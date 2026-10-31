@@ -297,8 +297,14 @@ describe('Tree list and event owners', () => {
       ),
     );
     tree.value?.focus();
-    expect(document.activeElement).toBe(wrapper.get('[role="tree"]').element);
-    Object.defineProperty(wrapper.get('.apollo-tree-list-holder').element, 'clientHeight', {
+    const holder = wrapper.get<HTMLElement>('.apollo-tree-list-holder');
+    const outer = wrapper.get('.apollo-tree-list');
+    expect(wrapper.get('[role="tree"]').element).toBe(holder.element);
+    expect(holder.attributes('tabindex')).toBe('0');
+    expect(outer.attributes('role')).toBeUndefined();
+    expect(outer.attributes('tabindex')).toBeUndefined();
+    expect(document.activeElement).toBe(holder.element);
+    Object.defineProperty(holder.element, 'clientHeight', {
       get: () => 80,
     });
     tree.value?.scrollTo(560);

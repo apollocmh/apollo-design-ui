@@ -214,11 +214,13 @@ describe('Select · real ref and resource boundaries', () => {
     const viewportHeight = vi
       .spyOn(HTMLElement.prototype, 'clientHeight', 'get')
       .mockReturnValue(64);
+    const popupScroll = vi.fn();
     const wrapper = mount(Select, {
       props: {
         options: Array.from({ length: 40 }, (_, index) => ({ value: index, label: String(index) })),
         open: true,
         listHeight: 64,
+        onPopupScroll: popupScroll,
       },
       attachTo: document.body,
     });
@@ -239,9 +241,32 @@ describe('Select · real ref and resource boundaries', () => {
     wrapper.vm.scrollTo({ index: 5, align: 'auto' });
     await flush();
     expect(holder?.scrollTop).toBe(160);
+    if (!holder) throw new Error('Select did not render its native scroll holder');
+    const scrollEvent = new Event('scroll');
+    holder.dispatchEvent(scrollEvent);
+    expect(popupScroll).toHaveBeenCalledExactlyOnceWith(scrollEvent);
     wrapper.vm.blur();
     expect(document.activeElement).not.toBe(input);
     viewportHeight.mockRestore();
+  });
+
+  it('binds a nonvirtual combobox to one listbox id on the actual scroll holder', async () => {
+    const wrapper = mount(Select, {
+      props: { id: 'native-listbox', options, open: true, virtual: false },
+      attachTo: document.body,
+    });
+    await flush();
+    const input = wrapper.get('input');
+    const controls = input.attributes('aria-controls');
+    if (!controls) throw new Error('The open Select must reference a listbox');
+    const list = document.getElementById(controls);
+    expect(list?.getAttribute('role')).toBe('listbox');
+    expect(list?.classList.contains('apollo-select-dropdown-list-holder')).toBe(true);
+    expect(input.attributes('aria-owns')).toBe(controls);
+    expect(document.querySelectorAll(`#${controls}`)).toHaveLength(1);
+    expect(list?.parentElement?.hasAttribute('id')).toBe(false);
+    expect(list?.parentElement?.hasAttribute('role')).toBe(false);
+    wrapper.unmount();
   });
 });
 

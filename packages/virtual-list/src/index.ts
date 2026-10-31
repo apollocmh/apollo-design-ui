@@ -8,7 +8,7 @@
  *
  *   1. **不做自绘滚动条 ⇒ 用原生滚动。** 上游的 `ScrollBar` 里写死了
  *      `borderRadius: 99` 与 `rgba(0, 0, 0, 0.5)` —— 那是视觉语义，与本包的 `notDo`
- *      冲突。连带后果：不做滚轮 / 触摸拦截；`showScrollBar` 被接受但不生效；
+ *      冲突。连带后果：不做滚轮 / 触摸拦截；滚动条外观由消费者 CSS 决定；
  *      `scrollTo()` 无参调用是 no-op。
  *   2. **横向不做 `marginLeft` 模拟。** 改用原生横向滚动（设了 `scrollWidth` 时给
  *      Filler 内层显式宽度）。
@@ -56,13 +56,13 @@ export { createSizeGetter } from './size';
 // ---------------------------------------------------------------------------
 export type {
   ExtraRenderInfo,
+  FillerEmits,
+  FillerSlots,
   GetKey,
   GetSize,
   HeightsLookup,
   ItemKey,
   RangeResult,
-  RenderFunc,
-  RenderProps,
   ScrollAlign,
   ScrollConfig,
   ScrollInfo,
@@ -70,6 +70,12 @@ export type {
   ScrollPos,
   ScrollTarget,
   SizeInfo,
+  VirtualListEmits,
+  VirtualListInnerProps,
+  VirtualListItemKey,
+  VirtualListItemSlotProps,
+  VirtualListProps,
+  VirtualListSlots,
 } from './types';
 export type { UseHeightsReturn } from './use-heights';
 export { useHeights } from './use-heights';

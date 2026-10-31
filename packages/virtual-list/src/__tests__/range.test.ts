@@ -203,9 +203,8 @@ describe('keepInHorizontalRange（List.js:291-297）', () => {
     expect(keepInHorizontalRange(50, undefined, 100)).toBe(0);
   });
 
-  it('⭐ scrollWidth 小于容器宽 ⇒ 上界为负，结果也可能是负的（上游如此）', () => {
-    // max = 300 - 400 = -100；min(max(50, 0), -100) = -100
-    expect(keepInHorizontalRange(50, 300, 400)).toBe(-100);
+  it('content narrower than its holder has zero horizontal scroll range', () => {
+    expect(keepInHorizontalRange(50, 300, 400)).toBe(0);
   });
 });
 

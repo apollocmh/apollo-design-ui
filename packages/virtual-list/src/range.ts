@@ -179,7 +179,7 @@ export function keepInHorizontalRange(
   scrollWidth: number | undefined,
   containerWidth: number,
 ): number {
-  const max = scrollWidth ? scrollWidth - containerWidth : 0;
+  const max = scrollWidth ? Math.max(0, scrollWidth - containerWidth) : 0;
   let tmp = nextOffsetLeft;
   tmp = Math.max(tmp, 0);
   tmp = Math.min(tmp, max);

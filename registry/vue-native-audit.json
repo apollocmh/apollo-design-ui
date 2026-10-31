@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
-  "phase": "architecture",
-  "revision": 230,
+  "phase": "acceptance",
+  "revision": 232,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -3637,7 +3637,18 @@
           "uiBarrelSha256": "3103a8979d3af83e1394e5c295617131f41524ca8957151dc05f171763a7ffae",
           "result": "Owned TS/Vue, all8 Demo and actual migrated s39 bytes match checked source; root barrel only changes stale Listy comments after strict pass. Eight unrelated pending notice types excluded from this commit."
         }
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/listy/Listy.vue",
+            "packages/ui/src/listy/__tests__/s38-issue38.test.ts"
+          ],
+          "change": "VirtualList integration delta: actual generic item scopes and native holder ownership; existing complete component audit and evidence retained.",
+          "verificationTask": "FND:virtual-list",
+          "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
+        }
+      ]
     },
     {
       "id": "CMP:masonry",
@@ -6233,6 +6244,17 @@
           ],
           "change": "TreeSelect-owned Tree presentation, true event-node/business-node boundary and immutable child loads; current tree ARIA and native keyboard/raw popup transport.",
           "verification": "CMP:tree-select compact verification: actual affected consumers and complete scoped strict, historical full delivery preserved."
+        },
+        {
+          "scope": [
+            "packages/ui/src/select/engine/OptionList.ts",
+            "packages/ui/src/select/engine/BaseSelect.ts",
+            "packages/ui/src/select/engine/context.ts",
+            "packages/ui/src/select/__tests__/native-contracts.test.ts"
+          ],
+          "change": "VirtualList integration delta: actual generic item scopes and native holder ownership; existing complete component audit and evidence retained.",
+          "verificationTask": "FND:virtual-list",
+          "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
         }
       ]
     },
@@ -7361,6 +7383,16 @@
           ],
           "change": "Native Radio Event/checked bridge preserves identical event delivery and existing selection behavior.",
           "verification": "CMP:radio focused checks record real native-event red→green, immutable Header mode/Demo consumers and full scoped strict; this delta does not repeat or complete the other unit audit."
+        },
+        {
+          "scope": [
+            "packages/ui/src/table/engine/VirtualTable/BodyGrid.ts",
+            "packages/ui/src/table/__tests__/native-browser.mjs",
+            "packages/ui/src/table/__tests__/fixtures/NativeTableBrowser.vue"
+          ],
+          "change": "VirtualList integration delta: actual generic item scopes and native holder ownership; existing complete component audit and evidence retained.",
+          "verificationTask": "FND:virtual-list",
+          "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
         }
       ],
       "verification": {
@@ -8508,6 +8540,16 @@
           ],
           "change": "TreeSelect-owned Tree presentation, true event-node/business-node boundary and immutable child loads; current tree ARIA and native keyboard/raw popup transport.",
           "verification": "CMP:tree-select compact verification: actual affected consumers and complete scoped strict, historical full delivery preserved."
+        },
+        {
+          "scope": [
+            "packages/ui/src/tree/NodeList.ts",
+            "packages/ui/src/tree/__tests__/native-contracts.test.ts",
+            "packages/ui/src/tree/__tests__/semantic.test.ts"
+          ],
+          "change": "VirtualList integration delta: actual generic item scopes and native holder ownership; existing complete component audit and evidence retained.",
+          "verificationTask": "FND:virtual-list",
+          "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
         }
       ]
     },
@@ -11230,17 +11272,13 @@
       "kind": "foundation",
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 223,
-        "startedAt": "2026-10-31T05:15:03.352Z"
-      },
+      "assignment": null,
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -11272,6 +11310,456 @@
           "packages/virtual-list/src/types.ts",
           "docs/foundation/virtual-list-contract.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/virtual-list/src"
+        ],
+        "task": "FND:virtual-list",
+        "owner": "native_picker",
+        "baseCommit": "6965a725",
+        "passed": true,
+        "sourceFrozen": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/virtual-list/src/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12240,
+            "durationSource": "Vitest reported total",
+            "log": "/tmp/apollo-virtual-list-core-final.log",
+            "result": "8 files / 175 passed; prior algorithms and valid cases retained; current metadata/refs/attrs/key/data/sizing/scroll-race/resources covered"
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/virtual-list/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5647,
+            "durationSource": "script performance.now through final assertions",
+            "log": "/tmp/apollo-virtual-list-browser-accepted-final.log",
+            "result": "System Chrome, 0 diagnostics and 0 retained ResizeObserver targets. All prior real keyboard/layout/focus/raw-virtual/key/RTL/holder/data assertions retained; actual bordered holder clientWidth540 vs offsetWidth560 now scrolls correctly to60. Actual viewport growth also reconciles accepted horizontal state."
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/virtual-list/src/VirtualList.vue packages/virtual-list/src/Filler.vue packages/virtual-list/src/virtual-list.ts packages/virtual-list/src/filler.ts packages/virtual-list/src/types.ts packages/virtual-list/src/cache.ts packages/virtual-list/src/use-heights.ts packages/virtual-list/src/range.ts packages/virtual-list/src/item-vnode.ts packages/virtual-list/src/__tests__",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 30,
+            "durationSource": "direct tool command wall time",
+            "log": "/tmp/apollo-virtual-list-biome-confirmed-final.log"
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/virtual-list/src/__tests__/native-contracts.test.ts packages/virtual-list/src/__tests__/virtual-list.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4410,
+            "durationSource": "Vitest reported total",
+            "log": "/tmp/apollo-virtual-list-runtime-final.log",
+            "result": "72 passed after static-root public el/anchor correction, true client viewport width, and in-place data/key getSize invalidation; pure algorithm range unchanged from prior full core pass."
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-final-architecture-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 56690,
+            "log": "/tmp/apollo-final-architecture-types.log",
+            "result": "All 26 foundation TS/Vue inputs match the successful strict program; public generic h/SFC fixtures and actual production consumer bridges included."
+          },
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/keyboard.test.ts packages/ui/src/tree/__tests__/s16-issue16.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14764,
+            "log": "/tmp/apollo-virtual-list-ui-core.log"
+          },
+          {
+            "kind": "dom-contract",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/tree/__tests__/semantic.test.ts --project dom-contract --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 6777,
+            "log": "/tmp/apollo-virtual-list-tree-dom.log"
+          },
+          {
+            "kind": "a11y-consumer",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/tree-select/__tests__/a11y.test.ts --project a11y -t combobox --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11626,
+            "log": "/tmp/apollo-virtual-list-tree-select-aria.log"
+          },
+          {
+            "kind": "format",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/select/engine/OptionList.ts packages/ui/src/select/engine/BaseSelect.ts packages/ui/src/select/engine/context.ts packages/ui/src/tree/NodeList.ts packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/semantic.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49,
+            "log": "/tmp/apollo-virtual-list-ui-format.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/select/engine/OptionList.ts packages/ui/src/select/engine/BaseSelect.ts packages/ui/src/select/engine/context.ts packages/ui/src/tree/NodeList.ts packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/semantic.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "kind": "consumer",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/table/__tests__/native-data.test.ts packages/ui/src/listy/__tests__/native-contracts.test.ts packages/ui/src/listy/__tests__/s38-issue38.test.ts packages/ui/src/listy/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13691,
+            "log": "/tmp/apollo-virtual-list-table-listy-consumers.log"
+          },
+          {
+            "kind": "browser",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "packages/ui/src/listy/__tests__/native-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4749,
+            "log": "/tmp/apollo-virtual-list-listy-browser.log"
+          },
+          {
+            "kind": "browser",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "packages/ui/src/table/__tests__/native-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11935,
+            "log": "/tmp/apollo-virtual-list-table-browser.log"
+          }
+        ],
+        "failedAttempts": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/virtual-list/src/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 1790,
+            "log": "/tmp/apollo-virtual-list-native-red.log",
+            "result": "8 red: typed key-cache collision; owned events/Filler ownership; overwritten consumer ref; stale async request; reordered key using old index; shrink retaining stale offset; disposed height service mutating."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/virtual-list/src/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 2380,
+            "log": "/tmp/apollo-virtual-list-native-first.log",
+            "result": "2 remaining: real accepted data prop is the Vue proxy (identity assertion corrected to actual props), and shrink clamping not yet implemented. Six original deltas already green."
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check --write packages/virtual-list/src/VirtualList.vue packages/virtual-list/src/Filler.vue packages/virtual-list/src/virtual-list.ts packages/virtual-list/src/filler.ts packages/virtual-list/src/types.ts packages/virtual-list/src/cache.ts packages/virtual-list/src/use-heights.ts packages/virtual-list/src/range.ts packages/virtual-list/src/item-vnode.ts packages/virtual-list/src/__tests__",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 221,
+            "log": "/tmp/apollo-virtual-list-biome-first.log",
+            "result": "forEach callback returned unused Map.set result; removed return, no semantic change."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/virtual-list/src/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "durationNote": "The first browser assertion stopped before elapsed-time output; not reconstructed.",
+            "log": "/tmp/apollo-virtual-list-browser-first.log",
+            "result": "Real RTL virtual overflow was anchored left: native scrollLeft -80 clamped to 0. Filler.rtl now drives right anchoring; same assertion passed."
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-virtual-list-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 40343,
+            "log": "/tmp/apollo-virtual-list-types-attempt-1.log",
+            "resultFile": "/tmp/apollo-virtual-list-types-attempt-1-result.json",
+            "result": "Root candidate: closed Props interface versus Vue h Record constraint, Filler role literal contextual typing, actual VueWrapper selector, sparse string array annotation, and private VNode.staticCount access. Corrected with exact public aliases/props and actual mounted el/anchor validation; no casts or indexed item types."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node /tmp/apollo-virtual-list-client-width-probe.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "durationNote": "Probe stopped at its physical viewport assertion before elapsed output.",
+            "log": "/tmp/apollo-virtual-list-client-width-probe.log",
+            "result": "Actual40/clientWidth540/offsetWidth560/scrollWidth600; valid scrollTo request80 should reach60. Fixed observer viewport width to real clientWidth."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/virtual-list/src/__tests__/native-contracts.test.ts --testNamePattern \"in-place replacement\" --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 2180,
+            "log": "/tmp/apollo-virtual-list-size-cache-red.log",
+            "result": "1 failed/14 skipped: new current key reported visible but stale getSize prefix factory returned bottom0 rather than20. Added currentData dependency; preserved same assertion green in final72."
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/virtual-list/src/VirtualList.vue packages/virtual-list/src/Filler.vue packages/virtual-list/src/virtual-list.ts packages/virtual-list/src/filler.ts packages/virtual-list/src/types.ts packages/virtual-list/src/cache.ts packages/virtual-list/src/use-heights.ts packages/virtual-list/src/range.ts packages/virtual-list/src/item-vnode.ts packages/virtual-list/src/__tests__",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 44,
+            "log": "/tmp/apollo-virtual-list-biome-accepted-final.log",
+            "result": "Browser probe chain formatting; corrected whitespace only."
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/virtual-list/src/VirtualList.vue packages/virtual-list/src/Filler.vue packages/virtual-list/src/virtual-list.ts packages/virtual-list/src/filler.ts packages/virtual-list/src/types.ts packages/virtual-list/src/cache.ts packages/virtual-list/src/use-heights.ts packages/virtual-list/src/range.ts packages/virtual-list/src/item-vnode.ts packages/virtual-list/src/__tests__",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 150,
+            "log": "/tmp/apollo-virtual-list-biome-accepted-final-2.log",
+            "result": "Indentation after manual chain formatting; one-file formatter fixed it, final full owned lint direct exit0."
+          }
+        ],
+        "types": {
+          "strict": "passed",
+          "declarationEmission": "not_run; final unified build",
+          "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3"
+        },
+        "implemented": [
+          "True generic Vue SFC Props/Slots/Emits; existing object default and extra scopes preserved, actual typed field/function keys support primitive items and numeric/Symbol fields.",
+          "Owned native scroll, accepted-offset virtualScroll and typed visibleChange, plus Filler.innerResize; no callback prop compatibility.",
+          "Single native holder owns id/role/tabindex/ARIA/key/focus; outer retains class/style/data. Readonly actual holder/container refs and imperative services retained; unused lastDiff state/watch/expose removed while pure diff algorithm stays.",
+          "Native Filler class/style/ARIA merge retains required geometry; px width in both raw/virtual and right anchoring for actual RTL overflow.",
+          "Typed cache identity, obsolete measurement pruning and individual ResizeObserver measurements; merged consumer ref and live component item-root refresh; scope disposal prevents pending/late measurement and releases observers.",
+          "Latest scroll request wins, requested keys re-resolve through current data, data/viewport/width changes reconcile actual accepted positions; keyed focus/draft survives ordinary retained-node updates."
+        ],
+        "publicMigration": [
+          "Remove inert showScrollBar and old multi-parameter RenderFunc/RenderProps; native CSS controls scrollbars.",
+          "VirtualListProps/Slots/ItemSlotProps/ItemKey/Emits/InnerProps and FillerSlots/Emits exported by root; no invented constructors.",
+          "id follows role/ARIA to actual holder; consumer control/owns references must target that holder. Tree focus uses nativeElement.",
+          "scrollTo({left}) is a nonnegative inline-start distance; getScrollInfo.x matches native scrollLeft (negative in RTL).",
+          "CacheMap.maps uses internal typed encodings for numeric enumeration; business-key lookup uses get."
+        ],
+        "consumerEvidence": {
+          "implemented": [
+            "Real h(VirtualList<FlattenItem/FlattenNode>) and VirtualListItemSlotProps<T>, no erased unknown item slot or forced generic h/ref/key casts",
+            "Remove private showScrollBar context/base/pass dead chain",
+            "Select nonvirtual listbox role/id move together to actual holder, no duplicate ID; Tree focus uses actual nativeElement",
+            "Preserve event names and one native scroll delivery through existing Select emits; keep default scope and existing Tree motion callback service"
+          ],
+          "domMigration": {
+            "baseline": "tests/compat/baselines/tree.dom.json unchanged",
+            "exactDiffPerScene": [
+              "$/div[0]/div[1]: 我们缺少属性 role=\"tree\"",
+              "$/div[0]/div[1]/div[0]: 我们多出属性 role=\"tree\""
+            ],
+            "preserved": "Directory and Directory-selected retain their original exact nine leaf-icon differences, composed after the two holder-role differences. Native regression checks tabindex/focus since DOM normalizer omits tabindex."
+          },
+          "results": [
+            "Existing core: 4 files/55 passed, includes Tree keyboard and s16 motion",
+            "Tree DOM: 18 passed = 16 original reference scenes plus 2 existing semantic cases",
+            "TreeSelect actual combobox controls/owns-to-role=tree consumer: 1 passed/21 unrelated skipped"
+          ],
+          "rootTableListy": "Native generics and real item scope; native holder receives id/role/ARIA/focus once. Actual Table LTR/RTL horizontal scroll, Listy scrolling/sticky/draft/focus and unmount passed."
+        },
+        "boundaries": [
+          "Owner did not edit public src/index.ts (root), UI consumer files, shared config/state, dependency installs or build artifacts.",
+          "Existing native scrolling, holder/root measurement, pure algorithm cases and historical Oracle evidence preserved. Pure horizontal clamp now returns 0 when content fits instead of an impossible negative range.",
+          "Default item slot requires exactly one measurable HTMLElement root; offscreen virtualization still unmounts rows, no persistent-cache/Portal platform added.",
+          "useHeights outside a Vue scope remains an imperative service; callers pair registration with setInstanceRef(item,null).",
+          "No full-library coverage/visual/publication/nine-dimension acceptance was executed; current checks prove this architecture unit only."
+        ],
+        "finalRuntimeDelta": [
+          "Public mounted VNode el/anchor validation replaces private staticCount access; legitimate static SFC/native single roots covered.",
+          "Holder ResizeObserver width uses the actual client viewport, excluding border/gutters.",
+          "getSize factory depends on current data/key sequence even without an existing measured-height change."
+        ],
+        "sourceHashes": {
+          "packages/ui/src/listy/Listy.vue": "c5f1e09bf22cf6da36a3ffc688d9bd032cba749b179a33cc4fe4977a8165392a",
+          "packages/ui/src/listy/__tests__/s38-issue38.test.ts": "0d4323f68dfd53d191e621e36b1520362efb215c092665938e5f6f22987b907f",
+          "packages/ui/src/select/__tests__/native-contracts.test.ts": "37095f0b61b4e7bfdeca28ffae6e93b3b64db785ccc581f4f2e1714acac790f6",
+          "packages/ui/src/select/engine/BaseSelect.ts": "f9e366cf58957a8583c065716129063b38bf78783329fab2cd619648365f39cb",
+          "packages/ui/src/select/engine/OptionList.ts": "7ca27fe4bd6a53a874b2a5f84c42227ca63d30d1eabc04cc3603fb34f433d2d3",
+          "packages/ui/src/select/engine/context.ts": "59da76bfad56a32fb89c86d1e1d02c62db4c64d7a75fb100d6854a42913297d9",
+          "packages/ui/src/table/__tests__/fixtures/NativeTableBrowser.vue": "87e02f20a834e7e62241ccf6275cf74cc6f0b7396fc16aced036294e85684b08",
+          "packages/ui/src/table/__tests__/native-browser.mjs": "14a9ca0c5676fda111bba4bec9f6b6a620f93e465a62c4536ca1a29f6548c57b",
+          "packages/ui/src/table/engine/VirtualTable/BodyGrid.ts": "3a53330e8854a4a234acb751fe572424d8670b2bb6aa469677e3e22f6277464c",
+          "packages/ui/src/tree/NodeList.ts": "d59a12b8069b95b91fe5725aa8852e3453f3ffcd73790a6a52bd24ec8186b1fb",
+          "packages/ui/src/tree/__tests__/native-contracts.test.ts": "11d6479ba97074f93eee23d1afe2101d074cfba5742396ec275a9ffa37d31f17",
+          "packages/ui/src/tree/__tests__/semantic.test.ts": "096b27ce950b17852f9fcddb42c3aff0d8713853b4757e1eb9e9adc67566d271",
+          "packages/virtual-list/src/Filler.vue": "8c4711709b23f86f19b68bad63eb6850e7574e583ef808dc7a3ab1ee5eb28de3",
+          "packages/virtual-list/src/VirtualList.vue": "2158815e75c9014ae4009f2a04e9328e69a2dfe87417837763fb082527e72e36",
+          "packages/virtual-list/src/__tests__/cache.test.ts": "18ae593cf7f8195628248dec72aaa63fc47af6ed8821a6b997260163fb23f0a4",
+          "packages/virtual-list/src/__tests__/fixtures/NativeStaticVirtualList.vue": "459953bcb2fc57d2a667b75739bd715bffbbbeed676a6da01727564b2114db35",
+          "packages/virtual-list/src/__tests__/fixtures/NativeVirtualList.vue": "5efd9d3cc6b0c718085359e79075d75cc952a71c522132487a3fc8da947bbd38",
+          "packages/virtual-list/src/__tests__/fixtures/NativeVirtualListTypes.vue": "c3051eff27cdc47e97672e0589f3d238fd470994b7875a0367e1d694d117e8bd",
+          "packages/virtual-list/src/__tests__/native-browser.mjs": "9ac7131d0de949ef059d09913b117add62aaa0b9524f46f080f0f01fedc1996c",
+          "packages/virtual-list/src/__tests__/native-contracts.test.ts": "c86331afbe9d9f28a31f2aa965fdbcabb540fc1a8a844a1ff56eb8c6b17e82c5",
+          "packages/virtual-list/src/__tests__/native.test-d.ts": "26db3f56adbcb7b4c839b98cfed0ca4a71bc762f588c16b742723af8a55e0ffd",
+          "packages/virtual-list/src/__tests__/range.test.ts": "ff9eb23eaebb996138ff24289585560337c8ee2b31ff2cd438b734c3cce7410f",
+          "packages/virtual-list/src/__tests__/virtual-list.test-d.ts": "ded7e5400467c5223f9128315ca3334cdfc3bcfd2de02f1b5b6e19e6a4038ba9",
+          "packages/virtual-list/src/__tests__/virtual-list.test.ts": "c24c63d2ede12d85897bddc4d15e5e09ddba4f78ff300e0fe331800cb72a7f2b",
+          "packages/virtual-list/src/cache.ts": "ab2f3c80674bfa1f58210c1a00ce9e06e72d8dfa023b8d8a95c0cf93348f8fc8",
+          "packages/virtual-list/src/filler.ts": "bd090791419aa6574f425516f191392418fadb0343c8083fe4a1968067fb2770",
+          "packages/virtual-list/src/index.ts": "7d11b3813f9c55edd32dd41dc6dba284c368a34d4eb4a4465a72c1f3b2a1ef9a",
+          "packages/virtual-list/src/item-vnode.ts": "d502347292201205eccb87a2acfdfeaf59240992c515908c5c7f0bcb9f94b9c6",
+          "packages/virtual-list/src/range.ts": "92a8d2d6040312f1b5504c22fee08e46c1b02e7a8fbb7dfe2555fa57008a4eaa",
+          "packages/virtual-list/src/types.ts": "46bb9dd1c0bd94580d03e2da0404138bb3b2d80e57003869062c06cf0999c0e9",
+          "packages/virtual-list/src/use-heights.ts": "1cff9e700c1fd3ab9a9a4168f18ecfdc25445a9ebd3b398e4aa380cfce7d41e2",
+          "packages/virtual-list/src/virtual-list.ts": "ba6accb8590ccbe74290afcfdedfbee57fc90d8a5fe862427cf7fade8d75447b"
+        },
+        "integrationSnapshot": {
+          "headAtIntegration": "cdd36a99d12a95ff5742657c26e8d191085d5383",
+          "foundationStrictInputsMatch": true,
+          "consumerFormatDelta": {
+            "file": "packages/ui/src/table/engine/VirtualTable/BodyGrid.ts",
+            "review": "Only multiline Vue import and trailing comma reformatted after successful type check; no runtime/type declaration changed."
+          },
+          "browserFixtureDelta": "Existing Table browser fixture adds a typed ltr/rtl Provider switch for real consumer coverage; browser compiled the changed SFC, whole-source strict check remains in final acceptance.",
+          "utilsCommentOnlyDelta": {
+            "file": "packages/utils/src/ref.ts",
+            "beforeSha256": "978ae3fa803d30e2fb8321ac0976e096922f23e5674f3ac6a176b356394dd0dc",
+            "afterSha256": "054b45e14338cd71ef217815801d42fcc31e8bc93700de6040084b7d6f28ab4d",
+            "runtimeAndTypesUnchanged": true,
+            "method": "TypeScript AST printer with comments removed",
+            "change": "Correct Vue callback replacement comment only"
+          }
+        },
+        "additionalFailedAttempts": {
+          "consumer": [
+            {
+              "kind": "dom-contract",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/tree/__tests__/semantic.test.ts --project dom-contract --maxWorkers=1",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 6793,
+              "log": "/tmp/apollo-virtual-list-tree-dom-red.log"
+            }
+          ],
+          "foundationTypes": {
+            "stage": "architecture",
+            "scope": [
+              "packages/virtual-list/src"
+            ],
+            "baseCommit": "5bde28e47af7614ee63b6779b0a99a690aa0062d",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/virtual-list/src/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/virtual-list/src/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/listy/Listy.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/listy/__tests__/s38-issue38.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/table/engine/VirtualTable/BodyGrid.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/select/engine/OptionList.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/select/engine/BaseSelect.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/select/engine/context.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/tree/NodeList.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/select/__tests__/native-contracts.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/tree/__tests__/native-contracts.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/tree/__tests__/semantic.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/index.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/listy/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/listy/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/table/__tests__/type.test-d.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/table/__tests__/native-data.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/table/__tests__/fixtures/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/select/__tests__/type.test-d.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/tree/__tests__/type.test-d.ts"
+              ]
+            },
+            "sourceHashes": {
+              "packages/virtual-list/src/scroll-target.ts": "e8c04a45f85c9039376c5897308538620ec716bd5f0b0fab56cba244abf4dd1f",
+              "packages/virtual-list/src/item-vnode.ts": "2f64eb7e125f6e6973fffd25fbfc06e809cc7c194c3f9cc474eba10b16b1a3ad",
+              "packages/virtual-list/src/virtual-list.ts": "ba6accb8590ccbe74290afcfdedfbee57fc90d8a5fe862427cf7fade8d75447b",
+              "packages/virtual-list/src/VirtualList.vue": "f8b484336beb8b0ee8085455a5198f8a9fecef8e1342903b7d5bc8668870991a",
+              "packages/virtual-list/src/filler.ts": "bd090791419aa6574f425516f191392418fadb0343c8083fe4a1968067fb2770",
+              "packages/virtual-list/src/size.ts": "30d15fa09f555112d02458ee4b703aefc1297204dda1b16cbee2a49586ec82f0",
+              "packages/virtual-list/src/types.ts": "2c41440d9fa45113f13d8dc74539b0e4243c3c3e28cc2343811363ea9d47e5f6",
+              "packages/virtual-list/src/use-heights.ts": "1cff9e700c1fd3ab9a9a4168f18ecfdc25445a9ebd3b398e4aa380cfce7d41e2",
+              "packages/virtual-list/src/cache.ts": "ab2f3c80674bfa1f58210c1a00ce9e06e72d8dfa023b8d8a95c0cf93348f8fc8",
+              "packages/virtual-list/src/range.ts": "92a8d2d6040312f1b5504c22fee08e46c1b02e7a8fbb7dfe2555fa57008a4eaa",
+              "packages/virtual-list/src/index.ts": "7d11b3813f9c55edd32dd41dc6dba284c368a34d4eb4a4465a72c1f3b2a1ef9a",
+              "packages/virtual-list/src/Filler.vue": "8c4711709b23f86f19b68bad63eb6850e7574e583ef808dc7a3ab1ee5eb28de3",
+              "packages/virtual-list/src/algorithm.ts": "134e8c765376686dc7f07b743918c900d988a5b1cd4c2f2559f832e1cf4f2411",
+              "packages/virtual-list/src/__tests__/range.test.ts": "ff9eb23eaebb996138ff24289585560337c8ee2b31ff2cd438b734c3cce7410f",
+              "packages/virtual-list/src/__tests__/virtual-list.test.ts": "9e490d2dd31d42935b2b8a818ede16a893d9a846eb5d84524dea330167150ce3",
+              "packages/virtual-list/src/__tests__/native-contracts.test.ts": "5f07aff2802f2febd6220911f41d87e111f5991bef20f25c2cd1e22f3da3a6cd",
+              "packages/virtual-list/src/__tests__/size.test.ts": "6fbc48b08f11f7778bd90b10e95dd14bc41b61ecae5fd36ff697ddd6d6976cb3",
+              "packages/virtual-list/src/__tests__/cache.test.ts": "18ae593cf7f8195628248dec72aaa63fc47af6ed8821a6b997260163fb23f0a4",
+              "packages/virtual-list/src/__tests__/scroll-target.test.ts": "4788193782502fd70619cb1f1a26a776784421b3e8d2648712089f59c03a1d2c",
+              "packages/virtual-list/src/__tests__/algorithm.test.ts": "b59358d72272ddebdc85074398137cf6f2ebc74f0207bc9698847ef6762aafda",
+              "packages/virtual-list/src/__tests__/virtual-list.test-d.ts": "ded7e5400467c5223f9128315ca3334cdfc3bcfd2de02f1b5b6e19e6a4038ba9",
+              "packages/virtual-list/src/__tests__/use-heights.test.ts": "9cba4fc1a69fdbf4b1787f70649489d659672d7c2ea523d9a7745aff8a1d1ee2",
+              "packages/virtual-list/src/__tests__/native.test-d.ts": "e2d1587b948bafca2b7e65f08e7d2e1046eff08e73dcad6746a0cdd1a8d9d787",
+              "packages/virtual-list/src/__tests__/fixtures/NativeVirtualList.vue": "5efd9d3cc6b0c718085359e79075d75cc952a71c522132487a3fc8da947bbd38",
+              "packages/virtual-list/src/__tests__/fixtures/NativeVirtualListTypes.vue": "c3051eff27cdc47e97672e0589f3d238fd470994b7875a0367e1d694d117e8bd",
+              "packages/ui/src/listy/Listy.vue": "c5f1e09bf22cf6da36a3ffc688d9bd032cba749b179a33cc4fe4977a8165392a",
+              "packages/ui/src/listy/__tests__/s38-issue38.test.ts": "0d4323f68dfd53d191e621e36b1520362efb215c092665938e5f6f22987b907f",
+              "packages/ui/src/table/engine/VirtualTable/BodyGrid.ts": "d612b275955ce88b80c66f2d69e2f1ce9e2d44804ebffbe56a823fdf800c2119",
+              "packages/ui/src/select/engine/OptionList.ts": "7ca27fe4bd6a53a874b2a5f84c42227ca63d30d1eabc04cc3603fb34f433d2d3",
+              "packages/ui/src/select/engine/BaseSelect.ts": "f9e366cf58957a8583c065716129063b38bf78783329fab2cd619648365f39cb",
+              "packages/ui/src/select/engine/context.ts": "59da76bfad56a32fb89c86d1e1d02c62db4c64d7a75fb100d6854a42913297d9",
+              "packages/ui/src/tree/NodeList.ts": "d59a12b8069b95b91fe5725aa8852e3453f3ffcd73790a6a52bd24ec8186b1fb",
+              "packages/ui/src/select/__tests__/native-contracts.test.ts": "37095f0b61b4e7bfdeca28ffae6e93b3b64db785ccc581f4f2e1714acac790f6",
+              "packages/ui/src/tree/__tests__/native-contracts.test.ts": "11d6479ba97074f93eee23d1afe2101d074cfba5742396ec275a9ffa37d31f17",
+              "packages/ui/src/tree/__tests__/semantic.test.ts": "096b27ce950b17852f9fcddb42c3aff0d8713853b4757e1eb9e9adc67566d271",
+              "packages/ui/src/index.ts": "516af93ad786f84c6c89afe33561aa7f8b400a4ec866565c099c43727ddf7f63",
+              "packages/utils/src/is.ts": "0131c16a8a7f176dc105fc6819e80d785fa0b1ef3bc5020594dc8ecdb28a6dfd",
+              "packages/utils/src/dom/focus.ts": "c6fb67051dc1c2f21e8258fdd30d1201a5b353995a51d9478b87bf247a29125f",
+              "packages/utils/src/dom/index.ts": "5727fe3ccfad8368167e148ef6256178182121ac2814d6707dd99805d0cb2ec7",
+              "packages/utils/src/index.ts": "426440731199a43466dfe00789c15b575464408e8e39da44c6655fc3664f57aa",
+              "packages/ui/src/listy/use-listy-theme.ts": "ad939c0b5ec72acfa309b7004c28b279b07eed9977f11c313eb84197a674120b",
+              "packages/ui/src/listy/use-raw-sticky.ts": "18c92819871693dc2940a6a839ea08bb46ea141b0d11aa4b67c1787a58558755",
+              "packages/ui/src/listy/Listy.ts": "a91063e4aa90dce1df592c34471c73131e34f1797574088822283c3ebebc1905",
+              "packages/ui/src/listy/interface.ts": "fb669421e8d477dafaafd02200dddd8aabc30f49b0d1ef0dea40a529875eaa5d",
+              "packages/ui/src/listy/index.ts": "b49cd1446625c7092ac46752f5f3a17bb84859992d413ba3d93e8931f2c90fa8",
+              "packages/ui/src/listy/style/index.ts": "3e0f5f1e3c780cbdce4670bbf7fa934325b8ba845b520b191288bfec3d2c44b9",
+              "packages/ui/src/listy/style/token.ts": "a6dc6790a8dc09d77b6c08177e96a6c35345563528d2816477e230081b53e93f",
+              "packages/ui/src/listy/__tests__/a11y.test.ts": "6d46b3d34a8e153e9d6ad573359bbebf4e2b954499dc41ae11a284fc71609776",
+              "packages/ui/src/listy/__tests__/native-contracts.test.ts": "28ed76455616f8d8251c82411d44fb1c44801589fd694f6836f8b0c152138349",
+              "packages/ui/src/listy/__tests__/index.test.ts": "19594c3e8c97faaf56b072692dd7cb99f9e7db2cb2fe9301a61c704de3d999ce",
+              "packages/ui/src/listy/__tests__/demo.test.ts": "378e51a2f4a251cbfd1b13a580ae9f15b605edf15644ea6e7c9e9a121d86d72e",
+              "packages/ui/src/listy/__tests__/type.test-d.ts": "acb31b51d8d6f051cfb24eedb30a2b68c8060d0f2bf7edde02ed267475d4dd86",
+              "packages/ui/src/listy/__tests__/theme.test.ts": "6ad717864950926073106868ba28ad6bb4f49ca3a2e9a8c93948fcc1f88482c5",
+              "packages/ui/src/listy/__tests__/semantic.test.ts": "f3e7aea8608bfc08416089135562641c159f750cb6686be06afd1d98ff9525d8",
+              "packages/ui/src/listy/engine/index.ts": "8a87c3a5031d0e03e2c3f3f8f9ebeb976402c6c6c4a1ea82727541723555053b",
+              "packages/ui/src/listy/demo/group.vue": "01841e2a9df3617abc4070dcb25364fec1bdcfb4f3d1db3e246a1f7dca5a0453",
+              "packages/ui/src/listy/demo/rich.vue": "5e48f4168ee44cdc42a894821c30fa98bbbf2e1a74cae8edc236b8befbe8fc2b",
+              "packages/ui/src/listy/demo/scroll-to.vue": "12e7097cda2ba03af64f90ab1b176351814a69666b164f7619a85ee56b787125",
+              "packages/ui/src/listy/demo/item-render.vue": "9d2bbce807e42f6cb9f27614a7bdb4499edf361cb2458f47c6aa366dd79ef426",
+              "packages/ui/src/listy/demo/group-header.vue": "b2b45da7247a299378f5afbc7a2ef34689be6c892a648841b91297aa00d0498b",
+              "packages/ui/src/listy/demo/style-class.vue": "6a203be47eed434e7ff1cb217886cdc93a0be6696cbe7d572c83341f0c08ab62",
+              "packages/ui/src/listy/demo/virtual.vue": "8c9636b699e9c75873a6ee235d1ef53813c040b7c8589a549b29c4119684ac1e",
+              "packages/ui/src/listy/demo/basic.vue": "b8570ac9a40d58f4c95ddeebcffc3d9e3bcb996419e1995b5398d0d70967a2dd",
+              "packages/ui/src/listy/__tests__/fixtures/NativeListy.vue": "6d29c148ac1132e3df304a2d04eea2102c9475a2eee46401f7217fcca3609d84",
+              "packages/ui/src/listy/__tests__/fixtures/NativeListyTypes.vue": "eb1cf9603a444f7036b53e8f9351b1f5c936414118e60ade33ef97d9387b9f55",
+              "packages/ui/src/table/__tests__/native-data.test.ts": "94a2e950433604a0b70ed8329fd21b9f0c6cf31c6c367dc5b47dae15876aeebc",
+              "packages/ui/src/table/__tests__/fixtures/NativeTableTypes.vue": "fb3f6071e3916f6cb128f2b8e624d125f0e5313e075ee43801aa12bf906f50ed",
+              "packages/ui/src/table/__tests__/fixtures/NativeTable.vue": "16a47ec8b9313ca82c52b8421dfd2bfe8e3fa4e72ae97462a3cdece18cc0c015",
+              "packages/ui/src/table/__tests__/fixtures/NativeTableBrowser.vue": "8e15ba2f674eb082ce358d229489cf8cd0e998edd6b355fd6882f15a4612cf29",
+              "packages/ui/src/select/__tests__/type.test-d.ts": "cbcb98cd49107d0119c6b990193d9f5333555207daad57dc7dc6c687a2a44c0d",
+              "packages/ui/src/tree/__tests__/type.test-d.ts": "afdcaf46489ded7f222c4b44efdb8e3402a58362d74aacf5727d3106f744c6cf"
+            },
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-virtual-list-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 40343,
+            "log": "/tmp/apollo-virtual-list-types.log"
+          }
+        }
       }
     }
   ],

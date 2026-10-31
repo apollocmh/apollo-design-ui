@@ -286,3 +286,7 @@ Position 的公开签名及纯几何算法保持，测量使用目标所属文�
 ### D-border-beam-native-host-and-effect
 
 BorderBeam 的原生 class/style/事件合并到默认槽的单一 HTML 宿主；旧组件 className 改用 classNames.effect，旧装饰 style 改用 styles.effect。Provider 的装饰配置保留原义。完整 Vue 内容、模板 ref、key 与组件插槽保留各自归属，条件或异步根更新后跟随真实宿主；多根、文本及 SVG 内容完整透传但不产生描边。动态 textContent 移除装饰节点时只重建描边，动画会重启，业务内容与焦点保持；共享采样跟随宿主所属文档并在卸载释放，详见[BorderBeam API](packages/ui/src/border-beam/index.zh-CN.md)。开发阶段直接迁移，无旧形态兼容层。
+
+### D-virtual-list-native-generics-and-holder
+
+VirtualList/Filler 使用真实泛型 Vue 组件与所属 emits，沿用 default={item,index,style,offsetX} 和 extra 槽；旧多参数 RenderFunc/RenderProps 类型、无效 showScrollBar 与无消费者的 lastDiff 诊断引用直接移除。公开引用保留只读 nativeElement/containerElement、getScrollInfo、scrollTo；按业务 key 读取高度缓存使用 get，数字与同文字符串 key 分离。id/role/ARIA/tabindex 和键盘、焦点监听落真实滚动 holder，class/style/data 留 outer，innerProps 独立指向内容层。Table、Listy、Select、Tree 同步使用实际泛型、作用域与 holder 引用，修正高度/宽度、RTL 和异步滚动请求生命周期，详见[VirtualList 当前契约](docs/foundation/virtual-list-contract.md)。开发阶段直接迁移，无旧回调或 DOM 形态兼容层。

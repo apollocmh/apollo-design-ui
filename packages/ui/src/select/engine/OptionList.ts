@@ -17,7 +17,11 @@
  */
 
 import { isEmptyVNode, KeyCode } from '@apollo-design/utils';
-import { VirtualList, type VirtualListExposed } from '@apollo-design/virtual-list';
+import {
+  VirtualList,
+  type VirtualListExposed,
+  type VirtualListItemSlotProps,
+} from '@apollo-design/virtual-list';
 import type { PropType, SlotsType } from 'vue';
 import { defineComponent, h, inject, ref } from 'vue';
 import type {
@@ -29,6 +33,7 @@ import type {
 } from '../interface';
 import { type BaseSelectContextValue, baseSelectContextKey, selectContextKey } from './context';
 import TransBtn from './TransBtn';
+import type { FlattenItem } from './valueUtil';
 
 function isTitleType(content: unknown): boolean {
   return typeof content === 'string' || typeof content === 'number';
@@ -247,7 +252,7 @@ export const OptionList = defineComponent({
             ])
           : null,
         h(
-          VirtualList,
+          VirtualList<FlattenItem>,
           {
             ref: listRef,
             prefixCls: `${prefixCls}-dropdown-list`,
@@ -260,14 +265,13 @@ export const OptionList = defineComponent({
             onScroll: props.onPopupScroll,
             virtual: select.virtual,
             direction: select.direction,
-            innerProps: (select.virtual ? undefined : a11yProps) as never,
-            showScrollBar: base.showScrollBar,
+            ...(select.virtual ? {} : a11yProps),
             class: classNames?.popup?.list,
             style: styles?.popup?.list,
           },
           {
-            default: ({ item, index }: { item: unknown; index: number }) =>
-              renderItem(item as (typeof flatten)[number], index) as never,
+            default: ({ item, index }: VirtualListItemSlotProps<FlattenItem>) =>
+              renderItem(item, index),
           },
         ),
       ];

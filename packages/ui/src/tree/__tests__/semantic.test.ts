@@ -204,13 +204,32 @@ const directoryIconContract = {
   diff: directoryLeafIcons,
 };
 
+// The tree role belongs to the native focus/scroll holder. Keep the original
+// reference HTML and require only this exact attribute relocation in every scene.
+// Tabindex and real focus are additionally checked in native-contracts.test.ts.
+const holderRoleContract = {
+  reason:
+    'Tree focus, keyboard handling and ARIA role share the actual VirtualList scroll holder. The historical reference keeps role on the outer container; no DOM nodes are added or removed.',
+  diff: [
+    '$/div[0]/div[1]: 我们缺少属性 role="tree"',
+    '$/div[0]/div[1]/div[0]: 我们多出属性 role="tree"',
+  ],
+};
+
 domContractTest('Tree', {
   baseline,
   keepStyle: false,
-  allow: {
-    'tree:directory': directoryIconContract,
-    'tree:directory-selected': directoryIconContract,
-  },
+  allow: Object.fromEntries(
+    baseline.cases.map(({ id }) => [
+      id,
+      id === 'tree:directory' || id === 'tree:directory-selected'
+        ? {
+            reason: `${holderRoleContract.reason} ${directoryIconContract.reason}`,
+            diff: [...holderRoleContract.diff, ...directoryIconContract.diff],
+          }
+        : holderRoleContract,
+    ]),
+  ),
   render: (id) => {
     const build = CASES[id];
     if (!build) {

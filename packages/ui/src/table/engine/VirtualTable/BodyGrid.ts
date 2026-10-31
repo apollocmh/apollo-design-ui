@@ -14,16 +14,9 @@ import {
   type ExtraRenderInfo,
   VirtualList,
   type VirtualListExposed,
+  type VirtualListItemSlotProps,
 } from '@apollo-design/virtual-list';
-import {
-  type CSSProperties,
-  computed,
-  defineComponent,
-  h,
-  ref,
-  type SetupContext,
-  watch,
-} from 'vue';
+import { computed, defineComponent, h, ref, type SetupContext, watch } from 'vue';
 import type { ColumnType, TableScrollToConfig, TableSlots } from '../../interface';
 import { useTableContext } from '../context';
 import { type FlattenRecord, flattenRecords } from '../hooks/use-table';
@@ -48,8 +41,6 @@ const NativeBodyGrid = defineComponent(
   <RecordType extends object>(props: BodyGridProps<RecordType>, { expose }: SetupContext<[]>) => {
     const ctx = useTableContext<RecordType>();
     const listRef = ref<VirtualListExposed | null>(null);
-    // The shared list transports the exact entries supplied by flattenData.
-    const sourceItem = (item: unknown) => item as FlattenRecord<RecordType>;
 
     // =========================== Data ===========================
     const flattenData = computed(() =>
@@ -213,7 +204,7 @@ const NativeBodyGrid = defineComponent(
       const wrapperComponent = ctx.getComponent(['body', 'wrapper'], 'div');
 
       return h(
-        VirtualList,
+        VirtualList<FlattenRecord<RecordType>>,
         {
           ref: listRef,
           fullHeight: false,
@@ -222,7 +213,7 @@ const NativeBodyGrid = defineComponent(
           height: props.height,
           itemHeight: props.listItemHeight || 24,
           data: flattenData.value,
-          itemKey: (item: unknown) => sourceItem(item).rowKey,
+          itemKey: (item) => item.rowKey,
           component: wrapperComponent,
           scrollWidth: props.scrollWidth,
           direction: ctx.direction,
@@ -236,11 +227,11 @@ const NativeBodyGrid = defineComponent(
           },
         },
         {
-          default: (slotProps: { item: unknown; index: number; style: CSSProperties }) =>
+          default: (slotProps: VirtualListItemSlotProps<FlattenRecord<RecordType>>) =>
             h(BodyLine<RecordType>, {
-              data: sourceItem(slotProps.item),
+              data: slotProps.item,
               bodyCell: props.bodyCell,
-              rowKey: sourceItem(slotProps.item).rowKey,
+              rowKey: slotProps.item.rowKey,
               index: slotProps.index,
               rowKeys: rowKeys.value,
               columnsOffset: columnsOffset.value,

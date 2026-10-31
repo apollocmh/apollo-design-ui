@@ -9,10 +9,12 @@ describe('CacheMap（utils/CacheMap.js）', () => {
     expect(map.get('b')).toBeUndefined();
   });
 
-  it('数字键与字符串键命中同一条（JS 属性语义）', () => {
+  it('numeric and string keys keep their distinct Vue identities', () => {
     const map = new CacheMap<number>();
     map.set(1, 10);
-    expect(map.get('1')).toBe(10);
+    map.set('1', 30);
+    expect(map.get(1)).toBe(10);
+    expect(map.get('1')).toBe(30);
   });
 
   it('⭐ id 每次 set 都自增 —— 外部拿它当「缓存代次」', () => {

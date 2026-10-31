@@ -12,6 +12,7 @@
  *   4. 非 `sync` 时用**微任务** + 自增 id 做**合并与失效**：只有最后一次的 id 匹配才执行。
  */
 
+import { observeResize } from '@apollo-design/utils';
 import { getCurrentScope, onScopeDispose, type Ref, ref } from 'vue';
 import { CacheMap } from './cache';
 import type { ItemKey } from './types';
@@ -51,9 +52,10 @@ export function useHeights<T>(
   onItemRemove?: ((item: T) => void) | undefined,
 ): UseHeightsReturn<T> {
   const updatedMark = ref(0);
-  const instanceMap = new Map<ItemKey, HTMLElement>();
+  const instanceMap = new Map<ItemKey, { element: HTMLElement; stop: () => void }>();
   const heights = new CacheMap<number>();
   let promiseId = 0;
+  let disposed = false;
 
   const cancelPending = (): void => {
     promiseId += 1;
@@ -62,7 +64,7 @@ export function useHeights<T>(
   const doCollect = (): void => {
     let changed = false;
 
-    for (const [key, element] of instanceMap) {
+    for (const [key, { element }] of instanceMap) {
       // ⚠️ 判据 1：隐藏的项不测
       if (element?.offsetParent) {
         const style = computedStyleOf(element);
@@ -83,6 +85,7 @@ export function useHeights<T>(
   };
 
   const collectHeight = (sync = false): void => {
+    if (disposed) return;
     cancelPending();
     if (sync) {
       doCollect();
@@ -99,15 +102,17 @@ export function useHeights<T>(
   };
 
   const setInstanceRef = (item: T, element: HTMLElement | null): void => {
+    if (disposed) return;
     const key = getKey(item);
     const origin = instanceMap.get(key);
 
-    if (element) {
-      instanceMap.set(key, element);
-      collectHeight();
-    } else {
-      instanceMap.delete(key);
+    if (origin?.element !== element) {
+      origin?.stop();
+      if (element)
+        instanceMap.set(key, { element, stop: observeResize(element, () => collectHeight()) });
+      else instanceMap.delete(key);
     }
+    if (element) collectHeight();
 
     // 上游写法：`!origin !== !element` —— 比「有无」的布尔值，而不是比元素本身。
     // 同一个 key 换成另一个元素时**不**触发 add/remove。
@@ -121,7 +126,12 @@ export function useHeights<T>(
   };
 
   if (getCurrentScope()) {
-    onScopeDispose(cancelPending);
+    onScopeDispose(() => {
+      disposed = true;
+      cancelPending();
+      for (const entry of instanceMap.values()) entry.stop();
+      instanceMap.clear();
+    });
   }
 
   return { setInstanceRef, collectHeight, heights, updatedMark, cancelPending };

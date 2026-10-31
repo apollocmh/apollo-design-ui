@@ -22,7 +22,7 @@ A data-driven list with grouping, native sticky headers and optional virtualizat
 | classNames | Semantic classes for root, item and groupHeader | `ListyClassNames` | — |
 | styles | Semantic Vue CSSProperties | `ListyStyles` | — |
 
-Direction follows the current ConfigProvider.direction. Native class/style/id/data attributes belong to the root; style accepts Vue strings, objects and arrays. In Virtual mode, tabindex, role, keyboard and focus listeners belong to the actual scrolling holder. ARIA naming is also forwarded to the holder. This provides one Tab stop and native list scrolling. Root style still applies to the outer container; height controls the viewport.
+Direction follows the current ConfigProvider.direction. Native class/style/data attributes belong to the outer root; style accepts Vue strings, objects and arrays. The id, tabindex, role, aria-* attributes, keyboard and focus listeners belong to the actual scrolling widget: the root in Raw mode and the holder in Virtual mode. Widget identity and ARIA share one target without duplication on the outer container. The height prop controls the viewport.
 
 ### Slots
 

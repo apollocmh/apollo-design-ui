@@ -16,7 +16,11 @@
  */
 
 import { useId } from '@apollo-design/utils';
-import { VirtualList, type VirtualListExposed } from '@apollo-design/virtual-list';
+import {
+  VirtualList,
+  type VirtualListExposed,
+  type VirtualListItemSlotProps,
+} from '@apollo-design/virtual-list';
 import {
   computed,
   defineComponent,
@@ -59,7 +63,7 @@ const MotionFlattenData: FlattenNode = {
   parent: null,
   children: [],
   pos: MotionEntity.pos,
-  data: MotionNode as never,
+  data: MotionNode,
   title: null,
   key: MOTION_KEY,
   /** Hold empty list here since we do not use it */
@@ -92,6 +96,7 @@ export interface NodeListRef {
 
 export default defineComponent({
   name: 'ATreeNodeList',
+  inheritAttrs: false,
   slots: Object as SlotsType<TreeSlots>,
   props: {
     prefixCls: { type: String, required: true },
@@ -124,9 +129,7 @@ export default defineComponent({
     const treeId = useId();
 
     // =============================== Ref ================================
-    const listRef = ref<(VirtualListExposed & { containerElement: HTMLElement | null }) | null>(
-      null,
-    );
+    const listRef = ref<VirtualListExposed | null>(null);
     const indentMeasurerRef = ref<HTMLElement | null>(null);
 
     expose({
@@ -136,7 +139,7 @@ export default defineComponent({
           void nextTick(() => listRef.value?.scrollTo(scroll));
         } else listRef.value?.scrollTo(scroll);
       },
-      focus: () => listRef.value?.containerElement?.focus(),
+      focus: () => listRef.value?.nativeElement?.focus(),
       getIndentWidth: () => indentMeasurerRef.value?.offsetWidth ?? 0,
     } satisfies NodeListRef);
 
@@ -265,11 +268,11 @@ export default defineComponent({
           ],
         ),
         h(
-          VirtualList,
+          VirtualList<FlattenNode>,
           {
             ...attrs,
             data: mergedData.value,
-            itemKey: (item: FlattenNode) => itemKey(item) as unknown as string,
+            itemKey,
             height: props.height,
             fullHeight: false,
             virtual: props.virtual,
@@ -280,7 +283,7 @@ export default defineComponent({
             onBlur: props.onBlur,
             onMousedown: props.onMousedown,
             prefixCls: `${props.prefixCls}-list`,
-            ref: listRef as never,
+            ref: listRef,
             role: 'tree',
             tabIndex: focusable ? props.tabIndex : undefined,
             'aria-activedescendant': activeItem.value
@@ -292,23 +295,23 @@ export default defineComponent({
                 onMotionEnd();
               }
             },
-          } as never,
+          },
           {
             // ⚠️ 本仓 VirtualList 的 slot 签名是 { item, index, style, offsetX } 包装对象
-            default: (slotItem: { item: FlattenNode }) => {
+            default: (slotItem: VirtualListItemSlotProps<FlattenNode>) => {
               const treeNode = slotItem.item;
               const mergedKey = getKey(treeNode.key, treeNode.pos);
-              const treeNodeProps = getTreeNodeProps(mergedKey, treeNodeRequiredProps as never);
+              const treeNodeProps = getTreeNodeProps(mergedKey, treeNodeRequiredProps);
               return h(
                 TreeListItem,
                 {
-                  key: mergedKey as string | number,
+                  key: mergedKey,
                   prefixCls: props.prefixCls,
                   ...treeNodeProps,
                   title: treeNode.title,
                   active: !!activeItem.value && treeNode.key === activeItem.value.key,
                   pos: treeNode.pos,
-                  data: treeNode.data as Record<string, unknown>,
+                  data: treeNode.data,
                   isStart: treeNode.isStart,
                   isEnd: treeNode.isEnd,
                   motion: props.motion,
@@ -322,7 +325,7 @@ export default defineComponent({
                   onMouseMove: () => {
                     props.onActiveChange(null);
                   },
-                } as never,
+                },
                 slots,
               );
             },

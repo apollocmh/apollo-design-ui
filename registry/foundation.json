@@ -372,9 +372,9 @@
         "packageConsumers": [
           "@apollo-design/ui"
         ],
-        "srcFiles": 10,
-        "srcLines": 1693,
-        "exportDeclarations": 44
+        "srcFiles": 13,
+        "srcLines": 1773,
+        "exportDeclarations": 51
       }
     },
     {

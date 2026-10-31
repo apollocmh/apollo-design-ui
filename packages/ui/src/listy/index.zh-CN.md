@@ -26,7 +26,7 @@ subtitle: 轻量列表
 | classNames | 语义类名 | `Partial<Record<'root' \| 'item' \| 'groupHeader', string>>` | — |
 | styles | 语义样式，使用 Vue `CSSProperties` | `ListyStyles` | — |
 
-文字方向来自当前 ConfigProvider.direction。`class`、`style`、`id`、`data-*` 等原生 attrs 落到根元素；`style` 支持 Vue 原生字符串、对象和数组合并。在 Virtual 分支，`tabindex`、`role`、键盘和焦点监听落到真实 holder，ARIA 命名同时传给 holder，避免键盘滚动页面或形成两个 Tab 停靠点。根样式仍属于外壳，视口高度由 `height` 控制。
+文字方向来自当前 ConfigProvider.direction。`class`、`style`、`data-*` 落到外层根元素，`style` 支持 Vue 原生字符串、对象和数组合并。`id`、`tabindex`、`role`、`aria-*`、键盘和焦点监听落到实际滚动容器：Raw 为根元素，Virtual 为 holder。控件身份与 ARIA 目标保持一致，不在外壳重复设置；视口高度由 `height` 控制。
 
 ### 插槽
 

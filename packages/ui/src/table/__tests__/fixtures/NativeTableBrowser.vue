@@ -19,6 +19,7 @@ const hostA = ref<HTMLElement | null>(null);
 const hostB = ref<HTMLElement | null>(null);
 const useHostB = ref(false);
 const virtual = ref(false);
+const direction = ref<'ltr' | 'rtl'>('ltr');
 const section = ref(false);
 const replacement = ref(false);
 const acceptSelection = ref(false);
@@ -96,6 +97,7 @@ function patch(kind: string) {
   if (kind === 'slots') native.value?.patch();
   if (kind === 'theme') replacement.value = !replacement.value;
   if (kind === 'virtual') virtual.value = !virtual.value;
+  if (kind === 'direction') direction.value = direction.value === 'ltr' ? 'rtl' : 'ltr';
   if (kind === 'wrapper') section.value = !section.value;
   if (kind === 'container') useHostB.value = !useHostB.value;
   if (kind === 'accept') acceptSelection.value = true;
@@ -134,7 +136,7 @@ defineExpose({
 </script>
 <template>
   <NativeFixture ref="native" />
-  <ConfigProvider :theme="theme">
+  <ConfigProvider :theme="theme" :direction="direction">
     <div id="table-scroll-a" ref="hostA" class="table-scroll-host">
       <Table ref="instance" class="table-engine" :columns="columns" :data-source="rows" row-key="id" :pagination="false" :virtual="virtual" :scroll="{x:1200,y:180}" :sticky="sticky" :components="components" :row-selection="selection" @change="change" @scroll="scrollEvents.push($event)">
         <template #bodyCell="{record,column,originNode}"><input v-if="column.key==='name'" :aria-label="`Record ${record.id}`" :placeholder="record.name"/><span v-else-if="column.key==='age'">{{record.age}}</span><NodeRenderer v-else :node="originNode"/></template>

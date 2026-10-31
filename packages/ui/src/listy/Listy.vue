@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T = unknown, K extends ListyKey = ListyKey">
-import type { ExtraRenderInfo } from '@apollo-design/virtual-list';
+import type { ExtraRenderInfo, VirtualListItemSlotProps } from '@apollo-design/virtual-list';
 import { VirtualList, type VirtualListExposed } from '@apollo-design/virtual-list';
 import {
   type CSSProperties,
@@ -281,7 +281,7 @@ function renderListy(): VNode {
       outer[name] = value;
   }
   return h(
-    VirtualList,
+    VirtualList<FlatRow<T, K>>,
     {
       ...outer,
       ref: virtualList,
@@ -300,9 +300,7 @@ function renderListy(): VNode {
       onScroll: (event: Event) => emit('scroll', event),
     },
     {
-      default: ({ index }: { index: number }) => {
-        const row = flat.value.rows[index];
-        if (!row) throw new RangeError('Listy virtual row index is outside the current data');
+      default: ({ item: row }: VirtualListItemSlotProps<FlatRow<T, K>>) => {
         return row.type === 'item' ? itemRow(row) : header(row.groupKey, false, false);
       },
       extra: virtualSticky,

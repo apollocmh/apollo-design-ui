@@ -9,7 +9,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 
 import type {
   ComputeRangeInput,
@@ -24,13 +24,13 @@ import type {
   ItemKey,
   ListDiffResult,
   RangeResult,
-  RenderFunc,
-  RenderProps,
   ScrollAlign,
   ScrollInfo,
   ScrollTo,
   SizeInfo,
   VirtualListExposed,
+  VirtualListItemSlotProps,
+  VirtualListSlots,
 } from '../index';
 import {
   CacheMap,
@@ -243,16 +243,16 @@ describe('组件契约', () => {
     });
   });
 
-  it('VirtualListExposed 的三个成员', () => {
-    const api = {} as VirtualListExposed;
-    expectTypeOf(api.nativeElement).toEqualTypeOf<HTMLElement | null>();
-    expectTypeOf(api.getScrollInfo).returns.toEqualTypeOf<ScrollInfo>();
-    expectTypeOf(api.scrollTo).toEqualTypeOf<ScrollTo>();
+  it('VirtualListExposed describes the real holder, outer container and services', () => {
+    expectTypeOf<VirtualListExposed['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
+    expectTypeOf<VirtualListExposed['containerElement']>().toEqualTypeOf<HTMLElement | null>();
+    expectTypeOf<VirtualListExposed['getScrollInfo']>().returns.toEqualTypeOf<ScrollInfo>();
+    expectTypeOf<VirtualListExposed['scrollTo']>().toEqualTypeOf<ScrollTo>();
   });
 
   it('ScrollTo 的入参可选', () => {
     neverCalled(() => {
-      const fn = {} as ScrollTo;
+      const fn: ScrollTo = () => {};
       fn();
       fn(100);
       fn({ index: 1, align: 'top' });
@@ -272,19 +272,20 @@ describe('组件契约', () => {
     expectTypeOf<ExtraRenderInfo['offsetY']>().toEqualTypeOf<number | undefined>();
   });
 
-  it('RenderProps 的 style 允许 undefined 值', () => {
-    expectTypeOf<RenderProps['style']>().toEqualTypeOf<
-      Record<string, number | string | undefined>
-    >();
+  it('native item scope style uses CSSProperties, including legal undefined values', () => {
+    expectTypeOf<VirtualListItemSlotProps<string>['style']>().toEqualTypeOf<CSSProperties>();
   });
-
-  it('RenderFunc 返回 VNodeChild', () => {
-    expectTypeOf<ReturnType<RenderFunc<string>>>().toEqualTypeOf<VNodeChild>();
+  it('native default slot receives one typed object and returns VNodeChild', () => {
+    expectTypeOf<Parameters<NonNullable<VirtualListSlots<string>['default']>>>().toEqualTypeOf<
+      [scope: VirtualListItemSlotProps<string>]
+    >();
+    expectTypeOf<
+      ReturnType<NonNullable<VirtualListSlots<string>['default']>>
+    >().toEqualTypeOf<VNodeChild>();
   });
 
   it('FillerExposed 暴露 getInnerHeight', () => {
-    const exposed = {} as FillerExposed;
-    expectTypeOf(exposed.getInnerHeight).toEqualTypeOf<() => number>();
+    expectTypeOf<FillerExposed['getInnerHeight']>().toEqualTypeOf<() => number>();
   });
 
   it('SizeInfo 的两个字段', () => {

@@ -1,3 +1,38 @@
+> 当前契约（2026-10-31）：以下新段描述本轮 Vue 原生接口与真实消费；后面的初期分析、上游版本、Oracle 和历史验收结论保留原日期与原义。架构交付与最终统一九维验收分别记录，当前临时证据见 `/tmp/apollo-virtual-list-checks.json`。
+
+## 当前 Vue 原生接口
+
+`VirtualList<T>` 为真实泛型 Vue SFC，`T` 可为普通接口或原始值，不需要 `Record` 索引签名。`data?: T[]`，必填 `itemKey: VirtualListItemKey<T>`：取键算法 `(item:T)=>string|number` 或值完整满足该类型的真实字段，含数字/Symbol 字段名。无效键在运行时明确报错，不伪造相同字符串键。数字键和同文字符串键分别缓存；缓存 `maps` 只用于数值枚举，按业务键定位必须用 `get`。移出窗口但仍在数据中的项保留高度，数据删除/替换与视口宽度变化会使对应旧测量失效。
+
+其余公开 Props 保留 `prefixCls / height / itemHeight / fullHeight / virtual / direction / scrollWidth / component / innerProps`。默认前缀为 `apollo-virtual-list`，fullHeight=true；virtual=false 强制真实布局。`height` 控制 holder 的 height/maxHeight，itemHeight 是未测量项的估计。`scrollWidth` 始终用于真实内容宽度，Raw 和 Virtual 都使用原生横向滚动；RTL 的显式宽度内容锚在右侧。`scrollTo({left})` 接受距 inline-start 的非负距离；`getScrollInfo().x` 与真实原生 scrollLeft 一致，RTL 为负。没有主题 Token、Provider 或自绘滚动条；相关视觉由消费者承担。无效 `showScrollBar` 已删除，不保留吞掉参数的兼容通道。
+
+| 插槽 | 对象作用域 | 约束 |
+| --- | --- | --- |
+| default | `{ item:T, index:number, style:CSSProperties, offsetX:number }` | 沿用既有字段；style.width 为显式 px；每项恰好一个可测量的 HTMLElement 根，可来自单根 Vue 组件 |
+| extra | `ExtraRenderInfo` | 沿用 `start/end/virtual/offsetX/scrollTop/offsetY/rtl/getSize`，支持普通 Vue 空内容、0 与数组 |
+
+透明 Fragment 和注释可包住一个真实项根；多根与纯文本不能被默默截取第一项，会提示单根约束。项根不额外包 div，保留真实 margin 测量与消费者自身 ref，Vue 组件自己的根替换也会重新绑定测量。旧多参数模板类型 `RenderFunc / RenderProps` 已删除；算法型 `GetKey / getSize / offset` 和 useHeights 的资源回调保留。
+
+| Owned 通知 | 参数 |
+| --- | --- |
+| scroll | `(event: Event)`，真实 holder 原生事件，只通知一次 |
+| virtualScroll | `(info: ScrollInfo)`，实际接受的偏移变化，按值去重 |
+| visibleChange | `(visibleList:T[], fullList:T[])`，挂载及当前窗口/数据变化 |
+
+具名监听继续使用 Vue 的 `onScroll/onVirtualScroll/onVisibleChange` 或模板 `@scroll/@virtual-scroll/@visible-change`，由 emits 承担，不再声明为业务 callback props。`Filler.innerResize()` 也为 owned 通知，包含变为零高的尺寸变化；Filler.default/extra 都是 Vue 槽。Filler 的用户 class/style/ARIA 按原生语义合并，内部撑高、平移、定位与宽度几何优先，传 style 不再抹掉虚拟布局。
+
+`VirtualListExposed` 只公开已有真实职责：只读 `nativeElement`（holder）、只读 `containerElement`（outer）、`getScrollInfo()`、`scrollTo()`。`FillerExposed.getInnerHeight()` 保留。无实际消费的 lastDiff 诊断 state/watch/expose 已删除；`findListDiffIndex` 纯算法和其有效测试保留。
+
+`scrollTo` 保留数字、坐标 `{left?,top?}`、项 `{index?|key?,align?:'top'|'bottom',offset?:number|算法}` 和 null/undefined 形状及原坐标优先规则。后一个请求使前一个未完成迭代失效；按 key 的迭代每轮核对当前数据位置。卸载不继续测量、滚动或告警，最大迭代仍有明确上限。数据截短、视口/模式和横向尺寸变化同步真实接受的滚动状态；横向上限读取 holder.clientWidth，不把边框或滚动条算进视口。getSize 的前缀工厂也随原地数据/key 序列更新失效；不拦截浏览器滚轮/触摸/键盘，也不新增滚动模式。
+
+`useHeights` 在 Vue effect scope 内自动注销所有测量观察并作废微任务；在 scope 外按既有命令服务使用时，调用方通过 `setInstanceRef(item, null)` 配对释放注册。`cancelPending` 只取消挂起收集，不冒充完整资源释放。
+
+原生 attrs 单落点：`id / role / tabindex / aria-*` 与 key/focus/blur 监听交给真实 holder；class/style/data 及其他普通 attrs 留 outer，不复制同一 ID、ARIA 或事件。`innerProps` 独立指向 Filler 内层。`component` 继续支持字符串标签或真实单 HTMLElement 根的 Vue 组件，两个 ref getter 始终返回当前实际 DOM。消费者的 attrs/ARIA 引用随此桥接，Table、Listy、Select、Tree 的既有真实测量、聚焦与键盘能力沿用。
+
+本轮针对性验证包含原算法与核心场景、真实 h/SFC 正负例及 Chrome 的实际滚动/布局/身份/资源；没有重做整库九维、覆盖率或发布产物。原始失败、当前命令与边界单独保留，不以历史结果冒充本次通过。
+
+---
+
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
 # `virtual-list` 契约文档

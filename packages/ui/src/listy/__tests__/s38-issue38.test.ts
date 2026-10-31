@@ -48,21 +48,24 @@ const rootOf = (virtual: boolean, extra: Record<string, unknown> = {}) => {
 };
 
 describe('Listy · Issue #38 Virtual 分支的根 attrs 与 Raw 一致', () => {
-  it('[A] virtual keeps root identity/ARIA and puts tabindex on its actual holder', () => {
+  it('[A] virtual puts widget identity, ARIA and tabindex on its actual holder', () => {
     const { w, root } = rootOf(true);
-    expect(root.attributes('id')).toBe('the-id');
     expect(root.attributes('data-testid')).toBe('dt');
-    expect(root.attributes('aria-label')).toBe('al');
+    expect(root.attributes('id')).toBeUndefined();
+    expect(root.attributes('aria-label')).toBeUndefined();
     expect(root.attributes('tabindex')).toBeUndefined();
+    expect(w.get('.apollo-listy-holder').attributes('id')).toBe('the-id');
+    expect(w.get('.apollo-listy-holder').attributes('aria-label')).toBe('al');
     expect(w.get('.apollo-listy-holder').attributes('tabindex')).toBe('3');
     w.unmount();
   });
 
-  it('[B] 对拍：同一套 attrs 下 raw 与 virtual 的关键根属性一致', () => {
+  it('[B] raw and virtual expose the same native widget attributes at the actual holder', () => {
     const raw = rootOf(false);
     const virt = rootOf(true);
-    for (const key of ['id', 'data-testid', 'aria-label']) {
-      expect(virt.root.attributes(key)).toBe(raw.root.attributes(key));
+    expect(virt.root.attributes('data-testid')).toBe(raw.root.attributes('data-testid'));
+    for (const key of ['id', 'aria-label']) {
+      expect(virt.w.get('.apollo-listy-holder').attributes(key)).toBe(raw.root.attributes(key));
     }
     expect(virt.w.get('.apollo-listy-holder').attributes('tabindex')).toBe(
       raw.root.attributes('tabindex'),

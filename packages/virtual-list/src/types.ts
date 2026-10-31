@@ -5,7 +5,8 @@
  * DOM 类型只出现在组件层与 `useHeights`（`src/use-heights.ts`）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { Component, CSSProperties, HTMLAttributes, VNodeChild, VNodeProps } from 'vue';
+import type { ScrollArg } from './scroll-target';
 
 /** 项键。与 React 的 `React.Key` 对齐（`string | number`）。 */
 export type ItemKey = string | number;
@@ -68,14 +69,13 @@ export interface HeightsLookup {
   get(key: ItemKey): number | undefined;
 }
 
-/** 传给渲染函数的第三参。 */
-export interface RenderProps {
-  /** 上游只放 `width`（= `scrollWidth`，未设时是 `undefined`） */
-  style: Record<string, number | string | undefined>;
+/** Native item slot scope. Exactly one measurable HTMLElement root is required. */
+export interface VirtualListItemSlotProps<T> {
+  item: T;
+  index: number;
+  style: CSSProperties;
   offsetX: number;
 }
-
-export type RenderFunc<T> = (item: T, index: number, props: RenderProps) => VNodeChild;
 
 /** `extraRender` 的入参。与上游 `interface.d.ts` 的 `ExtraRenderInfo` 对齐。 */
 export interface ExtraRenderInfo {
@@ -99,4 +99,65 @@ export interface ExtraRenderInfo {
 export interface SizeInfo {
   width: number;
   height: number;
+}
+
+/** Field keys must resolve to stable item keys, without requiring an object index signature. */
+type KeyField<T, P extends keyof T> = P extends keyof T
+  ? T[P] extends ItemKey
+    ? P
+    : never
+  : never;
+export type VirtualListItemKey<T> = KeyField<T, keyof T> | GetKey<T>;
+export type VirtualListSlots<T = unknown> = {
+  default?: (scope: VirtualListItemSlotProps<T>) => VNodeChild;
+  extra?: (info: ExtraRenderInfo) => VNodeChild;
+};
+export interface VirtualListEmits<T = unknown> {
+  scroll: [event: Event];
+  virtualScroll: [info: ScrollInfo];
+  visibleChange: [visibleList: T[], fullList: T[]];
+}
+export type VirtualListInnerProps = HTMLAttributes & VNodeProps & Record<string, unknown>;
+export type VirtualListProps<T = unknown> = {
+  prefixCls?: string | undefined;
+  data?: T[] | undefined;
+  height?: number | undefined;
+  itemHeight?: number | undefined;
+  itemKey: VirtualListItemKey<T>;
+  fullHeight?: boolean | undefined;
+  virtual?: boolean | undefined;
+  direction?: 'ltr' | 'rtl' | undefined;
+  scrollWidth?: number | undefined;
+  innerProps?: VirtualListInnerProps | undefined;
+  component?: string | Component | undefined;
+  onScroll?: ((event: Event) => void) | undefined;
+  onVirtualScroll?: ((info: ScrollInfo) => void) | undefined;
+  onVisibleChange?: ((visibleList: T[], fullList: T[]) => void) | undefined;
+};
+export type ScrollTo = (arg?: ScrollArg) => void;
+export interface VirtualListExposed {
+  readonly nativeElement: HTMLElement | null;
+  readonly containerElement: HTMLElement | null;
+  getScrollInfo(): ScrollInfo;
+  scrollTo: ScrollTo;
+}
+
+export type FillerProps = {
+  prefixCls?: string | undefined;
+  height?: number | undefined;
+  offsetY?: number | undefined;
+  rtl?: boolean | undefined;
+  scrollWidth?: number | undefined;
+  innerProps?: VirtualListInnerProps | undefined;
+  onInnerResize?: (() => void) | undefined;
+};
+export type FillerSlots = {
+  default?: () => VNodeChild;
+  extra?: () => VNodeChild;
+};
+export interface FillerEmits {
+  innerResize: [];
+}
+export interface FillerExposed {
+  getInnerHeight(): number;
 }

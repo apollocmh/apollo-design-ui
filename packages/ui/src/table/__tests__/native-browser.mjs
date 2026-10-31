@@ -231,6 +231,41 @@ window.tableState={patch:kind=>fixture.value.patch(kind),scrollTo:config=>fixtur
   await page.evaluate(() => window.tableState.patch('virtual'));
   const holder = engine.locator('.apollo-table-tbody-virtual-holder');
   await holder.waitFor({ state: 'visible' });
+  for (const direction of ['ltr', 'rtl']) {
+    if (direction === 'rtl') await page.evaluate(() => window.tableState.patch('direction'));
+    await page.waitForFunction(
+      (expected) =>
+        getComputedStyle(document.querySelector('.apollo-table-tbody-virtual-holder')).direction ===
+        expected,
+      direction,
+    );
+    const sign = direction === 'rtl' ? -1 : 1;
+    const horizontal = await holder.evaluate((element, scrollSign) => {
+      element.scrollLeft = 0;
+      element.dispatchEvent(new Event('scroll'));
+      const row = element.querySelector('[data-row-key]');
+      const before = row.getBoundingClientRect().left;
+      element.scrollLeft = scrollSign * 100;
+      element.dispatchEvent(new Event('scroll'));
+      return {
+        scrollLeft: element.scrollLeft,
+        delta: row.getBoundingClientRect().left - before,
+        viewport: element.clientWidth,
+        content: element.scrollWidth,
+      };
+    }, sign);
+    assert.ok(
+      horizontal.content > horizontal.viewport,
+      `${direction} has native horizontal overflow`,
+    );
+    assert.equal(
+      horizontal.scrollLeft,
+      sign * 100,
+      `${direction} keeps the requested native scroll`,
+    );
+    assert.equal(horizontal.delta, -sign * 100, `${direction} moves the actual virtual row`);
+  }
+  await page.evaluate(() => window.tableState.patch('direction'));
   await holder.evaluate((element) => {
     element.scrollTop = 160;
     element.dispatchEvent(new Event('scroll'));

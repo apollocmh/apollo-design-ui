@@ -67,7 +67,6 @@ export interface BaseSelectContextValue {
   searchValue: string;
   activeValue?: string | null;
   activeDescendantId?: string;
-  showScrollBar: boolean | 'optional';
   /** 关闭动画期间锁住列表（rc 的 `lockOptions`）。 */
   lockOptions: boolean;
   notFoundContent?: unknown;

@@ -609,7 +609,6 @@ export const BaseSelect = defineComponent({
         searchValue: mergedSearchValue.value,
         activeValue: props.activeValue,
         activeDescendantId: props.activeDescendantId,
-        showScrollBar: 'optional',
         lockOptions: lock.value,
         notFoundContent: props.notFoundContent,
         placeholder: props.placeholder,
