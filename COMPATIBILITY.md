@@ -246,3 +246,7 @@ Splitter 的 resizeStart/resize/resizeEnd/collapse/draggerDoubleClick 统一由 
 ### D-modal-native-content-and-sessions
 
 普通 Modal 的 ok/cancel/afterClose/afterOpenChange 改由 Vue emits 拥有，取消/关闭支持 open 模型请求，OK 保留业务通知职责。modalRender/footer 内容函数迁为 #modalRender={ModalPanel}、#footer={OkBtn,CancelBtn}，提供稳定可直接使用的组件；命令式确认的异步操作与程序内容配置保留。useModal 仍返回 [api,holderVNode]，结果以 ModalHookInstance 准确描述 PromiseLike<boolean>，修正早期调用、会话结算/注销、关闭后更新及当前 confirmLoading。删除从未生效的普通 focusTrap 和命令式 open 声明，分别使用 focusable.trap、destroy()；补齐实际 Portal 容器、当前配置/六 Token、原生 attrs、焦点与资源，详见[Modal API](packages/ui/src/modal/index.zh-CN.md)。
+
+### D-slider-native-handles-and-proposals
+
+Slider 的 handle/activeHandle 槽准确公开实际 nodeProps/ref/事件及当前 index/value，ColorPicker 使用同一类型。value 支持已有 null 输入，通知仍返回 number/number[]；beforeChange 统一为有效交互的首个提议，changeComplete 使用该会话最后提议，拒绝更新不改变已接受状态，无变更或取消不伪报完成。原生 tabindex/ARIA 落实际把手，键盘取消、拖拽/触摸及卸载资源、当前十八 Token 和范围 Tooltip 同步修正；删除 Tooltip 未消费的开关回调及内部 value/draggingDelete 声明，已有 open/formatter 保留，详见[Slider API](packages/ui/src/slider/index.zh-CN.md)。

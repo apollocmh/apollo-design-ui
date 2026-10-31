@@ -20,56 +20,45 @@ import Slider from '../Slider.vue';
 
 /** 与基线脚本同构的构造表（不传 prefixCls ⇒ 兜底 `apollo-slider`）。 */
 const CASES: Record<string, () => DomRenderResult> = {
-  'slider:basic': () => h(Slider as never, { defaultValue: 30 } as never),
-  'slider:min-max': () => h(Slider as never, { min: 10, max: 200, defaultValue: 100 } as never),
-  'slider:step-null': () =>
-    h(Slider as never, { step: null, defaultValue: 30, marks: { 0: 'a', 50: 'b' } } as never),
-  'slider:range': () => h(Slider as never, { range: true, defaultValue: [20, 60] } as never),
+  'slider:basic': () => h(Slider, { defaultValue: 30 }),
+  'slider:min-max': () => h(Slider, { min: 10, max: 200, defaultValue: 100 }),
+  'slider:step-null': () => h(Slider, { step: null, defaultValue: 30, marks: { 0: 'a', 50: 'b' } }),
+  'slider:range': () => h(Slider, { range: true, defaultValue: [20, 60] }),
   'slider:range-editable': () =>
-    h(Slider as never, { range: { editable: true }, defaultValue: [10, 50, 90] } as never),
-  'slider:count': () =>
-    h(Slider as never, { range: true, count: 3, defaultValue: [10, 30] } as never),
+    h(Slider, { range: { editable: true }, defaultValue: [10, 50, 90] }),
+  'slider:count': () => h(Slider, { range: true, count: 3, defaultValue: [10, 30] }),
   'slider:marks': () =>
-    h(
-      Slider as never,
-      {
-        defaultValue: 30,
-        marks: {
-          0: '0°C',
-          26: '26°C',
-          100: { style: { color: 'rgb(245, 34, 45)' }, label: '100°C' },
-        },
-      } as never,
-    ),
-  'slider:dots': () => h(Slider as never, { defaultValue: 30, step: 10, dots: true } as never),
-  'slider:start-point': () => h(Slider as never, { defaultValue: 60, startPoint: 20 } as never),
-  'slider:included-false': () => h(Slider as never, { included: false, defaultValue: 70 } as never),
-  'slider:track-false': () => h(Slider as never, { track: false, defaultValue: 70 } as never),
-  'slider:vertical': () => h(Slider as never, { vertical: true, defaultValue: 40 } as never),
-  'slider:reverse': () => h(Slider as never, { reverse: true, defaultValue: 40 } as never),
-  'slider:disabled': () => h(Slider as never, { disabled: true, defaultValue: 30 } as never),
+    h(Slider, {
+      defaultValue: 30,
+      marks: {
+        0: '0°C',
+        26: '26°C',
+        100: { style: { color: 'rgb(245, 34, 45)' }, label: '100°C' },
+      },
+    }),
+  'slider:dots': () => h(Slider, { defaultValue: 30, step: 10, dots: true }),
+  'slider:start-point': () => h(Slider, { defaultValue: 60, startPoint: 20 }),
+  'slider:included-false': () => h(Slider, { included: false, defaultValue: 70 }),
+  'slider:track-false': () => h(Slider, { track: false, defaultValue: 70 }),
+  'slider:vertical': () => h(Slider, { vertical: true, defaultValue: 40 }),
+  'slider:reverse': () => h(Slider, { reverse: true, defaultValue: 40 }),
+  'slider:disabled': () => h(Slider, { disabled: true, defaultValue: 30 }),
   'slider:disabled-array': () =>
-    h(Slider as never, { range: true, defaultValue: [20, 60], disabled: [true, false] } as never),
+    h(Slider, { range: true, defaultValue: [20, 60], disabled: [true, false] }),
   'slider:aria': () =>
-    h(
-      Slider as never,
-      {
-        defaultValue: 30,
-        ariaLabelForHandle: '音量',
-        ariaRequired: true,
-        ariaValueTextFormatterForHandle: (v: number) => `${v} 分`,
-      } as never,
-    ),
+    h(Slider, {
+      defaultValue: 30,
+      ariaLabelForHandle: '音量',
+      ariaRequired: true,
+      ariaValueTextFormatterForHandle: (v: number) => `${v} 分`,
+    }),
   'slider:aria-array': () =>
-    h(
-      Slider as never,
-      {
-        range: true,
-        defaultValue: [20, 60],
-        ariaLabelForHandle: ['起', '止'],
-        tabIndex: [0, -1],
-      } as never,
-    ),
+    h(Slider, {
+      range: true,
+      defaultValue: [20, 60],
+      ariaLabelForHandle: ['起', '止'],
+      tabIndex: [0, -1],
+    }),
 };
 
 domContractTest('Slider', {

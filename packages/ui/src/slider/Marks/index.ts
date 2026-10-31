@@ -24,7 +24,10 @@ const Mark = defineComponent({
     prefixCls: { type: String, required: true },
     style: { type: Object as PropType<CSSProperties>, default: undefined },
     value: { type: Number, required: true },
-    label: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    label: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     onClick: {
       type: Function as PropType<(value: number) => void>,
       default: undefined,

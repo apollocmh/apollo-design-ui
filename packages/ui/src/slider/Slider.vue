@@ -1,39 +1,20 @@
 <script lang="ts">
-/**
- * Slider 主实现 —— antd 6.6.4 `es/slider/index.js`（薄壳 232 行）
- * + rc-slider@1.1.1 `es/Slider.js`（内核 453 行）的 Vue 等价物。
- *
- * 判据逐条见 `docs/analysis/slider.md`；文件分工见其 §1。
- *
- * ── 三层合一（与上游一致）──────────────────────────────────────────────────────
- *   ① 壳层（antd）：orientation/vertical 归一、useMergeSemantic、Tooltip 包装、
- *      RTL 下 reverse 取反、5 条 deprecated 告警、SliderInternalContext 注入；
- *   ② 状态机（rc）：rawValues 归一 / marks 归一 / disabled 两态 / formatValue + offsetValues /
- *      事件链（beforeChange → change → changeComplete）/ 点击改值 / 键盘推进 /
- *      dragging 与 `-lock` 类 / included 区间 / expose（focus|blur）/ SliderContext provide；
- *   ③ 表现层：`Handles` / `Tracks` / `Steps` / `Marks`（各自一个文件）。
- *
- * ⚠️ Vue 化差异（已登记 COMPATIBILITY）：
- *   - `value` + `onChange` → `v-model:value`（C11：`update:value` 与 `change` 同发）；
- *   - `handleRender` / `activeHandleRender` → **scoped slot**（`#handle` / `#activeHandle`；
- *     默认的 Tooltip 包装由内部 `#wrapper` 槽承担 —— 见 Handles/Handle.ts 判据 7）；
- *   - `flushSync` 无对应物（D74 判例：Vue 响应式同步即等价）；
- *   - Tooltip 用本仓实现（antd 用自己的 Tooltip）。
- */
-
-import { isNumber, isVNode, useControlledValue } from '@apollo-design/utils';
+/** Vue Slider: accepted values, native input sessions, explicit handle slots and scoped static theme values. */
+import { isEmptyVNode, isVNode, useControlledValue } from '@apollo-design/utils';
 import {
-  type CSSProperties,
   computed,
   defineComponent,
   h,
   inject,
-  onBeforeUnmount,
+  mergeProps,
+  nextTick,
   onMounted,
   type PropType,
   provide,
   ref,
+  type SlotsType,
   shallowRef,
+  type VNodeChild,
   watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -44,20 +25,21 @@ import {
   type NormalizedMark,
   type SliderContextValue,
   sliderContextKey,
-  type UnstableSliderContextValue,
   unstableSliderContextKey,
 } from './context';
-import Handles from './Handles/index';
-import { useDrag } from './hooks/use-drag';
+import Handles, { type HandlesRef } from './Handles/index';
+import { resolveDragValues, useDrag } from './hooks/use-drag';
 import { getClosestEnabledHandleIndex, useOffset } from './hooks/use-offset';
 import { useDisabled as useHandleDisabled, useRange } from './hooks/use-range';
 import type {
   SliderFormatter,
   SliderHandleInfo,
+  SliderMarkObject,
   SliderMarks,
   SliderProps,
   SliderSemanticClassNames,
   SliderSemanticStyles,
+  SliderSlots,
   SliderTooltipProps,
   SliderValue,
 } from './interface';
@@ -65,18 +47,20 @@ import Marks from './Marks/index';
 import SliderTooltip from './SliderTooltip';
 import Steps from './Steps/index';
 import Tracks from './Tracks/index';
+import { useSliderTheme } from './use-slider-theme';
 
-/** rc 逐字的默认格式化：数字 → 字符串，否则空串。 */
-function getTipFormatter(tipFormatter: SliderFormatter | undefined): SliderFormatter {
-  if (tipFormatter || tipFormatter === null) {
-    return tipFormatter;
-  }
-  return (val?: number) => (isNumber(val) ? val.toString() : '');
-}
+const isMarkObject = (value: unknown): value is SliderMarkObject =>
+  !!value &&
+  typeof value === 'object' &&
+  !Array.isArray(value) &&
+  !isVNode(value) &&
+  ('label' in value || 'style' in value);
+const defaultFormatter = (value?: number) => (value === undefined ? '' : String(value));
 
 export default defineComponent({
   name: 'ASlider',
   inheritAttrs: false,
+  expose: ['focus', 'blur'],
   props: {
     prefixCls: { type: String, default: undefined },
     id: { type: String, default: undefined },
@@ -99,7 +83,7 @@ export default defineComponent({
     },
     track: { type: Boolean, default: undefined },
     formatter: {
-      type: Function as unknown as PropType<SliderFormatter>,
+      type: [Function, null] as PropType<SliderFormatter>,
       default: undefined,
     },
     tooltip: { type: Object as PropType<SliderTooltipProps>, default: undefined },
@@ -130,8 +114,8 @@ export default defineComponent({
     railStyle: { type: Object as PropType<SliderProps['railStyle']>, default: undefined },
     // 值域
     range: { type: [Boolean, Object] as PropType<SliderProps['range']>, default: undefined },
-    value: { type: [Number, Array] as PropType<SliderValue>, default: undefined },
-    defaultValue: { type: [Number, Array] as PropType<SliderValue>, default: undefined },
+    value: { type: [Number, Array] as PropType<SliderProps['value']>, default: undefined },
+    defaultValue: { type: [Number, Array] as PropType<SliderProps['value']>, default: undefined },
     count: { type: Number, default: undefined },
     /** ⚠️ 内核参数（`step` 的 `null` 语义必须保住：`null` = 只按 marks 走）。 */
     step: { type: Number as PropType<number | null>, default: undefined },
@@ -146,222 +130,156 @@ export default defineComponent({
     beforeChange: (_value: SliderValue) => true,
     focus: (_event: FocusEvent, _index: number) => true,
     blur: (_event: FocusEvent, _index: number) => true,
+    keydown: (_event: KeyboardEvent, _index: number) => true,
+    keyup: (_event: KeyboardEvent, _index: number) => true,
   },
-  setup(props, { slots, attrs, emit, expose }) {
-    const context = useComponentConfig('slider');
-    const direction = useDirection();
-    const contextDisabled = useDisabled(props.disabled as boolean | undefined);
-
-    const contextSemantic = context as unknown as {
+  slots: Object as SlotsType<SliderSlots>,
+  setup(props, { slots, attrs, emit }) {
+    const context = useComponentConfig<{
+      className?: string;
+      style?: import('vue').CSSProperties;
       classNames?: SliderSemanticClassNames;
       styles?: SliderSemanticStyles;
-      className?: string;
-      style?: CSSProperties;
-      getPrefixCls: (suffix?: string, custom?: string) => string;
-      getPopupContainer?: (trigger: HTMLElement) => HTMLElement;
-    };
-
-    // ---- orientation 归一（判断链：orientation → vertical → direction）----
-    const orientationPair = useOrientation(
-      computed(() => props.orientation),
-      computed(() => props.vertical),
-      computed(() => undefined),
-    );
-    const mergedVertical = computed(() => orientationPair.value[1]);
-    // antd 逐字告警：`vertical` 已废弃、请用 `orientation`
-    watch(
-      () => props.vertical,
-      (vertical) => {
-        if (vertical !== undefined && import.meta.env?.DEV) {
-          console.warn(
-            '[apollo: Slider] `vertical` is deprecated, please use `orientation` instead.',
-          );
-        }
-      },
-      { immediate: true },
-    );
-
+    }>('slider');
+    const direction = useDirection();
+    const contextDisabled = useDisabled();
     const mergedDisabled = computed(() => props.disabled ?? contextDisabled.value);
-
-    // ---- 语义合并（antd：useMergeSemantic([context, props])）----
-    // ⚠️ 返回**对象**（`{classNames, styles}`），不是元组（empty/flex 同判）
-    // ⚠️ **必须显式传三个泛型**（同 `empty/Empty.vue` 的写法）：不传时 TS 会从这 6 个
-    //    混合形态的 source 反推 `CN`/`ST`，退化成带索引签名约束的默认类型
-    //    ⇒ `SliderSemanticStyles`（具体接口，无索引签名）不可赋值
-    //    （`vue-tsc --noEmit` 的 `lint:types` **看不到**这条，只有 vitest 的 typecheck
-    //     project 会以 "Unhandled Source Error" 报出来 ⇒ `pnpm run test:types` 恒红）。
-    const mergedSemantic = useMergeSemantic<
-      SliderProps,
-      SliderSemanticClassNames,
-      SliderSemanticStyles
-    >(
-      [computed(() => contextSemantic.classNames), computed(() => props.classNames)],
-      [
-        computed(() => contextSemantic.styles),
-        computed(() => semanticRootStyle(contextSemantic.style)),
-        computed(() => props.styles),
-      ],
+    const orientation = useOrientation(
+      () => props.orientation,
+      () => props.vertical,
+      () => undefined,
+    );
+    const vertical = computed(() => orientation.value[1]);
+    const isRTL = computed(() => direction.value === 'rtl');
+    const prefixCls = computed(() => context.getPrefixCls('slider', props.prefixCls));
+    const themeStyle = useSliderTheme(() => prefixCls.value);
+    const semantic = useMergeSemantic<SliderProps, SliderSemanticClassNames, SliderSemanticStyles>(
+      [() => context.classNames, () => props.classNames],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
       props,
     );
-    const mergedClassNames = mergedSemantic.classNames;
-    const mergedStyles = mergedSemantic.styles;
-
-    const prefixCls = computed(() => contextSemantic.getPrefixCls('slider', props.prefixCls));
-    const isRTL = computed(() => (direction.value ?? 'ltr') === 'rtl');
-
-    // ---- 值（`useControlledValue` = rc 的 useControlledState）----
-    const [mergedValue, setValue] = useControlledValue<SliderValue | undefined>({
-      defaultValue: props.defaultValue,
+    const { rangeEnabled, rangeEditable, rangeDraggableTrack, minCount, maxCount } = useRange(
+      () => props.range,
+    );
+    const min = computed(() =>
+      typeof props.min === 'number' && Number.isFinite(props.min) ? props.min : 0,
+    );
+    const max = computed(() =>
+      typeof props.max === 'number' && Number.isFinite(props.max) ? props.max : 100,
+    );
+    const step = computed(() =>
+      props.step === null
+        ? null
+        : typeof props.step === 'number' && Number.isFinite(props.step) && props.step > 0
+          ? props.step
+          : 1,
+    );
+    const push = computed(() =>
+      typeof props.pushable === 'number'
+        ? props.pushable >= 0
+          ? props.pushable
+          : false
+        : props.pushable
+          ? (step.value ?? false)
+          : false,
+    );
+    const markList = computed<NormalizedMark[]>(() =>
+      Object.entries(props.marks ?? {})
+        .flatMap(([key, item]) => {
+          const value = Number(key);
+          if (!Number.isFinite(value) || value < min.value || value > max.value) return [];
+          const mark = isMarkObject(item)
+            ? { value, label: item.label, style: item.style }
+            : { value, label: item };
+          return isEmptyVNode(mark.label) ? [] : [mark];
+        })
+        .sort((a, b) => a.value - b.value),
+    );
+    const [value, setValue] = useControlledValue<SliderValue | null | undefined>({
+      defaultValue: () => props.defaultValue,
       getValue: () => props.value,
     });
-
-    // ---- range 五开关 ----
-    const { rangeEnabled, rangeEditable, rangeDraggableTrack, minCount, maxCount } = useRange(
-      computed(() => props.range),
-    );
-
-    const mergedMin = computed(() => (Number.isFinite(props.min) ? (props.min as number) : 0));
-    const mergedMax = computed(() => (Number.isFinite(props.max) ? (props.max as number) : 100));
-
-    const mergedStep = computed<number | null>(() => {
-      const step = props.step;
-      if (step === undefined) return 1;
-      if (step === null) return null;
-      return step <= 0 ? 1 : step;
-    });
-
-    /** `pushable` 归一：`true` ⇒ `step`；数字 ⇒ 自身；`false` ⇒ `false`（⚠️ `step === null` 时 `true` 退化成 false）。 */
-    const mergedPush = computed<number | boolean | null>(() => {
-      const pushable = props.pushable;
-      if (pushable === undefined || typeof pushable === 'boolean') {
-        return pushable ? (mergedStep.value ?? false) : false;
-      }
-      return pushable >= 0 ? pushable : false;
-    });
-
-    // ---- marks 归一：过滤（label 为 falsy 且非 number）+ 升序 ----
-    const markList = computed<NormalizedMark[]>(() => {
-      const record = props.marks ?? {};
-      return Object.keys(record)
-        .map((key) => {
-          const mark = record[key] as unknown;
-          const value = Number(key);
-          if (mark && typeof mark === 'object' && !isVNode(mark as never)) {
-            const obj = mark as { label?: unknown; style?: NormalizedMark['style'] };
-            if ('label' in obj || 'style' in obj) {
-              return { value, style: obj.style, label: obj.label as never };
-            }
-          }
-          return { value, label: mark as never };
-        })
-        .filter(({ label }) => label || typeof label === 'number')
-        .sort((a, b) => a.value - b.value);
-    });
-
-    // ---- disabled 两态 ----
     const { isHandleDisabled, getDisabledState } = useHandleDisabled(mergedDisabled);
-    const disabledState = computed(() => getDisabledState(rawValuesOf()));
-    const disabled = computed(() => disabledState.value[0]);
-    const hasDisabledHandle = computed(() => disabledState.value[1]);
-    /** `editable` 的前提是「没有任何禁用把手」。 */
-    const effectiveRangeEditable = computed(() => rangeEditable.value && !hasDisabledHandle.value);
-
-    // ---- 几何与量化 ----
     const { formatValue, offsetValues } = useOffset({
-      min: mergedMin,
-      max: mergedMax,
-      step: mergedStep,
+      min,
+      max,
+      step,
       markList,
-      allowCross: computed(() => props.allowCross ?? true),
-      pushable: mergedPush,
+      allowCross: () => props.allowCross ?? true,
+      pushable: push,
       isHandleDisabled,
     });
-
-    /** 值归一（rc 的 `rawValues`）：`null` ⇒ 空、range 补齐、逐值量化。 */
-    function rawValuesOf(): number[] {
-      const mv = mergedValue.value;
-      const valueList = mv === null || mv === undefined ? [] : Array.isArray(mv) ? mv : [mv];
-      const val0 = valueList[0] ?? mergedMin.value;
-      let returnValues: number[] = mv === null ? [] : [val0];
-
-      if (rangeEnabled.value) {
-        returnValues = [...valueList];
-        if (props.count !== undefined || mv === undefined) {
-          const pointCount = props.count !== undefined && props.count >= 0 ? props.count + 1 : 2;
-          returnValues = returnValues.slice(0, pointCount);
-          while (returnValues.length < pointCount) {
-            returnValues.push(returnValues[returnValues.length - 1] ?? mergedMin.value);
-          }
-        }
-        returnValues.sort((a, b) => a - b);
+    const rawValues = computed(() => {
+      const current = value.value;
+      if (current === null) return [];
+      const list = current === undefined ? [] : Array.isArray(current) ? [...current] : [current];
+      if (!rangeEnabled.value) return [formatValue(list[0] ?? min.value)];
+      if (props.count !== undefined || current === undefined) {
+        const count = props.count !== undefined && props.count >= 0 ? props.count + 1 : 2;
+        list.splice(count);
+        while (list.length < count) list.push(list[list.length - 1] ?? min.value);
       }
-      return returnValues.map((val) => formatValue(val));
-    }
-    const rawValues = computed<number[]>(() => rawValuesOf());
-
-    // ---- 事件链：beforeChange（调用方显式发）→ change/update:value → changeComplete ----
-    const getTriggerValue = (values: number[]): SliderValue =>
-      rangeEnabled.value ? values : (values[0] ?? mergedMin.value);
-
-    const triggerChange = (nextValues: number[]): void => {
-      const cloneNextValues = [...nextValues].sort((a, b) => a - b);
-      const current = rawValues.value;
-      const same =
-        cloneNextValues.length === current.length &&
-        cloneNextValues.every((val, index) => val === current[index]);
-      if (!same) {
-        const next = getTriggerValue(cloneNextValues);
-        emit('update:value', next);
-        emit('change', next);
-      }
-      setValue(cloneNextValues);
+      return list.sort((a, b) => a - b).map(formatValue);
+    });
+    const disabledState = computed(() => getDisabledState(rawValues.value));
+    const disabled = computed(() => disabledState.value[0]);
+    const editable = computed(() => rangeEditable.value && !disabledState.value[1]);
+    const sliderDirection = computed(() => {
+      const reversed = isRTL.value && !vertical.value ? !props.reverse : props.reverse;
+      return vertical.value ? (reversed ? 'ttb' : 'btt') : reversed ? 'rtl' : 'ltr';
+    });
+    const containerRef = ref<HTMLElement | null>(null);
+    const handlesRef = shallowRef<HandlesRef | null>(null);
+    const unstable = inject(unstableSliderContextKey, undefined);
+    const toValue = (values: number[]): SliderValue =>
+      rangeEnabled.value ? [...values] : (values[0] ?? min.value);
+    let session: 'drag' | 'keyboard' | null = null;
+    let lastProposal: number[] | undefined;
+    const resetSession = () => {
+      session = null;
+      lastProposal = undefined;
     };
-
-    const finishChange = (draggingDeleteFlag: boolean): void => {
-      if (draggingDeleteFlag) {
-        handlesRef.value?.hideHelp?.();
-      }
-      emit('changeComplete', getTriggerValue(rawValues.value));
+    const triggerChange = (nextValues: number[]) => {
+      const next = [...nextValues].sort((a, b) => a - b);
+      const previous = lastProposal ?? rawValues.value;
+      if (next.length === previous.length && next.every((item, index) => item === previous[index]))
+        return;
+      if (!lastProposal) emit('beforeChange', toValue(next));
+      lastProposal = [...next];
+      setValue(toValue(next));
+      const request = toValue(next);
+      emit('update:value', request);
+      emit('change', request);
     };
-
-    // ---- tooltip 三态 open ----
+    const finishChange = (deleting: boolean) => {
+      const next = lastProposal;
+      const wasDrag = session === 'drag';
+      resetSession();
+      if (deleting) handlesRef.value?.hideHelp();
+      if (next) emit('changeComplete', toValue(next));
+      if (wasDrag) {
+        const originalIndex = draggingIndex.value;
+        const dragged = draggingValue.value;
+        void nextTick(() => {
+          const root = containerRef.value;
+          if (!root) return;
+          const active = root.ownerDocument.activeElement;
+          if (active !== root.ownerDocument.body && active && !root.contains(active)) return;
+          const matching = dragged === null ? -1 : rawValues.value.lastIndexOf(dragged);
+          handlesRef.value?.focus(
+            matching >= 0
+              ? matching
+              : Math.max(0, Math.min(originalIndex, rawValues.value.length - 1)),
+          );
+        });
+      }
+    };
     const hoverOpen = ref(false);
     const focusOpen = ref(false);
-    const tooltipProps = computed<SliderTooltipProps>(() => ({ ...(props.tooltip ?? {}) }));
-    const lockOpen = computed(() => tooltipProps.value.open);
-    const activeOpen = computed(
-      () => (hoverOpen.value || focusOpen.value) && lockOpen.value !== false,
-    );
-    const mergedTipFormatter = computed(() => getTipFormatter(props.formatter));
-
-    // 文档级 mouseup：延迟 1 帧关掉 focusOpen（点一下即隐藏 tooltip）
-    const onDocumentMouseUp = (): void => {
-      requestAnimationFrame(() => {
-        focusOpen.value = false;
-      });
-    };
-    onMounted(() => document.addEventListener('mouseup', onDocumentMouseUp));
-    onBeforeUnmount(() => document.removeEventListener('mouseup', onDocumentMouseUp));
-
-    // ---- 拖拽 ----
-    const containerRef = ref<HTMLElement | null>(null);
-    const handlesRef = shallowRef<{
-      focus?: (index: number) => void;
-      hideHelp?: () => void;
-    } | null>(null);
-    const unstable = inject(unstableSliderContextKey, undefined) as
-      | UnstableSliderContextValue
-      | undefined;
-
-    const sliderDirection = computed<'ltr' | 'rtl' | 'ttb' | 'btt'>(() => {
-      const reverse = isRTL.value && !mergedVertical.value ? !props.reverse : props.reverse;
-      if (mergedVertical.value) return reverse ? 'ttb' : 'btt';
-      return reverse ? 'rtl' : 'ltr';
-    });
-
     const {
+      dragging,
       draggingIndex,
-      draggingValue: draggingValueRef,
+      draggingValue,
       draggingDelete,
       cacheValues,
       onStartMove,
@@ -370,344 +288,333 @@ export default defineComponent({
       containerRef,
       direction: sliderDirection,
       rawValues,
-      min: mergedMin,
-      max: mergedMax,
+      min,
+      max,
       formatValue,
       triggerChange,
       finishChange,
       offsetValues,
-      editable: effectiveRangeEditable,
+      editable,
       minCount,
       isHandleDisabled,
-      onDragStart: (info) => unstable?.onDragStart?.(info),
+      onCancel: resetSession,
+      onDragStart: (info) => {
+        session = 'drag';
+        focusOpen.value = true;
+        unstable?.onDragStart?.(info);
+      },
       onDragChange: (info) => unstable?.onDragChange?.(info),
     });
-
-    /**
-     * 渲染用的值：拖拽期间用 `cacheValues`，但**必须**满足 rc 的差异判据
-     * （多重集差异 ≤ `editable ? 1 : 0`），否则回落到 `rawValues`。
-     */
-    const renderValues = computed<number[]>(() => {
-      if (draggingIndex.value === -1) return rawValues.value;
-      const counts: Record<number, number> = {};
-      cacheValues.value.forEach((val) => {
-        counts[val] = (counts[val] || 0) + 1;
-      });
-      rawValues.value.forEach((val) => {
-        counts[val] = (counts[val] || 0) - 1;
-      });
-      const diffCount = Object.values(counts).reduce((prev, next) => prev + Math.abs(next), 0);
-      return diffCount <= (effectiveRangeEditable.value ? 1 : 0)
-        ? cacheValues.value
-        : rawValues.value;
-    });
-
-    // ---- included 区间（Track / Dot / Mark 的「激活」判据）----
-    const sortedRenderValues = computed(() => [...renderValues.value].sort((a, b) => a - b));
-    const includedStart = computed(() =>
-      rangeEnabled.value ? (sortedRenderValues.value[0] ?? mergedMin.value) : mergedMin.value,
+    const renderValues = computed(() =>
+      !dragging.value
+        ? rawValues.value
+        : resolveDragValues(rawValues.value, cacheValues.value, editable.value),
     );
-    const includedEnd = computed(() => {
-      if (rangeEnabled.value) {
-        return sortedRenderValues.value[sortedRenderValues.value.length - 1] ?? mergedMax.value;
-      }
-      return sortedRenderValues.value[0] ?? mergedMin.value;
-    });
-
-    // ---- 点击/按键改值 ----
-    const changeToCloseValue = (newValue: number, e?: MouseEvent | TouchEvent): void => {
+    const sortedValues = computed(() => [...renderValues.value].sort((a, b) => a - b));
+    const draggableTrack = computed(() => rangeDraggableTrack.value && step.value !== null);
+    // Structural/configuration changes invalidate geometry and input ownership, not accepted model updates.
+    watch(
+      [
+        rangeEnabled,
+        editable,
+        rangeDraggableTrack,
+        minCount,
+        maxCount,
+        min,
+        max,
+        step,
+        sliderDirection,
+        () => props.count,
+        () =>
+          Array.isArray(mergedDisabled.value)
+            ? mergedDisabled.value.join(',')
+            : mergedDisabled.value,
+        () => markList.value.map((mark) => mark.value).join(','),
+      ],
+      () => {
+        cancelDrag();
+        handlesRef.value?.hideHelp();
+      },
+      { flush: 'sync' },
+    );
+    watch(
+      () => [
+        props.vertical,
+        props.trackStyle,
+        props.handleStyle,
+        props.railStyle,
+        props.count,
+        rangeDraggableTrack.value,
+        step.value,
+      ],
+      () => {
+        if (!import.meta.env?.DEV) return;
+        if (props.vertical !== undefined)
+          console.warn(
+            '[apollo: Slider] `vertical` is deprecated, please use `orientation` instead.',
+          );
+        if (rangeDraggableTrack.value && step.value === null)
+          console.warn('[apollo: Slider] `draggableTrack` is not supported when `step` is `null`.');
+      },
+      { immediate: true },
+    );
+    const changeToCloseValue = (requested: number, event?: MouseEvent | TouchEvent) => {
       if (disabled.value) return;
-      const currentValues = rawValues.value;
-      const valueIndex = currentValues.length
+      const values = rawValues.value;
+      if (
+        editable.value &&
+        values.length === 0 &&
+        maxCount.value !== undefined &&
+        maxCount.value <= 0
+      )
+        return;
+      const index = values.length
         ? getClosestEnabledHandleIndex(
-            currentValues,
-            newValue,
-            mergedMin.value,
-            mergedMax.value,
-            mergedPush.value,
+            values,
+            requested,
+            min.value,
+            max.value,
+            push.value,
             isHandleDisabled,
           )
         : 0;
-      if (valueIndex === -1) return;
-
-      const cloneNextValues = [...currentValues];
-      let valueBeforeIndex = 0;
-      const valueDist = currentValues.length
-        ? Math.abs(newValue - (currentValues[valueIndex] ?? mergedMin.value))
-        : mergedMax.value - mergedMin.value;
-      currentValues.forEach((val, index) => {
-        if (val < newValue) valueBeforeIndex = index;
-      });
-      let focusIndex = valueIndex;
+      if (index < 0) return;
+      const next = [...values];
+      let target = index;
+      const distance = values.length
+        ? Math.abs(requested - (values[index] ?? min.value))
+        : max.value - min.value;
       if (
-        effectiveRangeEditable.value &&
-        valueDist !== 0 &&
-        (!maxCount.value || currentValues.length < maxCount.value)
+        editable.value &&
+        distance !== 0 &&
+        (maxCount.value === undefined || values.length < maxCount.value)
       ) {
-        cloneNextValues.splice(valueBeforeIndex + 1, 0, newValue);
-        focusIndex = valueBeforeIndex + 1;
+        target = values.findIndex((value) => value > requested);
+        if (target < 0) target = values.length;
+        next.splice(target, 0, requested);
+      } else next[index] = requested;
+      if (rangeEnabled.value && !values.length && props.count === undefined && !editable.value)
+        next.push(requested);
+      if (event) {
+        onStartMove(event, target, next);
+        triggerChange(next);
+        void nextTick(() => handlesRef.value?.focus(target));
       } else {
-        cloneNextValues[valueIndex] = newValue;
-        focusIndex = valueIndex;
-      }
-      if (rangeEnabled.value && !currentValues.length && props.count === undefined) {
-        cloneNextValues.push(newValue);
-      }
-
-      const nextValue = getTriggerValue(cloneNextValues);
-      emit('beforeChange', nextValue);
-      triggerChange(cloneNextValues);
-      if (e) {
-        (document.activeElement as HTMLElement | null)?.blur?.();
-        handlesRef.value?.focus?.(focusIndex);
-        onStartMove(e, focusIndex, cloneNextValues);
-      } else {
-        // 键盘点击 mark 的路径：不发 beforeChange，只 onChange + onChangeComplete
-        emit('changeComplete', nextValue);
+        cancelDrag();
+        triggerChange(next);
+        finishChange(false);
       }
     };
-
-    const onSliderMouseDown = (e: MouseEvent): void => {
-      e.preventDefault();
-      const rect = containerRef.value?.getBoundingClientRect();
-      if (!rect) return;
-      const { width, height, left, top, bottom, right } = rect;
-      let percent: number;
-      switch (sliderDirection.value) {
-        case 'btt':
-          percent = (bottom - e.clientY) / height;
-          break;
-        case 'ttb':
-          percent = (e.clientY - top) / height;
-          break;
-        case 'rtl':
-          percent = (right - e.clientX) / width;
-          break;
-        default:
-          percent = (e.clientX - left) / width;
-      }
-      const nextValue = mergedMin.value + percent * (mergedMax.value - mergedMin.value);
-      changeToCloseValue(formatValue(nextValue), e);
-    };
-
-    /** 键盘推进（方向键/Home/End/PageUp/Down）—— 走 `offsetValues` 的 `unit` 模式。 */
-    const keyboardFocus = shallowRef<{ value: number; index: number } | null>(null);
-    const onHandleOffsetChange = (offset: number | 'min' | 'max', valueIndex: number): void => {
-      if (disabled.value || isHandleDisabled(valueIndex)) return;
-      const next = offsetValues(rawValues.value, offset, valueIndex);
-      emit('beforeChange', getTriggerValue(rawValues.value));
-      triggerChange(next.values);
-      keyboardFocus.value = { value: next.value, index: valueIndex };
-    };
-    watch(keyboardFocus, (kv) => {
-      if (kv) {
-        const valueIndex =
-          rawValues.value[kv.index] === kv.value ? kv.index : rawValues.value.indexOf(kv.value);
-        if (valueIndex >= 0) handlesRef.value?.focus?.(valueIndex);
-      }
-      keyboardFocus.value = null;
-    });
-
-    // ⚠️ 拖拽结束把焦点交给「被拖的那个把手」（rc 在 `useEffect(…, [dragging])` 里做这件事）：
-    //    少这一步的后果是「拖完指针在把手 A 上、焦点却在别处」，键盘接着按时改的是另一个把手。
-    watch(draggingIndex, (index, prev) => {
-      if (index === -1 && prev !== -1) {
-        const valueIndex = rawValues.value.lastIndexOf(draggingValueRef.value ?? Number.NaN);
-        handlesRef.value?.focus?.(valueIndex);
-      }
-    });
-
-    /** 拖拽删除（`range.editable` + `minCount` 下限）。 */
-    const onDelete = (index: number): void => {
+    const onRootStart = (event: MouseEvent | TouchEvent) => {
       if (
         disabled.value ||
-        !effectiveRangeEditable.value ||
-        rawValues.value.length <= minCount.value
-      ) {
+        event.defaultPrevented ||
+        (!('targetTouches' in event) && event.button !== 0)
+      )
         return;
-      }
-      const cloneNextValues = [...rawValues.value];
-      cloneNextValues.splice(index, 1);
-      emit('beforeChange', getTriggerValue(cloneNextValues));
-      triggerChange(cloneNextValues);
-      handlesRef.value?.hideHelp?.();
-      handlesRef.value?.focus?.(Math.max(0, index - 1));
-    };
-
-    /** 整轨拖拽（`draggableTrack`；`step === null` 时禁用并告警）。 */
-    const mergedDraggableTrack = computed(() => {
-      if (rangeDraggableTrack.value && mergedStep.value === null) {
-        if (import.meta.env?.DEV) {
-          console.warn('[apollo: Slider] `draggableTrack` is not supported when `step` is `null`.');
-        }
-        return false;
-      }
-      return rangeDraggableTrack.value;
-    });
-
-    /** range 且未锁定 open ⇒ 用「活动把手替身」挂唯一的 tooltip。 */
-    const useActiveTooltipHandle = computed(() => rangeEnabled.value && !lockOpen.value);
-
-    // ---- 上下文（Proxy 桥：读时取最新值，等价 rc 的「每次渲染重建对象」）----
-    const sliderContextValue: SliderContextValue = new Proxy({} as SliderContextValue, {
-      get(_t, key) {
-        const next: SliderContextValue = {
-          min: mergedMin.value,
-          max: mergedMax.value,
-          direction: sliderDirection.value,
-          disabled: disabled.value,
-          keyboard: props.keyboard ?? true,
-          step: mergedStep.value,
-          included: props.included ?? true,
-          includedStart: includedStart.value,
-          includedEnd: includedEnd.value,
-          range: rangeEnabled.value,
-          tabIndex: props.tabIndex ?? 0,
-          ariaLabelForHandle: props.ariaLabelForHandle,
-          ariaLabelledByForHandle: props.ariaLabelledByForHandle,
-          ariaRequired: props.ariaRequired,
-          ariaValueTextFormatterForHandle: props.ariaValueTextFormatterForHandle,
-          styles: mergedStyles.value,
-          classNames: mergedClassNames.value,
-          isHandleDisabled,
-        };
-        return (next as unknown as Record<string | symbol, unknown>)[key];
-      },
-    });
-    provide(sliderContextKey, sliderContextValue);
-
-    // ---- expose（antd 的 SliderRef）----
-    expose({
-      focus: () => handlesRef.value?.focus?.(0),
-      blur: () => {
-        const activeElement = document.activeElement as HTMLElement | null;
-        if (containerRef.value?.contains(activeElement)) {
-          activeElement?.blur?.();
-        }
-      },
-    });
-
-    onMounted(() => {
-      if (props.autoFocus) handlesRef.value?.focus?.(0);
-    });
-    onBeforeUnmount(() => cancelDrag());
-
-    /** Tooltip 的位置：横向 `top`；纵向 `isRTL ? left : right`（antd 逐字）。 */
-    const tooltipPlacement = computed(() => {
-      if (tooltipProps.value.placement) return tooltipProps.value.placement;
-      if (!mergedVertical.value) return 'top';
-      return isRTL.value ? 'left' : 'right';
-    });
-
-    return () => {
-      const p = prefixCls.value;
-      const values = renderValues.value;
-
-      const handleNodes = h(
-        Handles,
-        {
-          ref: (node: unknown) => {
-            handlesRef.value = (node ?? null) as {
-              focus?: (index: number) => void;
-              hideHelp?: () => void;
-            } | null;
-          },
-          prefixCls: p,
-          style: props.handleStyle,
-          values,
-          draggingIndex: draggingIndex.value,
-          draggingDelete: draggingDelete.value,
-          onStartMove,
-          onOffsetChange: onHandleOffsetChange,
-          onChangeComplete: () => finishChange(false),
-          onDelete: effectiveRangeEditable.value ? onDelete : undefined,
-          onFocus: (e: FocusEvent, index: number) => {
-            focusOpen.value = true;
-            emit('focus', e, index);
-          },
-          onBlur: (e: FocusEvent, index: number) => {
-            focusOpen.value = false;
-            emit('blur', e, index);
-          },
-          onMouseEnterChange: () => {
-            hoverOpen.value = true;
-            if (useActiveTooltipHandle.value) focusOpen.value = true;
-          },
-          onMouseLeaveChange: () => {
-            hoverOpen.value = false;
-          },
-          onMouseDownChange: () => {
-            focusOpen.value = true;
-          },
-          hasActiveHandle: useActiveTooltipHandle.value,
-        },
-        {
-          // 自定义把手（rc 的 `handleRender` 的「节点替换」半边）
-          handle: slots.handle as never,
-          // 活动把手替身（rc 的 `activeHandleRender`）
-          activeHandle: slots.activeHandle as never,
-          // 默认包装：把每个把手包进 SliderTooltip（rc 的默认 handleRender 的「包装」半边）
-          wrapper: ({ node, value, index }: { node: unknown; value?: number; index: number }) => {
-            if (useActiveTooltipHandle.value) {
-              return node;
-            }
-            const open =
-              (!!lockOpen.value || activeOpen.value) && mergedTipFormatter.value !== null;
-            return h(
-              SliderTooltip as never,
-              {
-                key: index,
-                prefixCls: p,
-                tooltipProps: tooltipProps.value,
-                title:
-                  mergedTipFormatter.value && isNumber(value)
-                    ? mergedTipFormatter.value(value)
-                    : undefined,
-                open,
-                placement: tooltipPlacement.value,
-                getPopupContainer:
-                  tooltipProps.value.getPopupContainer ?? contextSemantic.getPopupContainer,
-              } as never,
-              { default: () => node as never },
-            );
-          },
-        } as never,
+      const rect = containerRef.value?.getBoundingClientRect();
+      if (!rect) return;
+      const point = 'targetTouches' in event ? event.targetTouches[0] : event;
+      if (!point) return;
+      const direction = sliderDirection.value;
+      const size = vertical.value ? rect.height : rect.width;
+      if (size <= 0) return;
+      const distance =
+        direction === 'btt'
+          ? rect.bottom - point.clientY
+          : direction === 'ttb'
+            ? point.clientY - rect.top
+            : direction === 'rtl'
+              ? rect.right - point.clientX
+              : point.clientX - rect.left;
+      cancelDrag();
+      changeToCloseValue(
+        formatValue(min.value + (distance / size) * (max.value - min.value)),
+        event,
       );
-
-      const rootClassName = [
-        // ⚠️ 基础类名必须在最前（rc：clsx(prefixCls, className, …)）
-        p,
-        // 调用方原生 class（位置与原先的 props.className 一致）
-        attrs.class,
-        contextSemantic.className,
-        mergedClassNames.value.root,
-        isRTL.value ? `${p}-rtl` : '',
-        draggingIndex.value !== -1 ? `${p}-lock` : '',
-        disabled.value ? `${p}-disabled` : '',
-        mergedVertical.value ? `${p}-vertical` : `${p}-horizontal`,
-        markList.value.length ? `${p}-with-marks` : '',
-      ]
-        .filter(Boolean)
-        .join(' ');
-
+      event.preventDefault();
+    };
+    const onOffsetChange = (offset: number | 'min' | 'max', index: number) => {
+      if (disabled.value || isHandleDisabled(index)) return;
+      if (session !== 'keyboard') {
+        cancelDrag();
+        session = 'keyboard';
+      }
+      const next = offsetValues(rawValues.value, offset, index);
+      triggerChange(next.values);
+      void nextTick(() => {
+        const matching =
+          rawValues.value[index] === next.value ? index : rawValues.value.indexOf(next.value);
+        handlesRef.value?.focus(matching < 0 ? index : matching);
+      });
+    };
+    const onDelete = (index: number) => {
+      if (disabled.value || !editable.value || rawValues.value.length <= minCount.value) return;
+      const next = [...rawValues.value];
+      next.splice(index, 1);
+      cancelDrag();
+      triggerChange(next);
+      finishChange(false);
+      handlesRef.value?.hideHelp();
+      void nextTick(() => handlesRef.value?.focus(Math.max(0, index - 1)));
+    };
+    const nativeTabIndex = () =>
+      typeof attrs.tabindex === 'number'
+        ? attrs.tabindex
+        : typeof attrs.tabindex === 'string'
+          ? Number(attrs.tabindex)
+          : 0;
+    const handleAttrs = () =>
+      Object.fromEntries(Object.entries(attrs).filter(([name]) => name.startsWith('aria-')));
+    provide(sliderContextKey, {
+      get min() {
+        return min.value;
+      },
+      get max() {
+        return max.value;
+      },
+      get direction() {
+        return sliderDirection.value;
+      },
+      get disabled() {
+        return disabled.value;
+      },
+      get keyboard() {
+        return props.keyboard ?? true;
+      },
+      get step() {
+        return step.value;
+      },
+      get included() {
+        return props.included ?? true;
+      },
+      get includedStart() {
+        return rangeEnabled.value ? (sortedValues.value[0] ?? min.value) : min.value;
+      },
+      get includedEnd() {
+        return sortedValues.value[sortedValues.value.length - 1] ?? min.value;
+      },
+      get range() {
+        return rangeEnabled.value;
+      },
+      get tabIndex() {
+        return props.tabIndex ?? nativeTabIndex();
+      },
+      get ariaLabelForHandle() {
+        return props.ariaLabelForHandle;
+      },
+      get ariaLabelledByForHandle() {
+        return props.ariaLabelledByForHandle;
+      },
+      get ariaRequired() {
+        return props.ariaRequired;
+      },
+      get ariaValueTextFormatterForHandle() {
+        return props.ariaValueTextFormatterForHandle;
+      },
+      get styles() {
+        return semantic.styles.value;
+      },
+      get classNames() {
+        return semantic.classNames.value;
+      },
+      get handleAttrs() {
+        return handleAttrs();
+      },
+      isHandleDisabled,
+      onKeydown: (event, index) => {
+        emit('keydown', event, index);
+        if (
+          session === 'keyboard' &&
+          (event.defaultPrevented || event.isComposing || event.keyCode === 229)
+        )
+          resetSession();
+      },
+      onKeyup: (event, index) => {
+        emit('keyup', event, index);
+        if (event.defaultPrevented || event.isComposing) resetSession();
+      },
+    } satisfies SliderContextValue);
+    const focus = (): void => {
+      const index = rawValues.value.findIndex((_, index) => !isHandleDisabled(index));
+      if (index >= 0) handlesRef.value?.focus(index);
+    };
+    const blur = (): void => {
+      const root = containerRef.value;
+      const active = root?.ownerDocument.activeElement;
+      if (active instanceof HTMLElement && root?.contains(active)) active.blur();
+    };
+    onMounted(() => {
+      if (props.autoFocus) focus();
+    });
+    const tooltip = computed(() => props.tooltip ?? {});
+    const formatter = computed(() =>
+      tooltip.value.formatter !== undefined
+        ? tooltip.value.formatter
+        : props.formatter !== undefined
+          ? props.formatter
+          : defaultFormatter,
+    );
+    const useActive = computed(() => rangeEnabled.value && tooltip.value.open !== true);
+    const tooltipPlacement = computed(
+      () => tooltip.value.placement ?? (vertical.value ? (isRTL.value ? 'left' : 'right') : 'top'),
+    );
+    const wrapTooltip = (info: SliderHandleInfo & { node: VNodeChild }, active: boolean) =>
+      h(
+        SliderTooltip,
+        {
+          key: info.index,
+          prefixCls: prefixCls.value,
+          tooltipProps: tooltip.value,
+          open:
+            (active || !useActive.value) &&
+            (tooltip.value.open === true ||
+              ((hoverOpen.value || focusOpen.value) && tooltip.value.open !== false)) &&
+            formatter.value !== null,
+          title: formatter.value?.(info.value),
+          placement: tooltipPlacement.value,
+          getPopupContainer: tooltip.value.getPopupContainer ?? tooltip.value.getTooltipContainer,
+        },
+        { default: () => info.node },
+      );
+    const renderSlider = () => {
+      const p = prefixCls.value;
+      const rootAttrs = Object.fromEntries(
+        Object.entries(attrs).filter(
+          ([name]) =>
+            !name.startsWith('aria-') &&
+            name !== 'tabindex' &&
+            name !== 'class' &&
+            name !== 'style',
+        ),
+      );
       return h(
         'div',
-        {
-          ...(attrs as Record<string, unknown>),
+        mergeProps(rootAttrs, {
           ref: containerRef,
-          class: rootClassName,
-          // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
-          style: {
-            ...mergedStyles.value.root,
-            ...((attrs.style as Record<string, string | number>) ?? {}),
-          },
           id: props.id,
-          onMousedown: onSliderMouseDown,
-        },
+          class: [
+            p,
+            attrs.class,
+            context.className,
+            semantic.classNames.value.root,
+            {
+              [`${p}-rtl`]: isRTL.value,
+              [`${p}-lock`]: dragging.value,
+              [`${p}-disabled`]: disabled.value,
+              [`${p}-vertical`]: vertical.value,
+              [`${p}-horizontal`]: !vertical.value,
+              [`${p}-with-marks`]: markList.value.length > 0,
+            },
+          ],
+          style: [themeStyle.value, semantic.styles.value.root, attrs.style],
+          onMousedown: onRootStart,
+          onTouchstart: onRootStart,
+        }),
         [
           h('div', {
-            class: [`${p}-rail`, mergedClassNames.value.rail].filter(Boolean).join(' '),
-            style: { ...props.railStyle, ...mergedStyles.value.rail },
+            class: [`${p}-rail`, semantic.classNames.value.rail],
+            style: [props.railStyle, semantic.styles.value.rail],
           }),
           props.track === false
             ? null
@@ -716,7 +623,7 @@ export default defineComponent({
                 style: props.trackStyle,
                 values: rawValues.value,
                 startPoint: props.startPoint,
-                onStartMove: mergedDraggableTrack.value ? onStartMove : undefined,
+                onStartMove: draggableTrack.value ? onStartMove : undefined,
               }),
           h(Steps, {
             prefixCls: p,
@@ -725,7 +632,56 @@ export default defineComponent({
             style: props.dotStyle,
             activeStyle: props.activeDotStyle,
           }),
-          handleNodes,
+          h(
+            Handles,
+            {
+              ref: handlesRef,
+              prefixCls: p,
+              style: props.handleStyle,
+              values: renderValues.value,
+              dragging: dragging.value,
+              draggingIndex: draggingIndex.value,
+              draggingDelete: draggingDelete.value,
+              hasActiveHandle:
+                useActive.value &&
+                tooltip.value.open !== false &&
+                formatter.value !== null &&
+                (hoverOpen.value || focusOpen.value || dragging.value),
+              onStartMove,
+              onOffsetChange,
+              onChangeComplete: () => {
+                if (session === 'keyboard') finishChange(false);
+              },
+              onDelete,
+              onFocus: (event, index) => {
+                focusOpen.value = true;
+                emit('focus', event, index);
+              },
+              onBlur: (event, index) => {
+                focusOpen.value = false;
+                emit('blur', event, index);
+                const root = containerRef.value;
+                if (
+                  session === 'keyboard' &&
+                  (!(event.relatedTarget instanceof Node) || !root?.contains(event.relatedTarget))
+                )
+                  finishChange(false);
+              },
+              onMouseenter: () => {
+                hoverOpen.value = true;
+              },
+              onMouseleave: () => {
+                hoverOpen.value = false;
+              },
+            },
+            {
+              handle: slots.handle,
+              activeHandle: slots.activeHandle,
+              wrapper: (info: SliderHandleInfo & { node: VNodeChild }) => wrapTooltip(info, false),
+              activeWrapper: (info: SliderHandleInfo & { node: VNodeChild }) =>
+                wrapTooltip(info, true),
+            },
+          ),
           h(Marks, {
             prefixCls: p,
             marks: markList.value,
@@ -734,6 +690,10 @@ export default defineComponent({
         ],
       );
     };
+    return { focus, blur, renderSlider };
+  },
+  render() {
+    return this.renderSlider();
   },
 });
 </script>

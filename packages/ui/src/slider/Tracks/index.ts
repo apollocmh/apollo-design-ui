@@ -93,7 +93,10 @@ export default defineComponent({
   name: 'ASliderTracks',
   props: {
     prefixCls: { type: String, required: true },
-    style: { type: Object as PropType<CSSProperties | CSSProperties[]>, default: undefined },
+    style: {
+      type: [Object, Array] as PropType<CSSProperties | CSSProperties[]>,
+      default: undefined,
+    },
     values: { type: Array as PropType<number[]>, required: true },
     startPoint: { type: Number, default: undefined },
     /** 可拖整轨（`range.draggableTrack` 且无禁用把手）。 */

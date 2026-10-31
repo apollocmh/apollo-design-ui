@@ -143,7 +143,7 @@ let tokenCache: ComponentToken | null = null;
  */
 export function sliderTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as SliderSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

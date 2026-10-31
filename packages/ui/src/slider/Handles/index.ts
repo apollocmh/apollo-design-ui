@@ -1,139 +1,141 @@
-/**
- * `Handles` —— rc-slider `Handles/index.js`（94 行）的 Vue 等价物。
- *
- * 职责：
- *   1. 逐个渲染 `Handle`（`values.map`），把 `dragging` / `draggingDelete` / `style[index]`
- *      以及**事件通道**传下去（含 antd 层要的 `onMouseEnterChange` / `onMouseLeaveChange` /
- *      `onMouseDownChange` / `onBlur` —— 它们驱动 tooltip 的三态 open）；
- *   2. 维护「活动把手」状态（`activeVisible` / `activeIndex`）：range 且未锁定 open 时，
- *      antd 会用一个**隐藏的替身把手**挂那唯一的 tooltip（`activeHandleRender`）；
- *   3. `expose({ focus(index), hideHelp() })` —— Slider 的键盘推进与拖拽结束都要用。
- *
- * ⚠️ 与上游的唯一差异：rc 的 `hideHelp` 用 `flushSync` 保证「同步隐藏」；Vue 的 patch 是异步的
- *    （`nextTick`）。本仓按既有判例（D74：`flushSync` 无对应物，Vue 响应式同步即等价）**不用 flushSync**，
- *    直接改 ref —— 影响面是「拖拽结束那一帧内，外部若立刻读 DOM 可能仍看到替身把手」，
- *    已在 COMPATIBILITY 登记。
- */
+/** Native handles retain their component references while the active decorative anchor follows focus/hover. */
+import {
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type ShallowRef,
+  type SlotsType,
+  shallowRef,
+  type VNodeChild,
+  watch,
+} from 'vue';
+import type { SliderHandleInfo } from '../interface';
+import Handle, { type HandleRef } from './Handle';
 
-import type { CSSProperties } from 'vue';
-import { computed, defineComponent, h, type PropType, ref, type VNode } from 'vue';
-import Handle from './Handle';
-
+export interface HandlesRef {
+  focus: (index: number) => void;
+  hideHelp: () => void;
+}
+type WrapperScope = SliderHandleInfo & { node: VNodeChild };
 export default defineComponent({
   name: 'ASliderHandles',
+  inheritAttrs: false,
+  expose: ['focus', 'hideHelp'],
   props: {
     prefixCls: { type: String, required: true },
-    style: { type: Object as PropType<CSSProperties | CSSProperties[]>, default: undefined },
+    style: {
+      type: [Object, Array] as PropType<
+        import('vue').CSSProperties | import('vue').CSSProperties[]
+      >,
+      default: undefined,
+    },
     values: { type: Array as PropType<number[]>, required: true },
     draggingIndex: { type: Number, default: -1 },
+    dragging: { type: Boolean, default: false },
     draggingDelete: { type: Boolean, default: false },
-    onStartMove: {
-      type: Function as PropType<(e: MouseEvent | TouchEvent, index: number) => void>,
-      default: undefined,
-    },
-    onOffsetChange: {
-      type: Function as PropType<(offset: number | 'min' | 'max', index: number) => void>,
-      default: undefined,
-    },
-    onChangeComplete: { type: Function as PropType<() => void>, default: undefined },
-    onDelete: { type: Function as PropType<(index: number) => void>, default: undefined },
-    onFocus: {
-      type: Function as PropType<(e: FocusEvent, index: number) => void>,
-      default: undefined,
-    },
-    onBlur: {
-      type: Function as PropType<(e: FocusEvent, index: number) => void>,
-      default: undefined,
-    },
-    /** antd 层：hover 开/关 tooltip。 */
-    onMouseEnterChange: { type: Function as PropType<() => void>, default: undefined },
-    onMouseLeaveChange: { type: Function as PropType<() => void>, default: undefined },
-    /** antd 层：按下把手（置 dragging + 开 tooltip）。 */
-    onMouseDownChange: { type: Function as PropType<() => void>, default: undefined },
-    /** 是否用「活动把手替身」（antd 层：`range && !lockOpen`）。 */
     hasActiveHandle: { type: Boolean, default: false },
   },
-  setup(props, { slots, expose }) {
-    const handleRefs = ref<Record<number, { focus?: () => void } | null>>({});
+  emits: {
+    startMove: (_event: MouseEvent | TouchEvent, _index: number) => true,
+    offsetChange: (_offset: number | 'min' | 'max', _index: number) => true,
+    changeComplete: () => true,
+    delete: (_index: number) => true,
+    focus: (_event: FocusEvent, _index: number) => true,
+    blur: (_event: FocusEvent, _index: number) => true,
+    mouseenter: () => true,
+    mouseleave: () => true,
+  },
+  slots: Object as SlotsType<{
+    handle?: (info: SliderHandleInfo) => VNodeChild;
+    activeHandle?: (info: SliderHandleInfo) => VNodeChild;
+    wrapper?: (info: WrapperScope) => VNodeChild;
+    activeWrapper?: (info: WrapperScope) => VNodeChild;
+  }>,
+  setup(props, { emit, slots }) {
+    const handleRefs = new Map<number, ShallowRef<HandleRef | null>>();
+    const reference = (index: number) => {
+      let current = handleRefs.get(index);
+      if (!current) {
+        current = shallowRef<HandleRef | null>(null);
+        handleRefs.set(index, current);
+      }
+      return current;
+    };
     const activeIndex = ref(-1);
     const activeVisible = ref(false);
-
-    const onHandleFocus = (e: FocusEvent, index: number): void => {
-      activeIndex.value = index;
-      activeVisible.value = true;
-      props.onFocus?.(e, index);
+    const focus = (index: number): void => {
+      handleRefs.get(index)?.value?.focus();
     };
-
-    const onHandleMouseEnter = (_e: MouseEvent, index: number): void => {
-      activeIndex.value = index;
-      activeVisible.value = true;
-      props.onMouseEnterChange?.();
+    const hideHelp = (): void => {
+      activeVisible.value = false;
     };
-
-    expose({
-      focus: (index: number) => handleRefs.value[index]?.focus?.(),
-      hideHelp: () => {
-        // 见文件头：不引入 flushSync（D74 判例），只改 ref
-        activeVisible.value = false;
+    watch(
+      () => props.values.length,
+      (length) => {
+        for (const index of handleRefs.keys()) if (index >= length) handleRefs.delete(index);
+        if (activeIndex.value >= length) {
+          activeIndex.value = -1;
+          hideHelp();
+        }
       },
-    });
-
-    /** 活动替身的值（rc 取 `values[activeIndex]`）。 */
-    const activeValue = computed(() => props.values[activeIndex.value]);
-
-    return () => {
-      const nodes: VNode[] = props.values.map((value, index) => {
-        const dragging = props.draggingIndex === index;
-        const style = Array.isArray(props.style) ? props.style[index] : props.style;
-        return h(
+    );
+    const renderHandles = () => {
+      const nodes = props.values.map((value, index) =>
+        h(
           Handle,
           {
             key: index,
-            ref: (node: unknown) => {
-              handleRefs.value[index] = (node ?? null) as { focus?: () => void } | null;
-            },
+            ref: reference(index),
             prefixCls: props.prefixCls,
             value,
             valueIndex: index,
-            style: style as CSSProperties | undefined,
-            dragging,
-            draggingDelete: dragging && props.draggingDelete,
-            onStartMove: props.onStartMove,
-            onOffsetChange: props.onOffsetChange,
-            onChangeComplete: props.onChangeComplete,
-            onDelete: props.onDelete,
-            onFocus: onHandleFocus,
-            onBlurChange: props.onBlur,
-            onMouseEnter: onHandleMouseEnter,
-            onMouseLeave: () => props.onMouseLeaveChange?.(),
-            onMouseDownChange: () => props.onMouseDownChange?.(),
+            style: Array.isArray(props.style) ? props.style[index] : props.style,
+            dragging: props.draggingIndex === index,
+            draggingDelete: props.draggingIndex === index && props.draggingDelete,
+            onStartMove: (event, handleIndex) => emit('startMove', event, handleIndex),
+            onOffsetChange: (offset, handleIndex) => emit('offsetChange', offset, handleIndex),
+            onChangeComplete: () => emit('changeComplete'),
+            onDelete: (handleIndex) => emit('delete', handleIndex),
+            onFocus: (event, handleIndex) => {
+              activeIndex.value = handleIndex;
+              activeVisible.value = true;
+              emit('focus', event, handleIndex);
+            },
+            onBlur: (event, handleIndex) => emit('blur', event, handleIndex),
+            onMouseenter: (_event, handleIndex) => {
+              activeIndex.value = handleIndex;
+              activeVisible.value = true;
+              emit('mouseenter');
+            },
+            onMouseleave: () => emit('mouseleave'),
           },
-          {
-            default: slots.handle as never,
-            wrapper: slots.wrapper as never,
-          } as never,
-        );
-      });
-
-      if (props.hasActiveHandle && activeVisible.value) {
+          { default: slots.handle, wrapper: slots.wrapper },
+        ),
+      );
+      const value = props.values[activeIndex.value];
+      if (props.hasActiveHandle && activeVisible.value && value !== undefined)
         nodes.push(
           h(
             Handle,
             {
               key: 'active',
               prefixCls: props.prefixCls,
-              value: activeValue.value ?? 0,
+              value,
               valueIndex: null,
-              dragging: props.draggingIndex !== -1,
+              activeIndex: activeIndex.value,
+              dragging: props.dragging,
               draggingDelete: props.draggingDelete,
               style: { pointerEvents: 'none' },
             },
-            { default: slots.activeHandle as never } as never,
+            { default: slots.activeHandle, wrapper: slots.activeWrapper },
           ),
         );
-      }
-
       return nodes;
     };
+    return { focus, hideHelp, renderHandles };
+  },
+  render() {
+    return this.renderHandles();
   },
 });

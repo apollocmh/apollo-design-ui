@@ -40,7 +40,7 @@ import {
 } from 'vue';
 import Slider from '../../slider';
 import { unstableSliderContextKey } from '../../slider/context';
-import type { SliderValue } from '../../slider/interface';
+import type { SliderHandleInfo, SliderValue } from '../../slider/interface';
 import type { AggregationColor } from '../color';
 import { getGradientPercentColor } from '../util';
 
@@ -49,15 +49,6 @@ export type SliderGradientColor = { color: string; percent: number }[];
 
 /** 三档：色相 / 透明度 / 渐变条。 */
 export type ColorSliderType = 'hue' | 'alpha' | 'gradient';
-
-/** `Slider` 的 `#handle` 槽参数（与 `slider/Handles/Handle.ts` 的 `HandleSlotNodeInfo` 同形）。 */
-interface HandleSlotInfo {
-  index: number;
-  value: number;
-  nodeProps: Record<string, unknown>;
-  className: string;
-  style: CSSProperties;
-}
 
 /** `unstableSliderContextKey` 的两个回调（渐变条靠它们做「增点 / 移点 / 删点」）。 */
 interface DragStartInfo {
@@ -176,11 +167,9 @@ export const GradientColorSlider = defineComponent({
         },
         {
           /** `handleRender` 的忠实复刻（见文件头）。 */
-          handle: (info: HandleSlotInfo): VNodeChild => {
-            const originalFocus = info.nodeProps.onFocus as ((e: FocusEvent) => void) | undefined;
-            const originalKeyDown = info.nodeProps.onKeydown as
-              | ((e: KeyboardEvent) => void)
-              | undefined;
+          handle: (info: SliderHandleInfo): VNodeChild => {
+            const originalFocus = info.nodeProps.onFocus;
+            const originalKeyDown = info.nodeProps.onKeydown;
 
             const mergedStyle: CSSProperties = { ...info.style };
             if (props.type === 'gradient') {

@@ -462,6 +462,7 @@ export type {
   SliderEmits,
   SliderFormatter,
   SliderHandleInfo,
+  SliderHandleNodeProps,
   SliderMarkObject,
   SliderMarks,
   SliderOrientation,

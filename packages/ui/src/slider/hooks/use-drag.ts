@@ -1,48 +1,24 @@
-/**
- * `useDrag` —— rc-slider `hooks/useDrag.js`（219 行）的 Vue 等价物。
- *
- * 职责：把手/整轨的指针拖拽 + 拖拽删除 + 「拖拽期间用 cacheValues、结束后回归 rawValues」。
- * 判据（`docs/analysis/slider.md` §6）：
- *
- *   1. **拖拽用的是 `originValues`（起点快照）而不是当前值** —— 「以把手起点为基准」；
- *   2. `direction` 四方向的百分比与 `removeDist`（**垂直方向**的位移，用于判断拖拽删除）：
- *      ltr → `offsetX/width` + `offsetY`；rtl → `-offsetX/width` + `offsetY`；
- *      btt → `-offsetY/height` + `offsetX`；ttb → `offsetY/height` + `offsetX`；
- *   3. 拖拽删除阈值 **130px**（`REMOVE_DIST`），且必须 `editable && minCount < 当前把手数`；
- *   4. **整轨拖拽**（`valueIndex === -1`）：所有把手同时平移，并把位移量夹到
- *      「不越界」的范围内，再用量化后的差值（`formatValue(start+offset) - start`）重算；
- *      任一禁用把手存在 ⇒ 整轨拖拽被上层禁掉（Track 里 also 拦一次）；
- *   5. `returnValues`：只有当 `cacheValues` 与 `rawValues` 的**差异计数 ≤ (editable ? 1 : 0)** 时
- *      才用 cache（否则用 raw）—— 这是「外部受控值插进来时立刻放弃本地缓存」的判据；
- *   6. 监听器挂在 `document`（move/up）+ `e.currentTarget`（touch），卸载时必须全部摘掉。
- *
- * ⚠️ Vue 与 React 的唯一差异在「状态」：上游用 4 个 useState，本仓用 §`ref`；
- *    `useEvent` 的最新闭包语义由「每次拖拽开始时重新绑定 handler」自然满足。
- */
-
+/** Native mouse/touch gesture ownership with scoped cancellation and the existing offset algorithms. */
 import { type MaybeRefOrGetter, onBeforeUnmount, type Ref, ref, toValue } from 'vue';
 import type { SliderDirection } from '../interface';
 
-/** 拖拽删除的位移阈值（rc 逐字注释：It's a user experience number for dragging out）。 */
 export const REMOVE_DIST = 130;
-
-/** 触摸事件取第一个触点；鼠标事件取自身。 */
-function getPosition(e: MouseEvent | TouchEvent): { pageX: number; pageY: number } {
-  if ('targetTouches' in e) {
-    // ⚠️ `targetTouches[0]` 在 `noUncheckedIndexedAccess` 下是 `Touch | undefined`；
-    //    真实 touchmove 必有一个触点，缺省分支只是类型兜底（退化成 event 本身）。
-    // ⚠️ TouchEvent 本身**没有** pageX/pageY（那是 MouseEvent 的），兜底只能给零值 ——
-    //    真实 touchmove 必有触点，这条分支不可达。
-    const touch: { pageX: number; pageY: number } = e.targetTouches[0] ?? { pageX: 0, pageY: 0 };
-    return { pageX: touch.pageX, pageY: touch.pageY };
+function getPosition(event: MouseEvent | TouchEvent, identifier?: number) {
+  if ('targetTouches' in event) {
+    const touches = event.touches.length ? event.touches : event.targetTouches;
+    const point =
+      identifier === undefined
+        ? touches[0]
+        : Array.from(touches).find((touch) => touch.identifier === identifier);
+    return point
+      ? { pageX: point.pageX, pageY: point.pageY, identifier: point.identifier }
+      : undefined;
   }
-  return { pageX: e.pageX, pageY: e.pageY };
+  return { pageX: event.pageX, pageY: event.pageY, identifier: undefined };
 }
-
 export interface UseDragOptions {
   containerRef: Ref<HTMLElement | null>;
   direction: MaybeRefOrGetter<SliderDirection>;
-  /** 当前值（**内部**已归一/排序的那一份）。 */
   rawValues: MaybeRefOrGetter<number[]>;
   min: MaybeRefOrGetter<number>;
   max: MaybeRefOrGetter<number>;
@@ -55,10 +31,10 @@ export interface UseDragOptions {
     valueIndex: number,
     mode?: 'unit' | 'dist',
   ) => { value: number; values: number[] };
-  /** `range.editable && !hasDisabledHandle`（可增删节点）。 */
   editable: MaybeRefOrGetter<boolean>;
   minCount: MaybeRefOrGetter<number>;
   isHandleDisabled: (index: number) => boolean;
+  onCancel?: () => void;
   onDragStart?: (info: {
     rawValues: number[];
     draggingIndex: number;
@@ -71,52 +47,58 @@ export interface UseDragOptions {
     draggingValue: number | null;
   }) => void;
 }
-
 export interface UseDragResult {
+  dragging: Ref<boolean>;
   draggingIndex: Ref<number>;
   draggingValue: Ref<number | null>;
   draggingDelete: Ref<boolean>;
-  /** 拖拽期间应渲染的值（见判据 5）。 */
   cacheValues: Ref<number[]>;
-  onStartMove: (e: MouseEvent | TouchEvent, valueIndex: number, startValues?: number[]) => void;
+  onStartMove: (event: MouseEvent | TouchEvent, valueIndex: number, startValues?: number[]) => void;
   cancel: () => void;
 }
-
 export function useDrag(options: UseDragOptions): UseDragResult {
+  const dragging = ref(false);
   const draggingIndex = ref(-1);
   const draggingValue = ref<number | null>(null);
   const draggingDelete = ref(false);
   const cacheValues = ref<number[]>([...toValue(options.rawValues)]);
   let originValues: number[] = [...toValue(options.rawValues)];
-
-  let moveHandler: ((e: MouseEvent | TouchEvent) => void) | null = null;
-  let upHandler: ((e: MouseEvent | TouchEvent) => void) | null = null;
-  let touchTarget: EventTarget | null = null;
-
-  const detach = (): void => {
-    if (moveHandler) document.removeEventListener('mousemove', moveHandler as EventListener);
-    if (upHandler) document.removeEventListener('mouseup', upHandler as EventListener);
-    if (touchTarget) {
-      if (moveHandler) touchTarget.removeEventListener('touchmove', moveHandler as EventListener);
-      if (upHandler) touchTarget.removeEventListener('touchend', upHandler as EventListener);
+  let ownerDocument: Document | null = null;
+  let ownerWindow: Window | null = null;
+  let moveHandler: ((event: MouseEvent | TouchEvent) => void) | null = null;
+  let upHandler: ((event: MouseEvent | TouchEvent) => void) | null = null;
+  let cancelHandler: ((event: TouchEvent) => void) | null = null;
+  const detach = () => {
+    if (moveHandler) {
+      ownerDocument?.removeEventListener('mousemove', moveHandler);
+      ownerDocument?.removeEventListener('touchmove', moveHandler);
     }
+    if (upHandler) {
+      ownerDocument?.removeEventListener('mouseup', upHandler);
+      ownerDocument?.removeEventListener('touchend', upHandler);
+    }
+    if (cancelHandler) ownerDocument?.removeEventListener('touchcancel', cancelHandler);
+    ownerWindow?.removeEventListener('blur', cancel);
     moveHandler = null;
     upHandler = null;
-    touchTarget = null;
+    cancelHandler = null;
+    ownerDocument = null;
+    ownerWindow = null;
   };
-
-  onBeforeUnmount(detach);
-
-  const flushValues = (nextValues: number[], nextValue?: number, deleteMark = false): void => {
-    if (nextValue !== undefined) {
-      draggingValue.value = nextValue;
-    }
+  const cancel = () => {
+    detach();
+    dragging.value = false;
+    draggingIndex.value = -1;
+    draggingDelete.value = false;
+    options.onCancel?.();
+  };
+  onBeforeUnmount(cancel);
+  const flushValues = (nextValues: number[], nextValue?: number, deleteMark = false) => {
+    if (nextValue !== undefined) draggingValue.value = nextValue;
     cacheValues.value = nextValues;
-    let changeValues = nextValues;
-    if (deleteMark) {
-      changeValues = nextValues.filter((_, i) => i !== draggingIndex.value);
-    }
-    options.triggerChange(changeValues);
+    options.triggerChange(
+      deleteMark ? nextValues.filter((_, index) => index !== draggingIndex.value) : nextValues,
+    );
     options.onDragChange?.({
       rawValues: nextValues,
       deleteIndex: deleteMark ? draggingIndex.value : -1,
@@ -124,140 +106,114 @@ export function useDrag(options: UseDragOptions): UseDragResult {
       draggingValue: nextValue ?? null,
     });
   };
-
-  const updateCacheValue = (
-    valueIndex: number,
-    offsetPercent: number,
-    deleteMark: boolean,
-  ): void => {
-    const min = toValue(options.min);
-    const max = toValue(options.max);
+  const updateCacheValue = (valueIndex: number, offsetPercent: number, deleteMark: boolean) => {
+    const min = toValue(options.min),
+      max = toValue(options.max);
     if (valueIndex === -1) {
-      // >>>> 整轨拖拽：所有把手一起平移
-      if (originValues.some((_, index) => options.isHandleDisabled(index))) {
-        return;
-      }
-      const startValue = originValues[0] ?? min;
-      const endValue = originValues[originValues.length - 1] ?? max;
-      const maxStartOffset = min - startValue;
-      const maxEndOffset = max - endValue;
-
-      let offset = offsetPercent * (max - min);
-      offset = Math.max(offset, maxStartOffset);
-      offset = Math.min(offset, maxEndOffset);
-
-      // 用量化后的差值回算（保证落在 step/marks 网格上）
-      const formatStartValue = options.formatValue(startValue + offset);
-      offset = formatStartValue - startValue;
-      const cloneCacheValues = originValues.map((val) => val + offset);
-      flushValues(cloneCacheValues);
-      return;
+      if (originValues.some((_, index) => options.isHandleDisabled(index))) return;
+      const start = originValues[0] ?? min,
+        end = originValues[originValues.length - 1] ?? max;
+      let offset = Math.min(Math.max(offsetPercent * (max - min), min - start), max - end);
+      offset = options.formatValue(start + offset) - start;
+      flushValues(originValues.map((value) => value + offset));
+    } else {
+      if (options.isHandleDisabled(valueIndex)) return;
+      const clone = [...cacheValues.value];
+      clone[valueIndex] = originValues[valueIndex] ?? min;
+      const next = options.offsetValues(clone, (max - min) * offsetPercent, valueIndex, 'dist');
+      flushValues(next.values, next.value, deleteMark);
     }
-
-    // >>>> 拖把手
-    const offsetDist = (max - min) * offsetPercent;
-    const cloneValues = [...cacheValues.value];
-    cloneValues[valueIndex] = originValues[valueIndex] ?? min;
-    const next = options.offsetValues(cloneValues, offsetDist, valueIndex, 'dist');
-    flushValues(next.values, next.value, deleteMark);
   };
-
   const onStartMove = (
-    e: MouseEvent | TouchEvent,
+    event: MouseEvent | TouchEvent,
     valueIndex: number,
     startValues?: number[],
-  ): void => {
-    e.stopPropagation();
-    const min = toValue(options.min);
-    const max = toValue(options.max);
-    const initialValues = startValues ?? [...toValue(options.rawValues)];
-    if (options.isHandleDisabled(valueIndex)) {
+  ) => {
+    if (dragging.value && 'targetTouches' in event) return;
+    if (event.defaultPrevented || (!('targetTouches' in event) && event.button !== 0)) return;
+    const container = options.containerRef.value;
+    const point = getPosition(event);
+    if (!container || !point || (valueIndex !== -1 && options.isHandleDisabled(valueIndex))) return;
+    if (
+      valueIndex === -1 &&
+      toValue(options.rawValues).some((_, index) => options.isHandleDisabled(index))
+    )
       return;
-    }
-
-    const originValue = initialValues[valueIndex] ?? min;
+    cancel();
+    event.stopPropagation();
+    const initialValues = startValues ?? [...toValue(options.rawValues)];
+    const originValue = initialValues[valueIndex] ?? toValue(options.min);
+    dragging.value = true;
     draggingIndex.value = valueIndex;
     draggingValue.value = originValue;
-    originValues = initialValues;
-    cacheValues.value = initialValues;
+    originValues = [...initialValues];
+    cacheValues.value = [...initialValues];
     draggingDelete.value = false;
-
     options.onDragStart?.({
       rawValues: initialValues,
       draggingIndex: valueIndex,
       draggingValue: originValue,
     });
-
-    const { pageX: startX, pageY: startY } = getPosition(e);
     let deleteMark = false;
-
-    const onMove = (event: MouseEvent | TouchEvent): void => {
-      event.preventDefault();
-      const { pageX: moveX, pageY: moveY } = getPosition(event);
-      const offsetX = moveX - startX;
-      const offsetY = moveY - startY;
-      const rect = options.containerRef.value?.getBoundingClientRect();
-      const width = rect?.width ?? 0;
-      const height = rect?.height ?? 0;
-
-      let offsetPercent: number;
-      let removeDist: number;
-      switch (toValue(options.direction)) {
-        case 'btt':
-          offsetPercent = -offsetY / height;
-          removeDist = offsetX;
-          break;
-        case 'ttb':
-          offsetPercent = offsetY / height;
-          removeDist = offsetX;
-          break;
-        case 'rtl':
-          offsetPercent = -offsetX / width;
-          removeDist = offsetY;
-          break;
-        default:
-          offsetPercent = offsetX / width;
-          removeDist = offsetY;
-      }
-
-      deleteMark = toValue(options.editable)
-        ? Math.abs(removeDist) > REMOVE_DIST && toValue(options.minCount) < cacheValues.value.length
-        : false;
+    const onMove = (move: MouseEvent | TouchEvent) => {
+      const position = getPosition(move, point.identifier);
+      if (!position) return;
+      const rect = container.getBoundingClientRect();
+      const direction = toValue(options.direction);
+      const size = direction === 'ttb' || direction === 'btt' ? rect.height : rect.width;
+      if (size <= 0) return;
+      move.preventDefault();
+      const x = position.pageX - point.pageX,
+        y = position.pageY - point.pageY;
+      const distance =
+        direction === 'btt' ? -y : direction === 'ttb' ? y : direction === 'rtl' ? -x : x;
+      const removeDist = direction === 'ttb' || direction === 'btt' ? x : y;
+      deleteMark =
+        toValue(options.editable) &&
+        Math.abs(removeDist) > REMOVE_DIST &&
+        toValue(options.minCount) < cacheValues.value.length;
       draggingDelete.value = deleteMark;
-      updateCacheValue(valueIndex, offsetPercent, deleteMark);
+      updateCacheValue(valueIndex, distance / size, deleteMark);
     };
-
-    const onUp = (event: MouseEvent | TouchEvent): void => {
-      event.preventDefault();
+    const onUp = (event: MouseEvent | TouchEvent) => {
+      if (
+        'touches' in event &&
+        Array.from(event.touches).some((touch) => touch.identifier === point.identifier)
+      )
+        return;
       detach();
       options.finishChange(deleteMark);
+      dragging.value = false;
       draggingIndex.value = -1;
       draggingDelete.value = false;
     };
-
-    // 先摘掉可能残留的监听（连点两次 mousedown 不会叠监听）
-    detach();
-    document.addEventListener('mouseup', onUp as EventListener);
-    document.addEventListener('mousemove', onMove as EventListener);
-    const target = e.currentTarget as EventTarget | null;
-    if (target) {
-      target.addEventListener('touchend', onUp as EventListener);
-      target.addEventListener('touchmove', onMove as EventListener);
-      touchTarget = target;
-    }
+    ownerDocument = container.ownerDocument;
+    ownerWindow = ownerDocument.defaultView;
+    const onCancel = (event: TouchEvent) => {
+      if (!Array.from(event.touches).some((touch) => touch.identifier === point.identifier))
+        cancel();
+    };
     moveHandler = onMove;
     upHandler = onUp;
-    void min;
-    void max;
+    cancelHandler = onCancel;
+    ownerWindow?.addEventListener('blur', cancel);
+    if ('targetTouches' in event) {
+      ownerDocument.addEventListener('touchmove', onMove, { passive: false });
+      ownerDocument.addEventListener('touchend', onUp);
+      ownerDocument.addEventListener('touchcancel', onCancel);
+    } else {
+      ownerDocument.addEventListener('mousemove', onMove);
+      ownerDocument.addEventListener('mouseup', onUp);
+    }
   };
-
   return {
+    dragging,
     draggingIndex,
     draggingValue,
     draggingDelete,
     cacheValues,
     onStartMove,
-    cancel: detach,
+    cancel,
   };
 }
 

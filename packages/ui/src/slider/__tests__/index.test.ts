@@ -24,7 +24,7 @@
  *   - 没证明 hover/focus 三态动效（静态帧之外的层，登记在 README 的缺口里）
  */
 
-import { mount } from '@vue/test-utils';
+import { type DOMWrapper, mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { h, nextTick, ref } from 'vue';
 import type { NormalizedMark } from '../context';
@@ -54,7 +54,7 @@ const at = <T>(list: T[], index: number): T => {
 };
 
 /** 标准 rect 替身（jsdom 不做布局，`getBoundingClientRect` 恒为 0）。 */
-const RECT = {
+const RECT: DOMRect = {
   left: 0,
   top: 0,
   right: 200,
@@ -64,12 +64,12 @@ const RECT = {
   x: 0,
   y: 0,
   toJSON: () => ({}),
-} as DOMRect;
+};
 
 /** 挂一个 Slider 并把容器的 rect 换成 `RECT`。 */
-const mountSlider = (props: Record<string, unknown> = {}) => {
-  const w = mount(h(Slider as never, { ...props } as never));
-  (w.element as HTMLElement).getBoundingClientRect = () => RECT;
+const mountSlider = (props: InstanceType<typeof Slider>['$props'] = {}) => {
+  const w = mount(Slider, { props });
+  w.element.getBoundingClientRect = () => RECT;
   return w;
 };
 
@@ -81,7 +81,7 @@ const fireKey = (el: Element, keyCode: number, type: 'keydown' | 'keyup' = 'keyd
 };
 
 /** 第 index 个把手（`findAll` 的元素）。 */
-const handle = (w: ReturnType<typeof mountSlider>, index = 0) =>
+const handle = (w: { findAll(selector: string): DOMWrapper<Element>[] }, index = 0) =>
   at(w.findAll(`.${P}-handle`), index);
 
 // ---------------------------------------------------------------------------
@@ -369,8 +369,8 @@ describe('Slider 值域与事件链（L2）', () => {
 
   it('v-model:value：同时发 update:value 与 change（C11）', async () => {
     const value = ref(30);
-    const w = mount(h(Slider as never, { value: value.value } as never));
-    (w.element as HTMLElement).getBoundingClientRect = () => RECT;
+    const w = mount(h(Slider, { value: value.value }));
+    w.element.getBoundingClientRect = () => RECT;
     fireKey(handle(w).element, 39);
     await nextTick();
     expect(w.emitted('update:value')?.[0]).toEqual([31]);
@@ -597,10 +597,8 @@ describe('Slider 拖拽（L2）', () => {
     //    `document.activeElement`（jsdom 的硬约束）
     // 用**非受控**：rc 的判据是 `rawValues.lastIndexOf(draggingValue)` —— 受控且父级不回写时
     // 该值不在 rawValues 里，focus 会被跳过（上游同判，所以这里必须非受控）
-    const w = mount(h(Slider as never, { defaultValue: 30 } as never), {
-      attachTo: document.body,
-    });
-    (w.element as HTMLElement).getBoundingClientRect = () => RECT;
+    const w = mount(Slider, { props: { defaultValue: 30 }, attachTo: document.body });
+    w.element.getBoundingClientRect = () => RECT;
     handle(w).element.dispatchEvent(
       new MouseEvent('mousedown', { clientX: 60, clientY: 10, bubbles: true }),
     );
@@ -670,8 +668,8 @@ describe('Slider tooltip（L2）', () => {
    * ⚠️ tooltip 必须 `attachTo: document.body`：浮层走 portal，而 VTU 默认把组件挂在
    *    **游离** 的 div 里 ⇒ 触发元素不在文档中，popup 不会渲染（tooltip 的测试同判）。
    */
-  const mountTip = (props: Record<string, unknown> = {}) =>
-    mount(h(Slider as never, { ...props } as never), { attachTo: document.body });
+  const mountTip = (props: InstanceType<typeof Slider>['$props'] = {}) =>
+    mount(Slider, { props, attachTo: document.body });
 
   it('formatter=null ⇒ 永不显示', async () => {
     const w = mountTip({ defaultValue: 30, formatter: null });
@@ -714,13 +712,11 @@ describe('Slider tooltip（L2）', () => {
 
 describe('Slider expose（L2）', () => {
   it('focus() 聚焦第一个把手，blur() 让它失焦', async () => {
-    const w = mount(h(Slider as never, { defaultValue: 30 } as never), {
-      attachTo: document.body,
-    });
-    (w.vm as unknown as { focus: () => void }).focus();
+    const w = mount(Slider, { props: { defaultValue: 30 }, attachTo: document.body });
+    w.vm.focus();
     await nextTick();
     expect(document.activeElement?.classList.contains(`${P}-handle`)).toBe(true);
-    (w.vm as unknown as { blur: () => void }).blur();
+    w.vm.blur();
     await nextTick();
     expect(document.activeElement?.classList.contains(`${P}-handle`)).toBe(false);
   });
@@ -777,7 +773,7 @@ describe('Slider 开发期告警（L2）', () => {
 
 describe('Slider 自定义把手（L2）', () => {
   it('#handle 槽替换把手节点（能拿到 nodeProps / className / style）', () => {
-    const w = mount(h(Slider as never, { defaultValue: 30 } as never), {
+    const w = mount(h(Slider, { defaultValue: 30 }), {
       slots: {
         handle: (info: { value?: number; className: string }) =>
           h('div', { class: `${info.className} custom`, 'data-value': info.value }),

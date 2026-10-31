@@ -81,13 +81,13 @@ import { Slider } from '@apollo-design/ui';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| value（`v-model:value`） | 当前值：单把手是 `number`、`range` 时是 `number[]` | `number \| number[]` | —— |
-| defaultValue | 非受控初始值 | `number \| number[]` | —— |
+| value（`v-model:value`） | Current scalar/range value; null clears handles | `number \| number[] \| null` | —— |
+| defaultValue | Local initial value, including null to clear | `number \| number[] \| null` | —— |
 | min | 最小值 | `number` | `0` |
 | max | 最大值 | `number` | `100` |
 | step | 步长；`null` 表示只按 `marks` 取值 | `number \| null` | `1` |
 | range | 双（多）把手；对象形态可开 `editable` / `draggableTrack` / `minCount` / `maxCount` | `boolean \| SliderRangeConfig` | `false` |
-| count | 把手数量（⚠️ 已废弃，请用 `range.minCount` / `range.maxCount`） | `number` | —— |
+| count | Fixed interval count (count + 1 handles); editing bounds are separate | `number` | —— |
 | marks | 刻度标记，值可以是 `string` / 数字 / `{ label, style }` | `SliderMarks` | —— |
 | dots | 是否显示刻度点（与 `step` 联用） | `boolean` | `false` |
 | included | 是否显示已选轨道 | `boolean` | `true` |
@@ -119,23 +119,24 @@ import { Slider } from '@apollo-design/ui';
 | --- | --- | --- |
 | `update:value` | 值变化（`v-model:value`） | `(value: number \| number[])` |
 | `change` | 值变化（与 `update:value` 同时发出） | `(value: number \| number[])` |
-| `beforeChange` | 变化开始前 | `(value: number \| number[])` |
-| `changeComplete` | 拖拽 / 键盘结束 | `(value: number \| number[])` |
-| `focus` / `blur` | 把手获得 / 失去焦点 | `(event: FocusEvent, index: number)` |
+| `beforeChange` | First effective proposal, once per interaction | `(value: number \| number[])` |
+| `changeComplete` | Final proposal when the interaction ends | `(value: number \| number[])` |
+| `focus` / `blur` | Native handle focus / blur | `(event: FocusEvent, index: number)` |
+| `keydown` / `keyup` | Native keyboard notification; keydown runs before internal actions | `(event: KeyboardEvent, index: number)` |
 
 ### Slots
 
 | Slot | Description | Arguments |
 | --- | --- | --- |
-| `handle` | 自定义把手（替代 `handleRender`） | `{ index, prefixCls, value, dragging, draggingDelete, nodeProps, className, style }` |
-| `activeHandle` | 自定义「跟随当前把手」的 tooltip（range 且未锁定 `open` 时生效） | 同上 |
+| `handle` | Real native handle replacement, retaining nodeProps/ref | `{ index, prefixCls, value, dragging, draggingDelete, nodeProps, className, style }` |
+| `activeHandle` | Decorative active range anchor, wrapped in the default Tooltip while active | Same complete scope |
 
 ### Methods (ref)
 
 | Method | Description |
 | --- | --- |
-| `focus()` | 聚焦第一个把手 |
-| `blur()` | 若焦点在组件内则失焦 |
+| `focus()` | Focus the first enabled real handle |
+| `blur()` | Blur the active element within Slider |
 
 ### Keyboard
 
@@ -171,3 +172,21 @@ import { Slider } from '@apollo-design/ui';
 | `trackBgDisabled` | `rgba(0,0,0,0.04)` | 禁用时的已选轨道 |
 
 Switch themes through `ConfigProvider`'s `theme`; component styles are static CSS + CSS variables (zero runtime).
+
+## Current native contract
+
+value/defaultValue accept number, number[] or null (clear). Single mode emits a number and range mode emits an array. min/max/step are declared on SliderProps. count is the fixed number of intervals (count + 1 handles); range.minCount/maxCount constrain editing and do not replace that responsibility.
+
+Updates are proposals. Rejection preserves accepted DOM/ARIA state, and withdrawal retains the last accepted value. beforeChange receives the first effective proposal once per interaction; change/update:value follow. changeComplete receives that interaction's final proposal even if the controller refused it. Unchanged keys, bare keyup, IME, native cancellation, touchcancel, invalidated gestures and teardown do not emit fabricated completion.
+
+keydown/keyup are owned native notifications `(event: KeyboardEvent, index: number)`. keydown runs before internal actions and respects preventDefault(). Use onKeydown/onKeyup with h(), or @keydown/@keyup in templates.
+
+handle and activeHandle receive the complete public SliderHandleInfo: required index/value/prefixCls/dragging/draggingDelete/nodeProps/className/style. nodeProps provides native HTML attributes, single native event functions and the actual element ref. Bind it to the real handle to retain focus and keyboard/ARIA behavior. activeHandle receives the actual current index and remains a decorative anchor without a slider role or keyboard events. It is wrapped by the default range Tooltip while hovered, focused or dragged, unless tooltip.open locks presentation.
+
+The existing ref methods remain focus()/blur(); focus selects the first enabled real handle, including a custom slot node. Surviving handles retain identity through mode and Tooltip configuration changes. No nativeElement member is added.
+
+Native class/style, data/title and ordinary listeners target the root. Style accepts Vue strings, objects and arrays. aria-* and native tabindex target actual handles; explicit tabIndex and per-handle ARIA props take precedence, while role and value metadata remain owned by Slider.
+
+tooltip.formatter takes priority over the top-level numeric formatter; null hides tips. Tooltip prefix, placement, semantic options and explicit containers are consumed by Tooltip; its current Provider owns the default container. Slider owns visibility through native focus/hover/drag and tooltip.open. Unsupported tooltip.defaultOpen/trigger/onOpenChange/onUpdate:open and unused internal value/draggingDelete declarations are removed; draggingDelete remains on the actual handle scope.
+
+Current components.slider className/style/classNames/styles, direction and disabled values remain reactive. All eighteen current theme.components.Slider tokens and current theme aliases project to actual root variables, with numeric lengths in px. Native root style has final priority. Custom DOM prefixes require matching static CSS.

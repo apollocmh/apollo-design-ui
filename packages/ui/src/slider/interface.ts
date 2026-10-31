@@ -1,29 +1,5 @@
-/**
- * Slider 的类型契约（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `es/slider/index.d.ts` + rc 内核 `@rc-component/slider@1.1.1`
- * 的 `es/Slider.d.ts` / `es/interface.d.ts`（**重新定义**，不搬运，H2）。
- * 判据逐条见 `docs/analysis/slider.md`。
- *
- * ── Vue 化映射（COMPATIBILITY.md 的规则）───────────────────────────────────────
- *
- * | React | Vue | 规则 |
- * |---|---|---|
- * | `value` + `onChange` | `v-model:value`（同时发 `change`，C11） | §3 |
- * | `onChangeComplete` / `onBeforeChange` / `onFocus` / `onBlur` | emits | C5 |
- * | `handleRender` / `activeHandleRender` | **scoped slot** `#handle` / `#activeHandle` | C8 |
- * | `SliderRef`（focus/blur） | `expose` | §4 |
- * | `marks` 的 value（`ReactNode`） | `VNodeChild` | §6 |
- * | `SliderInternalContext` | `provide/inject`（antd 内部给 icon-slider demo 用） | C4 |
- *
- * ⚠️ 三处 Boolean prop 必须显式 `default: undefined`（PITFALLS 2 / D21）：
- *    `included`（默认 true，「未传 ≠ false」的语义要保住）、`dots`、`keyboard`。
- *    另有 `disabled` 的**数组形态** —— `type: [Boolean, Array]`（PITFALLS 2 同族）。
- *
- * ⚠️ 本文件不含任何实现：G4 之前 `Slider.vue` 只有空壳。
- */
-
-import type { CSSProperties, VNodeChild } from 'vue';
+/** Slider input values, native handle slots, owned notifications and theme contracts. */
+import type { CSSProperties, HTMLAttributes, VNodeChild, VNodeProps } from 'vue';
 import type { TooltipPlacement, TooltipProps } from '../tooltip';
 
 // ---------------------------------------------------------------------------
@@ -111,7 +87,17 @@ export type SliderFormatter = ((value?: number) => VNodeChild) | null;
  * 本仓按「本仓 Tooltip 的 props 子集 + slider 专有项」重新定义（不搬 antd 的继承链）。
  */
 export interface SliderTooltipProps
-  extends Omit<TooltipProps, 'title' | 'children' | 'prefixCls' | 'open' | 'placement'> {
+  extends Omit<
+    TooltipProps,
+    | 'title'
+    | 'prefixCls'
+    | 'open'
+    | 'placement'
+    | 'defaultOpen'
+    | 'trigger'
+    | 'onOpenChange'
+    | 'onUpdate:open'
+  > {
   /** 提示前缀（默认取 `tooltip` 组件前缀）。 */
   prefixCls?: string;
   /** 受控开合：`false` ⇒ **永不显示**（lockOpen）。 */
@@ -122,10 +108,6 @@ export interface SliderTooltipProps
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   /** 文案格式化。 */
   formatter?: SliderFormatter;
-  /** ⚠️ 内部通道：当前把手的值（antd 的 `SliderTooltip` 注入，用户不必传）。 */
-  value?: number;
-  /** ⚠️ 内部通道：本次拖拽是「拖拽删除」（决定 tooltip 的隐藏时机）。 */
-  draggingDelete?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -133,17 +115,17 @@ export interface SliderTooltipProps
 // ---------------------------------------------------------------------------
 
 /** 单个把手的渲染信息（rc 的 `HandleGeneratorInfo` + `prefixCls`）。 */
+export type SliderHandleNodeProps = HTMLAttributes & Pick<VNodeProps, 'ref'>;
 export interface SliderHandleInfo {
-  /** 把手索引（从 0 起）。 */
   index: number;
-  /** 当前值。 */
-  value?: number;
-  /** 是否正在拖拽。 */
-  dragging?: boolean;
-  /** 是否处于「拖拽删除」态。 */
-  draggingDelete?: boolean;
-  /** 组件前缀（rc 也回传，便于自定义结构复用类名）。 */
-  prefixCls?: string;
+  value: number;
+  dragging: boolean;
+  draggingDelete: boolean;
+  prefixCls: string;
+  /** Bind to the actual native handle to retain ARIA, native events and the real focus ref. */
+  nodeProps: SliderHandleNodeProps;
+  className: string;
+  style: CSSProperties;
 }
 
 /** 无障碍的把手值文案格式化。 */
@@ -160,6 +142,9 @@ export type SliderAriaValueFormat = (value: number) => string;
  *    本仓直接从 rc 的 .d.ts 重新定义（H2），字段集合逐条对应。
  */
 export interface SliderBaseProps {
+  min?: number;
+  max?: number;
+  step?: number | null;
   prefixCls?: string;
   id?: string;
   /** 禁用：布尔（整体）或**数组**（逐把手）。 */
@@ -211,15 +196,15 @@ export interface SliderBaseProps {
 /** 单把手值域（形态对齐 antd 的 `SliderSingleProps`，只用于文档与类型测试）。 */
 export interface SliderSingleProps extends SliderBaseProps {
   range?: false;
-  value?: number;
-  defaultValue?: number;
+  value?: number | null;
+  defaultValue?: number | null;
 }
 
 /** 多把手值域（形态对齐 antd 的 `SliderRangeProps`）。 */
 export interface SliderRangeProps extends SliderBaseProps {
   range: true | SliderRangeConfig;
-  value?: number[];
-  defaultValue?: number[];
+  value?: number[] | null;
+  defaultValue?: number[] | null;
 }
 
 /**
@@ -232,9 +217,9 @@ export interface SliderRangeProps extends SliderBaseProps {
  */
 export interface SliderProps extends SliderBaseProps {
   range?: SliderRange;
-  value?: SliderValue;
-  defaultValue?: SliderValue;
-  /** ⚠️ 已废弃，请用 `range.minCount` / `range.maxCount`。 */
+  value?: SliderValue | null;
+  defaultValue?: SliderValue | null;
+  /** Fixed interval count (count + 1 handles); editing bounds have a separate responsibility. */
   count?: number;
 }
 
@@ -248,7 +233,7 @@ export interface SliderProps extends SliderBaseProps {
  * ⚠️ `value` 的载荷形状随模式而变：单把手 `number`、range `number[]`
  *    （rc 的 `getTriggerValue`）。类型上取并集，运行时由实现保证。
  */
-export interface SliderEmits {
+export type SliderEmits = {
   /** v-model:value（C11：与 `change` 同时发）。 */
   'update:value': [value: SliderValue];
   /** 值变化（与 `update:value` 同时发）。 */
@@ -261,10 +246,12 @@ export interface SliderEmits {
   focus: [event: FocusEvent, index: number];
   /** 把手失焦。 */
   blur: [event: FocusEvent, index: number];
-}
+  keydown: [event: KeyboardEvent, index: number];
+  keyup: [event: KeyboardEvent, index: number];
+};
 
 /** 插槽。 */
-export interface SliderSlots {
+export type SliderSlots = {
   /** 自定义把手（替代 rc 的 `handleRender`）。 */
   handle?: (info: SliderHandleInfo) => VNodeChild;
   /**
@@ -272,11 +259,11 @@ export interface SliderSlots {
    * （替代 rc 的 `activeHandleRender`：range 且未锁定 open 时生效）。
    */
   activeHandle?: (info: SliderHandleInfo) => VNodeChild;
-}
+};
 
 /** expose（antd 的 `SliderRef`）。 */
 export interface SliderRef {
-  /** 聚焦第一个把手。 */
+  /** 聚焦第一个未禁用的实际把手。 */
   focus: () => void;
   /** 若焦点在组件内则失焦。 */
   blur: () => void;

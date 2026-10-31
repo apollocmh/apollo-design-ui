@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 198,
+  "revision": 200,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1421,6 +1421,13 @@
           ],
           "change": "Actual Segmented owned-event and complete option-content consumer retains ColorPicker panel selection behavior.",
           "verification": "CMP:segmented records actual ColorPicker core consumers and scoped strict; existing ColorPicker delivery retained."
+        },
+        {
+          "scope": [
+            "packages/ui/src/color-picker/components/ColorSlider.ts"
+          ],
+          "change": "Use actual public SliderHandleInfo instead of a private DTO; remove two forced event assertions, preserve listener order and runtime data/gradient behavior.",
+          "verification": "CMP:slider includes actual ColorPicker core35 and strict public-h/SFC consumers. Full ColorPicker re-audit not performed."
         }
       ]
     },
@@ -4276,18 +4283,16 @@
       "kind": "component",
       "ref": "slider",
       "title": "Slider",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/slider"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 189,
-        "startedAt": "2026-10-31T00:26:03.009Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -4304,6 +4309,395 @@
           "packages/ui/src/slider/README.md",
           "packages/ui/src/slider/interface.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:slider",
+        "owner": "native_picker",
+        "base": "fd589dc8",
+        "scope": [
+          "packages/ui/src/slider"
+        ],
+        "passed": true,
+        "sourceAndTypesFrozen": true,
+        "writtenAtUtc": "2026-10-31T01:13:12.596237+00:00",
+        "implemented": [
+          "Accepted controlled/uncontrolled scalar/range values use useControlledValue without rejected-draft contamination; existing null clear behavior is now typed.",
+          "A meaningful interaction records first/final proposal snapshots for beforeChange/changeComplete. Owned native keydown/keyup run before actions, respect defaultPrevented/IME, and do not fabricate completion for no-op/bare-keyup/cancelled input.",
+          "Public SliderHandleInfo now accurately includes required index/value/prefixCls/dragging/draggingDelete/nodeProps/className/style. nodeProps preserves single native event callbacks and the real native ref, including custom handles. Ref remains only focus/blur.",
+          "Current range active Tooltip receives the actual active index, is decorative/aria-hidden and follows current visibility. Stable Tooltip/handle render ownership retains original nodes through mode/open changes; tooltip.formatter and function semantic options are consumed.",
+          "Mouse/track/touch sessions use ownerDocument listeners, active touch identity, touchcancel/window-blur/config/unmount cleanup. Track activity is distinct from the -1 sentinel. Partial-disabled presses cannot become sibling rail requests; empty editable ranges respect maxCount.",
+          "Native class/StyleValue/root attrs and handle ARIA/tabindex are routed accurately. Current Provider disabled/style replacements and all18 current theme token/alias values are consumed on actual roots. Existing offset/quantization/push algorithms and old valid assertions remain."
+        ],
+        "migration": {
+          "rootExportAdded": [
+            "SliderHandleNodeProps"
+          ],
+          "existingNamesRetained": [
+            "SliderHandleInfo",
+            "SliderSlots",
+            "SliderEmits",
+            "SliderRef"
+          ],
+          "existingRefMethods": [
+            "focus()",
+            "blur()"
+          ],
+          "ownedKeyboard": "keydown/keyup(event:KeyboardEvent,index:number)",
+          "inputDeclarations": "SliderProps/BaseProps min/max/step now match runtime; value/defaultValue accept null to clear. Notifications remain number | number[].",
+          "proposalNotifications": "beforeChange is the first effective proposal; changeComplete is the final interaction proposal even under rejection. Unchanged/IME/native-cancel/touchcancel/config-cancel do not emit completion.",
+          "removedUnsupportedTooltipFields": [
+            "defaultOpen",
+            "trigger",
+            "onOpenChange",
+            "onUpdate:open",
+            "value",
+            "draggingDelete"
+          ],
+          "tooltipFormatting": "Nested tooltip.formatter precedes existing top formatter; null hides tips. Visibility stays with actual Slider state and tooltip.open.",
+          "count": "Existing fixed count+1 handle behavior preserved; edit min/max counts serve separate responsibilities."
+        },
+        "consumerBridge": {
+          "owner": "root",
+          "path": "packages/ui/src/color-picker/components/ColorSlider.ts",
+          "change": "Use complete public SliderHandleInfo and remove two old event assertions. Single native onFocus/onKeydown callbacks and original wrapping order preserved. unstableSliderContextKey drag observation remains.",
+          "validation": "Root reports current ColorPicker actual core35 cases exit0/16.501s after the public-scope bridge; final immutable strict remains pending.",
+          "otherConsumer": "Statistic component-token demo uses only value/min/max; unchanged API responsibilities."
+        },
+        "checks": [
+          {
+            "kind": "core",
+            "name": "existing core algorithms and current native/DOM contracts",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/slider/__tests__/native-contracts.test.ts packages/ui/src/slider/__tests__/index.test.ts --project dom-contract packages/ui/src/slider/__tests__/semantic.test.ts --maxWorkers=1 > /tmp/apollo-slider-native-dynamic.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11850,
+            "durationSource": "Vitest runner total",
+            "log": "/tmp/apollo-slider-native-dynamic.log",
+            "testsPassed": 94,
+            "note": "64 existing behavior/algorithm assertions, 12 native cases and all18 dated DOM scenarios preserved. No baseline allowance or scenario removal. Later exact bridge/attrs deltas covered below; overlapping totals are not summed."
+          },
+          {
+            "kind": "core",
+            "name": "current native controller and Tooltip/disabled bridges",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/slider/__tests__/native-contracts.test.ts --maxWorkers=1 > /tmp/apollo-slider-final-bridges.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9660,
+            "durationSource": "Vitest runner total",
+            "log": "/tmp/apollo-slider-final-bridges.log",
+            "testsPassed": 14,
+            "note": "Includes the partial-disabled press guard and explicit/current Tooltip container plus function semantic options. Subsequent native tabindex delta covered by its affected case below."
+          },
+          {
+            "kind": "core",
+            "name": "last native tabindex/ref delta",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/slider/__tests__/native-contracts.test.ts --testNamePattern 'custom handle' --maxWorkers=1 > /tmp/apollo-slider-native-tabindex.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4750,
+            "durationSource": "Vitest runner total",
+            "log": "/tmp/apollo-slider-native-tabindex.log",
+            "testsPassed": 1,
+            "testsSkipped": 13
+          },
+          {
+            "kind": "core",
+            "name": "necessary Demo, theme and a11y projects",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/slider/__tests__/demo.test.ts --project a11y packages/ui/src/slider/__tests__/a11y.test.ts --project theme packages/ui/src/slider/__tests__/theme.test.ts --maxWorkers=1 > /tmp/apollo-slider-directed-first.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 20590,
+            "durationSource": "Vitest runner total",
+            "log": "/tmp/apollo-slider-directed-first.log",
+            "testsPassed": 64,
+            "note": "Current Provider/18-token projection plus all existing demos/a11y assertions. axe/jsdom emits known canvas and pseudo-style not-implemented messages; no new library runtime diagnostic is claimed from those messages. Actual Chrome below has zero diagnostics."
+          },
+          {
+            "kind": "browser",
+            "name": "actual Chrome native input and current static CSS",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/slider/__tests__/native-browser.mjs > /tmp/apollo-slider-native-browser-first.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7352,
+            "durationSource": "browser script performance timer",
+            "log": "/tmp/apollo-slider-native-browser-first.log",
+            "browser": "system Chrome",
+            "diagnostics": 0,
+            "note": "Actual mouse, CDP touch/end/cancel, unmount during touch, disabled invalidation, controlled rejection/acceptance, track/editor, native key/preventDefault, actual custom refs, stable range Tooltip/mode handles and current theme/static CSS. Later popup-default delegation is behaviorally identical and separately verified above; lowercase native tabindex separately verified without repeating this engine."
+          },
+          {
+            "kind": "lint",
+            "name": "frozen owned source and fixtures",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/slider/Slider.vue packages/ui/src/slider/SliderTooltip.ts packages/ui/src/slider/interface.ts packages/ui/src/slider/context.ts packages/ui/src/slider/index.ts packages/ui/src/slider/use-slider-theme.ts packages/ui/src/slider/Handles/Handle.ts packages/ui/src/slider/Handles/index.ts packages/ui/src/slider/hooks/use-drag.ts packages/ui/src/slider/Marks/index.ts packages/ui/src/slider/Tracks/index.ts packages/ui/src/slider/style/token.ts packages/ui/src/slider/__tests__/native-contracts.test.ts packages/ui/src/slider/__tests__/native-browser.mjs packages/ui/src/slider/__tests__/type.test-d.ts packages/ui/src/slider/__tests__/index.test.ts packages/ui/src/slider/__tests__/a11y.test.ts packages/ui/src/slider/__tests__/semantic.test.ts packages/ui/src/slider/__tests__/theme.test.ts packages/ui/src/slider/__tests__/fixtures/NativeSlider.vue packages/ui/src/slider/demo/component-token.vue > /tmp/apollo-slider-format-frozen.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 54,
+            "durationSource": "Biome check timer",
+            "log": "/tmp/apollo-slider-format-frozen.log"
+          },
+          {
+            "kind": "lint",
+            "name": "owned whitespace",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "git diff --check -- packages/ui/src/slider",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "durationSource": "not separately recorded",
+            "log": null
+          },
+          {
+            "kind": "core",
+            "name": "nullable formatter metadata and Host query helper delta",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/slider/__tests__/index.test.ts --testNamePattern 'formatter|tooltip.open|v-model:value' --maxWorkers=1 > /tmp/apollo-slider-formatter-types-delta.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2270,
+            "durationSource": "Vitest runner total",
+            "log": "/tmp/apollo-slider-formatter-types-delta.log",
+            "testsPassed": 5,
+            "testsSkipped": 59
+          },
+          {
+            "kind": "lint",
+            "name": "two corrected type boundaries",
+            "scope": [
+              "packages/ui/src/slider"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/slider/Slider.vue packages/ui/src/slider/__tests__/index.test.ts > /tmp/apollo-slider-type-delta-format.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 37,
+            "durationSource": "Biome check timer",
+            "log": "/tmp/apollo-slider-type-delta-format.log"
+          },
+          {
+            "kind": "types",
+            "stage": "architecture",
+            "scope": [
+              "packages/ui/src/slider",
+              "packages/ui/src/color-picker/components/ColorSlider.ts"
+            ],
+            "baseCommit": "f463fc367124d2aa3812da3fc3f58b90a18849bd",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/slider/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/slider/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/index.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/color-picker/components/ColorSlider.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/color-picker/__tests__/type.test-d.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/packages/ui/src/color-picker/__tests__/fixtures/NativeColorPicker.vue"
+              ]
+            },
+            "sourceHashes": {
+              "packages/ui/src/slider/use-slider-theme.ts": "de19ecd1360819c93f7fd98b55001ca5a555bf7d221341acce850d643d6574e9",
+              "packages/ui/src/slider/SliderTooltip.ts": "f2a6096e3d9a3be32107e3442fed9b50c867cd2b1dc144648af5b379adb9f407",
+              "packages/ui/src/slider/Slider.vue": "9f77fb26aac6884a058add3df3bf4331ca885cbc9e7268233b2ec6a5a488cfb1",
+              "packages/ui/src/slider/context.ts": "f69a01c10c2409eef4f41d4a04ea1ea3108506284362ce7687b9eb9948b395de",
+              "packages/ui/src/slider/interface.ts": "a5cea07703f1c1a39ed9724d6aae701403c06d8883779068699b768dc04b2b2e",
+              "packages/ui/src/slider/util.ts": "bdf45c42fcafb377193a56ab8df49f343fa7f36f9a0e947c19ba2941dc44c6f9",
+              "packages/ui/src/slider/index.ts": "f190b4819a57f1b63b1c74b0f6a6d8867d1cc3e801716c6e0594afc3ab3ce1df",
+              "packages/ui/src/slider/demo/editable.vue": "9858fd3a2b8ef0c42e7e1d3af5bbbec4523ca22e2cf2a39f90f9babd3dbccc6e",
+              "packages/ui/src/slider/demo/tip-formatter.vue": "eec22130119900c52d505fff4cd55ac0026cd194b609ab996e316e5270cffafe",
+              "packages/ui/src/slider/demo/show-tooltip.vue": "37175fd05962c0b354ca6043d73b0014c46607fafb40f802ab1b002b63ef1dd9",
+              "packages/ui/src/slider/demo/draggable-track.vue": "dd243ba9b9c78a3d614bb09b70618638eed18ecfb27ad875016fe84a572a2a66",
+              "packages/ui/src/slider/demo/event.vue": "65fbc06bb385dcd08c87eecac76c0036824e9023c769ef64a91ecff91277ff24",
+              "packages/ui/src/slider/demo/vertical.vue": "77a112c43159694dd0439f93e1197ad150c33254babd54229f1917eeffa39a1a",
+              "packages/ui/src/slider/demo/icon-slider.vue": "a2cbdba20b8b422f8c40994a521d32abed417ec0e853113f96463e46a92de692",
+              "packages/ui/src/slider/demo/reverse.vue": "47943227290cf5e7834b8eecade32b322888ebf5ecf7f7c4fbcd57cb7c03c246",
+              "packages/ui/src/slider/demo/component-token.vue": "2dc800fbdd55bddd5d90a7dbab41acc82d49c1bfe8f023075c7ce311d52040c1",
+              "packages/ui/src/slider/demo/multiple.vue": "4ce3074140ee87f94ceea523939a5c3c72c7c7821959fd1979ad19321c5231fe",
+              "packages/ui/src/slider/demo/style-class.vue": "cc610ffa3db02bada73665f16a914a98a12118420084cca2b2547a31bcf51fa9",
+              "packages/ui/src/slider/demo/basic.vue": "bd43ff997569a5adf220380964aefa6e5c85d9012bb5a6df808eb93ee9caec76",
+              "packages/ui/src/slider/demo/input-number.vue": "5c5374bfd22bfbffb9d596262a3394b90ba18f84e9aed27f0c89bab18186f3a7",
+              "packages/ui/src/slider/demo/disabled-handle.vue": "aa4e96ca6caf39434774c2353436568f451fee3b5e006de07fac396fb45845ef",
+              "packages/ui/src/slider/demo/mark.vue": "95eb8b988de0fc41e3361aab9d860891cc74c83c99882e37433c774eb7ba2583",
+              "packages/ui/src/slider/Handles/Handle.ts": "1ba80cdf5c457a111622fe06717c9dcf42df2a3820fd651d9eff6995f62fd475",
+              "packages/ui/src/slider/Handles/index.ts": "e69ad1490753699e5dc348613469c7d9a386dd8e06b7e87c9fe596aae23a2520",
+              "packages/ui/src/slider/Marks/index.ts": "70c0332b7076acd79d07e37240aa314ad531ab85e26791663e41d755b457e965",
+              "packages/ui/src/slider/Tracks/index.ts": "edd2f034e3ea979487bc2247d82c6e121a75114ec0199bfdcae8421a1bcf1b67",
+              "packages/ui/src/slider/style/index.ts": "df8e8869536d0218855c1ca316cf93db985858371c59f813708d2ac28d3ebc34",
+              "packages/ui/src/slider/style/token.ts": "3ca9042d82dbce9a1a7fa01b8291b6b6d2b8d85c989d9f6f6c48f27d23beb15b",
+              "packages/ui/src/slider/Steps/index.ts": "1c643ed2dbfe823c2f3f400df166378cb7bbdff3938c8a7037be6665eb4115fc",
+              "packages/ui/src/slider/__tests__/a11y.test.ts": "9195f5bfd342421d114b7e2cd6133bbf2ba0b4b75a537326aeda4832e0831fb0",
+              "packages/ui/src/slider/__tests__/native-contracts.test.ts": "25e2a1bf419727c12fa194971e010f060e94113b0e5dbb1fe63e64aa1ebcfc7c",
+              "packages/ui/src/slider/__tests__/index.test.ts": "f0303e5c522d0c2a0d8aa03b79b26efb32f13076958555a7554a0fcd4f41e2fc",
+              "packages/ui/src/slider/__tests__/demo.test.ts": "45cd720fe97a3b293b46daefe35e7fdde128320a2f626b5a0b8012450ad306a8",
+              "packages/ui/src/slider/__tests__/type.test-d.ts": "e78eb5883c522d5821229ea489f43a47f03c70d706c8042d1b12b9e5cb1b8cd4",
+              "packages/ui/src/slider/__tests__/theme.test.ts": "f05898f8c6b2b8bf1e79bf77d52eba101a5daecaa0f009bd68db654d9098ebc9",
+              "packages/ui/src/slider/__tests__/semantic.test.ts": "073e48de0601f05caaa1e1641bb8b9acbeff36e71c64056c4f4ec94abd5c4aba",
+              "packages/ui/src/slider/hooks/use-offset.ts": "4d34a76606f8d2b3359319de1cb67dab15f59498326b4a6c35b677f2582deabc",
+              "packages/ui/src/slider/hooks/use-drag.ts": "39be9f26dcfb6419e9f524a7a22ea88d150e670180e63ecda65adff1d2600b40",
+              "packages/ui/src/slider/hooks/use-range.ts": "a02ba0e654215f072d9b483314db5cdb36d6a98207f43307670acc4b7d64ca62",
+              "packages/ui/src/slider/__tests__/fixtures/NativeSlider.vue": "9d224ea88828c0edb014fa87b8fcabf75b9c3308ff80d82ef2f09d8d443019ad",
+              "packages/ui/src/index.ts": "30428b1f5e79cb3ab55a587d6aebbefccb3327363982739fbee1d5a951523d9d",
+              "packages/ui/src/color-picker/components/ColorSlider.ts": "538ed8631e0677da6722920fe231f5e9a5cd7d63805ee7a9c83a128d7ef11023",
+              "packages/ui/src/color-picker/__tests__/type.test-d.ts": "f23646802504f8d0eb8a10cdc7ae24ce2319801c1554ded019f6a32c73c1dbdd",
+              "packages/ui/src/color-picker/__tests__/fixtures/NativeColorPicker.vue": "32d0d4cf79510cfdb1bebc149a874aefb36c356c234f4c7a7e015759a9419201"
+            },
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-slider-tsconfig.json",
+            "updatedFiles": [
+              "packages/ui/src/slider/Slider.vue",
+              "packages/ui/src/slider/__tests__/index.test.ts"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52748,
+            "log": "/tmp/apollo-slider-final-types.log",
+            "result": "Immutable complete Slider source/tests/real h() and native SFC positives/negatives/Demos, public exports and actual ColorSlider plus ColorPicker type/SFC consumption. Inherited strict/declaration:true unchanged."
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/color-picker/__tests__/index.test.ts packages/ui/src/color-picker/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 16501,
+            "log": "/tmp/apollo-slider-color-consumers.log",
+            "result": "Actual ColorPicker index and native regressions, 35 passed. Subsequent changes only correct a DOM-helper type and accurate Function|null metadata; affected formatter core passed separately."
+          }
+        ],
+        "failedAttempts": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/slider/__tests__/native-contracts.test.ts --maxWorkers=1 > /tmp/apollo-slider-native-red.log 2>&1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5980,
+            "log": "/tmp/apollo-slider-native-red.log",
+            "failures": 7,
+            "reason": "Initial meaningful native keyboard/session/ref/disabled/active Tooltip/touchcancel/theme contradictions reproduced."
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check --write packages/ui/src/slider/Slider.vue packages/ui/src/slider/SliderTooltip.ts packages/ui/src/slider/interface.ts packages/ui/src/slider/Handles/Handle.ts packages/ui/src/slider/Handles/index.ts packages/ui/src/slider/hooks/use-drag.ts packages/ui/src/slider/__tests__/native-contracts.test.ts packages/ui/src/slider/__tests__/type.test-d.ts packages/ui/src/slider/__tests__/index.test.ts packages/ui/src/slider/__tests__/a11y.test.ts packages/ui/src/slider/__tests__/semantic.test.ts packages/ui/src/slider/__tests__/theme.test.ts packages/ui/src/slider/__tests__/fixtures/NativeSlider.vue packages/ui/src/slider/demo/component-token.vue > /tmp/apollo-slider-format-second.log 2>&1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 87,
+            "log": "/tmp/apollo-slider-format-second.log",
+            "reason": "Unused h import after actual constructor migration; removed directly."
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/slider/Slider.vue packages/ui/src/slider/SliderTooltip.ts packages/ui/src/slider/interface.ts packages/ui/src/slider/context.ts packages/ui/src/slider/index.ts packages/ui/src/slider/use-slider-theme.ts packages/ui/src/slider/Handles/Handle.ts packages/ui/src/slider/Handles/index.ts packages/ui/src/slider/hooks/use-drag.ts packages/ui/src/slider/Marks/index.ts packages/ui/src/slider/Tracks/index.ts packages/ui/src/slider/style/token.ts packages/ui/src/slider/__tests__/native-contracts.test.ts packages/ui/src/slider/__tests__/native-browser.mjs packages/ui/src/slider/__tests__/type.test-d.ts packages/ui/src/slider/__tests__/index.test.ts packages/ui/src/slider/__tests__/a11y.test.ts packages/ui/src/slider/__tests__/semantic.test.ts packages/ui/src/slider/__tests__/theme.test.ts packages/ui/src/slider/__tests__/fixtures/NativeSlider.vue packages/ui/src/slider/demo/component-token.vue > /tmp/apollo-slider-format-frozen.log 2>&1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 55,
+            "log": "/tmp/apollo-slider-format-frozen-first.log",
+            "reason": "Marks prop formatting; subsequent formatter and final full owned check passed."
+          },
+          {
+            "kind": "types",
+            "scope": [
+              "packages/ui/src/slider",
+              "packages/ui/src/color-picker/components/ColorSlider.ts"
+            ],
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-slider-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 37168,
+            "log": "/tmp/apollo-slider-types.log",
+            "result": "/tmp/apollo-slider-types-result.json",
+            "reason": "Only the test DOM helper wrapper shape and truthful nullable Function metadata diagnosed; exact two boundaries corrected."
+          }
+        ],
+        "pending": [],
+        "unverified": [
+          "Final same-freeze nine dimensions/full coverage/build/published artifacts/full visual/platform matrices belong to stage two and were not run here."
+        ],
+        "nonBlockingBoundaries": [
+          "Custom DOM prefixes still require corresponding static CSS (existing shared policy).",
+          "Focusable custom structures must bind nodeProps to an actual native handle; an intentionally empty handle slot has no focus target.",
+          "axe/jsdom does not implement layout/pseudo styles/canvas contrast; actual Chrome input and geometry were separately verified, without claiming a full visual or contrast matrix."
+        ],
+        "historical": "README/PLAN retain the dated original evidence under the current contract notice. No old complete acceptance was relabeled as current.",
+        "timing": "Runner/browser/lint durations are preserved from actual logs. Analysis/implementation/integration wait were not separately measured.",
+        "sourceHashes": {
+          "packages/ui/src/slider/use-slider-theme.ts": "de19ecd1360819c93f7fd98b55001ca5a555bf7d221341acce850d643d6574e9",
+          "packages/ui/src/slider/SliderTooltip.ts": "f2a6096e3d9a3be32107e3442fed9b50c867cd2b1dc144648af5b379adb9f407",
+          "packages/ui/src/slider/Slider.vue": "9f77fb26aac6884a058add3df3bf4331ca885cbc9e7268233b2ec6a5a488cfb1",
+          "packages/ui/src/slider/context.ts": "f69a01c10c2409eef4f41d4a04ea1ea3108506284362ce7687b9eb9948b395de",
+          "packages/ui/src/slider/interface.ts": "a5cea07703f1c1a39ed9724d6aae701403c06d8883779068699b768dc04b2b2e",
+          "packages/ui/src/slider/util.ts": "bdf45c42fcafb377193a56ab8df49f343fa7f36f9a0e947c19ba2941dc44c6f9",
+          "packages/ui/src/slider/index.ts": "f190b4819a57f1b63b1c74b0f6a6d8867d1cc3e801716c6e0594afc3ab3ce1df",
+          "packages/ui/src/slider/demo/editable.vue": "9858fd3a2b8ef0c42e7e1d3af5bbbec4523ca22e2cf2a39f90f9babd3dbccc6e",
+          "packages/ui/src/slider/demo/tip-formatter.vue": "eec22130119900c52d505fff4cd55ac0026cd194b609ab996e316e5270cffafe",
+          "packages/ui/src/slider/demo/show-tooltip.vue": "37175fd05962c0b354ca6043d73b0014c46607fafb40f802ab1b002b63ef1dd9",
+          "packages/ui/src/slider/demo/draggable-track.vue": "dd243ba9b9c78a3d614bb09b70618638eed18ecfb27ad875016fe84a572a2a66",
+          "packages/ui/src/slider/demo/event.vue": "65fbc06bb385dcd08c87eecac76c0036824e9023c769ef64a91ecff91277ff24",
+          "packages/ui/src/slider/demo/vertical.vue": "77a112c43159694dd0439f93e1197ad150c33254babd54229f1917eeffa39a1a",
+          "packages/ui/src/slider/demo/icon-slider.vue": "a2cbdba20b8b422f8c40994a521d32abed417ec0e853113f96463e46a92de692",
+          "packages/ui/src/slider/demo/reverse.vue": "47943227290cf5e7834b8eecade32b322888ebf5ecf7f7c4fbcd57cb7c03c246",
+          "packages/ui/src/slider/demo/component-token.vue": "2dc800fbdd55bddd5d90a7dbab41acc82d49c1bfe8f023075c7ce311d52040c1",
+          "packages/ui/src/slider/demo/multiple.vue": "4ce3074140ee87f94ceea523939a5c3c72c7c7821959fd1979ad19321c5231fe",
+          "packages/ui/src/slider/demo/style-class.vue": "cc610ffa3db02bada73665f16a914a98a12118420084cca2b2547a31bcf51fa9",
+          "packages/ui/src/slider/demo/basic.vue": "bd43ff997569a5adf220380964aefa6e5c85d9012bb5a6df808eb93ee9caec76",
+          "packages/ui/src/slider/demo/input-number.vue": "5c5374bfd22bfbffb9d596262a3394b90ba18f84e9aed27f0c89bab18186f3a7",
+          "packages/ui/src/slider/demo/disabled-handle.vue": "aa4e96ca6caf39434774c2353436568f451fee3b5e006de07fac396fb45845ef",
+          "packages/ui/src/slider/demo/mark.vue": "95eb8b988de0fc41e3361aab9d860891cc74c83c99882e37433c774eb7ba2583",
+          "packages/ui/src/slider/Handles/Handle.ts": "1ba80cdf5c457a111622fe06717c9dcf42df2a3820fd651d9eff6995f62fd475",
+          "packages/ui/src/slider/Handles/index.ts": "e69ad1490753699e5dc348613469c7d9a386dd8e06b7e87c9fe596aae23a2520",
+          "packages/ui/src/slider/Marks/index.ts": "70c0332b7076acd79d07e37240aa314ad531ab85e26791663e41d755b457e965",
+          "packages/ui/src/slider/Tracks/index.ts": "edd2f034e3ea979487bc2247d82c6e121a75114ec0199bfdcae8421a1bcf1b67",
+          "packages/ui/src/slider/style/index.ts": "df8e8869536d0218855c1ca316cf93db985858371c59f813708d2ac28d3ebc34",
+          "packages/ui/src/slider/style/token.ts": "3ca9042d82dbce9a1a7fa01b8291b6b6d2b8d85c989d9f6f6c48f27d23beb15b",
+          "packages/ui/src/slider/Steps/index.ts": "1c643ed2dbfe823c2f3f400df166378cb7bbdff3938c8a7037be6665eb4115fc",
+          "packages/ui/src/slider/__tests__/a11y.test.ts": "9195f5bfd342421d114b7e2cd6133bbf2ba0b4b75a537326aeda4832e0831fb0",
+          "packages/ui/src/slider/__tests__/native-contracts.test.ts": "25e2a1bf419727c12fa194971e010f060e94113b0e5dbb1fe63e64aa1ebcfc7c",
+          "packages/ui/src/slider/__tests__/index.test.ts": "f0303e5c522d0c2a0d8aa03b79b26efb32f13076958555a7554a0fcd4f41e2fc",
+          "packages/ui/src/slider/__tests__/demo.test.ts": "45cd720fe97a3b293b46daefe35e7fdde128320a2f626b5a0b8012450ad306a8",
+          "packages/ui/src/slider/__tests__/type.test-d.ts": "e78eb5883c522d5821229ea489f43a47f03c70d706c8042d1b12b9e5cb1b8cd4",
+          "packages/ui/src/slider/__tests__/theme.test.ts": "f05898f8c6b2b8bf1e79bf77d52eba101a5daecaa0f009bd68db654d9098ebc9",
+          "packages/ui/src/slider/__tests__/semantic.test.ts": "073e48de0601f05caaa1e1641bb8b9acbeff36e71c64056c4f4ec94abd5c4aba",
+          "packages/ui/src/slider/hooks/use-offset.ts": "4d34a76606f8d2b3359319de1cb67dab15f59498326b4a6c35b677f2582deabc",
+          "packages/ui/src/slider/hooks/use-drag.ts": "39be9f26dcfb6419e9f524a7a22ea88d150e670180e63ecda65adff1d2600b40",
+          "packages/ui/src/slider/hooks/use-range.ts": "a02ba0e654215f072d9b483314db5cdb36d6a98207f43307670acc4b7d64ca62",
+          "packages/ui/src/slider/__tests__/fixtures/NativeSlider.vue": "9d224ea88828c0edb014fa87b8fcabf75b9c3308ff80d82ef2f09d8d443019ad"
+        },
+        "stop": "No subagents, no own TS program, no pnpm/install/build, no commits/push or new tasks.",
+        "integrationNote": "A temporary WIP missing-module window blocked an unrelated Modal Demo import through the root barrel. The complete use-slider-theme module was then written, and later Slider core/Demo/browser collection succeeded; no stub or shared change was used. Root owns the unrelated Demo follow-up.",
+        "typeCorrectionFiles": [
+          "packages/ui/src/slider/Slider.vue",
+          "packages/ui/src/slider/__tests__/index.test.ts"
+        ],
+        "typeCorrections": "formatter runtime metadata is [Function,null] as PropType<SliderFormatter>; no null input loss or unknown cast. Test handle helper requires only findAll(string):DOMWrapper<Element>[], so both real component and Host wrappers satisfy the DOM contract.",
+        "stage": "architecture",
+        "sourceFrozen": true,
+        "integrationSnapshot": {
+          "sourceBase": "f463fc367124d2aa3812da3fc3f58b90a18849bd",
+          "uiBarrelSha256": "30428b1f5e79cb3ab55a587d6aebbefccb3327363982739fbee1d5a951523d9d",
+          "rootMerge": "Adds only the validated SliderHandleNodeProps export after independently validated Modal88850e41; component has no Modal runtime dependency."
+        }
       }
     },
     {

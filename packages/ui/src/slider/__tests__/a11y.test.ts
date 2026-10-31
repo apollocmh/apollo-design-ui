@@ -26,7 +26,7 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
-import { h, nextTick } from 'vue';
+import { nextTick } from 'vue';
 import Slider from '../Slider.vue';
 
 const P = 'apollo-slider';
@@ -82,8 +82,8 @@ a11yDemoTest('Slider（已命名把手 · 无豁免组）', {
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /** 挂到真实文档（axe 与 `.focus()` 都要求元素在文档里）。 */
-const mountA11y = (props: Record<string, unknown> = {}) =>
-  mount(h(Slider as never, { ...props } as never), { attachTo: document.body });
+const mountA11y = (props: InstanceType<typeof Slider>['$props'] = {}) =>
+  mount(Slider, { props, attachTo: document.body });
 
 const fireKey = (el: Element, keyCode: number, type: 'keydown' | 'keyup' = 'keydown'): void => {
   const ev = new KeyboardEvent(type, { keyCode, bubbles: true, cancelable: true });
@@ -92,7 +92,7 @@ const fireKey = (el: Element, keyCode: number, type: 'keydown' | 'keyup' = 'keyd
 };
 
 describe('Slider · axe 扫描（真实配置，0 violation）', () => {
-  const cases: Record<string, Record<string, unknown>> = {
+  const cases: Record<string, InstanceType<typeof Slider>['$props']> = {
     // ⚠️ 每个用例都带 `ariaLabelForHandle`：`role="slider"` 需要可访问名，
     //    而组件**不会**替用户发明一个（与 antd 一致，见文件末尾那条钉「上游同样的缺口」的用例）。
     单把手: { defaultValue: 30, ariaLabelForHandle: '音量' },
@@ -241,10 +241,10 @@ describe('Slider · 键盘与焦点管理（L5）', () => {
 
   it('expose 的 focus()/blur() 可用于程序化焦点管理', async () => {
     const w = mountA11y({ defaultValue: 30 });
-    (w.vm as unknown as { focus: () => void }).focus();
+    w.vm.focus();
     await nextTick();
     expect(document.activeElement?.classList.contains(`${P}-handle`)).toBe(true);
-    (w.vm as unknown as { blur: () => void }).blur();
+    w.vm.blur();
     await nextTick();
     expect(document.activeElement?.classList.contains(`${P}-handle`)).toBe(false);
     w.unmount();

@@ -1,3 +1,5 @@
+> 2026-10-31 当前架构差额：保留既有量化/推挤算法、Vue 槽及完整旧断言，补齐提议会话/owned 键盘通知、公开真实 nodeProps/ref、活动 Tooltip、当前 attrs/Provider/18 Token 和鼠标/触摸取消资源。focus/blur 保留原公开范围；min/max/step 与已有 null 清空行为补齐声明。当前契约见 [API](./index.zh-CN.md)，最小实际检查记录 `/tmp/apollo-slider-checks.json`，最终类型由集成人统一执行。以下 2026-09-29 历史结论保留原日期与原义，不作为本轮重跑或现行规格。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # Slider 实现说明

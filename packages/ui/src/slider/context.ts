@@ -14,7 +14,7 @@
  *    子组件读 `ctx.xxx` 即可拿到最新值（见 PITFALLS 195：读到 ref 本身是坑）。
  */
 
-import type { ComputedRef, InjectionKey } from 'vue';
+import type { InjectionKey } from 'vue';
 import type {
   SliderDirection,
   SliderMarkObject,
@@ -24,6 +24,9 @@ import type {
 
 /** `SliderContext` 的值形状（逐字段对应 rc 的 createContext 默认值）。 */
 export interface SliderContextValue {
+  handleAttrs: Record<string, unknown>;
+  onKeydown: (event: KeyboardEvent, index: number) => void;
+  onKeyup: (event: KeyboardEvent, index: number) => void;
   min: number;
   max: number;
   direction: SliderDirection;
@@ -71,12 +74,3 @@ export const unstableSliderContextKey: InjectionKey<UnstableSliderContextValue> 
 export interface NormalizedMark extends SliderMarkObject {
   value: number;
 }
-
-/** `SliderInternalContext`（antd 层）：给 `handleRender` / icon-slider demo 用的注入通道。 */
-export interface SliderInternalContextValue {
-  handleRender?: (node: unknown, info: { index: number }) => unknown;
-  direction?: 'ltr' | 'rtl';
-}
-
-export const sliderInternalContextKey: InjectionKey<ComputedRef<SliderInternalContextValue>> =
-  Symbol('apolloSliderInternalContext');

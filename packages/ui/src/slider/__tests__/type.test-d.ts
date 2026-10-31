@@ -10,7 +10,8 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties, VNodeChild } from 'vue';
+import { type CSSProperties, h, type VNodeChild } from 'vue';
+import { Slider } from '../index';
 import type {
   SliderEmits,
   SliderHandleInfo,
@@ -30,8 +31,8 @@ import type {
 describe('Slider · L3 类型', () => {
   it('值域：单值与数组共用一个联合类型', () => {
     expectTypeOf<SliderValue>().toEqualTypeOf<number | number[]>();
-    expectTypeOf<SliderProps['value']>().toEqualTypeOf<SliderValue | undefined>();
-    expectTypeOf<SliderProps['defaultValue']>().toEqualTypeOf<SliderValue | undefined>();
+    expectTypeOf<SliderProps['value']>().toEqualTypeOf<SliderValue | null | undefined>();
+    expectTypeOf<SliderProps['defaultValue']>().toEqualTypeOf<SliderValue | null | undefined>();
   });
 
   it('range：三形态（true / 配置对象 / 未传）', () => {
@@ -92,7 +93,7 @@ describe('Slider · L3 类型', () => {
   it('slots：handle 的槽参数是 SliderHandleInfo', () => {
     expectTypeOf<SliderSlots['handle']>().parameters.toEqualTypeOf<[info: SliderHandleInfo]>();
     expectTypeOf<SliderHandleInfo['index']>().toEqualTypeOf<number>();
-    expectTypeOf<SliderHandleInfo['draggingDelete']>().toEqualTypeOf<boolean | undefined>();
+    expectTypeOf<SliderHandleInfo['draggingDelete']>().toEqualTypeOf<boolean>();
   });
 
   it('ref：只有 focus 与 blur', () => {
@@ -103,7 +104,7 @@ describe('Slider · L3 类型', () => {
 
 describe('Slider · L3 负例', () => {
   it('value 不接受字符串', () => {
-    type Acceptable = SliderValue | undefined;
+    type Acceptable = SliderValue | null | undefined;
     // @ts-expect-error 字符串不是合法的 slider 值
     const bad: Acceptable = '30';
     expectTypeOf(bad).not.toBeNever();
@@ -130,3 +131,76 @@ describe('Slider · L3 负例', () => {
     expectTypeOf(bad).not.toBeNever();
   });
 });
+
+type SliderInstance = InstanceType<typeof Slider>;
+it('actual constructor exposes the existing native focus methods and owned payloads', () => {
+  expectTypeOf<SliderInstance['focus']>().toEqualTypeOf<SliderRef['focus']>();
+  expectTypeOf<SliderInstance['blur']>().toEqualTypeOf<SliderRef['blur']>();
+  expectTypeOf<Parameters<NonNullable<SliderInstance['$props']['onChange']>>>().toEqualTypeOf<
+    SliderEmits['change']
+  >();
+  expectTypeOf<Parameters<NonNullable<SliderInstance['$props']['onFocus']>>>().toEqualTypeOf<
+    SliderEmits['focus']
+  >();
+  expectTypeOf<Parameters<NonNullable<SliderInstance['$props']['onKeydown']>>>().toEqualTypeOf<
+    SliderEmits['keydown']
+  >();
+  expectTypeOf<SliderProps['min']>().toEqualTypeOf<number | undefined>();
+  expectTypeOf<SliderProps['max']>().toEqualTypeOf<number | undefined>();
+  expectTypeOf<SliderProps['step']>().toEqualTypeOf<number | null | undefined>();
+});
+
+it('actual h consumers use complete native handle scopes and nullable inputs', () => {
+  const slots: SliderSlots = {
+    handle: (info) => {
+      expectTypeOf(info.value).toEqualTypeOf<number>();
+      expectTypeOf(info.nodeProps.onFocus).toEqualTypeOf<
+        ((event: FocusEvent) => void) | undefined
+      >();
+      expectTypeOf(info.nodeProps.onKeydown).toEqualTypeOf<
+        ((event: KeyboardEvent) => void) | undefined
+      >();
+      return h('div', { ...info.nodeProps, class: info.className, style: info.style });
+    },
+    activeHandle: (info) =>
+      h('div', { ...info.nodeProps, class: info.className, style: info.style }),
+  };
+  const props: SliderProps = {
+    min: 10,
+    max: 80,
+    step: null,
+    marks: { 10: 'low', 80: 'high' },
+    value: null,
+  };
+  h(Slider, { ...props }, slots);
+  h(Slider, {
+    range: { editable: true, minCount: 1, maxCount: 3 },
+    value: [20, 60],
+    disabled: [false, true],
+    onKeydown: (event, index) => {
+      expectTypeOf(index).toBeNumber();
+      event.preventDefault();
+    },
+    onChange: (next) => {
+      expectTypeOf(next).toEqualTypeOf<SliderValue>();
+    },
+  });
+});
+function invalidNativeSliderContracts(instance: SliderInstance) {
+  // @ts-expect-error The current Slider ref has only focus and blur; no added root-handle promise.
+  instance.nativeElement;
+  // @ts-expect-error Values must be numeric or explicitly cleared with null.
+  h(Slider, { value: '30' });
+  // @ts-expect-error The runtime range limit is numeric.
+  h(Slider, { range: { maxCount: '3' } });
+  // @ts-expect-error Native keydown receives KeyboardEvent, not a MouseEvent callback.
+  h(Slider, { onKeydown: (_event: MouseEvent) => {} });
+  // @ts-expect-error Tooltip visibility is owned by Slider focus/hover and tooltip.open.
+  const unsupported: SliderTooltipProps = { defaultOpen: true };
+  // @ts-expect-error Internal dragging metadata lives on the actual handle scope.
+  const fakeTooltipValue: SliderTooltipProps = { value: 30 };
+  // @ts-expect-error The handle scope value is a real number.
+  const badSlots: SliderSlots = { handle: (_info: { value: string }) => null };
+  void [unsupported, fakeTooltipValue, badSlots];
+}
+void invalidNativeSliderContracts;
