@@ -4,124 +4,87 @@ title: Anchor
 subtitle: Anchor
 ---
 
-Hyperlinks to scroll on one page.
+# Anchor
 
-## When To Use
+Native links form a table of contents and track sections in the actual scrolling container. Items and default-slot composition share the same scrolling, indicator and Affix chain.
 
-- To display the structure of a page (table of contents) and jump to a section on click.
-- To **highlight the current anchor automatically** while scrolling.
+```vue
+<Anchor :get-container="() => scrollArea" :affix="false" @click="onClick" @change="onChange">
+  <AnchorLink href="#intro">
+    <template #title><strong>Introduction</strong></template>
+    <AnchorLink href="#details" title="Details" />
+  </AnchorLink>
+</Anchor>
+```
 
-## Examples
+## Anchor Props
 
-See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| items | Recursive link data; a present default slot overrides it, including an empty slot | AnchorLinkItemProps[] | — |
+| direction | Navigation arrangement | vertical \| horizontal | vertical |
+| offsetTop | Affix top offset, wrapper maximum height and fallback scroll offset | number | — |
+| bounds | Active-section tolerance | number | 5 |
+| targetOffset | Scroll and detection offset, before offsetTop | number | — |
+| affix | Use Affix; an object retains dynamic offsetBottom/prefixCls configuration | boolean \| AnchorAffixConfig | true |
+| showInkInFixed | Show the indicator without Affix | boolean | false |
+| getContainer | Actual scroll target; omitted: Provider.getTargetContainer, then window | () => HTMLElement \| Window \| null \| undefined | — |
+| getCurrentAnchor | Pure highlight mapping; removal restores the raw href without changing event payloads | (activeLink: string) => string | — |
+| replace | Use replaceState; link-level settings take precedence | boolean | false |
+| prefixCls | Current component prefix and the default prefix of its Links | string | apollo-anchor |
+| classNames | root/item/itemTitle/indicator classes or a function receiving { props } | AnchorSemanticClassNames \| function | — |
+| styles | Corresponding Vue CSSProperties or a function receiving { props } | AnchorSemanticStyles \| function | — |
 
-| demo | Description |
-|---|---|
-| `basic` | The simplest usage |
-| `horizontal` | Horizontally aligned anchors (the ink becomes a bottom bar) |
-| `onChange` | Listening for anchor link change |
-| `onClick` | Clicking an anchor does not record history |
-| `replace` | Replace path in browser history |
-| `targetOffset` | Scroll offset of the target (takes precedence over `offsetTop`) |
-| `targetOffset-per-link` | Per-link offset (higher precedence) |
-| `customizeHighlight` | Customize the anchor highlight (`getCurrentAnchor`) |
+A null/undefined container is explicitly pending: it releases the old listener and active detection without selecting window. Reactive template refs, Provider replacement and offset changes synchronize the current chain.
 
-⚠️ 4 of antd's demos are **not ported** (gaps in `README.md` §5):
-`static` (the only difference is scrolling behaviour ⇒ covered by L6) ·
-`legacy-anchor` (covered by the L4 `anchor:children` case) ·
-`style-class` (depends on `antd-style`) · `component-token` (tokens are build-time artifacts here).
+## Owned events
 
-## API
+| Component/event | Payload | Description |
+| --- | --- | --- |
+| Anchor change | currentActiveLink: string | The original href; highlight mapping does not change it |
+| Anchor click | event: MouseEvent, link: AnchorLinkInfo | Before selection, scrolling and history operations |
+| AnchorLink click | event: MouseEvent, link: AnchorLinkInfo | The same native event, before Anchor's aggregate notification |
 
-### Props
+Link info is `{ href, title }`, preserving full title content. Any click listener may preventDefault to cancel selection, scrolling and history. Notification uses emits once, without manually invoking listeners again. Templates use @click/@change; programmatic listeners retain onClick/onChange.
 
-| Property | Description | Type | Default | Global Config |
-|---|---|---|---|---|
-| items | Data source (recommended). Each entry is the link fields plus `key` and an optional nested `children` | `AnchorLinkItemProps[]` | — | × |
-| direction | Direction | `'vertical' \| 'horizontal'` | `'vertical'` | × |
-| offsetTop | Offset of the container top (also feeds `Affix` and the `maxHeight` calc) | `number` | — | × |
-| bounds | Tolerance of the hit test | `number` | `5` | × |
-| targetOffset | Scroll offset of the target (**takes precedence over** `offsetTop`) | `number` | — | × |
-| affix | Whether to fix the anchor. ⚠️ Defaults to **on** | `boolean \| Omit<AffixProps,'offsetTop'\|'target'>` | `true` | × |
-| showInkInFixed | Whether to show the ink when not affixed | `boolean` | `false` | × |
-| getContainer | Scroll container. Falls back to ConfigProvider's `getTargetContainer`, then `window` | `() => HTMLElement \| Window` | — | × |
-| getCurrentAnchor | Rewrites the **highlight** (does not change the `onChange` payload) | `(activeLink: string) => string` | — | × |
-| onChange | Current anchor changed (by scroll or click) | `(currentActiveLink: string) => void` | — | × |
-| onClick | Click on a link. Called **before** scrolling. ⚠️ A prop with a **custom signature**, **not** a DOM event | `(e: MouseEvent, link: { title, href }) => void` | — | × |
-| replace | Use `replaceState` instead of `pushState` | `boolean` | — | × |
-| classNames | Semantic class names (`root` / `item` / `itemTitle` / `indicator`); the function form is supported | `AnchorSemanticClassNames \| ((info) => …)` | — | ✅ (`anchor.classNames`) |
-| styles | Semantic styles (four slots); the function form is supported | `AnchorSemanticStyles \| ((info) => …)` | — | ✅ (`anchor.styles`) |
-| prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-anchor` | × |
-| class / style | **Native attrs on the root (inner wrapper div)**, not Props; caller `style` overrides the computed `max-height` | `string \| array \| object` / `CSSProperties` | — | × |
+Modifiers, nonprimary buttons, download, new browsing contexts and external links keep native browser navigation. Plain same-document fragments resolve against their owning document and support native mouse and Enter activation. No extra arrow-key or focus model is introduced. Explicit replace uses replaceState for same-page fragments and retains location.replace for ordinary external URLs.
 
-#### AnchorLinkItemProps
+## Items, Link and slots
 
-| Field | Description | Type |
-|---|---|---|
-| href | **Required**. Internal anchors look like `#section-1` | `string` |
-| title | The displayed text | `VNodeChild` |
-| key | Unique identifier | `string \| number` |
-| target | `<a target>` | `string` |
-| className | Applied to `.{prefixCls}-link` | `string` |
-| replace | Overrides `Anchor`'s `replace` for this link | `boolean` |
-| targetOffset | Per-link scroll offset (also used for scroll detection) | `number` |
-| children | **Nested** items. ⚠️ Not supported in the horizontal direction | `AnchorLinkItemProps[]` |
+| Data field | Description |
+| --- | --- |
+| key | Required string/number business key in items |
+| href | Required native link address |
+| title | Required VNodeChild in items, including zero, empty values, arrays and components |
+| target | Native a.target |
+| className | Existing item/Link wrapper class |
+| replace | Override the parent history behavior |
+| targetOffset | Link-level scroll/detection offset, before component offsets |
+| prefixCls | Explicit Link prefix |
+| children | Recursive items only; horizontal navigation does not render nested links |
 
-### Events
+AnchorLink (also Anchor.Link) requires href. Its title data is optional so templates can use #title. There is no children prop; nested links use its default slot.
 
-| Name | Description | Parameters |
-|---|---|---|
-| change | Current anchor changed (the **same path** as the `onChange` prop) | `(currentActiveLink: string)` |
+| Component/slot | Responsibility |
+| --- | --- |
+| Anchor default | Supported Vue composition; presence overrides items, including conditional empty content |
+| AnchorLink title | Complete native anchor content; presence overrides title data even when empty or zero |
+| AnchorLink default | Existing vertical nested-link composition |
 
-⚠️ **There is no `click` event** — `onClick` is a prop with a custom signature (see above).
-Declaring it as a component event would stop `@click` from being attached to the root element.
+Anchor and Link expose no public imperative control API or new v-model. Affix retains its own change event and updatePosition method.
 
-### Slots
+## Native attrs, Provider and Tokens
 
-| Name | Description |
-|---|---|
-| default | Link content. Corresponds to antd's **deprecated** `children` (use `items`; passing it emits a deprecation warning) |
+Anchor native attrs/class/style belong to its wrapper, outside the inner navigation and inside Affix. Precedence is Provider, component semantic styles, then native attrs. Link class/style/data/id retain their item wrapper; aria-*, tabindex and native focus/keyboard listeners belong to the actionable a. Active links default to aria-current="location". Conditional contents, same-key item replacement and configuration updates preserve nodes and focus.
 
-### Sub-components
+The current Provider prefix, direction, component configuration and theme remain reactive. Links inherit the current Anchor prefix unless explicitly overridden. Native dir lets logical CSS consume direction. The two component Tokens are linkPaddingBlock (paddingXXS by default) and linkPaddingInlineStart (padding); they project onto the actual consuming layer. Replacement, removal and explicit zero work, and existing aliases retain their derived roles.
 
-| Name | Description |
-|---|---|
-| `Anchor.Link` (also exported as `AnchorLink`) | A single link. Same fields as `AnchorLinkItemProps` minus `key` / `children` (the latter goes through the default slot) |
+## Resources and migration
 
-## Theme
+Listeners start after mounting. New targets, changed configuration, container switches and unmount cancel stale scroll animations. Each link owns registration, so removing one duplicate href does not remove the others. The indicator tracks direction, content and actual sizes; observations and frames are released on unmount. SSR starts no browser effects. No position polling, router adapter or controlled-highlight model is added.
 
-### Component Token
+onClick/onChange are owned emits; the old claim that multiple arguments cannot be emitted is removed. Default composition no longer produces an upstream-derived deprecation warning. Replace the unused children prop with the default slot and use #title for content. A custom Anchor prefix now also owns its Links' default classes, keeping ink lookup consistent. The historical DOM baseline remains intact with exact prefix and native-dir differences.
 
-**2** (both alias-derived):
+## Demos
 
-| token | Default | Used for |
-|---|---|---|
-| `linkPaddingBlock` | `paddingXXS` | `.{p}-link`'s `padding-block` |
-| `linkPaddingInlineStart` | `padding` | `.{p}-link`'s `padding-inline-start` |
-
-There are **4 more `mergeToken` derived values** (users **cannot** override them via
-`theme.components.Anchor`):
-
-| Derived token | Computation | Used for |
-|---|---|---|
-| `holderOffsetBlock` | `paddingXXS` | the wrapper's `margin-block-start` / `padding-block-start` |
-| `anchorPaddingBlockSecondary` | `paddingXXS / 2` | nested `.{p}-link`'s `padding-block` |
-| `anchorTitleBlock` | `fontSize / 14 * 3` | `.{p}-link-title`'s `margin-block-end` |
-| `anchorBallSize` | `fontSizeLG / 2` | ⚠️ **No consumer here nor upstream** (kept only for parity) |
-
-## Design Notes
-
-- **Current anchor rule**: for each link, extract the id with `/#([^\t\r\n\f\v]+)$/` ⇒
-  `document.getElementById` ⇒ `getOffsetTop(target, container)` ⇒ keep those with
-  `top <= (per-link targetOffset ?? global offsetTop) + bounds` ⇒ pick the one with the
-  **largest `top`**. If none matches, the result is an empty string (no highlight).
-- **`getOffsetTop` has three branches**: empty `getClientRects()` ⇒ `0`; non-zero width/height
-  ⇒ relative to the container; otherwise `rect.top`.
-- **The scroll listener follows link content and the current resolved scroll container**; changing the local or Provider target releases the previous listener and binds the new one.
-- **The highlight is not taken over during a scroll animation**: `handleScroll` returns early
-  while animating, and clicking the same link again does not re-emit `onChange`.
-- **`AnchorLink` takes its prefix from the ConfigProvider root prefix**, independent of
-  `Anchor`'s `prefixCls` prop (upstream behaviour).
-- **Zero ARIA**: semantics come entirely from the **native `<a href>`**; the component adds no
-  `role` / `aria-current`. This is intentional upstream and is pinned by L5.
-- **There is no `ref` / `expose`** (upstream `Anchor` is a `React.FC` without forwardRef).
+basic, horizontal, onChange, onClick, replace, target-offset, target-offset-per-link, customize-highlight, static, style-class, component-token and bounds. The Token demo uses real ConfigProvider.components.Anchor.

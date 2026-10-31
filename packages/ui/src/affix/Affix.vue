@@ -1,39 +1,7 @@
 <script setup lang="ts">
-/**
- * Affix 固钉 —— 移植自 antd 6.6.4 的 `es/affix/index.js`（204 行）。
- *
- * ⚠️ 判据在 `./utils.ts`（纯函数，已单独单测）；本文件只负责
- *    「测量 → 喂判据 → 应用结果 → 绑/解事件」。
- *
- * ── 结构（对照 antd `:186-203`）─────────────────────────────────────────────
- *
- * ```html
- * <div ref="placeholderNode" style="{...contextStyle, ...style}" class="{className, contextClassName}">
- *   <div v-if="affixStyle" style="{width, height}" aria-hidden="true"></div>   <!-- 占位 -->
- *   <div ref="fixedNode" class="{affixStyle ? prefixCls : ''}" style="{affixStyle}">
- *     <slot />
- *   </div>
- * </div>
- * ```
- *
- * ── 五条最容易写错的判据（对照 `docs/analysis/affix.md`）──────────────────────
- *
- * 1. **类名只在固钉时出现**（antd `:181-183` `mergedCls = clsx({ [rootCls]: affixStyle })`）
- *    ⇒ 未固钉时内层**没有** `apollo-affix`。
- * 2. **占位层只在固钉时渲染**（`:186`），且 `aria-hidden="true"`。
- * 3. **`internalOffsetTop` 互锁**（`:38`）：两者都未传时为 `0`；
- *    只传 `offsetBottom` 时 `getFixedTop` 仍因 `offsetTop === undefined` 而不触发
- *    ⇒ **两者都传时只有 `offsetTop` 生效**。
- * 4. **占位零矩形直接跳过**（`:48-50`）。
- * 5. **`onChange` 只在翻转时发**（`:63-65`）。
- *
- * ── 事件与生命周期（antd `:74-110`）────────────────────────────────────────
- * - `TRIGGER_EVENTS` 绑在 target 上，handler 是 `lazyUpdatePosition`（节流版）。
- * - mount 先 `setTimeout(addListeners)`（legacy：等父组件 ref 就绪）。
- * - 卸载时两个节流函数都 `cancel()`（防「卸载后仍触发」）。
- */
-
-import { throttleByAnimationFrame, useResizeObserver } from '@apollo-design/utils';
+/** Affix keeps the existing geometry and frame-coalesced fast path. */
+import { useTheme } from '@apollo-design/theme';
+import { isWindow, throttleByAnimationFrame, useResizeObserver } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -48,6 +16,7 @@ import {
 } from 'vue';
 import { useComponentConfig, useConfigContext } from '../config-provider/context';
 import type { AffixConfig, AffixProps, AffixRef, AffixTarget } from './interface';
+import { prepareComponentToken } from './style/token';
 import { getFixedBottom, getFixedTop, getTargetRect, hasSameFixedPosition } from './utils';
 
 const TRIGGER_EVENTS = [
@@ -59,301 +28,150 @@ const TRIGGER_EVENTS = [
   'pageshow',
   'load',
 ] as const;
-
-/** 与 antd `:30-31` 对齐的状态机。 */
-const AFFIX_STATUS_NONE = 0;
-const AFFIX_STATUS_PREPARE = 1;
-
 defineOptions({ name: 'AAffix', inheritAttrs: false });
-
 const props = defineProps<AffixProps>();
 const emit = defineEmits<{ change: [affixed: boolean] }>();
 defineSlots<{ default?: () => VNodeChild }>();
-
-/**
- * ⚠️ `inheritAttrs: false` + 显式把 `$attrs` 绑到**外层**（占位测量层）——
- *    antd 的 `...restProps` 落在外层（`index.js:190-195`），内层不落。
- *    漏了这一条，`data-*` / `id` / `aria-*` 等透传属性会静默丢失
- *    （这是我实现里的真 bug，L4 的 `attrs:passthrough` 用例抓出来的）。
- */
 const attrs = useAttrs();
-
 const config = useComponentConfig<AffixConfig>('affix');
-const { getPrefixCls } = config;
-// ⚠️ `getTargetContainer` 挂在 context **顶层**，不在 `components.affix` 里
-//    （它是全局的浮层容器配置，不是组件配置）—— 所以单独取。
 const globalConfig = useConfigContext();
-
-/**
- * Vue-native root attrs: component-level `class` / `style` stay in `$attrs` and are
- * merged with the ConfigProvider defaults using Vue's own class/style merge rules.
- */
+const theme = useTheme();
 const rootAttrs = () => mergeProps({ class: config.className, style: config.style }, attrs);
+const affixPrefixCls = computed(() => config.getPrefixCls('affix', props.prefixCls));
+const fixedThemeStyle = computed<CSSProperties | undefined>(() => {
+  if (theme.sourceActive?.value === false) return undefined;
+  const custom = theme.config.value.components?.Affix?.zIndexPopup;
+  return {
+    zIndex:
+      typeof custom === 'number' && Number.isFinite(custom)
+        ? custom
+        : prepareComponentToken(theme.token.value).zIndexPopup,
+  };
+});
 
-const affixPrefixCls = computed(() => getPrefixCls('affix', props.prefixCls));
-
-// ---------------------------------------------------------------------------
-// 状态
-// ---------------------------------------------------------------------------
-
+const mounted = ref(false);
 const lastAffix = ref(false);
-/** 固钉层的内联样式；`undefined` = 未固钉。 */
-const affixStyle = shallowRef<CSSProperties | undefined>(undefined);
-const placeholderStyle = shallowRef<CSSProperties | undefined>(undefined);
-const statusRef = ref<number>(AFFIX_STATUS_NONE);
-
+const affixStyle = shallowRef<CSSProperties>();
+const placeholderStyle = shallowRef<CSSProperties>();
 const placeholderNode = ref<HTMLElement | null>(null);
 const fixedNode = ref<HTMLElement | null>(null);
-
-/** antd `:38`：互锁推导 —— 两者都未传时为 0。 */
-const internalOffsetTop = computed<number | undefined>(() =>
+const internalOffsetTop = computed(() =>
   props.offsetBottom === undefined && props.offsetTop === undefined ? 0 : props.offsetTop,
 );
-
-/** 解析顺序：props.target ?? ConfigProvider.getTargetContainer ?? window（antd `:36`）。 */
-const targetFunc = computed<AffixTarget>(() => {
-  return (
+const targetFunc = computed<AffixTarget>(
+  () =>
     props.target ??
     globalConfig.getTargetContainer ??
-    (typeof window !== 'undefined' ? () => window : () => null)
-  );
-});
-const currentTarget = computed(() => (typeof window === 'undefined' ? null : targetFunc.value()));
-
-// ---------------------------------------------------------------------------
-// measure（antd `:40-71`）
-// ---------------------------------------------------------------------------
-
-const measure = (): void => {
-  if (statusRef.value !== AFFIX_STATUS_PREPARE || !fixedNode.value || !placeholderNode.value) {
-    return;
-  }
-  const targetNode = targetFunc.value();
-  if (!targetNode) return;
-
-  // ⚠️ 量外层（与 antd 一致）。曾试过「已固钉时改量占位层本身」以掐断增长循环——
-  //    实测 style 变体的差异率从 0.013-0.048% 恶化到 0.796-3.68% ⇒ 已回退。
-  //    （React 基线定格的就是「测量时的外层高度」，改量占位层反而偏离。）
-  const placeholderRect = getTargetRect(placeholderNode.value);
-  // antd `:48-50`：零矩形 ⇒ 还没量到，放弃本次测量。
-  if (
-    placeholderRect.top === 0 &&
-    (placeholderRect.left ?? 0) === 0 &&
-    placeholderRect.width === 0 &&
-    placeholderRect.height === 0
-  ) {
-    return;
-  }
-  // ⚠️⚠️ **占位塌缩保护**（L6 3/15 的根因，measure 日志实测：60 → 0 → 0 自锁）：
-  //    已固钉时，外层（placeholderNode）的高度就是占位层撑起来的；
-  //    若此时量到高度 0，说明量的是「内容已出文档流之后」的塌缩态——
-  //    把它写回 placeholderStyle 会让占位层变 0 → 外层更塌 → 再触发重测 ⇒ 自锁。
-  //    已固钉 + 高度 0 ⇒ 跳过本次测量，保住第一次的正确占位尺寸。
-  if (lastAffix.value && placeholderRect.height === 0) {
-    return;
-  }
-  const targetRect = getTargetRect(targetNode);
-  const fixedTop = getFixedTop(placeholderRect, targetRect, internalOffsetTop.value);
-  const fixedBottom = getFixedBottom(placeholderRect, targetRect, props.offsetBottom);
-
-  let nextAffixStyle: CSSProperties | undefined;
-  let nextPlaceholderStyle: CSSProperties | undefined;
-
-  // ⚠️⚠️ **数字必须转成带 px 的字符串**（L6 3/15 的根因）：
-  //    Vue 的 patchStyle 直接 `el.style[key] = value`，**不做数字 → px 的转换**
-  //    （React 才有 dangerousStyleValue 的自动补全）。数字赋给 CSSOM 是非法值，
-  //    会被**静默丢弃** —— 实测 `top: 80`、`width: 343` 全丢，只剩字符串的
-  //    `position: 'fixed'`。antd 侧是 React，数字自动转 px，所以两边看起来差一大截。
-  const px = (v: number | undefined): string | undefined =>
-    v === undefined ? undefined : `${v}px`;
-
-  if (fixedTop !== undefined) {
-    nextAffixStyle = {
-      position: 'fixed',
-      top: px(fixedTop),
-      width: px(placeholderRect.width),
-      height: px(placeholderRect.height),
-    };
-    nextPlaceholderStyle = {
-      width: px(placeholderRect.width),
-      height: px(placeholderRect.height),
-    };
-  } else if (fixedBottom !== undefined) {
-    nextAffixStyle = {
-      position: 'fixed',
-      bottom: px(fixedBottom),
-      width: px(placeholderRect.width),
-      height: px(placeholderRect.height),
-    };
-    nextPlaceholderStyle = {
-      width: px(placeholderRect.width),
-      height: px(placeholderRect.height),
-    };
-  }
-
-  const nextLastAffix = !!nextAffixStyle;
-  if (lastAffix.value !== nextLastAffix) {
-    emit('change', nextLastAffix);
-  }
-  statusRef.value = AFFIX_STATUS_NONE;
-  // ⚠️⚠️ **直接赋值，不要包一层对象**：
-  //    曾在这里做过 `Object.freeze({ ...nextAffixStyle })` 的「诊断实验」——
-  //    当 nextAffixStyle 为 **undefined** 时，`{ ...undefined }` 的结果是 **`{}`（真值！）**，
-  //    导致 v-if 渲染占位层、`apollo-affix` 类名被套上（CSS 的 position:fixed 生效）⇒
-  //    内容出文档流 ⇒ 外层塌成 0 ⇒ offset-bottom 变体整组 size-mismatch。
-  //    **教训：把「可能为 undefined 的值」展开进新对象，会把 undefined 变成真值空对象。**
-  affixStyle.value = nextAffixStyle;
-  placeholderStyle.value = nextPlaceholderStyle;
-  lastAffix.value = nextLastAffix;
-};
-
-const prepareMeasure = (): void => {
-  statusRef.value = AFFIX_STATUS_PREPARE;
-  measure();
-  /**
-   * 🚨 **补挂监听**（Issue #54）。
-   *
-   * 依赖收窄成只有 `props.target` 之后，若**首次**绑定时 `targetFunc()` 还没就绪
-   * （返回 `null`），后面就再也没有重绑时机了。上游是靠「`affixStyle` 每次变化都
-   * 重绑」**无意中**获得了重试能力 —— 那个能力是真的，只是代价是每帧 14 次 DOM 调用。
-   *
-   * ⇒ 这里用**一次引用比较**显式保留它：已绑成 ⇒ 幂等短路（零成本），
-   *   未绑成 ⇒ 补上（比上游更可靠，因为每次测量都会检查）。
-   */
-  addListeners();
-};
-
-// ---------------------------------------------------------------------------
-// 节流（`utils` 已有 `throttleByAnimationFrame`，含 `cancel()`）
-// ---------------------------------------------------------------------------
-
-const updatePosition = throttleByAnimationFrame((): void => {
-  prepareMeasure();
-});
-
-/** 懒更新：已固钉且位置没变 ⇒ 不重算（性能契约，antd `:58-70`）。 */
-const lazyUpdatePosition = throttleByAnimationFrame((): void => {
-  if (affixStyle.value) {
-    const targetNode = targetFunc.value();
-    if (targetNode && placeholderNode.value) {
-      const targetRect = getTargetRect(targetNode);
-      const placeholderRect = getTargetRect(placeholderNode.value);
-      const fixedTop = getFixedTop(placeholderRect, targetRect, internalOffsetTop.value);
-      const fixedBottom = getFixedBottom(placeholderRect, targetRect, props.offsetBottom);
-      if (hasSameFixedPosition(affixStyle.value, fixedTop, fixedBottom)) {
-        return;
-      }
-    }
-  }
-  prepareMeasure();
-});
-
-// ---------------------------------------------------------------------------
-// 事件绑定（antd `:74-92`）
-// ---------------------------------------------------------------------------
-
-const prevTargetRef = shallowRef<HTMLElement | Window | null>(null);
-const prevListenerRef = shallowRef<EventListener | null>(null);
-
-const addListeners = (): void => {
-  const listenerTarget = targetFunc.value();
-  if (!listenerTarget) return;
-
-  /**
-   * 🚨 **幂等短路**（Issue #54）。
-   *
-   * 上游 `useEffect(…, [target, affixStyle, lastAffix, offsetTop, offsetBottom])`
-   * 把**固钉状态**也放进了依赖 ⇒ 每次 `measure()` 写出新的 `affixStyle` 对象
-   * （React 的 `setState` / 本仓的 `shallowRef` 都是**引用比较**，新对象必然不同）
-   * 就重跑一轮 `removeListeners()` + `addListeners()`
-   * = **14 次无谓的 DOM 调用**（7 个事件 × remove + add），
-   * 且滚动期间**每一帧**都在发生。
-   *
-   * 绑定目标只由 `targetFunc()` 决定，listener 是**引用稳定**的节流函数
-   * ⇒ 两者都没变时这一轮纯粹是噪音。
-   */
-  const listener = lazyUpdatePosition as unknown as EventListener;
-  if (prevTargetRef.value === listenerTarget && prevListenerRef.value === listener) {
-    return;
-  }
-
-  for (const eventName of TRIGGER_EVENTS) {
-    if (prevListenerRef.value) {
-      prevTargetRef.value?.removeEventListener(eventName, prevListenerRef.value);
-    }
-    listenerTarget.addEventListener(eventName, listener);
-  }
-  prevTargetRef.value = listenerTarget;
-  prevListenerRef.value = listener;
-};
-
-const removeListeners = (): void => {
-  const newTarget = targetFunc.value();
-  for (const eventName of TRIGGER_EVENTS) {
-    newTarget?.removeEventListener(eventName, lazyUpdatePosition as EventListener);
-    if (prevListenerRef.value) {
-      prevTargetRef.value?.removeEventListener(eventName, prevListenerRef.value);
-    }
-  }
-  updatePosition.cancel();
-  lazyUpdatePosition.cancel();
-};
-
-// ---------------------------------------------------------------------------
-// 生命周期（antd `:95-110`）
-// ---------------------------------------------------------------------------
-
-let timer: ReturnType<typeof setTimeout> | null = null;
-
-onMounted(() => {
-  // legacy：等父组件 ref 就绪（antd `:97-99`）。
-  timer = setTimeout(addListeners);
-});
-
-onBeforeUnmount(() => {
-  if (timer) {
-    clearTimeout(timer);
-    timer = null;
-  }
-  removeListeners();
-});
-
-/**
- * 依赖变化 ⇒ 重新绑事件。
- *
- * 监听解析后的当前目标，包含 props.target、Provider 解析器及其响应式返回值。
- * 相同 DOM 目标由 addListeners 幂等复用，目标变化时释放旧监听。
- *
- * ⚠️ `flush: 'post'` 对齐上游 `useEffect` 的「commit 之后」（原先是默认的 `'pre'`）。
- * ⚠️ 「target 还没就绪」的补挂由 `prepareMeasure()` 收尾负责 —— 见那里的注释。
- */
-watch(
-  currentTarget,
-  () => {
-    addListeners();
-  },
-  { flush: 'post' },
+    (() => (typeof window === 'undefined' ? null : window)),
 );
+const resolveTarget = () => (mounted.value ? (targetFunc.value() ?? null) : null);
+const currentTarget = computed(resolveTarget);
 
+const applyPosition = (next: CSSProperties | undefined, placeholder: CSSProperties | undefined) => {
+  const affixed = next !== undefined;
+  affixStyle.value = next;
+  placeholderStyle.value = placeholder;
+  if (lastAffix.value !== affixed) emit('change', affixed);
+  lastAffix.value = affixed;
+};
+const measure = () => {
+  if (!mounted.value || !fixedNode.value || !placeholderNode.value) return;
+  const target = resolveTarget();
+  if (!target) {
+    applyPosition(undefined, undefined);
+    return;
+  }
+  const rect = getTargetRect(placeholderNode.value);
+  // Hidden/unmeasurable nodes retain the last valid geometry, including the existing
+  // fixed-placeholder collapse protection (s54).
+  if (rect.top === 0 && (rect.left ?? 0) === 0 && rect.width === 0 && rect.height === 0) return;
+  if (lastAffix.value && rect.height === 0) return;
+  const targetRect = getTargetRect(target);
+  const top = getFixedTop(rect, targetRect, internalOffsetTop.value);
+  const bottom = getFixedBottom(rect, targetRect, props.offsetBottom);
+  const px = (value: number | undefined) => (value === undefined ? undefined : `${value}px`);
+  // The fixed content keeps its natural height, so its existing ResizeObserver
+  // can update the spacer after either growth or shrinkage.
+  const width = px(rect.width);
+  const size = { width, height: px(fixedNode.value.getBoundingClientRect().height) };
+  if (top !== undefined) applyPosition({ position: 'fixed', top: px(top), width }, size);
+  else if (bottom !== undefined)
+    applyPosition({ position: 'fixed', bottom: px(bottom), width }, size);
+  else applyPosition(undefined, undefined);
+};
+
+let attachedTarget: HTMLElement | Window | null = null;
+let attachedWindow: Window | null = null;
+const resizeTarget = shallowRef<HTMLElement | null>(null);
+const detach = () => {
+  for (const event of TRIGGER_EVENTS) attachedTarget?.removeEventListener(event, listener);
+  attachedWindow?.removeEventListener('resize', listener);
+  attachedTarget = null;
+  attachedWindow = null;
+  resizeTarget.value = null;
+};
+const syncListeners = () => {
+  const target = resolveTarget();
+  if (target === attachedTarget) return;
+  detach();
+  attachedTarget = target;
+  for (const event of TRIGGER_EVENTS) target?.addEventListener(event, listener);
+  if (target && !isWindow(target)) {
+    resizeTarget.value = target;
+    attachedWindow = target.ownerDocument.defaultView;
+    attachedWindow?.addEventListener('resize', listener);
+  }
+};
+const prepareMeasure = () => {
+  syncListeners();
+  measure();
+};
+const scheduledUpdate = throttleByAnimationFrame(prepareMeasure);
+const updatePosition = () => {
+  if (mounted.value) scheduledUpdate();
+};
+const lazyUpdatePosition = throttleByAnimationFrame(() => {
+  if (affixStyle.value) {
+    const target = resolveTarget();
+    if (target && placeholderNode.value) {
+      const targetRect = getTargetRect(target);
+      const rect = getTargetRect(placeholderNode.value);
+      if (
+        hasSameFixedPosition(
+          affixStyle.value,
+          getFixedTop(rect, targetRect, internalOffsetTop.value),
+          getFixedBottom(rect, targetRect, props.offsetBottom),
+        )
+      )
+        return;
+    }
+  }
+  prepareMeasure();
+});
+const listener: EventListener = () => lazyUpdatePosition();
 watch(
   [currentTarget, () => props.offsetTop, () => props.offsetBottom],
   () => {
+    syncListeners();
     updatePosition();
   },
-  // ⚠️ **必须 `immediate: true`**：antd 的 `useEffect([target, offsetTop, offsetBottom])`
-  //    在**挂载时就会跑一次** `updatePosition()` —— 这是首次测量的唯一入口。
-  //    Vue 的 `watch` 默认不立即执行 ⇒ 永远不测量 ⇒ **永不固钉**（占位层也不渲染）。
-  //    视觉比对抓出来的：React 侧页面比我们高 60px（差的就是那层占位）。
-  { immediate: true },
+  { flush: 'post' },
 );
-
-// ResizeObserver：外层占位 + children（固钉层）两处（antd `:175` / `:200`）。
+onMounted(() => {
+  mounted.value = true;
+  syncListeners();
+  updatePosition();
+});
+onBeforeUnmount(() => {
+  mounted.value = false;
+  detach();
+  scheduledUpdate.cancel();
+  lazyUpdatePosition.cancel();
+});
 useResizeObserver({ target: placeholderNode, onResize: updatePosition });
 useResizeObserver({ target: fixedNode, onResize: updatePosition });
-
-defineExpose<AffixRef>({
-  updatePosition: () => updatePosition(),
-});
+useResizeObserver({ target: resizeTarget, onResize: updatePosition });
+defineExpose<AffixRef>({ updatePosition });
 </script>
 
 <template>
@@ -362,7 +180,7 @@ defineExpose<AffixRef>({
     <div v-if="affixStyle" :style="placeholderStyle" aria-hidden="true"></div>
 
     <!-- ② 固钉层：类名只在固钉时出现（antd `:181-183`） -->
-    <div ref="fixedNode" :class="affixStyle ? affixPrefixCls : ''" :style="affixStyle">
+    <div ref="fixedNode" :class="affixStyle ? affixPrefixCls : ''" :style="[affixStyle, affixStyle ? fixedThemeStyle : undefined]">
       <slot></slot>
     </div>
   </div>

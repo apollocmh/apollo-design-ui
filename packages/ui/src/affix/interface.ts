@@ -1,15 +1,7 @@
-/**
- * Affix 的类型面。
- *
- * ⚠️ 脚手架**没有**预生成 affix 的导出清单（`packages/ui/src/index.ts` 里搜不到
- *    `Affix`）⇒ 本文件就是类型面的**源头**，`index.ts` 只做转出口。
- *    因此这里的导出名要自己保证与 antd 对齐（`interface.d.ts` 比对）。
- */
-
 import type { CSSProperties, VNodeChild } from 'vue';
 
 /** 目标容器：滚动监听与定位的参照物。默认 `window`。 */
-export type AffixTarget = () => HTMLElement | Window | null;
+export type AffixTarget = () => HTMLElement | Window | null | undefined;
 
 /** 占位/固钉层的定位计算用的矩形快照。 */
 export type { AffixRect } from './utils';
@@ -21,7 +13,7 @@ export type { AffixRect } from './utils';
 export interface AffixProps {
   /** 距离窗口（或 `target`）顶部达到指定偏移后固钉。 */
   offsetTop?: number;
-  /** 距离窗口（或 `target`）底部达到指定偏移后固钉。**与 `offsetTop` 互斥**：都传时只有 `offsetTop` 生效。 */
+  /** 距离窗口（或 `target`）底部达到指定偏移后固钉。两者条件同时命中时 `offsetTop` 优先；顶部条件未命中时仍可固钉到底部。 */
   offsetBottom?: number;
   /**
    * 滚动监听与定位的参照目标。默认取 ConfigProvider 的 `getTargetContainer`，再退回 `window`。
@@ -35,7 +27,7 @@ export interface AffixProps {
   prefixCls?: string;
 }
 
-/** `ref` 暴露面 —— 与 antd 一致，只有 `updatePosition`。 */
+/** Public template-ref contract. */
 export interface AffixRef {
   /** 手动触发一次「重新测量并应用定位」。 */
   updatePosition: () => void;

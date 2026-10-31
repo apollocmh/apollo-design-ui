@@ -15,16 +15,11 @@
  * ❌ 不覆盖：`-link-active` / `-ink-visible` / ink 的内联几何 —— 它们来自**滚动侦测**，
  *    而 SSR 不跑 effect、也没有滚动 ⇒ `activeLink` 恒 `null`（真滚动归 **L6**）。
  *
- * ── 🚨 一处必须记住的判据：`AnchorLink` **不继承** `Anchor` 的 `prefixCls` ───────
- *
- * 上游 `AnchorLink` 用的是 `React.useContext(ConfigContext).getPrefixCls('anchor', customize)`
- * —— 即 **ConfigProvider 的根前缀**，与 `Anchor` 的 `prefixCls` prop **无关**。
- * 所以传 `prefixCls: 'apollo'` 给 `Anchor` 时：`Anchor` 自己是 `apollo`，
- * 而链接是 **`ant-anchor-link`**（根前缀默认 `ant`）。
- * 本仓的 `AnchorLink` 是同一逻辑（`useConfigContext().getPrefixCls`）⇒ 逐字一致 ✓。
+ * Current Anchor prefix inheritance intentionally differs from the old reference.
+ * The exact two-token class projection below preserves every other DOM comparison.
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { type DomRenderResult, diffHtml, domContractTest } from '@apollo-design/test-utils';
 import { defineComponent, h, provide, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/anchor.dom.json';
 import {
@@ -169,10 +164,50 @@ const specs: Record<
   },
 };
 
+// The old reference gave child links the Provider prefix even when Anchor had an
+// explicit prefix. Current links inherit the Anchor prefix so ink can find them.
+// Project exactly those two class tokens in the immutable reference; every path,
+// other class, attribute and style still participates in the normal exact diff.
+type ReferenceAllowance = NonNullable<Parameters<typeof domContractTest>[1]['allow']>[string];
+const inheritedPrefixAllow: Record<string, ReferenceAllowance> = {};
+for (const reference of baseline.cases) {
+  const prefix = specs[reference.id]?.props.prefixCls;
+  if (!prefix) continue;
+  const projected = reference.html.replace(
+    /class="([^"]*)"/g,
+    (_attribute, classes: string) =>
+      `class="${classes
+        .split(' ')
+        .map((name) => {
+          if (name === 'apollo-anchor-link') return `${prefix}-link`;
+          if (name === 'apollo-anchor-link-title') return `${prefix}-link-title`;
+          return name;
+        })
+        .join(' ')}"`,
+  );
+  const diff = diffHtml(reference.html, projected, { profile: 'full', keepStyle: true });
+  if (diff.length)
+    inheritedPrefixAllow[reference.id] = {
+      reason: 'Current Anchor prefix also owns its child links and active ink lookup',
+      deviationId: 'ANCHOR-NATIVE-PREFIX',
+      diff,
+    };
+}
+
 domContractTest('Anchor', {
   baseline,
+  profile: 'full',
   keepStyle: true,
   allow: {
+    ...inheritedPrefixAllow,
+    'anchor:rtl': {
+      reason: 'Current direction is applied to the native root so logical CSS follows Provider RTL',
+      deviationId: 'ANCHOR-NATIVE-DIRECTION',
+      diff: [
+        '$/div[0]/div[0]/div[0]: 我们多出属性 dir="rtl"',
+        ...(inheritedPrefixAllow['anchor:rtl']?.diff ?? []),
+      ],
+    },
     // 默认前缀不同（裁决 `prefix-cls-default` = A）：`bare` 用例下两侧的根前缀分别是
     // antd 的 `ant` 与我们的 `apollo` ⇒ **每一层带前缀的元素**都不同（wrapper / anchor / ink / link）。
     'anchor:prefix-cls:no-props': {
@@ -197,6 +232,7 @@ domContractTest('Anchor', {
       deviationId: 'D114',
       diff: [
         '$/div[0]/div[0]/div[0]: style 不同 [background:#fafafa;max-height:100vh] vs [background:rgb(250,250,250);max-height:100vh]',
+        ...(inheritedPrefixAllow['anchor:styles']?.diff ?? []),
       ],
     },
   },
@@ -205,7 +241,7 @@ domContractTest('Anchor', {
     if (!spec) {
       throw new Error(`[Anchor L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     }
-    const vnode = h(Anchor, spec.props as never, spec.slots as never);
+    const vnode = h(Anchor, spec.props, spec.slots);
     if (spec.bare) return vnode;
     const result: DomRenderResult = spec.ctx ? withConfig(spec.ctx, () => vnode) : vnode;
     return result;

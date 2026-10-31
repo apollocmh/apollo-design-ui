@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { AnchorLinkItemProps } from '@apollo-design/ui';
-import { Anchor, Select, Space, Tag } from '@apollo-design/ui';
+import { Anchor, ConfigProvider, Select, Space, Tag } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
+const defaultDensity = { value: 'default', label: '默认', block: 4, inline: 16 };
 const densities = [
   { value: 'compact', label: '紧凑', block: 1, inline: 8 },
-  { value: 'default', label: '默认', block: 4, inline: 16 },
+  defaultDensity,
   { value: 'spacious', label: '宽松', block: 10, inline: 28 },
 ];
 
@@ -15,15 +16,8 @@ const density = ref<DensityValue>('default');
 const activeLink = ref('');
 
 const currentDensity = computed(
-  () =>
-    densities.find((item) => item.value === density.value) ??
-    (densities[0] as (typeof densities)[number]),
+  () => densities.find((item) => item.value === density.value) ?? defaultDensity,
 );
-
-const tokenStyle = computed(() => ({
-  '--anchor-demo-padding-block': `${currentDensity.value.block}px`,
-  '--anchor-demo-padding-inline-start': `${currentDensity.value.inline}px`,
-}));
 
 const sections = [
   { key: 'a', title: 'Section A' },
@@ -39,12 +33,13 @@ const items: AnchorLinkItemProps[] = sections.map((section) => ({
 
 const scrollArea = ref<HTMLElement | null>(null);
 
-function getContainer(): HTMLElement | Window {
-  return scrollArea.value ?? window;
+function getContainer(): HTMLElement | null {
+  return scrollArea.value;
 }
 
 function onDensityChange(value: unknown): void {
-  density.value = value as DensityValue;
+  const selected = densities.find((item) => item.value === value);
+  if (selected) density.value = selected.value;
 }
 
 function onChange(link: string): void {
@@ -67,10 +62,10 @@ function onChange(link: string): void {
       <Tag>当前高亮：{{ activeLink || '无' }}</Tag>
     </Space>
 
+    <ConfigProvider :theme="{ components: { Anchor: { linkPaddingBlock: currentDensity.block, linkPaddingInlineStart: currentDensity.inline } } }">
     <div style="display: flex; gap: 16px">
       <Anchor
         class="anchor-token-demo"
-        :style="tokenStyle"
         :items="items"
         :affix="false"
         :get-container="getContainer"
@@ -88,15 +83,11 @@ function onChange(link: string): void {
         </div>
       </div>
     </div>
+    </ConfigProvider>
   </div>
 </template>
 
 <style>
-.anchor-token-demo .apollo-anchor.apollo-anchor {
-  --apollo-anchor-link-padding-block: var(--anchor-demo-padding-block, 4px);
-  --apollo-anchor-link-padding-inline-start: var(--anchor-demo-padding-inline-start, 16px);
-}
-
 .anchor-token-demo-scroll {
   flex: 1;
   height: 240px;

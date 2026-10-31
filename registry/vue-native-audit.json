@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 210,
+  "revision": 213,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -22,18 +22,16 @@
       "kind": "component",
       "ref": "affix",
       "title": "Affix",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/affix"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 207,
-        "startedAt": "2026-10-31T04:14:38.992Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -50,6 +48,169 @@
           "packages/ui/src/affix/README.md",
           "packages/ui/src/affix/Affix.vue"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "owner": "native_portal",
+        "scope": [
+          "packages/ui/src/affix",
+          "packages/ui/src/anchor"
+        ],
+        "baseCommit": "67651d24e6e66b2a9e18bc4950387d944cd2eb66",
+        "passed": true,
+        "implemented": [
+          "Anchor/Link own Vue click/change, pre-default cancellation and actual native link target; #title and nested default slot semantics, current complete VNodeChild.",
+          "Reactive targets/offsets/mapper/duplicate registrations and real-ref indicator, current Provider and three existing component tokens.",
+          "Affix releases old target resources, keeps SSR side effects mounted, preserves s54 geometry/listener idempotence and actual natural content height/placeholder."
+        ],
+        "migration": [
+          "Remove unused Anchor.Link children prop; child links use default slot, title uses #title or title data.",
+          "Click is now a component event with MouseEvent and link payload, h onClick remains the natural listener."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit --project dom-contract --project a11y packages/ui/src/affix packages/ui/src/anchor --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 31617,
+            "log": "/tmp/apollo-affix-anchor-core-frozen.log",
+            "result": "148 passed before final ink/native-link difference; unaffected Affix, Demo and a11y results reused. Eight existing jsdom canvas diagnostics retained."
+          },
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit --project dom-contract packages/ui/src/anchor/__tests__/index.test.ts packages/ui/src/anchor/__tests__/native-contracts.test.ts packages/ui/src/anchor/__tests__/s28-issue28.test.ts packages/ui/src/anchor/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13326,
+            "log": "/tmp/apollo-affix-anchor-followup-core.log",
+            "result": "67 affected Anchor core/semantic cases passed after final real-ref ink and native-link attrs changes."
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/targets.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7909,
+            "log": "/tmp/apollo-affix-anchor-provider.log"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-affix-anchor-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 58642,
+            "log": "/tmp/apollo-affix-anchor-types.log",
+            "kind": "types",
+            "runner": "root",
+            "result": "Strict declaration portability, actual h/SFC positives and negatives, 17 Demos and public barrel; all 52 source hashes identical at integration."
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/anchor/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8948,
+            "log": "/tmp/apollo-affix-anchor-browser-frozen.log",
+            "result": "Real Chrome affix geometry/growth/shrink, container changes, keyboard/link cancellation, focus/draft/selection, live Provider/theme/RTL and cleanup; diagnostics []."
+          },
+          {
+            "kind": "format",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/index.ts",
+            "exitCode": 0,
+            "signal": null,
+            "result": "Root barrel formatting checked; owned changed files checked by owner."
+          }
+        ],
+        "failedAttempts": [
+          {
+            "exitCode": 1,
+            "durationMs": 7576,
+            "log": "/tmp/apollo-affix-anchor-native-red-cases.log",
+            "result": "14 actual contract failures reproduced."
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-affix-anchor-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 35083,
+            "log": "/tmp/apollo-affix-anchor-types.log"
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 33564,
+            "log": "/tmp/apollo-affix-anchor-core-final.log",
+            "result": "147 passed, final dir expectation failed; corrected exact full DOM comparison and reran affected scope."
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 5304,
+            "log": "/tmp/apollo-affix-anchor-link-prefix-red.log",
+            "result": "Explicit Link prefix ink defect reproduced before real-ref fix."
+          }
+        ],
+        "sourceHashes": {
+          "packages/ui/src/affix/Affix.vue": "05a41a854bfb2009a8aaa266adb727a7cb538368d8a1cd8a7d8db36c8e651891",
+          "packages/ui/src/affix/utils.ts": "d31bce8262fa06852bbf449e3fb2530c7996d06c5056301bface4589140ec513",
+          "packages/ui/src/affix/interface.ts": "da90ea1dacfb736203160fb09dce059d79842426c513c1c9676066b02b6a4dd5",
+          "packages/ui/src/affix/index.ts": "359d0486c1fcc3279cea327c5e158762afcd5fe7d8102ace5198a1451b853859",
+          "packages/ui/src/affix/demo/target.vue": "4991f364d0da9927ab35e2d1dee5e93f1a95266bac9ee8a420b5df7c02eb44b0",
+          "packages/ui/src/affix/demo/basic.vue": "13df2a997f37f2f40891615d87199c0817c276d80dd3970f9b9b88c02be2af3f",
+          "packages/ui/src/affix/demo/offset-bottom.vue": "ed8b820bc694f1f6e19cc605c6e5190681a5243eb5dbc6b3efbdb301d84ab056",
+          "packages/ui/src/affix/demo/update-position.vue": "d4e55a8ff2e49b03aabb44ce3e00ff03454bc1a40c9fe1ad199db5fa3b350197",
+          "packages/ui/src/affix/demo/on-change.vue": "bcf86f62a79ccb76f61b6b0d7d3f71ed49343549089c204e60fb0191b5eb7976",
+          "packages/ui/src/affix/style/index.ts": "0b4b346835a8aa6598ea50a9d52e3bd8849d582dfe2540f6bdb10ecffd740e57",
+          "packages/ui/src/affix/style/token.ts": "306e032bee15ac9514380d75e13803f7c75a7e09b058afdde6439e1d6fc5af53",
+          "packages/ui/src/affix/__tests__/a11y.test.ts": "ebc7bf5344c3cd1a26dd3e9dcd8f46c5b7faffb25bd97242c25d39ba26b48796",
+          "packages/ui/src/affix/__tests__/native-contracts.test.ts": "d1c34080d9b0d8b63e21e40cd88b6bf4db48a9880e2c87160234c33553e2c2d6",
+          "packages/ui/src/affix/__tests__/utils.test.ts": "9970b9506b57ba6e498552d0088a54f602da3c3de369320dfe85dec91598aa26",
+          "packages/ui/src/affix/__tests__/index.test.ts": "fdbcac5a43b9011132311abbf89a80f10d7c64d58c703e049bbb3bdeda689f11",
+          "packages/ui/src/affix/__tests__/type.test-d.ts": "de01bddd8bd535a6b7e4968b11a599c6b885d3f0f88113a4745d61c321e34711",
+          "packages/ui/src/affix/__tests__/s54-issue54.test.ts": "40b34a990c01a16bd5589bfecda09d951667ec8f9f82d29c6e786dcc6fa185b7",
+          "packages/ui/src/affix/__tests__/semantic.test.ts": "6d8ca4f57b3153465e35eafb6eb737229b473240119031d415d62cbc14644937",
+          "packages/ui/src/anchor/context.ts": "804bc3429c984d7b3c4e30554e355fa8a0a782619020871c6064153a1bb1b7e3",
+          "packages/ui/src/anchor/use-anchor-theme.ts": "470c5656785aa0e780c9c9abd24285157a0efb0a5446e47a3e8db730d368931d",
+          "packages/ui/src/anchor/content-prop.ts": "a76b731c68140b1ffa52911934c523787a3bc83e0c6d59851d77ca8c19e10004",
+          "packages/ui/src/anchor/get-target.ts": "83a25b98638b6a98f87957d3afef992c344f6d01d7e190cad777358064074f04",
+          "packages/ui/src/anchor/interface.ts": "4d534136e5acffca2a0bff8f3a82d4b4a4cf35a9aa0a9e6998ce42cae0bbe54a",
+          "packages/ui/src/anchor/AnchorLink.ts": "bb13c01d907d23c5985635f152d23d03ae4b8afcddffa2acf9a3b912a2694158",
+          "packages/ui/src/anchor/Anchor.ts": "3553c7f1ce2a50ecb7629696e811507f95485344f648e6c1d758df65f7888258",
+          "packages/ui/src/anchor/index.ts": "0a0f11aef93b270003913e1addc42973b25d5fb8a587f01f88057c0b07cc2a99",
+          "packages/ui/src/anchor/demo/bounds.vue": "968e654519e23c11af490c811b132ba5bdb63a172abad04085c352a02bc291dd",
+          "packages/ui/src/anchor/demo/static.vue": "bdad9343ebe04b8b7da8f30d10b36f47aaf624adc80d3d232e44b22e5efb02ec",
+          "packages/ui/src/anchor/demo/horizontal.vue": "8c6c96c7ffa8a9c1c1a75b5a6cde344f266ef817b94d4d11baad10182d38debc",
+          "packages/ui/src/anchor/demo/customize-highlight.vue": "dabd733211bb7beff6ce3efecd4cec0659316c1c02d382eacd5280f5271de410",
+          "packages/ui/src/anchor/demo/component-token.vue": "778281bf93e95f3929682f5c38f5737e09d9a027e9a750a0620458c288945da7",
+          "packages/ui/src/anchor/demo/onChange.vue": "9d9bca1890c0c4ba9afb58583930f448027fe5620eac52b4a4976c9db2f33875",
+          "packages/ui/src/anchor/demo/style-class.vue": "8eb81f3af1591ad85feb03093fee5785cbb3bbdbae031a78bc6ddef77c29620c",
+          "packages/ui/src/anchor/demo/replace.vue": "cc8e9aa91a22d860ff0b13ae4c7b048c5e9d70a48e8ef1362e4311bd82868634",
+          "packages/ui/src/anchor/demo/basic.vue": "82798ab910dca90a6cb3b32fe8a83ff72da82ed9ef7ae9df1fb5daefc612e909",
+          "packages/ui/src/anchor/demo/onClick.vue": "8ea03901ab006a2c7903b1db7bc3cc0535510c37b7e0968aa5410dc56f7fe738",
+          "packages/ui/src/anchor/demo/target-offset-per-link.vue": "c4be4ff8f4f4420642c77aaa37596d0ffbe84fadc05896646e7f87bd2215a025",
+          "packages/ui/src/anchor/demo/target-offset.vue": "dddf3459e336caea65c11e3ffc1d01a118a5690f140f1c7c79633c5be8558d30",
+          "packages/ui/src/anchor/style/index.ts": "c7ddeb533b07a53752ccf26f4edc5a0d0fc7713721ea940797209fabc803d86e",
+          "packages/ui/src/anchor/style/token.ts": "a54369a2faf7e754d850ada3a39c9d043c41f245b8c68b6b73b104f468ce4c73",
+          "packages/ui/src/anchor/__tests__/a11y.test.ts": "0be6e615e222903a8d0fc60a8d2f26b2b3b3d79c2930d750f5ff69d209564e73",
+          "packages/ui/src/anchor/__tests__/s28-issue28.test.ts": "84730793d85d6ac79ea3b128d622427b84d16891bc5922bd0eda0d0f9f200740",
+          "packages/ui/src/anchor/__tests__/native-contracts.test.ts": "678ab9bf8df0adc45672728cdffc99ac63f3511ac202d608cbb55b6fa7138966",
+          "packages/ui/src/anchor/__tests__/index.test.ts": "b61446b2a5e1cc8854988346b542899db6a59d55d6deb873d0d72acee61a2839",
+          "packages/ui/src/anchor/__tests__/demo.test.ts": "79a2aa480beb503a49f706397c2d48d73c6f6a36dcfa1278bc51e0ac9b9d19de",
+          "packages/ui/src/anchor/__tests__/type.test-d.ts": "70e88d2adc5cb19f7a7450452090d4cd75d13136e88d1c4d3cad03c5f53364ed",
+          "packages/ui/src/anchor/__tests__/theme.test.ts": "4a6b7333a781952c272a3d96304f85ab0d2f9b532bc3c4bbe76a46663a5b94c9",
+          "packages/ui/src/anchor/__tests__/semantic.test.ts": "77ff5393e400cc37f435a5fd695691a8108f46b3a3aaf15e135fa360125d66bb",
+          "packages/ui/src/anchor/__tests__/fixtures/NativeAnchor.vue": "9e22fbc9a03bb45fdae0eecc94763c6e157173ab7c2eb69adb16a7274cf67931",
+          "packages/ui/src/anchor/__tests__/fixtures/NativeAnchorTypes.vue": "88c74a98f25ff6282c39eec5c9724beb494d30597e35d5e3e9a46a758b72e493",
+          "packages/ui/src/index.ts": "06f8b21641a398dd6aa6298f5fb9b23b2167d0355e369e3a67916bd33fda051a",
+          "packages/ui/src/config-provider/__tests__/targets.test.ts": "81f4b54e42c2df0322d9c0a47d85c9f7ef2b871f0d7d35252b1318c8902468cf"
+        },
+        "remainingBlocking": [],
+        "boundaries": [
+          "No complete nine-dimension/library/release/visual matrix acceptance claimed.",
+          "Affix retains existing top/bottom conditions: when both hit top wins; bottom can hit when top does not.",
+          "Existing jsdom canvas capability diagnostics do not establish browser contrast acceptance."
+        ],
+        "timing": "Started 2026-10-31T04:14Z; root type first35.083s, final58.642s and consumer7.909s. Existing logs record test duration; exact analysis/implementation split unavailable."
       }
     },
     {
@@ -83,18 +244,16 @@
       "kind": "component",
       "ref": "anchor",
       "title": "Anchor",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/anchor"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 208,
-        "startedAt": "2026-10-31T04:14:39.173Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -111,6 +270,169 @@
           "packages/ui/src/anchor/README.md",
           "packages/ui/src/anchor/Anchor.ts"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "owner": "native_portal",
+        "scope": [
+          "packages/ui/src/affix",
+          "packages/ui/src/anchor"
+        ],
+        "baseCommit": "67651d24e6e66b2a9e18bc4950387d944cd2eb66",
+        "passed": true,
+        "implemented": [
+          "Anchor/Link own Vue click/change, pre-default cancellation and actual native link target; #title and nested default slot semantics, current complete VNodeChild.",
+          "Reactive targets/offsets/mapper/duplicate registrations and real-ref indicator, current Provider and three existing component tokens.",
+          "Affix releases old target resources, keeps SSR side effects mounted, preserves s54 geometry/listener idempotence and actual natural content height/placeholder."
+        ],
+        "migration": [
+          "Remove unused Anchor.Link children prop; child links use default slot, title uses #title or title data.",
+          "Click is now a component event with MouseEvent and link payload, h onClick remains the natural listener."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit --project dom-contract --project a11y packages/ui/src/affix packages/ui/src/anchor --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 31617,
+            "log": "/tmp/apollo-affix-anchor-core-frozen.log",
+            "result": "148 passed before final ink/native-link difference; unaffected Affix, Demo and a11y results reused. Eight existing jsdom canvas diagnostics retained."
+          },
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit --project dom-contract packages/ui/src/anchor/__tests__/index.test.ts packages/ui/src/anchor/__tests__/native-contracts.test.ts packages/ui/src/anchor/__tests__/s28-issue28.test.ts packages/ui/src/anchor/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13326,
+            "log": "/tmp/apollo-affix-anchor-followup-core.log",
+            "result": "67 affected Anchor core/semantic cases passed after final real-ref ink and native-link attrs changes."
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/targets.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7909,
+            "log": "/tmp/apollo-affix-anchor-provider.log"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-affix-anchor-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 58642,
+            "log": "/tmp/apollo-affix-anchor-types.log",
+            "kind": "types",
+            "runner": "root",
+            "result": "Strict declaration portability, actual h/SFC positives and negatives, 17 Demos and public barrel; all 52 source hashes identical at integration."
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/anchor/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8948,
+            "log": "/tmp/apollo-affix-anchor-browser-frozen.log",
+            "result": "Real Chrome affix geometry/growth/shrink, container changes, keyboard/link cancellation, focus/draft/selection, live Provider/theme/RTL and cleanup; diagnostics []."
+          },
+          {
+            "kind": "format",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/index.ts",
+            "exitCode": 0,
+            "signal": null,
+            "result": "Root barrel formatting checked; owned changed files checked by owner."
+          }
+        ],
+        "failedAttempts": [
+          {
+            "exitCode": 1,
+            "durationMs": 7576,
+            "log": "/tmp/apollo-affix-anchor-native-red-cases.log",
+            "result": "14 actual contract failures reproduced."
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-affix-anchor-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 35083,
+            "log": "/tmp/apollo-affix-anchor-types.log"
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 33564,
+            "log": "/tmp/apollo-affix-anchor-core-final.log",
+            "result": "147 passed, final dir expectation failed; corrected exact full DOM comparison and reran affected scope."
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 5304,
+            "log": "/tmp/apollo-affix-anchor-link-prefix-red.log",
+            "result": "Explicit Link prefix ink defect reproduced before real-ref fix."
+          }
+        ],
+        "sourceHashes": {
+          "packages/ui/src/affix/Affix.vue": "05a41a854bfb2009a8aaa266adb727a7cb538368d8a1cd8a7d8db36c8e651891",
+          "packages/ui/src/affix/utils.ts": "d31bce8262fa06852bbf449e3fb2530c7996d06c5056301bface4589140ec513",
+          "packages/ui/src/affix/interface.ts": "da90ea1dacfb736203160fb09dce059d79842426c513c1c9676066b02b6a4dd5",
+          "packages/ui/src/affix/index.ts": "359d0486c1fcc3279cea327c5e158762afcd5fe7d8102ace5198a1451b853859",
+          "packages/ui/src/affix/demo/target.vue": "4991f364d0da9927ab35e2d1dee5e93f1a95266bac9ee8a420b5df7c02eb44b0",
+          "packages/ui/src/affix/demo/basic.vue": "13df2a997f37f2f40891615d87199c0817c276d80dd3970f9b9b88c02be2af3f",
+          "packages/ui/src/affix/demo/offset-bottom.vue": "ed8b820bc694f1f6e19cc605c6e5190681a5243eb5dbc6b3efbdb301d84ab056",
+          "packages/ui/src/affix/demo/update-position.vue": "d4e55a8ff2e49b03aabb44ce3e00ff03454bc1a40c9fe1ad199db5fa3b350197",
+          "packages/ui/src/affix/demo/on-change.vue": "bcf86f62a79ccb76f61b6b0d7d3f71ed49343549089c204e60fb0191b5eb7976",
+          "packages/ui/src/affix/style/index.ts": "0b4b346835a8aa6598ea50a9d52e3bd8849d582dfe2540f6bdb10ecffd740e57",
+          "packages/ui/src/affix/style/token.ts": "306e032bee15ac9514380d75e13803f7c75a7e09b058afdde6439e1d6fc5af53",
+          "packages/ui/src/affix/__tests__/a11y.test.ts": "ebc7bf5344c3cd1a26dd3e9dcd8f46c5b7faffb25bd97242c25d39ba26b48796",
+          "packages/ui/src/affix/__tests__/native-contracts.test.ts": "d1c34080d9b0d8b63e21e40cd88b6bf4db48a9880e2c87160234c33553e2c2d6",
+          "packages/ui/src/affix/__tests__/utils.test.ts": "9970b9506b57ba6e498552d0088a54f602da3c3de369320dfe85dec91598aa26",
+          "packages/ui/src/affix/__tests__/index.test.ts": "fdbcac5a43b9011132311abbf89a80f10d7c64d58c703e049bbb3bdeda689f11",
+          "packages/ui/src/affix/__tests__/type.test-d.ts": "de01bddd8bd535a6b7e4968b11a599c6b885d3f0f88113a4745d61c321e34711",
+          "packages/ui/src/affix/__tests__/s54-issue54.test.ts": "40b34a990c01a16bd5589bfecda09d951667ec8f9f82d29c6e786dcc6fa185b7",
+          "packages/ui/src/affix/__tests__/semantic.test.ts": "6d8ca4f57b3153465e35eafb6eb737229b473240119031d415d62cbc14644937",
+          "packages/ui/src/anchor/context.ts": "804bc3429c984d7b3c4e30554e355fa8a0a782619020871c6064153a1bb1b7e3",
+          "packages/ui/src/anchor/use-anchor-theme.ts": "470c5656785aa0e780c9c9abd24285157a0efb0a5446e47a3e8db730d368931d",
+          "packages/ui/src/anchor/content-prop.ts": "a76b731c68140b1ffa52911934c523787a3bc83e0c6d59851d77ca8c19e10004",
+          "packages/ui/src/anchor/get-target.ts": "83a25b98638b6a98f87957d3afef992c344f6d01d7e190cad777358064074f04",
+          "packages/ui/src/anchor/interface.ts": "4d534136e5acffca2a0bff8f3a82d4b4a4cf35a9aa0a9e6998ce42cae0bbe54a",
+          "packages/ui/src/anchor/AnchorLink.ts": "bb13c01d907d23c5985635f152d23d03ae4b8afcddffa2acf9a3b912a2694158",
+          "packages/ui/src/anchor/Anchor.ts": "3553c7f1ce2a50ecb7629696e811507f95485344f648e6c1d758df65f7888258",
+          "packages/ui/src/anchor/index.ts": "0a0f11aef93b270003913e1addc42973b25d5fb8a587f01f88057c0b07cc2a99",
+          "packages/ui/src/anchor/demo/bounds.vue": "968e654519e23c11af490c811b132ba5bdb63a172abad04085c352a02bc291dd",
+          "packages/ui/src/anchor/demo/static.vue": "bdad9343ebe04b8b7da8f30d10b36f47aaf624adc80d3d232e44b22e5efb02ec",
+          "packages/ui/src/anchor/demo/horizontal.vue": "8c6c96c7ffa8a9c1c1a75b5a6cde344f266ef817b94d4d11baad10182d38debc",
+          "packages/ui/src/anchor/demo/customize-highlight.vue": "dabd733211bb7beff6ce3efecd4cec0659316c1c02d382eacd5280f5271de410",
+          "packages/ui/src/anchor/demo/component-token.vue": "778281bf93e95f3929682f5c38f5737e09d9a027e9a750a0620458c288945da7",
+          "packages/ui/src/anchor/demo/onChange.vue": "9d9bca1890c0c4ba9afb58583930f448027fe5620eac52b4a4976c9db2f33875",
+          "packages/ui/src/anchor/demo/style-class.vue": "8eb81f3af1591ad85feb03093fee5785cbb3bbdbae031a78bc6ddef77c29620c",
+          "packages/ui/src/anchor/demo/replace.vue": "cc8e9aa91a22d860ff0b13ae4c7b048c5e9d70a48e8ef1362e4311bd82868634",
+          "packages/ui/src/anchor/demo/basic.vue": "82798ab910dca90a6cb3b32fe8a83ff72da82ed9ef7ae9df1fb5daefc612e909",
+          "packages/ui/src/anchor/demo/onClick.vue": "8ea03901ab006a2c7903b1db7bc3cc0535510c37b7e0968aa5410dc56f7fe738",
+          "packages/ui/src/anchor/demo/target-offset-per-link.vue": "c4be4ff8f4f4420642c77aaa37596d0ffbe84fadc05896646e7f87bd2215a025",
+          "packages/ui/src/anchor/demo/target-offset.vue": "dddf3459e336caea65c11e3ffc1d01a118a5690f140f1c7c79633c5be8558d30",
+          "packages/ui/src/anchor/style/index.ts": "c7ddeb533b07a53752ccf26f4edc5a0d0fc7713721ea940797209fabc803d86e",
+          "packages/ui/src/anchor/style/token.ts": "a54369a2faf7e754d850ada3a39c9d043c41f245b8c68b6b73b104f468ce4c73",
+          "packages/ui/src/anchor/__tests__/a11y.test.ts": "0be6e615e222903a8d0fc60a8d2f26b2b3b3d79c2930d750f5ff69d209564e73",
+          "packages/ui/src/anchor/__tests__/s28-issue28.test.ts": "84730793d85d6ac79ea3b128d622427b84d16891bc5922bd0eda0d0f9f200740",
+          "packages/ui/src/anchor/__tests__/native-contracts.test.ts": "678ab9bf8df0adc45672728cdffc99ac63f3511ac202d608cbb55b6fa7138966",
+          "packages/ui/src/anchor/__tests__/index.test.ts": "b61446b2a5e1cc8854988346b542899db6a59d55d6deb873d0d72acee61a2839",
+          "packages/ui/src/anchor/__tests__/demo.test.ts": "79a2aa480beb503a49f706397c2d48d73c6f6a36dcfa1278bc51e0ac9b9d19de",
+          "packages/ui/src/anchor/__tests__/type.test-d.ts": "70e88d2adc5cb19f7a7450452090d4cd75d13136e88d1c4d3cad03c5f53364ed",
+          "packages/ui/src/anchor/__tests__/theme.test.ts": "4a6b7333a781952c272a3d96304f85ab0d2f9b532bc3c4bbe76a46663a5b94c9",
+          "packages/ui/src/anchor/__tests__/semantic.test.ts": "77ff5393e400cc37f435a5fd695691a8108f46b3a3aaf15e135fa360125d66bb",
+          "packages/ui/src/anchor/__tests__/fixtures/NativeAnchor.vue": "9e22fbc9a03bb45fdae0eecc94763c6e157173ab7c2eb69adb16a7274cf67931",
+          "packages/ui/src/anchor/__tests__/fixtures/NativeAnchorTypes.vue": "88c74a98f25ff6282c39eec5c9724beb494d30597e35d5e3e9a46a758b72e493",
+          "packages/ui/src/index.ts": "06f8b21641a398dd6aa6298f5fb9b23b2167d0355e369e3a67916bd33fda051a",
+          "packages/ui/src/config-provider/__tests__/targets.test.ts": "81f4b54e42c2df0322d9c0a47d85c9f7ef2b871f0d7d35252b1318c8902468cf"
+        },
+        "remainingBlocking": [],
+        "boundaries": [
+          "No complete nine-dimension/library/release/visual matrix acceptance claimed.",
+          "Affix retains existing top/bottom conditions: when both hit top wins; bottom can hit when top does not.",
+          "Existing jsdom canvas capability diagnostics do not establish browser contrast acceptance."
+        ],
+        "timing": "Started 2026-10-31T04:14Z; root type first35.083s, final58.642s and consumer7.909s. Existing logs record test duration; exact analysis/implementation split unavailable."
       }
     },
     {

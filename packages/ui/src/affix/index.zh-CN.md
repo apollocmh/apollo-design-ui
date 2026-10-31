@@ -6,183 +6,57 @@ subtitle: 固钉
 
 # Affix 固钉
 
-将页面元素钉在可视范围。
-
-## 何时使用
-
-- 当内容过长，需要把某个元素（如工具条、操作栏）**固定在页面可视范围**内时；
-- 常用于导航、按钮组的固定。
-
-## 代码演示
-
-### 基础
+滚动到指定偏移后，将内容固定到窗口或实际滚动容器的可视边缘。默认插槽承载完整 Vue 内容。
 
 ```vue
-<script setup lang="ts">
-import { Affix, Button } from '@apollo-design/ui';
-</script>
-
-<template>
-  <Affix :offset-top="80">
-    <Button type="primary">固定在顶部 80px</Button>
-  </Affix>
-</template>
-```
-
-### 固定在底部
-
-```vue
-<Affix :offset-bottom="80">
-  <Button>固定在底部 80px</Button>
+<Affix :offset-top="16" :target="() => scrollArea" @change="onAffixed">
+  <button>固定工具栏</button>
 </Affix>
-```
-
-### 固钉状态改变回调
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Affix, Button } from '@apollo-design/ui';
-
-const affixed = ref(false);
-</script>
-
-<template>
-  <Affix :offset-top="120" @change="(v) => (affixed = v)">
-    <Button>{{ affixed ? '已固钉' : '未固钉' }}</Button>
-  </Affix>
-</template>
-```
-
-### 滚动容器
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Affix, Button } from '@apollo-design/ui';
-
-const container = ref<HTMLElement | null>(null);
-const getTarget = () => container.value ?? window;
-</script>
-
-<template>
-  <div ref="container" style="height: 300px; overflow: auto">
-    <Affix :target="getTarget" :offset-top="10">
-      <Button>固定在容器顶部</Button>
-    </Affix>
-  </div>
-</template>
-```
-
-### 手动更新位置
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Affix, Button } from '@apollo-design/ui';
-
-const affixRef = ref<{ updatePosition: () => void } | null>(null);
-</script>
-
-<template>
-  <Affix ref="affixRef" :offset-top="60">
-    <Button @click="affixRef?.updatePosition()">手动重新测量</Button>
-  </Affix>
-</template>
 ```
 
 ## API
 
-### Props
+| Prop | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| offsetTop | 顶部固钉偏移 | number | 两种偏移都未传时为 0 |
+| offsetBottom | 底部固钉偏移；两个条件同时命中时顶部优先，顶部未命中时仍可命中底部 | number | — |
+| target | 返回实际滚动元素或 Window；未传依次使用 Provider.getTargetContainer、window | () => HTMLElement \| Window \| null \| undefined | — |
+| prefixCls | 当前组件类名前缀 | string | apollo-affix |
 
-| 属性 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| `offsetTop` | 距离窗口顶部达到指定偏移后固钉 | `number` | — |
-| `offsetBottom` | 距离窗口底部达到指定偏移后固钉。**与 `offsetTop` 互斥**：都传时只有 `offsetTop` 生效 | `number` | — |
-| `target` | 滚动监听与定位的参照目标，**返回元素或 `window` 的函数**。默认 `window` | `() => HTMLElement \| Window \| null` | — |
-| `prefixCls` | 类名前缀 | `string` | `apollo-affix` |
+`target` 返回 null/undefined 表示尚未就绪，释放旧目标监听并撤除固钉状态，不退回 window。响应式 ref 就绪或替换后自动同步；非响应式目标变化可调用已有 `updatePosition()` 重新读取。
 
-### 根节点原生属性
+| 事件 | 载荷 | 时机 |
+| --- | --- | --- |
+| change | affixed: boolean | 实际固钉状态翻转时；同一状态的滚动不重复通知 |
 
-根节点是外层占位测量层。Vue 原生 `class`、`style` 及其它 `$attrs` 会透传到该节点；`class` 支持字符串、数组和对象形态，`style` 与 ConfigProvider 中的 `components.affix.style` 合并，调用处同名样式优先。它们不是 Affix 专属 Props，因此不声明 `className`、`rootClassName` 或 `style` Props。
+| 插槽 | 说明 |
+| --- | --- |
+| default | 固钉内容，保留完整 VNodeChild 和节点身份 |
+
+| AffixRef | 说明 |
+| --- | --- |
+| updatePosition(): void | 合并到下一帧重新测量当前目标和内容 |
+
+没有新增实例方法。模板 ref 可声明为 `ref<AffixRef | null>(null)`。
+
+## 原生属性与当前配置
+
+根是外层占位测量 div，原生 class/style、id、data、ARIA 和监听器只落此处。class/style 使用 Vue 的字符串、数组和对象合并，调用者样式覆盖 `ConfigProvider.components.affix.style`；这些字段不另声明成组件 Props。固钉层与占位层是内部定位节点。
+
+`getPrefixCls`、组件配置和主题读取当前 Provider。唯一组件 Token 是 `zIndexPopup`，默认由 `zIndexBase + 10` 派生；替换、撤除和显式 0 均作用于实际固钉层。
 
 ```vue
-<Affix class="toolbar-affix" :style="{ zIndex: 20 }">
-  <Toolbar />
-</Affix>
+<ConfigProvider :theme="{ components: { Affix: { zIndexPopup: 20 } } }">
+  <Affix :offset-top="0">工具栏</Affix>
+</ConfigProvider>
 ```
 
-### 事件
+## 几何与资源
 
-| 事件 | 说明 | 回调参数 |
-|---|---|---|
-| `change` | 固钉状态变化。**只在翻转时触发**（连续固钉不会重复发） | `(affixed: boolean)` |
+保留顶部/底部的亚像素比较与外层布局测量基准。顶部条件优先于底部条件，并非删除另一个条件。固定宽度跟随外层可用宽度；内容保留自然高度，其真实尺寸通过已有 ResizeObserver 同步占位，支持增长和缩小，不重挂内部输入。
 
-### 插槽
+只在挂载后测量和绑定。当前目标的滚动事件保持逐帧合并与同位置快路径；内容/容器的尺寸通知走完整测量。换目标、目标变为空和卸载释放监听、观察及待执行帧，SSR 不调度这些副作用。没有为无尺寸/滚动/显式更新信号的任意位置重排增加观察或轮询。
 
-| 名称 | 说明 |
-|---|---|
-| `default` | 被固钉的内容 |
+## Demo
 
-### ref
-
-```ts
-const affixRef = ref<{ updatePosition: () => void } | null>(null);
-```
-
-## 设计说明
-
-### 双层结构
-
-外层始终在文档流里（**占位测量层**，`restProps` 落在这里）；内层在固钉时 `position: fixed`，
-并在外层里插入一个**等高占位**（`aria-hidden="true"`）防止布局跳动。
-
-⚠️ **内层的 `apollo-affix` 类名只在固钉时出现**（antd 的 `mergedCls = clsx({ [rootCls]: affixStyle })`）。
-
-### `offsetTop` / `offsetBottom` 互斥
-
-antd 的 `internalOffsetTop = 两者都未传 ? 0 : offsetTop`，但 `getFixedTop` 的判据要求
-`offsetTop !== undefined` ⇒ **两者都传时只有 `offsetTop` 生效**。
-
-### 定位判据（`utils.ts`，已导出供单测）
-
-```ts
-getFixedTop(placeholderRect, targetRect, offsetTop)
-// offsetTop !== undefined && round(targetRect.top) > round(placeholderRect.top) - offsetTop
-//   ⇒ offsetTop + targetRect.top
-
-getFixedBottom(placeholderRect, targetRect, offsetBottom)
-// offsetBottom !== undefined && round(targetRect.bottom) < round(placeholderRect.bottom) + offsetBottom
-//   ⇒ offsetBottom + (window.innerHeight - targetRect.bottom)
-```
-
-⚠️ `Math.round` **只参与比较**（消除亚像素抖动），结果用原始值。
-⚠️ `getFixedBottom` 用 `window.innerHeight`（不是 target 高度）—— 固在「容器可视区底部」
-需要容器底边到视口底边的距离补偿。
-
-位置未变时的快速路径需按 Vue 的 inline style 值比较：测量数值写入样式后会变成 `"64px"` 这样的像素字符串；与当前判据位置相等时跳过完整重测。几何函数不在生产路径输出探针日志。
-
-### 无障碍
-
-⚠️ **固钉状态变化对读屏器不可见**：antd 没有输出 `aria-live` / `role="status"` / `aria-busy`，
-我们逐字对齐，不擅自补。整个组件只有占位层一处 ARIA（`aria-hidden="true"`）。
-
-### 组件 Token
-
-| token | 默认值 | 说明 |
-|---|---|---|
-| `zIndexPopup` | `zIndexBase + 10` | 固钉层的 z-index |
-
-⚠️ 已知缺口：没有「Component Token → CSS 变量」管线，用户暂无法覆盖 `zIndexPopup`。
-
-### 样式引入
-
-```ts
-import '@apollo-design/ui/affix/style.css';
-```
-
-## 已知缺口
-
-- **jsdom / 静态渲染测不了**：真实滚动、`ResizeObserver` 触发、固钉态的视觉比对
-  —— 详见 `README.md` §7.1（判据已用纯函数单测钉住，缺口是**组件级集成**那条链路）。
-- 按需样式子路径 `./affix/style.css` 依赖 `packages/ui/package.json` 的 `exports` 声明（全库级基建议题）。
+basic、offset-bottom、on-change、target、update-position；原有几何与 s54 监听幂等回归保留。统一九维与发布验收另行执行。

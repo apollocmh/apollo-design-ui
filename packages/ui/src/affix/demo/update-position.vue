@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Affix, Button } from '../../index';
+import { Affix, type AffixRef, Button } from '../../index';
 
-const affixRef = ref<{ updatePosition: () => void } | null>(null);
+const affixRef = ref<AffixRef | null>(null);
 </script>
 
 <template>

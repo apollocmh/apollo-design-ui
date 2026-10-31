@@ -43,9 +43,7 @@ export interface ComponentToken {
  * });
  * ```
  */
-export const prepareComponentToken = (
-  token: Pick<AliasToken, 'zIndexBase'>,
-): Partial<ComponentToken> => ({
+export const prepareComponentToken = (token: Pick<AliasToken, 'zIndexBase'>): ComponentToken => ({
   zIndexPopup: token.zIndexBase + 10,
 });
 

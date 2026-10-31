@@ -44,7 +44,7 @@ export interface ComponentToken {
 }
 
 /** 与上游的 `prepareComponentToken` 逐字对应。 */
-export const prepareComponentToken = (token: AliasToken): Partial<ComponentToken> => ({
+export const prepareComponentToken = (token: AliasToken): ComponentToken => ({
   linkPaddingBlock: token.paddingXXS,
   linkPaddingInlineStart: token.padding,
 });

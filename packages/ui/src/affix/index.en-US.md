@@ -9,194 +9,57 @@ group:
 
 # Affix
 
-Make an element stick to viewport.
-
-## When to use
-
-- When the page is long and an element (toolbar, action bar) needs to stay **within the viewport**;
-- Commonly used for navigation and button groups.
-
-## Code examples
-
-### Basic
+Keep content fixed to the visible edge of the window or an actual scroll container after reaching an offset. The default slot accepts complete Vue content.
 
 ```vue
-<script setup lang="ts">
-import { Affix, Button } from '@apollo-design/ui';
-</script>
-
-<template>
-  <Affix :offset-top="80">
-    <Button type="primary">Affix top at 80px</Button>
-  </Affix>
-</template>
-```
-
-### Affix bottom
-
-```vue
-<Affix :offset-bottom="80">
-  <Button>Affix bottom at 80px</Button>
+<Affix :offset-top="16" :target="() => scrollArea" @change="onAffixed">
+  <button>Sticky toolbar</button>
 </Affix>
-```
-
-### Change callback
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Affix, Button } from '@apollo-design/ui';
-
-const affixed = ref(false);
-</script>
-
-<template>
-  <Affix :offset-top="120" @change="(v) => (affixed = v)">
-    <Button>{{ affixed ? 'Affixed' : 'Not affixed' }}</Button>
-  </Affix>
-</template>
-```
-
-### Scroll container
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Affix, Button } from '@apollo-design/ui';
-
-const container = ref<HTMLElement | null>(null);
-const getTarget = () => container.value ?? window;
-</script>
-
-<template>
-  <div ref="container" style="height: 300px; overflow: auto">
-    <Affix :target="getTarget" :offset-top="10">
-      <Button>Affix in container</Button>
-    </Affix>
-  </div>
-</template>
-```
-
-### Update position manually
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Affix, Button } from '@apollo-design/ui';
-
-const affixRef = ref<{ updatePosition: () => void } | null>(null);
-</script>
-
-<template>
-  <Affix ref="affixRef" :offset-top="60">
-    <Button @click="affixRef?.updatePosition()">Re-measure</Button>
-  </Affix>
-</template>
 ```
 
 ## API
 
-### Props
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| offsetTop | Top affixing offset | number | 0 when both offsets are absent |
+| offsetBottom | Bottom offset. Top wins when both conditions match; bottom can still match when top does not | number | — |
+| target | Actual scrolling element or Window. Omitted: Provider.getTargetContainer, then window | () => HTMLElement \| Window \| null \| undefined | — |
+| prefixCls | Current component prefix | string | apollo-affix |
 
-| Property | Description | Type | Default |
-|---|---|---|---|
-| `offsetTop` | Offset from the top of the viewport after affixing | `number` | — |
-| `offsetBottom` | Offset from the bottom of the viewport after affixing. **Mutually exclusive with `offsetTop`**: when both are set only `offsetTop` takes effect | `number` | — |
-| `target` | Scroll listening and positioning reference; **a function returning an element or `window`**. Default `window` | `() => HTMLElement \| Window \| null` | — |
-| `prefixCls` | Class name prefix | `string` | `apollo-affix` |
+A null/undefined result means pending. It releases the previous target and fixed state without selecting window. Reactive template refs update automatically; use the existing `updatePosition()` method after a nonreactive target change.
 
-### Native root attributes
+| Event | Payload | Timing |
+| --- | --- | --- |
+| change | affixed: boolean | Accepted affixed state flips; unchanged scrolling does not repeat it |
 
-The outer placeholder-measuring element is the root. Vue-native `class`, `style`, and other `$attrs` fall through to it; `class` supports string, array, and object forms. `style` merges with `ConfigProvider.components.affix.style`, with caller values taking precedence. These are not Affix-specific Props, so no `className`, `rootClassName`, or `style` Props are declared.
+| Slot | Description |
+| --- | --- |
+| default | Complete VNodeChild content with persistent node identity |
+
+| AffixRef | Description |
+| --- | --- |
+| updatePosition(): void | Coalesce remeasurement of the current target and content into the next frame |
+
+No new instance API is introduced. A template ref can use `ref<AffixRef | null>(null)`.
+
+## Native attrs and current configuration
+
+The outer measuring div owns native class/style, id, data, ARIA and listeners once. Vue merges string, array and object styles with `ConfigProvider.components.affix.style`; caller styles take precedence. These remain native attrs rather than Affix Props. The fixed and spacer nodes are internal positioning layers.
+
+The prefix, component configuration and theme follow current Provider values. The sole component Token is `zIndexPopup`, derived from `zIndexBase + 10` by default. Replacement, removal and explicit zero affect the actual fixed layer.
 
 ```vue
-<Affix class="toolbar-affix" :style="{ zIndex: 20 }">
-  <Toolbar />
-</Affix>
+<ConfigProvider :theme="{ components: { Affix: { zIndexPopup: 20 } } }">
+  <Affix :offset-top="0">Toolbar</Affix>
+</ConfigProvider>
 ```
 
-### Events
+## Geometry and cleanup
 
-| Event | Description | Arguments |
-|---|---|---|
-| `change` | Fired when the affixed state **flips** (not repeatedly while staying affixed) | `(affixed: boolean)` |
+Existing rounded comparisons and the outer layout reference are preserved. Top has branch priority; setting it does not remove the bottom condition. Fixed width follows the outer available width. Content keeps its natural height, and its existing ResizeObserver updates the spacer on growth and shrinkage without replacing inputs.
 
-### Slots
+Measurement and listeners start after mounting. Scrolling retains frame coalescing and the unchanged-position fast path; size notifications perform full measurement. Target replacement, a pending target and unmount release listeners, observations and pending frames. SSR schedules none of these effects. Arbitrary position rearrangement without a size, scroll or explicit update signal does not add a new observer or polling loop.
 
-| Name | Description |
-|---|---|
-| `default` | The affixed content |
+## Demos
 
-### ref
-
-```ts
-const affixRef = ref<{ updatePosition: () => void } | null>(null);
-```
-
-## Design notes
-
-### Two-layer structure
-
-The outer element always stays in the document flow (the **placeholder measuring layer**, where
-`restProps` land); the inner element gets `position: fixed` when affixed, and an equal-height
-**placeholder** (`aria-hidden="true"`) is inserted to prevent layout jumps.
-
-⚠️ **The inner `apollo-affix` class name only exists while affixed**
-(antd's `mergedCls = clsx({ [rootCls]: affixStyle })`).
-
-### `offsetTop` / `offsetBottom` are mutually exclusive
-
-antd's `internalOffsetTop = neither passed ? 0 : offsetTop`, but `getFixedTop` requires
-`offsetTop !== undefined` ⇒ **when both are set only `offsetTop` takes effect**.
-
-### Positioning predicates (`utils.ts`, exported for unit tests)
-
-```ts
-getFixedTop(placeholderRect, targetRect, offsetTop)
-// offsetTop !== undefined && round(targetRect.top) > round(placeholderRect.top) - offsetTop
-//   ⇒ offsetTop + targetRect.top
-
-getFixedBottom(placeholderRect, targetRect, offsetBottom)
-// offsetBottom !== undefined && round(targetRect.bottom) < round(placeholderRect.bottom) + offsetBottom
-//   ⇒ offsetBottom + (window.innerHeight - targetRect.bottom)
-```
-
-⚠️ `Math.round` participates in the **comparison only** (to remove sub-pixel jitter);
-the result uses the raw values.
-⚠️ `getFixedBottom` uses `window.innerHeight` (not the target height) — affixing to the
-"visible bottom of a container" needs the distance from the container's bottom edge to the
-viewport's bottom edge.
-
-When comparing an unchanged affix position, account for Vue's inline style values: numeric
-measurements are written as pixel strings such as `"64px"`. The fast path compares that value
-with the computed position to avoid repeating the full measurement. Geometry helpers do not emit
-probe logs in production.
-
-### Accessibility
-
-⚠️ **Affixed-state changes are invisible to screen readers**: antd outputs no
-`aria-live` / `role="status"` / `aria-busy`. We match it verbatim and do not add attributes.
-The whole component contains exactly one ARIA attribute (`aria-hidden="true"` on the placeholder).
-
-### Component token
-
-| Token | Default | Description |
-|---|---|---|
-| `zIndexPopup` | `zIndexBase + 10` | z-index of the affixed layer |
-
-⚠️ Known gap: without the "Component Token → CSS variable" pipeline users cannot override
-`zIndexPopup` yet.
-
-### Importing styles
-
-```ts
-import '@apollo-design/ui/affix/style.css';
-```
-
-## Known gaps
-
-- **Not testable in jsdom / static rendering**: real scrolling, `ResizeObserver` triggering,
-  visual comparison of the affixed state — see `README.md` §7.1
-  (the predicates are pinned by pure-function unit tests; the gap is the component-level integration).
-- The per-component style subpath `./affix/style.css` depends on the `exports` declaration in
-  `packages/ui/package.json` (repo-wide infrastructure issue).
+basic, offset-bottom, on-change, target and update-position. Existing geometry and s54 listener-idempotency regressions remain. Final nine-dimensional and distribution acceptance are separate.

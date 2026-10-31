@@ -712,9 +712,8 @@ export { prepareComponentToken as prepareAlertComponentToken } from './alert/sty
 //
 // ⚠️ 类名前缀 `apollo-anchor`；**2 个 Component Token**（`linkPaddingBlock` /
 //    `linkPaddingInlineStart`，都是别名派生）+ 4 个 `mergeToken` 派生值（见 style/token.ts）。
-// ⚠️ **没有 `ref`/`expose`**（上游 `Anchor` 是 `React.FC`，无 forwardRef）。
-// ⚠️ `onClick` 是**自定义签名**的 prop（不是 DOM 事件）⇒ 不声明 `click` 事件
-//    （否则组件上的 `@click` 不再挂到根元素）。`onChange` 走 `emit('change')`。
+// `click(MouseEvent, link)` / `change(href)` 为组件事件；click 可取消内部导航。
+// Anchor.Link 的默认插槽承载子链接，`#title` 承载标题。
 // ⚠️ 组件实现是 `.ts` 渲染函数（COMPONENT-RULES §2 条件 2：递归 + 两分支共享内容）。
 // ---------------------------------------------------------------------------
 export type {
@@ -724,6 +723,7 @@ export type {
   AnchorEmits,
   AnchorKey,
   AnchorLinkBaseProps,
+  AnchorLinkEmits,
   AnchorLinkInfo,
   AnchorLinkItemProps,
   AnchorLinkProps,

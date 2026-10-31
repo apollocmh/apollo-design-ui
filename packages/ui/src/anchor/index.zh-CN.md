@@ -4,121 +4,87 @@ title: Anchor
 subtitle: 锚点
 ---
 
-用于跳转到页面指定位置。
+# Anchor 锚点
 
-## 何时使用
+使用原生链接展示目录，并根据实际滚动容器中的小节位置更新高亮。支持 items 数据和 Vue 默认槽组合，两者共享同一滚动、指示条及 Affix 链。
 
-- 需要展示当前页面结构（目录），并支持点击跳转到对应位置。
-- 需要**滚动时自动高亮**当前所在的锚点。
+```vue
+<Anchor :get-container="() => scrollArea" :affix="false" @click="onClick" @change="onChange">
+  <AnchorLink href="#intro">
+    <template #title><strong>介绍</strong></template>
+    <AnchorLink href="#details" title="详情" />
+  </AnchorLink>
+</Anchor>
+```
 
-## 代码演示
+## Anchor Props
 
-见 [`demo/`](./demo)（**12 个**，覆盖 antd 的主要用户场景）。
+| Prop | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| items | 递归链接数据；存在默认槽时由槽覆盖，空槽也会有意盖住数据 | AnchorLinkItemProps[] | — |
+| direction | 导航排列方向 | vertical \| horizontal | vertical |
+| offsetTop | Affix 顶部偏移及 wrapper 最大高度计算，也作为滚动偏移后备 | number | — |
+| bounds | 当前位置命中容差 | number | 5 |
+| targetOffset | 滚动落点及当前位置检测偏移，优先于 offsetTop | number | — |
+| affix | 是否使用 Affix；对象配置保留动态 offsetBottom/prefixCls | boolean \| AnchorAffixConfig | true |
+| showInkInFixed | 非 Affix 模式仍显示指示条 | boolean | false |
+| getContainer | 当前实际滚动容器；未传依次取 Provider.getTargetContainer 和 window | () => HTMLElement \| Window \| null \| undefined | — |
+| getCurrentAnchor | 纯高亮映射，接收原始 href，移除后恢复原始值；不改事件载荷 | (activeLink: string) => string | — |
+| replace | 使用 replaceState；单条链接配置优先 | boolean | false |
+| prefixCls | 当前组件前缀，也作为 Link 的默认前缀 | string | apollo-anchor |
+| classNames | root/item/itemTitle/indicator 语义类名，或接收 { props } 的函数 | AnchorSemanticClassNames \| function | — |
+| styles | 同名语义样式，使用 Vue CSSProperties，或接收 { props } 的函数 | AnchorSemanticStyles \| function | — |
 
-| demo | 内容 |
-|---|---|
-| `basic` | 最简单的用法 |
-| `horizontal` | 横向 Anchor（ink 是底部横条） |
-| `onChange` | 监听锚点链接改变 |
-| `onClick` | 点击锚点不记录历史 |
-| `replace` | 替换浏览器历史记录中的路径 |
-| `targetOffset` | 滚动落点偏移（优先于 `offsetTop`） |
-| `targetOffset-per-link` | 每条链接单独的偏移（优先级更高） |
-| `customizeHighlight` | 自定义锚点高亮（`getCurrentAnchor`） |
+getContainer 返回空值表示 pending，清除旧滚动监听和活动检测，不回退 window。响应式模板 ref、Provider 替换和偏移变化均重新同步当前链路。
 
-⚠️ 与 antd 的 4 个 demo **未移植**（缺口见 `README.md` §5）：
-`static`（差别只在滚动行为 ⇒ 归 L6）· `legacy-anchor`（已由 L4 的 `anchor:children` 覆盖）·
-`style-class`（依赖 `antd-style`）· `component-token`（零运行时下 token 是构建期产物）。
+## 所属事件
 
-## API
+| 组件/事件 | 载荷 | 说明 |
+| --- | --- | --- |
+| Anchor change | currentActiveLink: string | 原始 href；映射仅影响高亮，不改该载荷 |
+| Anchor click | event: MouseEvent, link: AnchorLinkInfo | 选择、滚动及历史记录操作前通知 |
+| AnchorLink click | event: MouseEvent, link: AnchorLinkInfo | 当前链接的同一原生事件，先于 Anchor 汇总通知 |
 
-### Props
+`link` 包含 `{ href, title }`，title 保留完整内容。任意 click 监听器调用 `preventDefault()` 都会取消默认选择、滚动与历史操作。只通过 emits 通知，不重复手调同名监听器；模板用 `@click`/`@change`，程序调用仍使用自然的 onClick/onChange listener。
 
-| 参数 | 说明 | 类型 | 默认值 | 全局配置 |
-|---|---|---|---|---|
-| items | 数据源（推荐）。每项 = 链接字段 + `key` + 可选 `children`（**嵌套**） | `AnchorLinkItemProps[]` | — | × |
-| direction | 方向 | `'vertical' \| 'horizontal'` | `'vertical'` | × |
-| offsetTop | 容器顶部偏移（同时喂给 `Affix` 与 `maxHeight` 计算） | `number` | — | × |
-| bounds | 命中判据的容差 | `number` | `5` | × |
-| targetOffset | 滚动落点偏移（**优先于** `offsetTop`） | `number` | — | × |
-| affix | 是否固钉。⚠️ 默认**开** | `boolean \| Omit<AffixProps,'offsetTop'\|'target'>` | `true` | × |
-| showInkInFixed | 非固钉时是否仍显示指示条 | `boolean` | `false` | × |
-| getContainer | 滚动容器。回落到 ConfigProvider 的 `getTargetContainer`，再回落 `window` | `() => HTMLElement \| Window` | — | × |
-| getCurrentAnchor | 改写**高亮**（不改 `onChange` 的载荷） | `(activeLink: string) => string` | — | × |
-| onChange | 当前锚点变化（滚动或点击） | `(currentActiveLink: string) => void` | — | × |
-| onClick | 点击链接。**在滚动之前**调用。⚠️ 这是**自定义签名**的 prop，**不是 DOM 事件** | `(e: MouseEvent, link: { title, href }) => void` | — | × |
-| replace | 用 `replaceState` 而不是 `pushState` | `boolean` | — | × |
-| classNames | 语义化类名（`root` / `item` / `itemTitle` / `indicator`），支持函数形态 | `AnchorSemanticClassNames \| ((info) => …)` | — | ✅（`anchor.classNames`） |
-| styles | 语义化样式（四个槽），支持函数形态 | `AnchorSemanticStyles \| ((info) => …)` | — | ✅（`anchor.styles`） |
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-anchor` | × |
-| class / style | **根节点（内层 wrapper div）原生 attrs**（不是 Props）；调用方 `style` 覆盖算出来的 `max-height` | `string \| array \| object` / `CSSProperties` | — | × |
+修饰键、非主按钮、download、新浏览上下文及真正外链保持浏览器原生路径。普通同页片段使用所属文档解析，支持鼠标和原生 Enter 激活；不会引入额外箭头键或焦点模型。显式 replace 对同页片段使用 replaceState，对普通外部 URL 保留 location.replace 行为。
 
-#### AnchorLinkItemProps
+## 数据项、Link 与插槽
 
-| 字段 | 说明 | 类型 |
-|---|---|---|
-| href | **必填**。内部锚点形如 `#section-1` | `string` |
-| title | 显示的文本 | `VNodeChild` |
-| key | 唯一标识 | `string \| number` |
-| target | `<a target>` | `string` |
-| className | 落在 `.{prefixCls}-link` 上 | `string` |
-| replace | 单条覆盖 `Anchor` 的 `replace` | `boolean` |
-| targetOffset | 单条的滚动偏移（也参与滚动侦测） | `number` |
-| children | **嵌套**子项。⚠️ 水平方向不支持 | `AnchorLinkItemProps[]` |
+| 数据字段 | 说明 |
+| --- | --- |
+| key | items 中必需的 string/number 业务 key |
+| href | 必需的原生链接地址 |
+| title | items 中必需的 VNodeChild，支持 0、空值、数组和组件节点 |
+| target | 原生 a.target |
+| className | 数据项及 Link 的既有 item 类名 |
+| replace | 覆盖 Anchor 的历史替换配置 |
+| targetOffset | 单条滚动与检测偏移，优先于组件偏移 |
+| prefixCls | 单条 Link 的显式前缀 |
+| children | 仅 items 数据使用的递归子项；水平导航不渲染嵌套项 |
 
-### Events
+AnchorLink（也可使用 Anchor.Link）的 href 必需，title 数据可选，以支持原生 #title。没有 children prop，子链接通过默认槽表达。
 
-| 名称 | 说明 | 参数 |
-|---|---|---|
-| change | 当前锚点变化（与 `onChange` prop 是**同一条通路**） | `(currentActiveLink: string)` |
+| 组件/槽 | 职责 |
+| --- | --- |
+| Anchor default | 合法 Vue 链接组合，存在即优先于 items；条件空槽不会退回数据 |
+| AnchorLink title | 实际 a 的完整内容，存在即覆盖 title 数据，含空槽和 0 |
+| AnchorLink default | 嵌套子链接，沿用垂直导航职责 |
 
-⚠️ **没有 `click` 事件** —— `onClick` 是自定义签名的 prop（见上表）。
-把它声明成组件事件会让模板上的 `@click` **不再挂到根元素**。
+Anchor 与 Link 没有公开实例控制 API，不新增 v-model。Affix 保留自己的 change 与 updatePosition 职责。
 
-### Slots
+## 原生 attrs、Provider 与 Token
 
-| 名称 | 说明 |
-|---|---|
-| default（默认） | 链接内容。对应 antd **已废弃**的 `children`（用 `items` 代替，传了会发废弃告警） |
+Anchor 原生 attrs/class/style 落实际 wrapper（不落外层 Affix），合并 Provider → 当前组件语义样式 → 原生 attrs。Link 的 class/style/data/id 等既有根 attrs 保留在 item wrapper；aria-*、tabindex、focus/keyboard 原生监听落可操作的 a。活跃链接默认带 `aria-current="location"`。条件内容、同 key 数据替换与配置变化保留原节点和焦点。
 
-### 子组件
+当前 Provider 的前缀、方向、组件配置与主题动态生效。Link 默认继承 Anchor 当前前缀，显式 Link 前缀仍优先；方向通过原生 dir 消费，逻辑 CSS 随之更新。两个组件 Token 是 linkPaddingBlock（默认 paddingXXS）和 linkPaddingInlineStart（默认 padding），投影到实际消费层；替换、撤除和显式 0 均可用，既有全局别名继续参与派生。
 
-| 名称 | 说明 |
-|---|---|
-| `Anchor.Link`（也导出为 `AnchorLink`） | 单条链接。字段同 `AnchorLinkItemProps` 去掉 `key` / `children`（后者的内容走默认插槽） |
+## 资源与迁移
 
-## Theme
+监听只在挂载后存在；滚动动画在新目标、配置变更、换容器和卸载时取消。链接注册按实例归属，重复 href 的一个实例移除不会删除其它实例。指示条跟随当前方向、内容与真实尺寸更新，观察和帧在卸载释放；SSR 不启动浏览器副作用。没有新增无信号位置轮询、路由适配或受控高亮模型。
 
-### Component Token
+onClick/onChange 迁为 owned emits；删除关于“多参数不能 emits”的旧判断。默认槽不再因上游习惯发弃用告警；原 children 伪 prop 使用默认槽，内容使用 #title。自定义 Anchor 前缀现在同时控制 Link 默认类名，以保证指示条链一致。历史 DOM 参考保留，只精确登记这条前缀及原生 dir 差异。
 
-**2 个**（都是别名派生）：
+## Demo
 
-| token | 默认值 | 用在哪 |
-|---|---|---|
-| `linkPaddingBlock` | `paddingXXS` | `.{p}-link` 的 `padding-block` |
-| `linkPaddingInlineStart` | `padding` | `.{p}-link` 的 `padding-inline-start` |
-
-另有 **4 个 `mergeToken` 派生值**（用户**不可**通过 `theme.components.Anchor` 覆盖）：
-
-| 派生 token | 计算 | 用在哪 |
-|---|---|---|
-| `holderOffsetBlock` | `paddingXXS` | wrapper 的 `margin-block-start` / `padding-block-start` |
-| `anchorPaddingBlockSecondary` | `paddingXXS / 2` | 嵌套层 `.{p}-link` 的 `padding-block` |
-| `anchorTitleBlock` | `fontSize / 14 * 3` | `.{p}-link-title` 的 `margin-block-end` |
-| `anchorBallSize` | `fontSizeLG / 2` | ⚠️ **本仓与上游都没有消费者**（保留计算只为逐条对齐） |
-
-## 设计说明
-
-- **当前锚点的判据**：逐链接用 `/#([^\t\r\n\f\v]+)$/` 抓 id ⇒ `document.getElementById` ⇒
-  `getOffsetTop(target, container)` ⇒ 保留 `top <= (单条 targetOffset ?? 全局 offsetTop) + bounds` 的
-  ⇒ 取其中 **`top` 最大**的那个。一个都没有 ⇒ 空串（无高亮）。
-- **`getOffsetTop` 的三条分支**：`getClientRects()` 为空 ⇒ `0`；宽高非 0 时按容器基准；
-  否则直接 `rect.top`。
-- **滚动监听跟随链接内容与当前解析出的目标**；局部或 Provider 容器切换时释放旧监听并绑定新容器。
-- **动画期间不抢高亮**：`handleScroll` 在滚动动画进行中直接 return；
-  再次点击同一个链接时也不重复发 `onChange`。
-- **`AnchorLink` 的类名前缀取自 ConfigProvider 的根前缀**，与 `Anchor` 的 `prefixCls` prop **无关**
-  （上游如此）。
-- **零 ARIA**：语义完全由**原生 `<a href>`** 承担，组件不叠 `role` / `aria-current`。
-  这是上游的**有意**设计，已由 L5 钉住。
-- **本组件没有 `ref` / `expose`**（上游是 `React.FC`，无 forwardRef）。
+basic、horizontal、onChange、onClick、replace、target-offset、target-offset-per-link、customize-highlight、static、style-class、component-token、bounds。组件 Token Demo 使用真实 ConfigProvider.components.Anchor。

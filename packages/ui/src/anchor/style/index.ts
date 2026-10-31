@@ -55,7 +55,7 @@ let tokenCache: ComponentToken | null = null;
 
 function anchorTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken()) as ComponentToken;
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

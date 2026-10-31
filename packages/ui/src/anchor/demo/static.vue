@@ -27,7 +27,7 @@ const sections = [
 
 const scrollArea = ref<HTMLElement | null>(null);
 
-const getContainer = (): HTMLElement | Window => scrollArea.value ?? window;
+const getContainer = (): HTMLElement | null => scrollArea.value;
 </script>
 
 <template>

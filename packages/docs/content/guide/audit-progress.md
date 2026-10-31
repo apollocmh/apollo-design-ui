@@ -11,11 +11,11 @@ order: 0
 
 ## Vue 原生化：架构整改与最终验收
 
-当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 5/5。
+当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 3/5。
 
 | 范围 | 架构整改完成 | 历史完整交付 | 本轮冻结验收通过 |
 | --- | --- | --- | --- |
-| 组件单元 | 65/72 | 25 | 0 |
+| 组件单元 | 67/72 | 25 | 0 |
 | 基础包 | 10/13 | 0 | 0 |
 
 历史交付沿用仍有效的代码、测试与证据，不代表已经对本轮冻结版本重新验证。第一阶段完成相关类型、核心行为及必要 Demo/消费者检查即可继续；非阻塞问题记录影响与延期理由，第二阶段统一执行九维验收。源码导入关系用于影响面分析，只有任务中明确登记的整改依赖才阻塞推进。
@@ -24,9 +24,9 @@ order: 0
 
 | 任务 | 架构状态 | 当前负责人 | 保留证据 |
 | --- | --- | --- | --- |
-| Affix | 进行中 | native_portal | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Affix | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Alert | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
-| Anchor | 进行中 | native_portal | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Anchor | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | App | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | AutoComplete | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Avatar | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md) |
@@ -116,11 +116,11 @@ order: 0
 
 ## Vue native architecture and final acceptance
 
-Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 5/5.
+Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 3/5.
 
 | Scope | Architecture complete | Historical deliveries | Passed on the frozen version |
 | --- | --- | --- | --- |
-| Component units | 65/72 | 25 | 0 |
+| Component units | 67/72 | 25 | 0 |
 | Foundation packages | 10/13 | 0 | 0 |
 
 Existing code, tests and valid evidence are retained. Historical deliveries do not claim a fresh frozen-version pass. Focused types, core behavior and necessary demo/consumer checks allow architecture work to progress. Record non-blocking issues and defer full nine-dimension acceptance to stage two. Imports describe impact; only explicit work dependencies block task completion.
@@ -129,9 +129,9 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 
 | Task | Architecture status | Current owner | Retained evidence |
 | --- | --- | --- | --- |
-| Affix | In progress | native_portal | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Affix | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Alert | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
-| Anchor | In progress | native_portal | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Anchor | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | App | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | AutoComplete | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Avatar | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md) |

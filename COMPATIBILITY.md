@@ -258,3 +258,7 @@ Carousel 的 beforeChange/afterChange/swipe/edge 使用所属 Vue emits，模板
 ### D-tour-native-target-and-popup
 
 Tour 保留 open/current 模型与已有具名槽，拒绝请求不泄漏到撤控状态，异步步骤和真正重开分别处理。actions 的 originNode 改为稳定可直接渲染的组件；popupAlign 使用 Vue emits，步骤按钮传原生 MouseEvent 并支持取消导航。原生 attrs 经私有 Trigger 通道落真实弹层，修正当前目标/容器、配置/语言/Token、PurePanel 及焦点；遮罩使用原生 SVG 属性，实际滚动、换容器与切换遮罩保持正确几何和子树身份。没有新增观察任意纯位置重排的能力，详见[Tour API](packages/ui/src/tour/index.zh-CN.md)。
+
+### D-affix-anchor-native-scroll-and-links
+
+Anchor 与 Anchor.Link 的 click 使用所属 Vue emits，载荷为原生 MouseEvent 和链接信息，preventDefault() 可取消内部导航；change 保留原始 href。Anchor 默认槽是正式组合入口，Anchor.Link 的标题使用 #title 或 title，子链接使用默认槽，移除未消费的 children prop。原生链接交互落实际 a 元素，换容器、当前配置、指示条和卸载资源按真实节点维护；Affix 保留 updatePosition 与既有几何判据，显式未就绪目标会释放旧监听，固定内容尺寸变化同步占位。详见[Anchor API](packages/ui/src/anchor/index.zh-CN.md)和[Affix API](packages/ui/src/affix/index.zh-CN.md)。

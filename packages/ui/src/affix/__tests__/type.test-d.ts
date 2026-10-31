@@ -15,7 +15,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties, VNodeChild } from 'vue';
+import { type CSSProperties, h, type VNodeChild } from 'vue';
 import type {
   AffixConfig,
   AffixProps,
@@ -154,4 +154,27 @@ describe('Affix · 组件本体', () => {
   it('★ `Affix` 在类型上也挂得住（可作组件使用）', () => {
     expectTypeOf(Affix).not.toBeNever();
   });
+});
+
+it('Affix has a real h constructor, owned change and the existing template-ref method', () => {
+  const props: AffixProps = { offsetTop: 0, target: () => undefined };
+  h(
+    Affix,
+    {
+      ...props,
+      onChange: (affixed) => {
+        expectTypeOf(affixed).toEqualTypeOf<boolean>();
+      },
+    },
+    { default: () => [0, 'native'] },
+  );
+  const contract = (instance: InstanceType<typeof Affix>) => {
+    expectTypeOf(instance.updatePosition).toEqualTypeOf<AffixRef['updatePosition']>();
+    instance.$emit('change', true);
+    // @ts-expect-error change only carries the actual boolean affixed state
+    instance.$emit('change', 'yes');
+    // @ts-expect-error no invented imperative scrolling API
+    instance.scrollTo('#a');
+  };
+  void contract;
 });

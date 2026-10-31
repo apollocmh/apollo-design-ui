@@ -1,94 +1,13 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # Anchor 实现说明
 
-> 规则 R1：本文件必须记录（G11 前补齐）。
+当前规范见仓库 AGENTS.md / WORKFLOW.md / TESTING.md。旧分析、计划与 s28 参考保留历史含义；当前 API 见双语 index 文档。
 
-## 1. 对应 antd 组件
+- Anchor/AnchorLink 使用 Vue owned click，携带原生 MouseEvent 与具名 link 数据；取消发生在选择、滚动和历史操作前。change 保留原始 href，getCurrentAnchor 继续是纯映射服务。
+- 默认槽是合法组合，存在（包括空槽）即覆盖 items；Link 的默认槽仍嵌套子链接，title 槽只负责实际链接内容，支持完整 VNodeChild。
+- 每个 Link 持有自己的注册与清理，重复 href、同 key 内容/偏移替换不破坏其它实例；原生导航、修饰键、目标浏览上下文与 Enter 保留浏览器职责。
+- 根 attrs 真实归属明确：Anchor wrapper；Link 根 class/style/data/id；Link 的 ARIA/tab/focus/keyboard 在 a。没有新增公开 Expose 或高亮模型。
+- 当前前缀贯穿 Anchor/Link/ink；原生 dir 消费当前方向，两个 Component Token 和既有别名投影实际 CSS 消费层，Provider 样式实时合并。
+- 几何、落点偏移、历史替换和 s28 已交付算法保留；资源随当前容器、偏移和链接更新，动画在失效或卸载取消，尺寸观察更新 ink，SSR 无浏览器副作用。
+- DOM 原始参考未改；类名前缀与 dir 的差异独立于实际输出精确投影，其余属性与样式保持严格比较。
 
-- antd 6.6.4 · `es/anchor/`（只读参照，H2）
-- 契约全文：`docs/analysis/anchor.md`（G1 产物）；Gate 清单：`PLAN.md`
-- **依赖面：无缺口**（13 处外部依赖全部可复用，对照表见分析文档 §0）
-
-## 2. 与 antd 的行为差异清单
-
-<!-- 同步到 COMPATIBILITY.md §9；G11 补齐。分类只能是 BUG / INTENDED / PLATFORM / UPSTREAM（AGENTS.md §4.3） -->
-
-| # | 差异 | 分类 |
-|---|---|---|
-| D1 | 默认前缀 `apollo-anchor`（antd `ant-anchor`） | INTENDED |
-| D2 | 无 cssinjs 的 hash 类 | INTENDED |
-| D3 | `useCSSVarCls` 无对应 hook ⇒ 手写 `-css-var` | PLATFORM |
-| D4 | 上游 `'items' in props` ⇒ 本仓按**值**判（`props.items !== undefined`） | PLATFORM |
-| D5 | `useEvent` / `useCallback` ⇒ 不需要（`setup` 只跑一次） | PLATFORM |
-| D6 | `getTargetContainer` 的响应式读取（Vue 的 `inject` 是快照） | PLATFORM |
-| D7 | 监听链接内容与当前解析的滚动目标；容器切换释放旧监听并绑定新目标 | Apollo 当前契约 |
-| D8 | `children` 在 Vue 侧是**默认插槽**（规则 C19），不是 prop | PLATFORM |
-| D9 | 同一容器**不重复**挂 scroll 监听（上游每次 remove+add，监听器同一个函数 ⇒ 净效果一致） | PLATFORM |
-
-## 3. `.vue` / `.ts` 选择
-
-**本组件两个文件都用 `.ts` 渲染函数**（`Anchor.ts` / `AnchorLink.ts`）——
-依据 `COMPONENT-RULES.md` §2 的**条件 2**（「渲染树深度动态、由数据驱动的分支远超模板表达能力」）
-与**条件 1**（纯渲染函数型内部件）：
-
-1. **`Anchor.ts`**：
-   - `items` 是**递归**的（`createNestedLink` 逐层展开成 `AnchorLink` 的 children）；
-   - **同一份 `anchorContent` 要在 affix / 非 affix 两个分支里复用** ——
-     模板里只能靠 `<component :is="vnode">`（不可靠）或复制一份（会漂移）；
-   - 类名是**多来源定序合并**（`clsx` 的实参顺序即契约，共 4 个来源）。
-2. **`AnchorLink.ts`**：它要渲染一个 **`VNodeChild` prop**（`title`）——
-   模板里渲染 vnode 只能写 `<component :is="() => vnode" />`
-   （`tour/demo/actions-render.vue` 就是这么写的），但那会**每次渲染换一个组件类型**
-   ⇒ Vue 走「卸载 + 重挂」⇒ 焦点与 DOM 状态丢失。加上「children 只在垂直方向渲染」
-   这个条件分支，渲染函数更直接。
-
-⚠️ 先例：`splitter/Splitter.ts`（同为 `.ts` 渲染函数组件）。
-
-## 3.5 Issue #28 的两条判据
-
-1. **`createNestedLink` 的 props 展开顺序必须是 `{ replace, ...item, key }`**（#28.1）：
-   antd `Anchor.js:230` 逐字如此 —— 父级 `replace` 在**前** ⇒ **单项显式值胜**。
-   写成 `{ ...item, replace: props.replace }` 会让父级的 `undefined`/`false`
-   顶掉 item 的 `replace: true` ⇒ 单项配置静默失效（走 `pushState` 而不是
-   `replaceState`）。嵌套子项走同一个函数 ⇒ 一并生效。
-2. **`affixProps` 必须在渲染体里求值**（#28.2）：antd 的 `const affixProps = …` 就在
-   render 体里（每次渲染重算）。移到 setup 里就成一次性快照 ⇒ 调用方动态改
-   `offsetBottom` / `prefixCls` 或 `true → object` 都不生效。
-   ⚠️ `AnchorAffixConfig = Omit<AffixProps,'offsetTop'|'target'>` —— 这两个键由
-   Anchor 自己控制（`offsetTop` prop + `getCurrentContainer`），配置对象里不存在。
-
-## 4. Component Token 清单
-
-**2 个**（都是别名派生，落 `var(--apollo-*)`）：
-
-| token | 默认值来源 | 消费点 |
-|---|---|---|
-| `linkPaddingBlock` | `paddingXXS` | `.{p}-link` 的 `padding-block` |
-| `linkPaddingInlineStart` | `padding` | `.{p}-link` 的 `padding-inline-start` |
-
-另有 **4 个 `mergeToken` 派生值**（用户**不可**通过 `theme.components.Anchor` 覆盖）：
-`holderOffsetBlock`(=`paddingXXS`) · `anchorPaddingBlockSecondary`(=`paddingXXS/2`) ·
-`anchorTitleBlock`(=`fontSize/14*3`) · `anchorBallSize`(=`fontSizeLG/2`，**本仓样式里没有消费者**，上游也没有)。
-
-## 5. 已知缺口
-
-1. **4 个 antd demo 未移植**（`demo.test.ts` 的 `expectCount: 8` 钉住的是**已落地**的那批）：
-   - `static`（`affix={false}` + 状态不随滚动变化）—— 与 `basic` 的差别**只在滚动行为**，
-     而 jsdom 测不到滚动 ⇒ 归 L6；
-   - `legacy-anchor`（废弃的 `children` 路径）—— 本仓用**默认插槽**表达，
-     已由 L4 的 `anchor:children` 用例覆盖；
-   - `style-class`（`antd-style` 的 `createStaticStyles`）—— 本仓没有 `antd-style`，
-     语义化能力已由 `semantic` 视觉用例与 L4 的 `class-names` / `styles` 用例覆盖；
-   - `component-token`（`theme.components.Anchor` 调试）—— 零运行时架构下 token 是构建期产物。
-2. **上游 `Anchor.test.tsx` 有 49 条用例**，本仓镜像了其中**最容易写错的那批**（19 条）。
-   剩余的主要是「滚动位置 → 当前锚点」的穷举与 `Affix` 交互细节，
-   在 L6（真浏览器）与 L4（机械 oracle）里各有覆盖 ⇒ 未逐条镜像，登记在此。
-3. **`anchorBallSize` 没有消费者**（上游 6.6.4 也没有）—— 保留计算只为逐条对齐。
-4. **「目标进入视口 → 当前锚点」的真实滚动路径不进像素比对**：`run.mjs` 只截**静态帧**
-   （渲染完成即截图、不滚动页面）⇒ L6 的 active 状态是用 `bounds` 阈值**钉**出来的
-   （见 `tests/visual/render/cases/react/anchor.jsx` 的文件头）。
-   「滚动时切换 active」由 L1 的 mock-rect 用例覆盖。
-5. **RTL 在像素上是 no-op**（antd 对 Anchor 零 RTL CSS，只有 wrapper 上的 `-rtl` 类）
-   ⇒ `rtl-active` 视觉用例与 `active` **逐字节相同**。留着它是为了守
-   「不许擅自加 antd 没有的 RTL CSS」；**别当重复删掉**（`PITFALLS 276` 第三种情形）。
+不增加路由平台、无信号位置轮询或发布构建。真实 Chrome 覆盖 Affix 组合、滚动落点、取消、尺寸、Token、节点/焦点和卸载释放；统一九维验收另行执行。

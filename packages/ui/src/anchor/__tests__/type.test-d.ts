@@ -17,7 +17,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { VNodeChild } from 'vue';
+import { type CSSProperties, h, type VNodeChild } from 'vue';
 import type { AffixProps } from '../../affix/interface';
 import { Anchor, AnchorLink } from '../index';
 import type {
@@ -27,12 +27,15 @@ import type {
   AnchorEmits,
   AnchorKey,
   AnchorLinkBaseProps,
+  AnchorLinkEmits,
   AnchorLinkInfo,
   AnchorLinkItemProps,
   AnchorLinkProps,
+  AnchorLinkSlots,
   AnchorProps,
   AnchorSemanticClassNames,
   AnchorSemanticStyles,
+  AnchorSlots,
 } from '../interface';
 
 describe('Anchor · Props 类型', () => {
@@ -45,7 +48,7 @@ describe('Anchor · Props 类型', () => {
     expectTypeOf<AnchorProps['showInkInFixed']>().toEqualTypeOf<boolean | undefined>();
     expectTypeOf<AnchorProps['replace']>().toEqualTypeOf<boolean | undefined>();
     expectTypeOf<AnchorProps['getContainer']>().toEqualTypeOf<
-      (() => AnchorContainer) | undefined
+      (() => AnchorContainer | null | undefined) | undefined
     >();
     expectTypeOf<AnchorProps['getCurrentAnchor']>().toEqualTypeOf<
       ((activeLink: string) => string) | undefined
@@ -103,7 +106,7 @@ describe('Anchor · 本组件「没有」的东西', () => {
   });
 
   it('🚨 `AnchorEmits` 只有 `change` —— **没有 `click`**（那会让 `@click` 不再挂到根元素）', () => {
-    expectTypeOf<keyof AnchorEmits>().toEqualTypeOf<'change'>();
+    expectTypeOf<keyof AnchorEmits>().toEqualTypeOf<'change' | 'click'>();
   });
 
   it('🚨 `Anchor` 没有 `expose` 的 `nativeElement`（上游 `React.FC` 无 forwardRef）', () => {
@@ -134,8 +137,8 @@ describe('Anchor · 链接类型', () => {
   });
 
   it('`AnchorLinkProps.children` 是 `VNodeChild`（`Anchor.Link` 的插槽对应物）', () => {
-    expectTypeOf<AnchorLinkProps>().toMatchTypeOf<AnchorLinkBaseProps>();
-    expectTypeOf<AnchorLinkProps>().toHaveProperty('children');
+    expectTypeOf<AnchorLinkProps>().toMatchTypeOf<Omit<AnchorLinkBaseProps, 'title'>>();
+    expectTypeOf<AnchorLinkProps>().not.toHaveProperty('children');
   });
 });
 
@@ -171,5 +174,60 @@ describe('Anchor · 负例（永不调用的闭包内）', () => {
       return bad;
     };
     void _never;
+  });
+});
+
+describe('Anchor actual Vue constructors', () => {
+  it('supports real h calls, complete CSSProperties, typed slots and owned events', () => {
+    const style: CSSProperties = { color: undefined, '--anchor-marker': 'native' };
+    const props: AnchorProps = {
+      getContainer: () => null,
+      styles: { root: style, itemTitle: style },
+      onClick: (event, link) => {
+        expectTypeOf(event).toEqualTypeOf<MouseEvent>();
+        expectTypeOf(link).toEqualTypeOf<AnchorLinkInfo>();
+      },
+    };
+    const slots: AnchorSlots = {
+      default: () => [0, h(AnchorLink, { href: '#a' }, { title: () => h('span', 'A') })],
+    };
+    h(Anchor, props, slots);
+    const linkProps: AnchorLinkProps = {
+      href: '#a',
+      title: 0,
+      onClick: (event, link) => {
+        expectTypeOf(event).toEqualTypeOf<MouseEvent>();
+        expectTypeOf(link).toEqualTypeOf<AnchorLinkInfo>();
+      },
+    };
+    const linkSlots: AnchorLinkSlots = {
+      title: () => [0, null],
+      default: () => h(AnchorLink, { href: '#b', title: 'B' }),
+    };
+    h(AnchorLink, linkProps, linkSlots);
+    h(Anchor.Link, linkProps, linkSlots);
+    expectTypeOf<AnchorLinkEmits['click']>().toEqualTypeOf<
+      [event: MouseEvent, link: AnchorLinkInfo]
+    >();
+    const contracts = (
+      anchor: InstanceType<typeof Anchor>,
+      link: InstanceType<typeof AnchorLink>,
+    ) => {
+      anchor.$emit('click', new MouseEvent('click'), { href: '#a', title: 0 });
+      anchor.$emit('change', '#a');
+      link.$emit('click', new MouseEvent('click'), { href: '#a', title: 0 });
+      // @ts-expect-error owned click requires the link information
+      anchor.$emit('click', new MouseEvent('click'));
+      // @ts-expect-error change carries a string rather than an arbitrary object
+      anchor.$emit('change', { href: '#a' });
+      // @ts-expect-error native MouseEvent is required
+      link.$emit('click', 'click', { href: '#a', title: 0 });
+      // @ts-expect-error nested children are a Vue slot, never an unused prop
+      const legacy: AnchorLinkProps = { href: '#a', children: 'unused' };
+      // @ts-expect-error actual slot takes no arbitrary required scope
+      const invalid: NonNullable<typeof link.$slots.title> = (_scope: { missing: string }) => [];
+      return [legacy, invalid];
+    };
+    void contracts;
   });
 });

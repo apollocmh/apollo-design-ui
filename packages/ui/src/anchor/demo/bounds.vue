@@ -27,8 +27,8 @@ const items: AnchorLinkItemProps[] = sections.map((section) => ({
   title: section.title,
 }));
 
-function getContainer(): HTMLElement | Window {
-  return scrollArea.value ?? window;
+function getContainer(): HTMLElement | null {
+  return scrollArea.value;
 }
 
 function onBoundsChange(value: unknown): void {

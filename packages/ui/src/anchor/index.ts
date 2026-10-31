@@ -28,6 +28,7 @@ export type {
   AnchorEmits,
   AnchorKey,
   AnchorLinkBaseProps,
+  AnchorLinkEmits,
   AnchorLinkInfo,
   AnchorLinkItemProps,
   AnchorLinkProps,

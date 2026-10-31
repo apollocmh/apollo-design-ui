@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { Affix, Button } from '../../index';
 
 const container = ref<HTMLElement | null>(null);
-const getTarget = () => container.value ?? window;
+const getTarget = () => container.value;
 </script>
 
 <template>

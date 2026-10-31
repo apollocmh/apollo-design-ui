@@ -21,6 +21,6 @@ const handleClick = (e: MouseEvent, link: AnchorLinkInfo): void => {
 <template>
   <div>
     <div style="margin-bottom: 8px">最近点击：{{ clicked || '（无）' }}</div>
-    <Anchor :items="items" :affix="false" :on-click="handleClick" />
+    <Anchor :items="items" :affix="false" @click="handleClick" />
   </div>
 </template>
