@@ -137,6 +137,110 @@ describe('Trigger · L1 开合与渲染', () => {
     expect(root.style.top).not.toBe('-1000vh');
   });
 
+  it('routes current popup attrs to the actual popup without replacing it', async () => {
+    const firstClick = vi.fn();
+    const secondClick = vi.fn();
+    const once = vi.fn();
+    const replacement = vi.fn();
+    const wrapper = mountTrigger({
+      open: true,
+      popupClassName: 'owned-popup',
+      popupStyle: { paddingTop: '4px' },
+      popupAttrs: {
+        id: 'tour-popup',
+        'aria-label': 'Current tour',
+        'data-current': 'first',
+        class: ['native-popup', { 'native-active': true }],
+        style: [{ color: 'rgb(10, 20, 30)' }, { borderTopWidth: '2px' }],
+        onClick: [firstClick, secondClick],
+        onClickOnce: once,
+      },
+    });
+    try {
+      await vi.waitFor(() => expect(popup()).not.toBeNull());
+      const root = popup();
+      if (!root) throw new Error('Missing actual popup');
+      expect(root.id).toBe('tour-popup');
+      expect(root.getAttribute('aria-label')).toBe('Current tour');
+      expect(root.dataset.current).toBe('first');
+      expect(root.classList.contains('owned-popup')).toBe(true);
+      expect(root.classList.contains('native-popup')).toBe(true);
+      expect(root.classList.contains('native-active')).toBe(true);
+      expect(root.style.color).toBe('rgb(10, 20, 30)');
+      expect(root.style.borderTopWidth).toBe('2px');
+      expect(root.style.paddingTop).toBe('4px');
+      expect(triggerEl()?.id).toBe('');
+      expect(triggerEl()?.hasAttribute('data-current')).toBe(false);
+      const click = new MouseEvent('click', { bubbles: true });
+      root.dispatchEvent(click);
+      root.click();
+      expect(firstClick).toHaveBeenCalledTimes(2);
+      expect(secondClick).toHaveBeenCalledTimes(2);
+      expect(firstClick).toHaveBeenNthCalledWith(1, click);
+      expect(once).toHaveBeenCalledTimes(1);
+
+      await wrapper.setProps({
+        popupAttrs: { id: 'tour-popup-later', 'data-current': 'next', onClick: replacement },
+      });
+      expect(popup()).toBe(root);
+      expect(root.id).toBe('tour-popup-later');
+      expect(root.dataset.current).toBe('next');
+      expect(root.hasAttribute('aria-label')).toBe(false);
+      expect(root.classList.contains('native-popup')).toBe(false);
+      expect(root.style.color).toBe('');
+      expect(root.style.paddingTop).toBe('4px');
+      root.click();
+      expect(replacement).toHaveBeenCalledTimes(1);
+      expect(firstClick).toHaveBeenCalledTimes(2);
+      expect(once).toHaveBeenCalledTimes(1);
+
+      await wrapper.setProps({ popupAttrs: undefined });
+      expect(popup()).toBe(root);
+      expect(root.id).toBe('');
+      expect(root.hasAttribute('data-current')).toBe(false);
+      expect(root.classList.contains('owned-popup')).toBe(true);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it('merges popup native listeners with overlay hover retention', async () => {
+    vi.useFakeTimers();
+    const firstEnter = vi.fn();
+    const secondEnter = vi.fn();
+    const leave = vi.fn();
+    const wrapper = mountTrigger({
+      mouseLeaveDelay: 0.1,
+      popupAttrs: { onMouseenter: [firstEnter, secondEnter], onMouseleave: leave },
+    });
+    try {
+      const target = triggerEl();
+      if (!target) throw new Error('Missing actual trigger');
+      target.dispatchEvent(new Event('mouseenter'));
+      await vi.advanceTimersByTimeAsync(0);
+      await nextTick();
+      const root = popup();
+      if (!root) throw new Error('Missing actual popup');
+      target.dispatchEvent(new Event('mouseleave'));
+      await nextTick();
+      const enter = new Event('mouseenter');
+      root.dispatchEvent(enter);
+      await vi.advanceTimersByTimeAsync(1000);
+      await nextTick();
+      expect(firstEnter).toHaveBeenCalledExactlyOnceWith(enter);
+      expect(secondEnter).toHaveBeenCalledExactlyOnceWith(enter);
+      expect(root.classList.contains('apollo-trigger-hidden')).toBe(false);
+      root.dispatchEvent(new Event('mouseleave'));
+      await vi.advanceTimersByTimeAsync(1000);
+      await nextTick();
+      expect(leave).toHaveBeenCalledTimes(1);
+      expect(root.classList.contains('apollo-trigger-hidden')).toBe(true);
+    } finally {
+      wrapper.unmount();
+      vi.useRealTimers();
+    }
+  });
+
   it('arrow：传入 arrow ⇒ 渲染 {p}-arrow 与 content；undefined ⇒ 不渲染', async () => {
     mountTrigger({
       open: true,

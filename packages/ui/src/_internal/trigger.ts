@@ -48,6 +48,7 @@ import {
   computed,
   defineComponent,
   h,
+  mergeProps,
   onBeforeUnmount,
   type PropType,
   ref,
@@ -213,6 +214,8 @@ export const Trigger = defineComponent({
     zIndex: { type: Number, default: undefined },
     popupClassName: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    /** Native attrs for consumers whose trigger is a positioning placeholder. */
+    popupAttrs: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     onPopupAlign: {
       type: Function as PropType<(popupEle: HTMLElement, align: TriggerAlign) => void>,
       default: undefined,
@@ -693,38 +696,41 @@ export const Trigger = defineComponent({
                 }) => {
                   return h(
                     'div',
-                    {
-                      ref: ((el: unknown) => {
-                        setPopupEle((el as HTMLElement | null) ?? null);
-                      }) as never,
-                      class: [
-                        props.prefixCls,
-                        motion.className,
-                        ...(props.popupClassName
-                          ? Array.isArray(props.popupClassName)
-                            ? props.popupClassName
-                            : [props.popupClassName]
-                          : []),
-                        !isMobile && alignedClassName.value,
-                      ],
-                      style: {
-                        ...popupThemeStyle.value,
-                        '--arrow-x': `${info.arrowX || 0}px`,
-                        '--arrow-y': `${info.arrowY || 0}px`,
-                        ...offsetStyle.value,
-                        // rc 的 stretchStyle：'minWidth' ⇒ 浮层不窄于目标
-                        ...(props.stretch === 'minWidth' && stretchMinWidth.value
-                          ? { minWidth: stretchMinWidth.value }
-                          : {}),
-                        // rc miscStyle：关闭时指针穿透（离场动画期间仍占位）
-                        ...(mergedOpen.value ? {} : { pointerEvents: 'none' }),
-                        boxSizing: 'border-box',
-                        zIndex: props.zIndex,
-                        ...props.popupStyle,
-                        ...(motion.style ?? {}),
+                    mergeProps(
+                      {
+                        ref: ((el: unknown) => {
+                          setPopupEle((el as HTMLElement | null) ?? null);
+                        }) as never,
+                        class: [
+                          props.prefixCls,
+                          motion.className,
+                          ...(props.popupClassName
+                            ? Array.isArray(props.popupClassName)
+                              ? props.popupClassName
+                              : [props.popupClassName]
+                            : []),
+                          !isMobile && alignedClassName.value,
+                        ],
+                        style: {
+                          ...popupThemeStyle.value,
+                          '--arrow-x': `${info.arrowX || 0}px`,
+                          '--arrow-y': `${info.arrowY || 0}px`,
+                          ...offsetStyle.value,
+                          // rc 的 stretchStyle：'minWidth' ⇒ 浮层不窄于目标
+                          ...(props.stretch === 'minWidth' && stretchMinWidth.value
+                            ? { minWidth: stretchMinWidth.value }
+                            : {}),
+                          // rc miscStyle：关闭时指针穿透（离场动画期间仍占位）
+                          ...(mergedOpen.value ? {} : { pointerEvents: 'none' }),
+                          boxSizing: 'border-box',
+                          zIndex: props.zIndex,
+                          ...props.popupStyle,
+                          ...(motion.style ?? {}),
+                        },
                       },
-                      ...overlay.popupProps.value,
-                    },
+                      props.popupAttrs ?? {},
+                      overlay.popupProps.value,
+                    ),
                     [
                       arrow
                         ? h(
