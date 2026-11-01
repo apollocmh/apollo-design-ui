@@ -755,14 +755,16 @@
     "tag": "v0.1.7",
     "sourceCommit": "35b1ff589cfa8b8fccc50cb653a316ba1cefb035",
     "tagObject": "e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8",
-    "status": "tag_pushed_ci_in_progress",
+    "status": "tag_pushed_ci_timed_out_retry_in_progress",
     "previousTagRefsRetained": 14,
     "npmPublish": false,
     "ci": {
       "runId": 41288847372,
       "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847372",
-      "status": "in_progress",
-      "conclusion": null
+      "status": "completed",
+      "conclusion": "cancelled",
+      "reason": "GitHub annotation: The job has exceeded the maximum execution time of 2h0m0s",
+      "lastStage": "Complete visual matrix; no complete visual result"
     },
     "docs": {
       "runId": 41288847399,
@@ -809,7 +811,20 @@
       "durationMs": 6148,
       "observedAt": "2026-11-01T08:36:41.418768+00:00"
     },
-    "followupScope": "Subsequent GitHub issue fixes are separate master commits and do not move this tag or claim full-library acceptance on each new commit."
+    "followupScope": "Subsequent GitHub issue fixes are separate master commits and do not move this tag or claim full-library acceptance on each new commit.",
+    "ciRetry": {
+      "runId": 41300894803,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41300894803",
+      "branch": "ci/v0.1.7-time-budget-20261101",
+      "sourceCommit": "9c1324370e26360a895245b3f6388843620d98c4",
+      "status": "in_progress",
+      "conclusion": null,
+      "differenceFromTag": [
+        ".github/workflows/ci.yml"
+      ],
+      "change": "Job budget 120 to 180 minutes; production source, dependencies, tests, assertions and approved baselines identical to v0.1.7",
+      "originalTagUnchanged": true
+    }
   },
   "docsTests": {
     "files": 15,

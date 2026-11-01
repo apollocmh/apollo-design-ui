@@ -1,6 +1,6 @@
 # 2026-11-01 zIndex 修复、冻结验收与版本收口
 
-当前状态：干净冻结提交 `9ea0518035acc46d7036d5f7ae9a3391fcee8ba2` 的统一九维验收全部通过，本轮审计结束。`v0.1.7` 已推送，文档站构建/部署及线上版本核对通过，标签完整 CI 仍在执行。72 个组件、13 个基础包均保留架构成果，25 项历史交付不改写为新的执行记录。
+当前状态：干净冻结提交 `9ea0518035acc46d7036d5f7ae9a3391fcee8ba2` 的本地统一九维验收全部通过，架构整改及本地验收收口。`v0.1.7` 已推送，文档站构建/部署及线上版本核对通过；标签 CI 因作业两小时上限取消，同一发布源码的独立分支复验仍在执行，远端验收尚未通过。72 个组件、13 个基础包均保留架构成果，25 项历史交付不改写为新的执行记录。
 
 [本轮机器记录](evidence/z-index-closeout-2026-11-01.json) · [唯一台账](../../registry/vue-native-audit.json) · [当前支持限制和待核实项](../KNOWN-ISSUES.md)
 
@@ -49,8 +49,32 @@ CI 修正的定向验证为 58 项 tooling 和固定官方 Chrome 的 Empty / Re
 
 注解标签 [`v0.1.7`](https://github.com/apollocmh/apollo-design-ui/releases/tag/v0.1.7) 指向 `35b1ff589cfa8b8fccc50cb653a316ba1cefb035`，标签对象为 `e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8`。推送前确认本地/远端均不存在此名；推送后确认原 7 个版本标签的 14 个 refs 全部保留，未覆盖标签、未发布 npm。
 
-- [完整标签 CI 41288847372](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847372)：已实际触发，精确版本 Chrome 安装通过，完整冻结门禁执行中；未提前记为通过。
+- [完整标签 CI 41288847372](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847372)：结论为 cancelled，平台注解为作业超过 `2h0m0s`。已执行至完整视觉阶段，但没有完整视觉结果，不算通过。
+- [同发布源码复验 41300894803](https://github.com/apollocmh/apollo-design-ui/actions/runs/41300894803)：独立分支 `ci/v0.1.7-time-budget-20261101` 的 `9c1324370e26360a895245b3f6388843620d98c4` 仅将 CI 作业总时限从 120 分钟调整为 180 分钟；与标签的唯一差异为 `.github/workflows/ci.yml`，发布源码、依赖、测试、基线和断言不变。实际已触发且仍在执行；不移动标签，不将首轮取消改写为通过。
 - [Docs 41288847399](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847399)：同一标签提交的构建及 GitHub Pages 部署均成功。
 - [线上进度页](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress)：真实 Chrome 核对版本 `v0.1.7`、组件 72/72、基础包 13/13、历史交付 25 和冻结验收 passed；浏览器诊断为空。
 
 后续 GitHub issue 按最新 master / 当前相关源码复核，旧报告仅作线索。已有修复沿用并补缺证，仍存在的缺陷独立整改。`640cde4b` 起的后续修复提交不移动本轮标签，也不冒称每个新提交都重新通过整库九维；关闭 issue 依据对应代码、类型、核心行为与必要浏览器证据。
+
+## 后续 issue 定向交付
+
+以下是推送至 `cdc9e2a4` 时已经验证并关闭的问题；每项的 GitHub 评论保留具体检查结果。既有修复没有重写或冒充新实现。
+
+| Issue | 当前确认与交付提交 | 验证范围 |
+| --- | --- | --- |
+| [#71](https://github.com/apollocmh/apollo-design-ui/issues/71) | `640cde4b`：Trigger 使用实际翻转 points | 旧代码失败回归、定位核心、Tour 真实浏览器 |
+| [#72](https://github.com/apollocmh/apollo-design-ui/issues/72) | `b9c24de4`：Affix 跟踪外层滚动并释放监听 | Affix / Anchor 核心、真实滚动与重绑定 |
+| [#67](https://github.com/apollocmh/apollo-design-ui/issues/67)、[#69](https://github.com/apollocmh/apollo-design-ui/issues/69) | `125a6d5d`：保留零高度，补全合并单元格 Demo | 核心、公开类型、实际构建产物几何与滚动 |
+| [#77](https://github.com/apollocmh/apollo-design-ui/issues/77) | 沿用 `505c94f63`；`df7ba4c2` 补 Form→AutoComplete 回归 | 显式覆盖、撤除继承、在线明暗主题键盘交互 |
+| [#63](https://github.com/apollocmh/apollo-design-ui/issues/63)、[#75](https://github.com/apollocmh/apollo-design-ui/issues/75) | 沿用 `a34c8d4b`、`b61eadd5` | 实际后缀/SVG 和 Progress 0%/50% 的明暗切换 |
+| [#65](https://github.com/apollocmh/apollo-design-ui/issues/65) | 沿用 `8b262e5a` | 日期/时间选择器核心、在线实际 SVG 与明暗主题 |
+| [#62](https://github.com/apollocmh/apollo-design-ui/issues/62)、[#74](https://github.com/apollocmh/apollo-design-ui/issues/74) | 沿用 `55cd46b6`、`88850e41`；`e1af1941` 补 Modal 回归 | Dropdown / Modal 浏览器、根样式与事件唯一归属 |
+| [#68](https://github.com/apollocmh/apollo-design-ui/issues/68) | `e7360eb4`：Masonry Demo 的有效 CSS 长度 | 核心、SFC 类型、明暗几何与容器边界 |
+| [#60](https://github.com/apollocmh/apollo-design-ui/issues/60)、[#61](https://github.com/apollocmh/apollo-design-ui/issues/61) | `aa0907af`：Demo 配色和 Tag 分组间距 | 相关核心、30 个 SFC 类型、实际动态主题/窄屏/交互 |
+| [#66](https://github.com/apollocmh/apollo-design-ui/issues/66) | `9821c870`：跨日期色条的专用溢出层及周边界 | 核心、三种周首日与 RTL、连续命中、保留普通列表滚动 |
+| [#70](https://github.com/apollocmh/apollo-design-ui/issues/70)、[#73](https://github.com/apollocmh/apollo-design-ui/issues/73) | `97e0d1ca`、`17da40cd`：原子初始滚动、独立预览视口 | 实际 DocsPreview→Frame、独立页面、内容构建和元数据 |
+| [#78](https://github.com/apollocmh/apollo-design-ui/issues/78) | `cdc9e2a4`：可验证的 Drawer 表单与资料 | 核心、类型、明暗主题、375px、反复开关 |
+
+集成后的 `vue-tsc --noEmit -p tsconfig.json` 实际 exit 0；变更文件与子任务冻结的证据哈希相符。已审阅各项最终实际截图，不修改视觉基线。此次只运行相关范围，未宣称这些后续提交重新通过完整九维。
+
+尚未关闭：#58 / #59 评论补充场景仍在复核；#79 Resolver、#80 主题预设仍在开发。它们不阻塞上述独立修复的提交或关闭。标签 CI 复验单独跟进。
