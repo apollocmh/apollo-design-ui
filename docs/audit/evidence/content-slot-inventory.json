@@ -12784,6 +12784,7 @@
           "packages/ui/src/popover/demo/hover-with-click.vue",
           "packages/ui/src/popover/demo/placement.vue",
           "packages/ui/src/popover/demo/render-panel.vue",
+          "packages/ui/src/popover/demo/style-class.vue",
           "packages/ui/src/popover/demo/triggerType.vue",
           "packages/ui/src/popover/demo/wireframe.vue"
         ]
@@ -12874,6 +12875,7 @@
           "packages/ui/src/popover/demo/hover-with-click.vue",
           "packages/ui/src/popover/demo/placement.vue",
           "packages/ui/src/popover/demo/render-panel.vue",
+          "packages/ui/src/popover/demo/style-class.vue",
           "packages/ui/src/popover/demo/triggerType.vue",
           "packages/ui/src/popover/demo/wireframe.vue"
         ]
@@ -17803,7 +17805,8 @@
           "packages/ui/src/tooltip/__tests__/native-contracts.test.ts",
           "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
           "packages/ui/src/tooltip/__tests__/semantic.test.ts",
-          "packages/ui/src/tooltip/__tests__/theme-contracts.test.ts"
+          "packages/ui/src/tooltip/__tests__/theme-contracts.test.ts",
+          "packages/ui/src/tooltip/__tests__/z-index.test.ts"
         ]
       },
       "decision": "implemented-verified",
@@ -17841,7 +17844,8 @@
           "packages/ui/src/tooltip/__tests__/injected-layer.test.ts",
           "packages/ui/src/tooltip/__tests__/native-contracts.test.ts",
           "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
-          "packages/ui/src/tooltip/__tests__/semantic.test.ts"
+          "packages/ui/src/tooltip/__tests__/semantic.test.ts",
+          "packages/ui/src/tooltip/__tests__/z-index.test.ts"
         ]
       },
       "decision": "skip",
@@ -17885,7 +17889,8 @@
           "packages/ui/src/tooltip/__tests__/native-contracts.test.ts",
           "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
           "packages/ui/src/tooltip/__tests__/semantic.test.ts",
-          "packages/ui/src/tooltip/__tests__/theme-contracts.test.ts"
+          "packages/ui/src/tooltip/__tests__/theme-contracts.test.ts",
+          "packages/ui/src/tooltip/__tests__/z-index.test.ts"
         ]
       },
       "decision": "skip",

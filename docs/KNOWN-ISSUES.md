@@ -11,7 +11,7 @@
 - **现象**：Tooltip / Popover 的 `styles.root.zIndex = 2500` 已作用于父浮层 DOM，但提供给后代的数值上下文仍为 1170 / 1130；子 Tooltip 为 1270 / 1230，被父内容遮挡，实际命中测试也落到父层。这不只是 `calc()` / `var()` 的支持限制。
 - **影响**：通过语义根样式设置较高层级时，嵌套 Tooltip 可能不可见。专用数值 `zIndex` prop、数值组件 Token 及显式子层级对照正常，不是所有浮层或主题层级均失效。
 - **源码**：[Tooltip.ts](../packages/ui/src/tooltip/Tooltip.ts#L273) 只以专用 prop 计算上下文；[Popover.ts](../packages/ui/src/popover/Popover.ts#L267) 分别传递数值层级与根样式；[trigger.ts](../packages/ui/src/_internal/trigger.ts#L731) 再由根样式覆盖实际 DOM。
-- **证据与状态**：[14 组真实浏览器矩阵](audit/evidence/known-issues-review-2026-11-01.json)及实际截图、`elementFromPoint` 对照确认。诊断程序 exit 0 代表复核执行完毕，**不代表这个场景通过**。本轮未修改组件，缺陷仍开放，不能宣称整库验收完成。
+- **修复进度**：Tooltip 已让最终 Vue 根样式与数值上下文共用同一来源，Popover / Popconfirm 沿现有组合链生效。新增回归先在旧实现出现 6 项失败；修后 19 项关键回归、三个组件的 unit / DOM / theme 及源码浏览器检查通过。统一新产物及九维验收仍在进行，完成前保留本项，详见[本轮收口记录](audit/2026-11-01-z-index-closeout.md)。[原 14 组诊断](audit/evidence/known-issues-review-2026-11-01.json)保留修复前事实。
 
 ## 支持限制
 
