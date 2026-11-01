@@ -8,6 +8,7 @@ import { createServer } from 'vite';
 import { launchBrowser } from '../../../../../tests/visual/stabilize.mjs';
 
 const repo = process.cwd();
+const started = performance.now();
 const fixture = await mkdtemp(path.join(tmpdir(), 'apollo-drawer-native-'));
 const alias = Object.fromEntries(
   [
@@ -30,18 +31,35 @@ alias.vue = path.join(repo, 'node_modules/vue/dist/vue.esm-bundler.js');
 await writeFile(
   path.join(fixture, 'index.html'),
   `<!doctype html><html lang="en"><head><title>Drawer native contracts</title><link rel="icon" href="data:,"><style>body{font-family:sans-serif}#drawer-trigger,#drawer-outside{margin:20px}#demos{margin-top:100px}</style></head><body><main id="app"></main><script type="module">
-import {createApp,defineComponent,h,ref} from 'vue';
-import {getDesignToken,transformToken} from '@apollo-design/theme';
+import {createApp,defineComponent,h,nextTick,ref} from 'vue';
+import {darkAlgorithm,getDesignToken,transformToken} from '@apollo-design/theme';
+import ConfigProvider from '/@fs${repo}/packages/ui/src/config-provider/ConfigProvider.ts';
 import Fixture from '/@fs${repo}/packages/ui/src/drawer/__tests__/fixtures/NativeDrawer.vue';
 import TokenDemo from '/@fs${repo}/packages/ui/src/drawer/demo/component-token.vue';
 import ConfigDemo from '/@fs${repo}/packages/ui/src/drawer/demo/config-provider.vue';
+import FormDemo from '/@fs${repo}/packages/ui/src/drawer/demo/form-in-drawer.vue';
+import ProfileDemo from '/@fs${repo}/packages/ui/src/drawer/demo/user-profile.vue';
 import {genDrawerStyle} from '/@fs${repo}/packages/ui/src/drawer/style/index.ts';
 import {genButtonStyle} from '/@fs${repo}/packages/ui/src/button/style/index.ts';
+import {genFormStyle} from '/@fs${repo}/packages/ui/src/form/style/index.ts';
+import {genInputStyle} from '/@fs${repo}/packages/ui/src/input/style/index.ts';
+import {genAlertStyle} from '/@fs${repo}/packages/ui/src/alert/style/index.ts';
+import {genAvatarStyle} from '/@fs${repo}/packages/ui/src/avatar/style/index.ts';
+import {genDescriptionsStyle} from '/@fs${repo}/packages/ui/src/descriptions/style/index.ts';
+import {genDividerStyle} from '/@fs${repo}/packages/ui/src/divider/style/index.ts';
 for(const [key,value] of Object.entries(transformToken(getDesignToken()).vars))document.documentElement.style.setProperty(key,value);
-const css=document.createElement('style');css.textContent=[genDrawerStyle(),genButtonStyle()].join(String.fromCharCode(10));document.head.append(css);
-const component=ref(null);
-createApp(defineComponent({setup:()=>()=>[h(Fixture,{ref:component}),h('section',{id:'demos'},[h(TokenDemo),h(ConfigDemo)])]})).mount('#app');
+const css=document.createElement('style');css.textContent=[genDrawerStyle(),genButtonStyle('apollo'),genFormStyle('apollo'),genInputStyle(),genAlertStyle('apollo'),genAvatarStyle('apollo'),genDescriptionsStyle('apollo'),genDividerStyle('apollo')].join(String.fromCharCode(10));document.head.append(css);
+const component=ref(null),dark=ref(false);
+createApp(defineComponent({setup:()=>()=>[
+  h(Fixture,{ref:component}),
+  h('section',{id:'demos'},[h(TokenDemo),h(ConfigDemo)]),
+  h(ConfigProvider,{theme:dark.value?{algorithm:darkAlgorithm}:undefined},()=>[
+    h('section',{id:'form-scene'},[h(FormDemo)]),
+    h('section',{id:'profile-scene'},[h(ProfileDemo)])
+  ])
+]})).mount('#app');
 window.drawerState={patch:kind=>component.value.patch(kind),focus:()=>component.value.focus(),refValid:()=>component.value.refValid(),events:()=>component.value.events()};
+window.drawerScenes={async theme(value){dark.value=value;await nextTick()}};
 </script></body></html>`,
 );
 
@@ -60,11 +78,17 @@ try {
   browser = (await launchBrowser()).browser;
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.setDefaultTimeout(10_000);
+  await page.addInitScript(() => {
+    window.drawerErrors = [];
+    window.addEventListener('error', (event) => window.drawerErrors.push(event.message));
+    window.addEventListener('unhandledrejection', (event) =>
+      window.drawerErrors.push(String(event.reason)),
+    );
+  });
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('console', (message) => {
-    if (message.type() === 'error' || message.text().includes('[Vue warn]'))
-      errors.push(message.text());
+    if (message.type() === 'error' || message.type() === 'warning') errors.push(message.text());
   });
   await page.goto(server.resolvedUrls.local[0]);
   await page.waitForFunction(() => window.drawerState);
@@ -244,9 +268,130 @@ try {
   assert.equal(await configured.getByRole('button', { name: 'Close', exact: true }).count(), 1);
   await configured.getByRole('button', { name: 'Close', exact: true }).click();
   await configured.waitFor({ state: 'hidden' });
+  const scenes = [];
+  const formTrigger = page
+    .locator('#form-scene')
+    .getByRole('button', { name: '新建联系人', exact: true });
+  const formPanel = page.getByRole('dialog', { name: '新建联系人', exact: true });
+  const profileTrigger = page
+    .locator('#profile-scene')
+    .getByRole('button', { name: '查看用户资料', exact: true });
+  const profilePanel = page.getByRole('dialog', { name: '用户资料', exact: true });
+  const waitForSceneReady = async (dialog) => {
+    await page.waitForFunction(
+      (element) => {
+        const root = element.closest('.apollo-drawer');
+        const moving = [...root.querySelectorAll('[class]')].some((node) =>
+          [...node.classList].some(
+            (name) =>
+              name.startsWith('apollo-drawer-panel-motion-') ||
+              name.startsWith('apollo-drawer-mask-motion-'),
+          ),
+        );
+        return (
+          !moving &&
+          root
+            .getAnimations({ subtree: true })
+            .every((animation) => animation.playState !== 'running' && !animation.pending)
+        );
+      },
+      await dialog.elementHandle(),
+    );
+  };
+  for (const dark of [false, true]) {
+    const theme = dark ? 'dark' : 'light';
+    await page.evaluate((value) => window.drawerScenes.theme(value), dark);
+    await formTrigger.click();
+    await formPanel.waitFor({ state: 'visible' });
+    const name = formPanel.getByRole('textbox', { name: '姓名', exact: true });
+    const email = formPanel.getByRole('textbox', { name: '邮箱', exact: true });
+    const submit = formPanel.getByRole('button', { name: '提交', exact: true });
+    assert.equal(
+      await submit.evaluate(
+        (button) => button.form === button.closest('[role="dialog"]').querySelector('form'),
+      ),
+      true,
+    );
+    await submit.click();
+    await formPanel.getByText('请输入姓名', { exact: true }).waitFor();
+    await formPanel.getByText('请输入邮箱', { exact: true }).waitFor();
+    await name.fill('林晓');
+    await email.fill('invalid');
+    await submit.click();
+    await formPanel.getByText('请输入有效的邮箱地址', { exact: true }).waitFor();
+    await waitForSceneReady(formPanel);
+    const formBounds = await formPanel.locator('..').boundingBox();
+    assert.equal(formBounds.width, 520);
+    await page.screenshot({ path: `/tmp/apollo-issue78-form-${theme}.png` });
+    await formPanel.getByRole('button', { name: '取消', exact: true }).click();
+    await formPanel.waitFor({ state: 'hidden' });
+    await formTrigger.click();
+    await formPanel.waitFor({ state: 'visible' });
+    assert.equal(await name.inputValue(), '');
+    assert.equal(await email.inputValue(), '');
+    assert.equal(await formPanel.locator('.apollo-form-item-explain-error').count(), 0);
+    await name.fill('林晓');
+    await email.fill('lin@example.com');
+    await submit.click();
+    await formPanel.waitFor({ state: 'hidden' });
+    const feedback = page.locator('#form-scene .apollo-alert');
+    await feedback.waitFor({ state: 'visible' });
+    assert.equal(await feedback.count(), 1);
+    assert.ok((await feedback.textContent()).includes('lin@example.com'));
+    await formTrigger.click();
+    await formPanel.waitFor({ state: 'visible' });
+    assert.equal(await name.inputValue(), '');
+    assert.equal(await feedback.count(), 0);
+    await formPanel.getByRole('button', { name: 'Close', exact: true }).click();
+    await formPanel.waitFor({ state: 'hidden' });
+    await profileTrigger.click();
+    await profilePanel.waitFor({ state: 'visible' });
+    assert.equal(await profilePanel.locator('.apollo-descriptions').count(), 2);
+    assert.ok((await profilePanel.textContent()).includes('lin@example.com'));
+    assert.ok((await profilePanel.textContent()).includes('产品设计师'));
+    await waitForSceneReady(profilePanel);
+    const profileBounds = await profilePanel.locator('..').boundingBox();
+    assert.equal(profileBounds.width, 520);
+    await page.screenshot({ path: `/tmp/apollo-issue78-profile-${theme}.png` });
+    await profilePanel.getByRole('button', { name: '关闭资料', exact: true }).click();
+    await profilePanel.waitFor({ state: 'hidden' });
+    await profileTrigger.click();
+    await profilePanel.waitFor({ state: 'visible' });
+    assert.ok((await profilePanel.textContent()).includes('lin@example.com'));
+    await profilePanel.getByRole('button', { name: 'Close', exact: true }).click();
+    await profilePanel.waitFor({ state: 'hidden' });
+    scenes.push({ theme, formBounds, profileBounds });
+  }
+  await page.setViewportSize({ width: 375, height: 667 });
+  for (const [trigger, dialog, closeLabel] of [
+    [formTrigger, formPanel, '取消'],
+    [profileTrigger, profilePanel, '关闭资料'],
+  ]) {
+    await trigger.click();
+    await dialog.waitFor({ state: 'visible' });
+    await waitForSceneReady(dialog);
+    const bounds = await dialog.locator('..').boundingBox();
+    assert.equal(bounds.width, 375);
+    assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= 375);
+    await dialog.getByRole('button', { name: closeLabel, exact: true }).click();
+    await dialog.waitFor({ state: 'hidden' });
+  }
+  errors.push(...(await page.evaluate(() => window.drawerErrors)));
   assert.deepEqual(errors, []);
   console.log(
-    'Drawer source browser: real motion/destroy/focus, template refs/events, Tab trap, sibling push/Escape, resize cleanup, current theme/provider and both changed demos passed.',
+    JSON.stringify({
+      passed: true,
+      durationMs: Math.round(performance.now() - started),
+      errors,
+      scenes,
+      checks: [
+        'original motion/destroy/focus/ref/Tab/push/resize/provider/token contracts retained',
+        'form required/email validation, native footer submit, local feedback, clean cancel/reopen',
+        'profile details and close/reopen',
+        'light/dark actual screenshots',
+        '375px viewport bounds',
+      ],
+    }),
   );
 } finally {
   await browser?.close();
