@@ -1,5 +1,9 @@
 ---
 order: 104
+preview:
+  mode: viewport
+  viewportHeight: 320
+  scrollable: true
 ---
 ## zh-CN
 

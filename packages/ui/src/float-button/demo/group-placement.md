@@ -1,5 +1,9 @@
 ---
 order: 101
+preview:
+  mode: viewport
+  viewportHeight: 320
+  scrollable: true
 title:
   zh-CN: 悬浮按钮组方位
   en-US: Group Placement

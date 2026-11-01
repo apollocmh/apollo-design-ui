@@ -22,7 +22,13 @@ const onPlacementChange = (value: SegmentedValue) => {
 <template>
   <div>
     <Segmented :value="placement" :options="options" @change="onPlacementChange" />
-    <FloatButtonGroup :key="placement" :placement="placement" trigger="click" type="primary">
+    <FloatButtonGroup
+      :key="placement"
+      :placement="placement"
+      trigger="click"
+      type="primary"
+      style="inset: 50% auto auto 50%; transform: translate(-50%, -50%)"
+    >
       <template #icon><CustomerServiceOutlined /></template>
       <FloatButton #icon><CommentOutlined /></FloatButton>
       <FloatButton tooltip="Settings" />
