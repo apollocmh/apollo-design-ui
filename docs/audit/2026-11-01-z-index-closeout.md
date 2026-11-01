@@ -1,6 +1,6 @@
 # 2026-11-01 zIndex 修复、冻结验收与版本收口
 
-当前状态：干净冻结提交 `9ea0518035acc46d7036d5f7ae9a3391fcee8ba2` 的统一九维验收全部通过，本轮审计结束；尚待创建版本标签并跟进远端 CI / Docs。72 个组件、13 个基础包均保留架构成果，25 项历史交付不改写为新的执行记录。
+当前状态：干净冻结提交 `9ea0518035acc46d7036d5f7ae9a3391fcee8ba2` 的统一九维验收全部通过，本轮审计结束。`v0.1.7` 已推送，文档站构建/部署及线上版本核对通过，标签完整 CI 仍在执行。72 个组件、13 个基础包均保留架构成果，25 项历史交付不改写为新的执行记录。
 
 [本轮机器记录](evidence/z-index-closeout-2026-11-01.json) · [唯一台账](../../registry/vue-native-audit.json) · [当前支持限制和待核实项](../KNOWN-ISSUES.md)
 
@@ -45,4 +45,12 @@ CI 修正的定向验证为 58 项 tooling 和固定官方 Chrome 的 Empty / Re
 
 原 consumer-z-index / Cascader 两个严格源码浏览器场景各首次复测 exit 0，`window.error` 与 RO 诊断为空，无过滤、重试或节流兜底。该结果仅说明原场景当前未复现，不归结历史通知的永久消除；源码场景不冒充发布产物验证。
 
-本地门禁已经通过；标签、远端 CI、文档站构建与部署在此续记，未完成的远端任务不提前记为通过，已有标签不得覆盖。随后按核心功能、共享交互、样式与 Demo、新能力的顺序处理 GitHub issue，逐项验证后关闭。
+## 标签与远端结果
+
+注解标签 [`v0.1.7`](https://github.com/apollocmh/apollo-design-ui/releases/tag/v0.1.7) 指向 `35b1ff589cfa8b8fccc50cb653a316ba1cefb035`，标签对象为 `e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8`。推送前确认本地/远端均不存在此名；推送后确认原 7 个版本标签的 14 个 refs 全部保留，未覆盖标签、未发布 npm。
+
+- [完整标签 CI 41288847372](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847372)：已实际触发，精确版本 Chrome 安装通过，完整冻结门禁执行中；未提前记为通过。
+- [Docs 41288847399](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847399)：同一标签提交的构建及 GitHub Pages 部署均成功。
+- [线上进度页](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress)：真实 Chrome 核对版本 `v0.1.7`、组件 72/72、基础包 13/13、历史交付 25 和冻结验收 passed；浏览器诊断为空。
+
+后续 GitHub issue 按最新 master / 当前相关源码复核，旧报告仅作线索。已有修复沿用并补缺证，仍存在的缺陷独立整改。`640cde4b` 起的后续修复提交不移动本轮标签，也不冒称每个新提交都重新通过整库九维；关闭 issue 依据对应代码、类型、核心行为与必要浏览器证据。

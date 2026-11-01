@@ -753,8 +753,63 @@
   ],
   "release": {
     "tag": "v0.1.7",
-    "status": "not_created",
-    "npmPublish": false
+    "sourceCommit": "35b1ff589cfa8b8fccc50cb653a316ba1cefb035",
+    "tagObject": "e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8",
+    "status": "tag_pushed_ci_in_progress",
+    "previousTagRefsRetained": 14,
+    "npmPublish": false,
+    "ci": {
+      "runId": 41288847372,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847372",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "docs": {
+      "runId": 41288847399,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847399",
+      "sourceCommit": "35b1ff589cfa8b8fccc50cb653a316ba1cefb035",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "name": "构建文档站",
+          "conclusion": "success"
+        },
+        {
+          "name": "发布到 GitHub Pages",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "liveDocs": {
+      "url": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress",
+      "version": "v0.1.7",
+      "rows": [
+        [
+          "范围",
+          "架构整改完成",
+          "历史完整交付",
+          "本轮冻结验收通过"
+        ],
+        [
+          "组件单元",
+          "72/72",
+          "25",
+          "72"
+        ],
+        [
+          "基础包",
+          "13/13",
+          "0",
+          "13"
+        ]
+      ],
+      "diagnostics": [],
+      "passed": true,
+      "durationMs": 6148,
+      "observedAt": "2026-11-01T08:36:41.418768+00:00"
+    },
+    "followupScope": "Subsequent GitHub issue fixes are separate master commits and do not move this tag or claim full-library acceptance on each new commit."
   },
   "docsTests": {
     "files": 15,
