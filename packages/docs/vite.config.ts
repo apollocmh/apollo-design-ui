@@ -58,6 +58,13 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
     },
   },
   build: {
+    rolldownOptions: {
+      output: {
+        // Dynamic icon namespaces share helpers with the statically imported UI.
+        // Preserve ESM initialization order across those code-split chunks.
+        strictExecutionOrder: true,
+      },
+    },
     // demo 源码（?raw）+ 72 个组件页数据都是大字符串，提高上限避免误报
     chunkSizeWarningLimit: 1500,
     // 使用 Vite 默认 CSS 压缩器（lightningcss）。如果这里再次出现「只能退回
