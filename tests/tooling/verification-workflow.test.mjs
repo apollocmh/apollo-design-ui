@@ -415,6 +415,9 @@ test('CI keeps PR feedback scoped and Docs browser checks on the single explicit
   const scoped = ci.jobs.architecture.steps.flatMap((step) => step.run ?? '').join('\n');
   assert.match(scoped, /verify-changed\.mjs/);
   assert.doesNotMatch(scoped, /verify-full\.mjs|test:coverage/);
+  assert.equal(ci.jobs.acceptance.env?.TMPDIR, undefined);
+  const acceptance = ci.jobs.acceptance.steps.find((step) => step.run?.includes('verify-full.mjs'));
+  assert.equal(acceptance.env.TMPDIR, '$' + '{{ runner.temp }}');
   const docs = read('docs-ci.yml');
   assert.deepEqual(Object.keys(docs.on), ['workflow_dispatch']);
   const docsCommands = docs.jobs.docs.steps.flatMap((step) => step.run ?? '').join('\n');
