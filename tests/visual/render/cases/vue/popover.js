@@ -5,8 +5,8 @@
 import { Button, Popover, PopoverPurePanel } from '@apollo-design/ui';
 import { h } from 'vue';
 
-const box = (children) =>
-  h('div', { style: { minHeight: '280px', padding: '16px', width: '420px' } }, children);
+const box = (children, style = {}) =>
+  h('div', { style: { minHeight: '280px', padding: '16px', width: '420px', ...style } }, children);
 
 const content = () =>
   h('div', null, [
@@ -30,6 +30,13 @@ export default {
           content,
         },
       ),
+      {
+        width: '100%',
+        maxWidth: '420px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        justifyContent: 'center',
+      },
     ),
 
   purePanel: () =>

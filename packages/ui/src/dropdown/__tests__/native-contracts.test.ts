@@ -214,6 +214,77 @@ describe('Dropdown owned notifications and target', () => {
     expect.soft(currentKey).toHaveBeenCalledOnce();
     expect(previousKey).toHaveBeenCalledOnce();
   });
+
+  it('navigates from actual popup items, skips disabled items and isolates repeated menu keys', async () => {
+    const onOpenChange = vi.fn();
+    const items = [
+      { key: 'one', label: 'One' },
+      { key: 'two', label: 'Two' },
+      { key: 'three', label: 'Three', disabled: true },
+    ];
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h('div', [
+            h(
+              Dropdown,
+              {
+                open: true,
+                menu: { items },
+                classNames: { root: 'first-keyboard-popup' },
+                onOpenChange,
+              },
+              () => h('button', 'First menu'),
+            ),
+            h(
+              Dropdown,
+              { open: true, menu: { items }, classNames: { root: 'second-keyboard-popup' } },
+              () => h('button', 'Second menu'),
+            ),
+          ]),
+      }),
+      options,
+    );
+    wrappers.push(wrapper);
+    await settle();
+    const findItem = (selector: string, index: number): HTMLElement => {
+      const item = document
+        .querySelector(selector)
+        ?.querySelectorAll<HTMLElement>('[role="menuitem"]')[index];
+      if (!item) throw new Error(`Missing actual popup menu item ${selector} ${index}`);
+      return item;
+    };
+    const one = findItem('.first-keyboard-popup', 0);
+    const two = findItem('.first-keyboard-popup', 1);
+    const press = async (node: HTMLElement, key: string, keyCode: number) => {
+      const event = new KeyboardEvent('keydown', { key, keyCode, bubbles: true, cancelable: true });
+      node.dispatchEvent(event);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      await settle();
+      return event;
+    };
+    one.focus();
+    await settle();
+    expect((await press(one, 'ArrowDown', 40)).defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(two);
+    await press(two, 'ArrowDown', 40);
+    expect(document.activeElement).toBe(one);
+    await press(one, 'ArrowUp', 38);
+    expect(document.activeElement).toBe(two);
+    await press(two, 'Home', 36);
+    expect(document.activeElement).toBe(one);
+    await press(one, 'End', 35);
+    expect(document.activeElement).toBe(two);
+    await press(two, 'Enter', 13);
+    expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false, { source: 'menu' });
+    expect(document.querySelector('.first-keyboard-popup.apollo-dropdown-hidden')).toBeNull();
+    const secondOne = findItem('.second-keyboard-popup', 0);
+    const secondTwo = findItem('.second-keyboard-popup', 1);
+    secondOne.focus();
+    await press(secondOne, 'ArrowDown', 40);
+    expect(document.activeElement).toBe(secondTwo);
+    expect(onOpenChange).toHaveBeenCalledOnce();
+  });
 });
 
 describe('Dropdown current Provider and CSS values', () => {

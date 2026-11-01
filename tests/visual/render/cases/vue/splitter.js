@@ -8,11 +8,12 @@ import { h } from 'vue';
 const box = (children) => h('div', { style: { minHeight: '260px', padding: '16px' } }, children);
 
 const BOX = { height: '220px', boxShadow: '0 0 0 1px #d9d9d9' };
+const FRAME = { width: '480px', maxWidth: '100%', boxSizing: 'border-box' };
 
 export default {
   basic: () =>
     box(
-      h('div', { style: { width: '480px' } }, [
+      h('div', { style: FRAME }, [
         h(Splitter, { style: BOX }, () => [
           h(Splitter.Panel, null, () => 'Left'),
           h(Splitter.Panel, null, () => 'Right'),
@@ -22,7 +23,7 @@ export default {
 
   vertical: () =>
     box(
-      h('div', { style: { width: '480px' } }, [
+      h('div', { style: FRAME }, [
         h(Splitter, { orientation: 'vertical', style: BOX }, () => [
           h(Splitter.Panel, null, () => 'Top'),
           h(Splitter.Panel, null, () => 'Bottom'),
@@ -32,7 +33,7 @@ export default {
 
   multiple: () =>
     box(
-      h('div', { style: { width: '480px' } }, [
+      h('div', { style: FRAME }, [
         h(Splitter, { style: BOX }, () => [
           h(Splitter.Panel, { collapsible: true, defaultSize: '20%', min: '10%' }, () => 'Left'),
           h(Splitter.Panel, { defaultSize: '40%' }, () => 'Center'),

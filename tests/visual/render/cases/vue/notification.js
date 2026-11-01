@@ -12,7 +12,20 @@ const Panel = notification._InternalPanelDoNotUseOrYouWillBeFired;
 const List = notification._InternalListDoNotUseOrYouWillBeFired;
 
 const stage = (children, style = {}) =>
-  h('div', { style: { minHeight: '240px', padding: '16px', width: '420px', ...style } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '240px',
+        padding: '16px',
+        width: '100%',
+        maxWidth: '420px',
+        boxSizing: 'border-box',
+        ...style,
+      },
+    },
+    children,
+  );
 
 export default {
   // 单条（success 图标 + 标题 + 描述 + 关闭按钮）
@@ -54,6 +67,7 @@ export default {
         // 列表保持真实 fixed bottomRight；截图舞台覆盖完整视口，不重写其定位规则。
         height: 'calc(100vh - 32px)',
         width: '100%',
+        maxWidth: 'none',
         boxSizing: 'border-box',
       },
     ),

@@ -87,15 +87,33 @@ export default {
   // PurePanel 静态面板（default + primary 堆叠）
   'render-panel': () =>
     box(
-      h('div', { style: { display: 'flex', flexDirection: 'column', rowGap: '16px' } }, [
-        h(TourPurePanel, { title: 'Hello World!', description: 'Hello World?!' }),
-        h(TourPurePanel, {
-          title: 'Hello World!',
-          description: 'Hello World?!',
-          type: 'primary',
-          current: 4,
-          total: 5,
-        }),
-      ]),
+      h(
+        'div',
+        {
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            rowGap: '16px',
+            width: '100%',
+            maxWidth: '520px',
+            minWidth: 0,
+          },
+        },
+        [
+          h(TourPurePanel, {
+            title: 'Hello World!',
+            description: 'Hello World?!',
+            style: { width: '100%', boxSizing: 'border-box' },
+          }),
+          h(TourPurePanel, {
+            title: 'Hello World!',
+            description: 'Hello World?!',
+            type: 'primary',
+            current: 4,
+            total: 5,
+            style: { width: '100%', boxSizing: 'border-box' },
+          }),
+        ],
+      ),
     ),
 };

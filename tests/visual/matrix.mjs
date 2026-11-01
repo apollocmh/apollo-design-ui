@@ -32,6 +32,13 @@ export const THEMES = [{ id: 'light', antdTheme: 'default', apolloTokens: 'light
  */
 export const COMPONENTS = {
   affix: {
+    apolloDuplicateAllow: [
+      {
+        variants: ['basic', 'class'],
+        reason:
+          '当前原生 class 用例只增加未附加视觉样式的宿主类名；三视口实际审阅与哈希确认其固定位置、完整内容和 basic 相同。attrs 落点另由行为测试覆盖。',
+      },
+    ],
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
     duplicateAllow: [
@@ -273,6 +280,8 @@ export const COMPONENTS = {
     variants: ['basic'],
   },
   tabs: {
+    // Apollo 的响应式舞台已完整展示 extraContent，不能再沿用旧参考图的裁剪豁免。
+    apolloDuplicateAllow: [],
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
     duplicateAllow: [
@@ -917,6 +926,13 @@ export const COMPONENTS = {
     ],
   },
   pagination: {
+    apolloDuplicateAllow: [
+      {
+        variants: ['quickJumper', 'quickJumperButton', 'sizeChanger'],
+        reason:
+          '当前既有 max-width:576px 媒体规则隐藏 options，三个 mobile 场景只保留相同基础页码；真实 DOM 与 PNG 均已核对。宽屏仍展示各自快跳/尺寸配置，不能把舞台裁剪当作重复理由。',
+      },
+    ],
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
     duplicateAllow: [

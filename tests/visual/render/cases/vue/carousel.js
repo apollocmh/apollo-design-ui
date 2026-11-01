@@ -9,6 +9,7 @@ import { Carousel } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) => h('div', { style: { minHeight: '240px', padding: '16px' } }, children);
+const FRAME = { width: '480px', maxWidth: '100%', boxSizing: 'border-box' };
 
 const slide = (n, bg) =>
   h('div', { key: n }, [
@@ -30,26 +31,17 @@ const slide = (n, bg) =>
 const slides = () => [slide(1, '#364d79'), slide(2, '#626c91'), slide(3, '#1677ff')];
 
 export default {
-  basic: () =>
-    box(h('div', { style: { width: '480px' } }, [h(Carousel, null, { default: () => slides() })])),
+  basic: () => box(h('div', { style: FRAME }, [h(Carousel, null, { default: () => slides() })])),
 
   fade: () =>
-    box(
-      h('div', { style: { width: '480px' } }, [
-        h(Carousel, { effect: 'fade' }, { default: () => slides() }),
-      ]),
-    ),
+    box(h('div', { style: FRAME }, [h(Carousel, { effect: 'fade' }, { default: () => slides() })])),
 
   arrows: () =>
-    box(
-      h('div', { style: { width: '480px' } }, [
-        h(Carousel, { arrows: true }, { default: () => slides() }),
-      ]),
-    ),
+    box(h('div', { style: FRAME }, [h(Carousel, { arrows: true }, { default: () => slides() })])),
 
   vertical: () =>
     box(
-      h('div', { style: { width: '480px' } }, [
+      h('div', { style: FRAME }, [
         h(Carousel, { dotPlacement: 'start' }, { default: () => slides() }),
       ]),
     ),

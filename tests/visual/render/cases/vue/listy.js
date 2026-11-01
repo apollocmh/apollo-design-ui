@@ -6,6 +6,7 @@ import { Listy } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) => h('div', { style: { minHeight: '200px', padding: '16px' } }, children);
+const FRAME = { width: '420px', maxWidth: '100%', boxSizing: 'border-box' };
 
 const items = Array.from({ length: 6 }, (_, i) => ({ key: i, content: `Item ${i}` }));
 const groupItems = Array.from({ length: 8 }, (_, i) => ({
@@ -21,15 +22,11 @@ const groupHeader = ({ groupKey, items: rows }) => `${groupKey} (${rows.length})
 
 export default {
   basic: () =>
-    box(
-      h('div', { style: { width: '420px' } }, [
-        h(Listy, { items, rowKey: 'key' }, { default: item }),
-      ]),
-    ),
+    box(h('div', { style: FRAME }, [h(Listy, { items, rowKey: 'key' }, { default: item })])),
 
   groupSticky: () =>
     box(
-      h('div', { style: { width: '420px' } }, [
+      h('div', { style: FRAME }, [
         h(
           Listy,
           { items: groupItems, rowKey: 'key', group, sticky: true, height: 240 },
@@ -40,7 +37,7 @@ export default {
 
   height: () =>
     box(
-      h('div', { style: { width: '420px' } }, [
+      h('div', { style: FRAME }, [
         h(Listy, { items, rowKey: 'key', height: 160 }, { default: item }),
       ]),
     ),

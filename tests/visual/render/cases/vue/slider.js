@@ -15,7 +15,7 @@ const box = (children) =>
       style: {
         padding: '16px',
         background: '#fff',
-        width: '320px',
+        width: '352px',
         maxWidth: '100%',
         boxSizing: 'border-box',
       },

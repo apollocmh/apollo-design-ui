@@ -27,8 +27,9 @@ import {
   ANCHOR_TARGET_OFFSETS,
 } from '../shared.mjs';
 
+const FRAME = { ...ANCHOR_BOX_STYLE, maxWidth: '100%', boxSizing: 'border-box' };
 const box = (children, height = 220) =>
-  h('div', { style: { ...ANCHOR_BOX_STYLE, minHeight: `${height}px` } }, [children]);
+  h('div', { style: { ...FRAME, minHeight: `${height}px` } }, [children]);
 
 /** 锚点目标夹具（零高度容器 + 绝对定位目标）。 */
 const targets = () =>
@@ -46,7 +47,7 @@ const targets = () =>
 
 /** 「有当前锚点」的用例：`affix` 走**默认 `true`**（ink 才显示得出来）。 */
 const activeBox = ({ bounds, direction = 'vertical' }) =>
-  h('div', { style: { ...ANCHOR_BOX_STYLE, minHeight: '220px' } }, [
+  h('div', { style: { ...FRAME, minHeight: '220px' } }, [
     h(Anchor, { bounds, direction, items: ANCHOR_ITEMS }),
     targets(),
   ]);
@@ -72,7 +73,7 @@ export default {
 
   /** 语义化：两个槽都给。 */
   semantic: () =>
-    h('div', { style: { ...ANCHOR_BOX_STYLE, minHeight: '240px' } }, [
+    h('div', { style: { ...FRAME, minHeight: '240px' } }, [
       h(Anchor, {
         affix: false,
         items: ANCHOR_ITEMS,
@@ -84,8 +85,7 @@ export default {
   /**
    * RTL + active。
    *
-   * 🚨 **它与 `active` 逐字节相同，这是预期、不是 bug**（antd 对 Anchor 零 RTL CSS）。
-   * 留着的理由与「别删」的告警见 `react/anchor.jsx` 的说明（`PITFALLS 276` 第三种情形）。
+   * 当前 Provider 的原生 RTL 方向使文字与指示条位于右侧，和 active 的左侧布局不同。
    */
   'rtl-active': () =>
     h(

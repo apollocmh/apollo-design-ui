@@ -6,7 +6,19 @@ import { Menu } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { minHeight: '280px', padding: '16px', width: '420px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '280px',
+        padding: '16px',
+        width: '420px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 const items = [
   { key: '1', label: 'One' },
@@ -37,7 +49,14 @@ const mk = (extra) =>
   });
 
 export default {
-  vertical: () => box(mk({ mode: 'vertical', style: { width: '256px' } })),
+  vertical: () =>
+    box(
+      mk({
+        mode: 'vertical',
+        // Reserve the existing 160px popup plus stage/container padding on narrow viewports.
+        style: { width: '256px', maxWidth: 'calc(100vw - 208px)' },
+      }),
+    ),
 
   inline: () => box(mk({ mode: 'inline', style: { width: '256px' } })),
 

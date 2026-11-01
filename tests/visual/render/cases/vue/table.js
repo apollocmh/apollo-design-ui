@@ -216,16 +216,28 @@ export default {
       }),
     ),
 
-  virtual: () =>
-    box(
+  virtual: () => {
+    // The three start columns plus Action need 490px, while mobile has about
+    // 310px after stage/fixture padding. Keep all columns and 2000px scrolling;
+    // on narrow screens only ID + Action stay fixed (250px), so neither side covers the other.
+    const narrow = typeof window !== 'undefined' && window.innerWidth < 576;
+    const columns = narrow
+      ? VIRTUAL_COLUMNS.map((column) =>
+          column.dataIndex === 'firstName' || column.dataIndex === 'lastName'
+            ? { ...column, fixed: undefined }
+            : column,
+        )
+      : VIRTUAL_COLUMNS;
+    return box(
       h(Table, {
         bordered: true,
         virtual: true,
-        columns: VIRTUAL_COLUMNS,
+        columns,
         dataSource: VIRTUAL_DATA,
         scroll: { x: 2000, y: 400 },
         rowKey: 'id',
         pagination: false,
       }),
-    ),
+    );
+  },
 };
