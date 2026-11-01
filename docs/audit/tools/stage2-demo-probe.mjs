@@ -137,8 +137,11 @@ try {
 
   // ── Stage 3：站点语言 → Demo 组件 locale（I18N-01）────────────────────
   await page.goto(`${BASE}/components/date-picker?lang=en-US`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('.demo-canvas .apollo-picker input');
-  await page.locator('.demo-canvas .apollo-picker input').first().click();
+  const localeDemo = page.locator('.demo-renderer[data-demo="date-picker-basic"]');
+  await localeDemo.scrollIntoViewIfNeeded();
+  const localeInput = localeDemo.locator('.apollo-picker input').first();
+  await localeInput.waitFor();
+  await localeInput.click();
   await page.waitForTimeout(500);
   const localeState = await page.evaluate(() => ({
     nav: document.querySelector('.site-topbar-nav')?.textContent?.trim() ?? '',

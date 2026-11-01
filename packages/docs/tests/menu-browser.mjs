@@ -44,7 +44,19 @@ async function hoverTitle(scope, index = 0) {
   if (!box) throw new Error(`找不到 ${scope} 的第 ${index} 个 submenu title`);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 5 });
   await page.waitForTimeout(250);
-  return { title, box, controls: await title.getAttribute('aria-controls') };
+  return { title, controls: await title.getAttribute('aria-controls') };
+}
+
+// Read both rectangles in one layout snapshot after hover/lazy Demo updates.
+async function popupGeometry(title, popup) {
+  return title.evaluate(
+    (title, popup) => ({
+      title: title.getBoundingClientRect().toJSON(),
+      popup: popup?.getBoundingClientRect().toJSON() ?? null,
+      popupClass: popup?.getAttribute('class') ?? '',
+    }),
+    await popup.elementHandle(),
+  );
 }
 
 try {
@@ -93,18 +105,20 @@ try {
   const horizontalPopup = page.locator(
     `.apollo-menu-submenu-popup:has(ul[id="${horizontalHover.controls}"])`,
   );
-  const hPopupBox = await horizontalPopup.boundingBox();
+  const {
+    title: hTitleBox,
+    popup: hPopupBox,
+    popupClass: hPopupClass,
+  } = await popupGeometry(horizontalHover.title, horizontalPopup);
   check('M-06 水平弹层存在', hPopupBox !== null);
   check(
     'M-06 水平弹层 placement=bottomLeft 且贴标题下方',
     hPopupBox !== null &&
-      (await horizontalPopup.getAttribute('class')).includes(
-        'apollo-menu-submenu-placement-bottomLeft',
-      ) &&
-      near(hPopupBox.x, horizontalHover.box.x) &&
-      near(hPopupBox.y, horizontalHover.box.y + horizontalHover.box.height),
+      hPopupClass.includes('apollo-menu-submenu-placement-bottomLeft') &&
+      near(hPopupBox.x, hTitleBox.x) &&
+      near(hPopupBox.y, hTitleBox.y + hTitleBox.height),
     hPopupBox
-      ? `popup=(${Math.round(hPopupBox.x)},${Math.round(hPopupBox.y)}) title=(${Math.round(horizontalHover.box.x)},${Math.round(horizontalHover.box.y + horizontalHover.box.height)})`
+      ? `popup=(${Math.round(hPopupBox.x)},${Math.round(hPopupBox.y)}) title=(${Math.round(hTitleBox.x)},${Math.round(hTitleBox.y + hTitleBox.height)})`
       : 'null',
   );
   check(
@@ -155,18 +169,20 @@ try {
   const verticalPopup = page.locator(
     `.apollo-menu-submenu-popup:has(ul[id="${verticalHover.controls}"])`,
   );
-  const vPopupBox = await verticalPopup.boundingBox();
+  const {
+    title: vTitleBox,
+    popup: vPopupBox,
+    popupClass: vPopupClass,
+  } = await popupGeometry(verticalHover.title, verticalPopup);
   check('M-06 垂直弹层存在', vPopupBox !== null);
   check(
     'M-06 垂直弹层 placement=rightTop 且贴标题右侧',
     vPopupBox !== null &&
-      (await verticalPopup.getAttribute('class')).includes(
-        'apollo-menu-submenu-placement-rightTop',
-      ) &&
-      near(vPopupBox.x, verticalHover.box.x + verticalHover.box.width) &&
-      near(vPopupBox.y, verticalHover.box.y),
+      vPopupClass.includes('apollo-menu-submenu-placement-rightTop') &&
+      near(vPopupBox.x, vTitleBox.x + vTitleBox.width) &&
+      near(vPopupBox.y, vTitleBox.y),
     vPopupBox
-      ? `popup=(${Math.round(vPopupBox.x)},${Math.round(vPopupBox.y)}) titleRight=${Math.round(verticalHover.box.x + verticalHover.box.width)}`
+      ? `popup=(${Math.round(vPopupBox.x)},${Math.round(vPopupBox.y)}) titleRight=${Math.round(vTitleBox.x + vTitleBox.width)} titleY=${Math.round(vTitleBox.y)}`
       : 'null',
   );
   await page.mouse.move(vPopupBox.x + vPopupBox.width / 2, vPopupBox.y + vPopupBox.height / 2, {
@@ -199,18 +215,10 @@ try {
   // 滚动时指针留在弹层内，避免标题移开后触发正常的 hover 离场。
   await verticalPopup.hover({ position: { x: 10, y: 10 } });
   // 重开时会把示例滚回视口，必须在重开后测量滚动起点。
-  const beforeScroll = {
-    title: await verticalHover.title.boundingBox(),
-    popup: await verticalPopup.boundingBox(),
-    popupClass: await verticalPopup.getAttribute('class'),
-  };
+  const beforeScroll = await popupGeometry(verticalHover.title, verticalPopup);
   await page.evaluate(() => window.scrollBy({ top: 120, behavior: 'instant' }));
   await page.waitForTimeout(200);
-  const afterScroll = {
-    title: await verticalHover.title.boundingBox(),
-    popup: await verticalPopup.boundingBox(),
-    popupClass: await verticalPopup.getAttribute('class'),
-  };
+  const afterScroll = await popupGeometry(verticalHover.title, verticalPopup);
   check(
     'M-06 滚动后弹层跟随标题',
     beforeScroll.title &&
