@@ -1,11 +1,6 @@
 <script setup lang="ts">
-// 对齐 antd 的 event-range demo：用 `cellRender` 画**跨日期的色条**。
-//
-// ⚠️ **一处 demo 级替换**：上游用 `antd-style` 的 `createStyles`（第三方 CSS-in-JS）生成
-//    类名 —— 本仓没有这个依赖 ⇒ 改用**内联 style 对象**（结构、几何、颜色逐项对应）。
-//    色值用 token 的**等值字面量**（`colorPrimary` / `colorSuccess` / `colorWarning` /
-//    `colorError` 的默认解析值），因为本仓没有 `theme.useToken()`。
-
+// Continuous bars use the demo's content layer; ordinary Calendar lists keep scrolling.
+import { dayjsGenerateConfig } from '@apollo-design/picker';
 import { Calendar } from '@apollo-design/ui';
 import dayjs from 'dayjs';
 
@@ -34,6 +29,13 @@ const EVENTS: CalendarEvent[] = [
     color: '#52c41a',
   },
   {
+    key: 'cross-week',
+    title: 'Cross-week delivery',
+    start: dayjs('2026-01-17'),
+    end: dayjs('2026-01-20'),
+    color: '#1677ff',
+  },
+  {
     key: 'maintenance',
     title: 'Maintenance',
     start: dayjs('2026-01-21'),
@@ -57,13 +59,26 @@ const isInRange = (current: dayjs.Dayjs, event: CalendarEvent) =>
 
 type RangePosition = 'single' | 'start' | 'middle' | 'end';
 
-const getRangePosition = (current: dayjs.Dayjs, event: CalendarEvent): RangePosition => {
-  const starts = current.isSame(event.start, 'day');
-  const ends = current.isSame(event.end, 'day');
+const getRangePosition = (
+  current: dayjs.Dayjs,
+  event: CalendarEvent,
+  weekFirstDay: number,
+): RangePosition => {
+  const starts = current.isSame(event.start, 'day') || current.day() === weekFirstDay;
+  const ends = current.isSame(event.end, 'day') || current.day() === (weekFirstDay + 6) % 7;
   if (starts && ends) return 'single';
   if (starts) return 'start';
   if (ends) return 'end';
   return 'middle';
+};
+
+const getCellEvents = (current: dayjs.Dayjs, locale: string) => {
+  // Use the same locale service as PickerPanel, including Monday/Saturday weeks.
+  const firstDay = dayjsGenerateConfig.locale.getWeekFirstDay(locale);
+  return EVENTS.filter((event) => isInRange(current, event)).map((event) => ({
+    event,
+    position: getRangePosition(current, event, firstDay),
+  }));
 };
 
 /** 色条圆角（上游 `barRadius = 999`）。 */
@@ -104,13 +119,14 @@ const rangeStyle: Record<RangePosition, Record<string, string>> = {
 </script>
 
 <template>
-  <Calendar :default-value="defaultValue">
+  <Calendar :default-value="defaultValue" :styles="{ itemContent: { overflow: 'visible' } }">
     <template #cellRender="{ current, info }">
-      <div v-if="info.type === 'date'" style="min-height: 32px; overflow: visible">
-        <div :style="{ display: 'flex', flexDirection: 'column', gap: `${MARGIN_XXS}px`, marginTop: `${MARGIN_XXS}px` }">
-          <span v-for="event in EVENTS.filter(event => isInRange(current, event))" :key="event.key"
-            :style="{ ...barStyle, ...rangeStyle[getRangePosition(current, event)], backgroundColor: event.color }">
-            {{ ['start', 'single'].includes(getRangePosition(current, event)) ? event.title : '' }}
+      <div v-if="info.type === 'date'" :style="{ minHeight: '32px', paddingBlockStart: `${MARGIN_XXS}px` }">
+        <div :style="{ display: 'flex', flexDirection: 'column', gap: `${MARGIN_XXS}px` }">
+          <span v-for="{ event, position } in getCellEvents(current, info.locale.locale)" :key="event.key"
+            :data-event="event.key" :data-position="position" :title="event.title"
+            :style="{ ...barStyle, ...rangeStyle[position], backgroundColor: event.color }">
+            {{ ['start', 'single'].includes(position) ? event.title : '' }}
           </span>
         </div>
       </div>

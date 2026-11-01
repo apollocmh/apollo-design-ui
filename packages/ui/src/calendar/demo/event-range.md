@@ -5,17 +5,16 @@ title:
   en-US: Event Range
 ---
 
-通过 `cellRender` 渲染跨日期事件范围。示例根据日期判断事件的开始、持续、结束或单日状态，并用连续色条展示。
+通过 `cellRender` 渲染跨日期事件。此示例使用已有的 `styles.itemContent`，仅允许自己的色条跨出日期内容层；普通日历事件列表仍保留默认的固定高度与纵向滚动。
+
+色条按当前日历语言的实际周首日分段，跨周换行时重新显示标题并保留两端圆角，不把不同行连在一起。1 月 17–20 日的事件展示这种换行；RTL 使用逻辑方向边距。窄屏标题保持省略显示，完整名称保留在原生 `title` 中。
+
+The existing `styles.itemContent` scopes visible overflow to this example. Ordinary event lists keep their fixed-height vertical scrolling. Bars split at the current locale's week boundaries, repeat their title on each row, and use logical margins in RTL. Narrow cells retain ellipsis and the complete native title.
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd 的 event-range demo：用 `cellRender` 画**跨日期的色条**。
-//
-// ⚠️ **一处 demo 级替换**：上游用 `antd-style` 的 `createStyles`（第三方 CSS-in-JS）生成
-//    类名 —— 本仓没有这个依赖 ⇒ 改用**内联 style 对象**（结构、几何、颜色逐项对应）。
-//    色值用 token 的**等值字面量**（`colorPrimary` / `colorSuccess` / `colorWarning` /
-//    `colorError` 的默认解析值），因为本仓没有 `theme.useToken()`。
-
+// Continuous bars use the demo's content layer; ordinary Calendar lists keep scrolling.
+import { dayjsGenerateConfig } from '@apollo-design/picker';
 import { Calendar } from '@apollo-design/ui';
 import dayjs from 'dayjs';
 
@@ -44,6 +43,13 @@ const EVENTS: CalendarEvent[] = [
     color: '#52c41a',
   },
   {
+    key: 'cross-week',
+    title: 'Cross-week delivery',
+    start: dayjs('2026-01-17'),
+    end: dayjs('2026-01-20'),
+    color: '#1677ff',
+  },
+  {
     key: 'maintenance',
     title: 'Maintenance',
     start: dayjs('2026-01-21'),
@@ -67,13 +73,26 @@ const isInRange = (current: dayjs.Dayjs, event: CalendarEvent) =>
 
 type RangePosition = 'single' | 'start' | 'middle' | 'end';
 
-const getRangePosition = (current: dayjs.Dayjs, event: CalendarEvent): RangePosition => {
-  const starts = current.isSame(event.start, 'day');
-  const ends = current.isSame(event.end, 'day');
+const getRangePosition = (
+  current: dayjs.Dayjs,
+  event: CalendarEvent,
+  weekFirstDay: number,
+): RangePosition => {
+  const starts = current.isSame(event.start, 'day') || current.day() === weekFirstDay;
+  const ends = current.isSame(event.end, 'day') || current.day() === (weekFirstDay + 6) % 7;
   if (starts && ends) return 'single';
   if (starts) return 'start';
   if (ends) return 'end';
   return 'middle';
+};
+
+const getCellEvents = (current: dayjs.Dayjs, locale: string) => {
+  // Use the same locale service as PickerPanel, including Monday/Saturday weeks.
+  const firstDay = dayjsGenerateConfig.locale.getWeekFirstDay(locale);
+  return EVENTS.filter((event) => isInRange(current, event)).map((event) => ({
+    event,
+    position: getRangePosition(current, event, firstDay),
+  }));
 };
 
 /** 色条圆角（上游 `barRadius = 999`）。 */
@@ -114,13 +133,14 @@ const rangeStyle: Record<RangePosition, Record<string, string>> = {
 </script>
 
 <template>
-  <Calendar :default-value="defaultValue">
+  <Calendar :default-value="defaultValue" :styles="{ itemContent: { overflow: 'visible' } }">
     <template #cellRender="{ current, info }">
-      <div v-if="info.type === 'date'" style="min-height: 32px; overflow: visible">
-        <div :style="{ display: 'flex', flexDirection: 'column', gap: `${MARGIN_XXS}px`, marginTop: `${MARGIN_XXS}px` }">
-          <span v-for="event in EVENTS.filter(event => isInRange(current, event))" :key="event.key"
-            :style="{ ...barStyle, ...rangeStyle[getRangePosition(current, event)], backgroundColor: event.color }">
-            {{ ['start', 'single'].includes(getRangePosition(current, event)) ? event.title : '' }}
+      <div v-if="info.type === 'date'" :style="{ minHeight: '32px', paddingBlockStart: `${MARGIN_XXS}px` }">
+        <div :style="{ display: 'flex', flexDirection: 'column', gap: `${MARGIN_XXS}px` }">
+          <span v-for="{ event, position } in getCellEvents(current, info.locale.locale)" :key="event.key"
+            :data-event="event.key" :data-position="position" :title="event.title"
+            :style="{ ...barStyle, ...rangeStyle[position], backgroundColor: event.color }">
+            {{ ['start', 'single'].includes(position) ? event.title : '' }}
           </span>
         </div>
       </div>
