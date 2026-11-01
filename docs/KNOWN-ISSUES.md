@@ -28,7 +28,7 @@
 
 | 项目 | 已确认事实与剩余检查 |
 | --- | --- |
-| CI 视觉环境一致性 | `v0.1.7` 本地完整视觉 1875 项通过，远端仍未通过。[六例对照 41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353)实际确认：原环境 0/6 通过；设为叠加滚动条后消除 15px 尺寸差，4/6 通过，该设置已纳入后续 CI。再匹配中文区域仍为 4/6，Affix 文字的 26 个像素及 Watermark 多行文字仍被原比较器判 FAIL，原生 Canvas 文字度量也不同。未更换基线、接受差异或放宽阈值，尚不能声明所有差异均已解释。完整结果见[环境证据](audit/evidence/visual-environment-2026-11-01.json)及[收口记录](audit/2026-11-01-z-index-closeout.md)。 |
+| CI 视觉环境一致性 | `v0.1.7` 本地完整视觉 1875 项通过，远端仍未通过。[六例对照 41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353)实际确认：原环境 0/6 通过；设为叠加滚动条后消除 15px 尺寸差，4/6 通过，该设置已纳入后续 CI。再匹配中文区域仍为 4/6，Affix 文字的 26 个像素及 Watermark 多行文字仍被原比较器判 FAIL；两例真实看图及同条件探针确认原生字形/Canvas 度量差异，可限定归类 PLATFORM，不能扩展到未跑完的全矩阵。使用旧配置的完整运行已主动停止，未更换基线、接受差异或放宽阈值。完整结果见[环境证据](audit/evidence/visual-environment-2026-11-01.json)及[收口记录](audit/2026-11-01-z-index-closeout.md)。 |
 
 ## 历史追溯与验收
 

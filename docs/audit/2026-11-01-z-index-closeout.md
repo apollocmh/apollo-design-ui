@@ -1,6 +1,6 @@
 # 2026-11-01 zIndex 修复、冻结验收与版本收口
 
-当前状态：干净冻结提交 `9ea0518035acc46d7036d5f7ae9a3391fcee8ba2` 的本地统一九维验收全部通过，架构整改及本地验收收口。`v0.1.7` 已推送，文档站构建/部署及线上版本核对通过；标签 CI 超时取消，独立分支的后两次复验分别因主题测试超时和静态索引遗漏失败，修正后的复验进行中，远端验收尚未通过。72 个组件、13 个基础包均保留架构成果，25 项历史交付不改写为新的执行记录。
+当前状态：干净冻结提交 `9ea0518035acc46d7036d5f7ae9a3391fcee8ba2` 的本地统一九维验收全部通过，架构整改及本地验收收口。`v0.1.7` 已推送，文档站构建/部署及线上版本核对通过；远端完整验收仍因视觉环境差异受阻，未记通过。后续本批 21 个 GitHub issue 已验证关闭。72 个组件、13 个基础包均保留架构成果，25 项历史交付不改写为新的执行记录。
 
 [本轮机器记录](evidence/z-index-closeout-2026-11-01.json) · [唯一台账](../../registry/vue-native-audit.json) · [当前支持限制和待核实项](../KNOWN-ISSUES.md)
 
@@ -52,7 +52,7 @@ CI 修正的定向验证为 58 项 tooling 和固定官方 Chrome 的 Empty / Re
 - [完整标签 CI 41288847372](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847372)：结论为 cancelled，平台注解为作业超过 `2h0m0s`。已执行至完整视觉阶段，但没有完整视觉结果，不算通过。
 - [同发布源码复验 41300894803](https://github.com/apollocmh/apollo-design-ui/actions/runs/41300894803)：独立分支 `ci/v0.1.7-time-budget-20261101` 的 `9c1324370e26360a895245b3f6388843620d98c4` 仅将 CI 作业总时限从 120 分钟调整为 180 分钟；与标签的唯一差异为 `.github/workflows/ci.yml`，发布源码、依赖、测试、基线和断言不变。结论 failure：覆盖率执行中的 Popconfirm 一项及 Space compact-debug 四种主题均超过默认 5000ms，实测 6.395–6.958 秒，17349 项通过、5 项超时。本次尚未执行 tarball 和完整视觉，不算通过；正在定向排查，不移动标签或删减场景。
 - [五项实测耗时修正后的复验 41307766529](https://github.com/apollocmh/apollo-design-ui/actions/runs/41307766529)：`27e50539` 仅再为上述五项设置 10 秒预算，其余用例仍为默认 5 秒，所有断言、四主题和连续迁移保留。定向覆盖率实跑也观察到 6.414 / 5.649 秒，支持此预算；局部命令仍因原整包覆盖率门槛 exit 1，不冒称覆盖率验收通过。共享测试工具 42 项回归通过。本次远端结论 failure：修改测试工具后遗漏刷新静态行数索引（2965→2967），Registry 检查拒绝，未执行后续验收。
-- [静态索引修正后的复验 41313575629](https://github.com/apollocmh/apollo-design-ui/actions/runs/41313575629)：`fb2eaa2b` 补齐上述事实索引，本地 Registry 与格式检查退出 0，远端完整验收进行中；发布源码、依赖、CSS、PNG 与原标签一致。旧运行仍保留原失败结论。
+- [静态索引修正后的复验 41313575629](https://github.com/apollocmh/apollo-design-ui/actions/runs/41313575629)：`fb2eaa2b` 补齐上述事实索引，本地 Registry 与格式检查退出 0，发布源码、依赖、CSS、PNG 与原标签一致。远端 787 文件 / 17354 条运行时回归、原覆盖率门禁和 13 包 Vite / Webpack 消费检查已通过，五项超时没有复现。随后短对照已证明其旧滚动条配置必然产生视觉尺寸失败，因此于 2026-11-02 00:04（UTC+8）主动取消，避免等待已知失败的完整矩阵；完整视觉被中断，后续 Docs 检查未执行，不能算完整验收通过。作业日志和已执行产物均保留，旧失败不被改写。
 - [Docs 41288847399](https://github.com/apollocmh/apollo-design-ui/actions/runs/41288847399)：同一标签提交的构建及 GitHub Pages 部署均成功。
 - [线上进度页](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress)：真实 Chrome 核对版本 `v0.1.7`、组件 72/72、基础包 13/13、历史交付 25 和冻结验收 passed；浏览器诊断为空。
 
@@ -86,3 +86,5 @@ CI 修正的定向验证为 58 项 tooling 和固定官方 Chrome 的 Empty / Re
 标签 CI 复验单独跟进。旧取消运行的实际截图已查看并按原比较阈值复核，确认有约 15px 的经典滚动槽差额及部分文字/Canvas 差异；批准机器使用自动叠加滚动条和中文区域设置。云端具体字体及原生偏好仍需实测，尚不能把所有差异归因于字体。当前不接受新截图、不降低视觉标准，用少量代表案例做原生环境对照。
 
 短对照运行 [41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353) 对应独立临时分支 `ci/v017-visual-environment` 的 `1c2b726a`，实际耗时 8 分 41 秒，结论 failure。六个既有用例依次核对原生配置、叠加滚动条、中文语言/区域，分别 0/6、4/6、4/6 通过；各阶段只读同一构建产物。`WhenScrolling` 确实消除 15px 尺寸差，已将该原生设置纳入后续完整 CI。仍失败的 Affix 与 Watermark 保留 FAIL；区域设置不能消除全部文字差异，不能将其冒称为六例全通过。原始截图、差异和探针保存在该 run artifact，紧凑结果见[环境对照证据](evidence/visual-environment-2026-11-01.json)。没有改组件 CSS、字体、基线或阈值，也没有重跑已知仍会失败的完整流程。
+
+实际查看这两例当前图、diff 和批准图后，仅将两例残差分类为 PLATFORM，机器结论仍为 FAIL：[Affix 字形差异](evidence/visual-environment-2026-11-01/affix-platform-diff.png)、[Watermark 字宽与平铺间距差异](evidence/visual-environment-2026-11-01/watermark-platform-diff.png)。逐字相同的探针、同版官方 Chrome / zh-CN / DPR1 下，`16px sans-serif` 的 Ant Design 本机宽 81.2159、云端中文环境宽 84.528；`12px sans-serif` 的 Happy Working 分别 85.1519 和 88.5599，证明原生 Canvas 文字度量不一致。不据 DOM 同名 PingFangSC 推断具体 Canvas 字体文件或版本，也不将两例分类扩展到未完成的全矩阵。

@@ -755,7 +755,7 @@
     "tag": "v0.1.7",
     "sourceCommit": "35b1ff589cfa8b8fccc50cb653a316ba1cefb035",
     "tagObject": "e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8",
-    "status": "tag_pushed_ci_final_retry_in_progress",
+    "status": "tag_and_docs_delivered_remote_visual_environment_blocked",
     "previousTagRefsRetained": 14,
     "npmPublish": false,
     "ci": {
@@ -879,8 +879,8 @@
       "runId": 41313575629,
       "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41313575629",
       "sourceCommit": "fb2eaa2b566e5e84d33f9216441d319155504395",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "cancelled",
       "differenceFromTag": [
         ".github/workflows/ci.yml",
         "packages/test-utils/src/theme-test.ts",
@@ -894,7 +894,27 @@
         "formatCheckExit": 0,
         "sourceFactDelta": "Private test utility source line count only: 2965 to 2967"
       },
-      "originalTagUnchanged": true
+      "originalTagUnchanged": true,
+      "cancelledAt": "2026-11-01T16:04:06Z",
+      "reason": "Actively stopped after the same-source six-case preflight proved the old scrollbar configuration causes visual size failures. Avoided waiting for a known failing full matrix; no acceptance PASS claimed.",
+      "verifiedBeforeCancellation": {
+        "runtimeFiles": 787,
+        "runtimeTestsPassed": 17354,
+        "coveragePercent": {
+          "statements": 92.06,
+          "branches": 83.84,
+          "functions": 91.82,
+          "lines": 93.03
+        },
+        "runtimeTarballViteWebpackPackages": 13,
+        "fullVisualMatrix": "interrupted; no complete result",
+        "remainingDocsChecks": "not reached"
+      },
+      "logs": {
+        "command": "gh run view 41313575629 --job 124868844670 --log",
+        "exitCode": 0,
+        "localFile": "/tmp/apollo-v017-ci-final-job.log"
+      }
     },
     "visualEnvironmentPreflight": {
       "runId": 41322884353,
@@ -920,7 +940,8 @@
       ],
       "scope": "Temporary runner preferences only; all phase results retained; no local-user preferences modified.",
       "evidence": "docs/audit/evidence/visual-environment-2026-11-01.json",
-      "result": "0/6 native pass; 4/6 pass with overlay scrollbars; 4/6 pass with additionally matched language. Affix and text Watermark remain block-diff FAIL under unchanged comparator."
+      "result": "0/6 native pass; 4/6 pass with overlay scrollbars; 4/6 pass with additionally matched language. Affix and text Watermark remain block-diff FAIL under unchanged comparator.",
+      "residualClassification": "Only the two reviewed residual cases are PLATFORM; machine verdict remains FAIL. A matching local probe confirms native text metrics differ. No automatic exception or baseline acceptance."
     }
   },
   "docsTests": {

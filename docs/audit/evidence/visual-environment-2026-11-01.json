@@ -462,5 +462,96 @@
         }
       ]
     }
-  ]
+  ],
+  "residualReview": {
+    "machinePassed": false,
+    "reviewed": "Third-phase Affix and Watermark current PNGs + composited diffs + approved PNGs; six real images viewed",
+    "cases": [
+      {
+        "id": "affix/basic__light__desktop",
+        "classification": "PLATFORM",
+        "machineVerdict": "FAIL",
+        "reason": "block-diff",
+        "diffPixels": 26,
+        "diffPercent": 0.008516771488469603,
+        "isolatedPercent": 61.53846153846154,
+        "observation": "Container position, dimensions, blue fill and centered content agree. Residual pixels lie on AFFIX glyph strokes. This fails the original90% isolation requirement despite its low area."
+      },
+      {
+        "id": "watermark/multi-line__light__desktop",
+        "classification": "PLATFORM",
+        "machineVerdict": "FAIL",
+        "reason": "block-diff",
+        "diffPixels": 1617,
+        "diffPercent": 0.384560502283105,
+        "isolatedPercent": 52.25726654298083,
+        "observation": "Same content, rotation and container, with a small visible change in glyph width and repeated tile spacing. Native Canvas font metrics affect real tile geometry; this is not merely isolated antialias noise."
+      }
+    ],
+    "probeComparison": {
+      "method": "Extracted the exact CI probe function into /tmp and reran locally. Only import path retargeted to identical stabilizer; source hash matched. No local preference changes.",
+      "sameBrowser": "officialCfT150.0.7871.125/x64",
+      "sameConditions": "zh-CN document and browser locale, DPR1,375viewport/stage, explicit ctx.font16px/12px sans-serif, same text and Canvas operations",
+      "stabilizerSha256": "65f9fba7f88710687fa346f404c20ccecbaef64b68471dbf5f7901b8c97d127d",
+      "localOS": "macOS12.7.6/21H1320",
+      "cloudOS": "macOS15.7.9/24G830",
+      "localMetrics": [
+        {
+          "font": "16px sans-serif",
+          "text": "Ant Design",
+          "width": 81.21589660644531,
+          "fontBoundingBoxAscent": 17,
+          "fontBoundingBoxDescent": 5
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Happy Working",
+          "width": 85.15191650390625,
+          "fontBoundingBoxAscent": 13,
+          "fontBoundingBoxDescent": 4
+        }
+      ],
+      "cloudEnglishMetrics": [
+        {
+          "font": "16px sans-serif",
+          "text": "Ant Design",
+          "width": 78.265625,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Happy Working",
+          "width": 81.8203125,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        }
+      ],
+      "cloudChineseMetrics": [
+        {
+          "font": "16px sans-serif",
+          "text": "Ant Design",
+          "width": 84.52799987792969,
+          "fontBoundingBoxAscent": 17,
+          "fontBoundingBoxDescent": 5
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Happy Working",
+          "width": 88.55987548828125,
+          "fontBoundingBoxAscent": 13,
+          "fontBoundingBoxDescent": 4
+        }
+      ],
+      "localCanvasHashEqualsOldPortableProbe": true,
+      "localResult": "/tmp/apollo-v017-visual-env-same-probe-local.json",
+      "command": "APOLLO_CHROME_EXECUTABLE=<official150binary> node /tmp/apollo-v017-visual-env-same-probe.mjs",
+      "exitCode": 0,
+      "signal": null,
+      "log": "/tmp/apollo-v017-visual-env-same-probe.log"
+    },
+    "causalBoundary": "Same SDK digest throughout CI. WhenScrolling fixes6/6 viewport width mismatches and4 cases pass unchanged thresholds. Native language changes Canvas metrics and watermark2320 to1617 pixels while source/geometry inputs stay fixed, leaving independent platform-dependent native font/Canvas rendering differences.",
+    "precisionLimits": "CDP reports DOM PingFangSC-Regular in all cloud phases, but it does not identify the actual detached-Canvas fallback face/version. No claim that the English Canvas used Arial or that a specific font-file revision is proven. Classification applies only to these reviewed residual cases, not the unrun matrix.",
+    "decision": "Keep both FAIL results and approved PNGs unchanged. Apply only the independently proven overlay-scrollbar setting; record remaining native font/Canvas PLATFORM differences without converting the run to acceptance PASS."
+  }
 }
