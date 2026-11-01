@@ -20,7 +20,7 @@ order: 0
 
 历史交付沿用仍有效的代码、测试与证据，不代表已经对本轮冻结版本重新验证。第一阶段完成相关类型、核心行为及必要 Demo/消费者检查即可继续；非阻塞问题记录影响与延期理由，第二阶段统一执行九维验收。源码导入关系用于影响面分析，只有任务中明确登记的整改依赖才阻塞推进。
 
-全库最终验收：**in_progress**。未知、未测或延期均不计为通过。
+全库最终验收：**failed**。未知、未测或延期均不计为通过。
 
 | 任务 | 架构状态 | 当前负责人 | 保留证据 |
 | --- | --- | --- | --- |
@@ -125,7 +125,7 @@ Current stage: **Frozen-version acceptance**. Dispatch: **running**; active task
 
 Existing code, tests and valid evidence are retained. Historical deliveries do not claim a fresh frozen-version pass. Focused types, core behavior and necessary demo/consumer checks allow architecture work to progress. Record non-blocking issues and defer full nine-dimension acceptance to stage two. Imports describe impact; only explicit work dependencies block task completion.
 
-Final library acceptance: **in_progress**. Unknown, untested and deferred checks are not passes.
+Final library acceptance: **failed**. Unknown, untested and deferred checks are not passes.
 
 | Task | Architecture status | Current owner | Retained evidence |
 | --- | --- | --- | --- |

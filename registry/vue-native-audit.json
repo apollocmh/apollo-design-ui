@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 247,
+  "revision": 248,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12114,13 +12114,13 @@
     }
   ],
   "finalAcceptance": {
-    "status": "in_progress",
-    "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+    "status": "failed",
+    "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
     "gates": [
       {
         "dimension": "api",
         "status": "passed",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
         "note": "Public API/type/behavior regressions and published consumers passed. Architecture evidence remains dated; historical acceptance is not promoted.",
         "checks": [
           {
@@ -12167,7 +12167,7 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
@@ -12183,37 +12183,56 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
+          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged.",
+          "validationCommits": {
+            "coverage": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+            "strictAndPublicTypes": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+            "consumer": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+            "fullVisual": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+            "updatedVisual": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+            "docsStage2": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+            "docsMenu": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+            "artifactBuild": "26e5ddd0622c3faeb1075cafd849042fc0938fb8"
+          },
+          "timings": {
+            "uiBuildMs": 86303,
+            "docsBuildMs": 157673,
+            "fullVisualWallMs": 1786571,
+            "concurrentCoverageMs": 2188674,
+            "dedicatedCoverageMs": 1507822
+          },
+          "timingLimit": "Analysis, implementation and integration-wait phases were not separately measured; command timings do not represent those phases."
         }
       },
       {
         "dimension": "tokens",
-        "status": "in_progress",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
-        "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
+        "status": "passed",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "checks": [
           {
-            "name": "coverage",
-            "command": "/tmp/apollo-audit-toolchain/pnpm",
-            "args": [
+            "kind": "coverage",
+            "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+            "command": [
+              "/tmp/apollo-audit-toolchain/pnpm",
               "run",
               "test:coverage",
               "--reporter=default",
               "--reporter=json",
-              "--outputFile=/tmp/apollo-final-coverage-1adf76dc.json"
+              "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
             ],
-            "exitCode": 1,
+            "exitCode": 0,
             "signal": null,
-            "durationMs": 2188674,
-            "log": "/tmp/apollo-final-coverage-1adf76dc-coverage.log",
-            "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+            "durationMs": 1507822,
+            "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+            "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
           }
         ]
       },
       {
         "dimension": "styles",
         "status": "failed",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
         "note": "The current UI build completed CSS/SSR/export checks with exactly one failure: unchanged B6 budget, 13/73 entries, full 2236.7 KB. No size optimization or threshold change. Unchanged foundation build evidence remains dated and is not claimed as a new 151-check run.",
         "remainingBudget": {
           "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
@@ -12342,7 +12361,7 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
@@ -12358,14 +12377,44 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
+          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
+        },
+        "foundationBuildReuse": {
+          "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "foundationBuildCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+          "foundations": [
+            "utils",
+            "theme",
+            "icons",
+            "motion",
+            "portal",
+            "position",
+            "a11y",
+            "virtual-list",
+            "overlay",
+            "form-core",
+            "picker",
+            "locale",
+            "test-utils"
+          ],
+          "configs": [
+            "package.json",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "tsconfig.json",
+            "tsconfig.base.json",
+            "vitest.config.ts",
+            "tests/build/run.mjs"
+          ],
+          "changedRelevantInputs": [],
+          "scope": "Only unchanged foundation build inputs; current UI was independently rebuilt and its B6 failure retained."
         }
       },
       {
         "dimension": "unit",
-        "status": "in_progress",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
-        "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
+        "status": "passed",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
           "command": "pnpm run test:coverage",
@@ -12384,30 +12433,63 @@
         },
         "checks": [
           {
-            "name": "coverage",
-            "command": "/tmp/apollo-audit-toolchain/pnpm",
-            "args": [
+            "kind": "coverage",
+            "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+            "command": [
+              "/tmp/apollo-audit-toolchain/pnpm",
               "run",
               "test:coverage",
               "--reporter=default",
               "--reporter=json",
-              "--outputFile=/tmp/apollo-final-coverage-1adf76dc.json"
+              "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
             ],
-            "exitCode": 1,
+            "exitCode": 0,
             "signal": null,
-            "durationMs": 2188674,
-            "log": "/tmp/apollo-final-coverage-1adf76dc-coverage.log",
-            "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+            "durationMs": 1507822,
+            "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+            "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
           }
         ],
         "result": {
-          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+          "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "success": true,
           "files": 786,
           "total": 17335,
-          "passed": 17330,
-          "failed": 5,
-          "coverage": null,
-          "status": "failed; dedicated coverage rerun pending"
+          "passed": 17335,
+          "failed": 0,
+          "pending": 0,
+          "coverage": {
+            "lines": {
+              "total": 38364,
+              "covered": 35692,
+              "skipped": 0,
+              "pct": 93.03
+            },
+            "statements": {
+              "total": 42476,
+              "covered": 39107,
+              "skipped": 0,
+              "pct": 92.06
+            },
+            "functions": {
+              "total": 11586,
+              "covered": 10639,
+              "skipped": 0,
+              "pct": 91.82
+            },
+            "branches": {
+              "total": 30747,
+              "covered": 25774,
+              "skipped": 0,
+              "pct": 83.82
+            },
+            "branchesTrue": {
+              "total": 0,
+              "covered": 0,
+              "skipped": 0,
+              "pct": 100
+            }
+          }
         },
         "previousValidatedRun": {
           "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
@@ -12434,6 +12516,92 @@
           }
         },
         "currentFullAttempt": {
+          "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "passed": true,
+          "check": {
+            "kind": "coverage",
+            "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+            "command": [
+              "/tmp/apollo-audit-toolchain/pnpm",
+              "run",
+              "test:coverage",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1507822,
+            "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+            "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
+          },
+          "files": 786,
+          "result": {
+            "success": true,
+            "files": 786,
+            "total": 17335,
+            "passed": 17335,
+            "failed": 0,
+            "pending": 0
+          },
+          "coverage": {
+            "lines": {
+              "total": 38364,
+              "covered": 35692,
+              "skipped": 0,
+              "pct": 93.03
+            },
+            "statements": {
+              "total": 42476,
+              "covered": 39107,
+              "skipped": 0,
+              "pct": 92.06
+            },
+            "functions": {
+              "total": 11586,
+              "covered": 10639,
+              "skipped": 0,
+              "pct": 91.82
+            },
+            "branches": {
+              "total": 30747,
+              "covered": 25774,
+              "skipped": 0,
+              "pct": 83.82
+            },
+            "branchesTrue": {
+              "total": 0,
+              "covered": 0,
+              "skipped": 0,
+              "pct": 100
+            }
+          },
+          "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+          "parallelism": "Original two-worker coverage command; no concurrent build, public type suite or full visual shard."
+        },
+        "targetedThemeDiagnostic": {
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "node_modules/vitest/vitest.mjs",
+            "run",
+            "--project",
+            "theme",
+            "--maxWorkers=1",
+            "packages/ui/src/space/__tests__/theme.test.ts",
+            "packages/ui/src/popconfirm/__tests__/theme.test.ts",
+            "--reporter=json",
+            "--outputFile=/tmp/apollo-final-timeout-diagnostic-1adf76dc.json"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 47688,
+          "log": "/tmp/apollo-final-timeout-diagnostic-1adf76dc.log",
+          "scope": "Only the two theme files with failures in the concurrent full run; no timeout/threshold changes and no coverage claim.",
+          "tests": 161,
+          "passed": 161
+        },
+        "previousConcurrentAttempt": {
           "passed": false,
           "checks": [
             {
@@ -12494,35 +12662,13 @@
             }
           ],
           "coverageReportAvailable": false
-        },
-        "targetedThemeDiagnostic": {
-          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
-          "command": [
-            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
-            "node_modules/vitest/vitest.mjs",
-            "run",
-            "--project",
-            "theme",
-            "--maxWorkers=1",
-            "packages/ui/src/space/__tests__/theme.test.ts",
-            "packages/ui/src/popconfirm/__tests__/theme.test.ts",
-            "--reporter=json",
-            "--outputFile=/tmp/apollo-final-timeout-diagnostic-1adf76dc.json"
-          ],
-          "exitCode": 0,
-          "signal": null,
-          "durationMs": 47688,
-          "log": "/tmp/apollo-final-timeout-diagnostic-1adf76dc.log",
-          "scope": "Only the two theme files with failures in the concurrent full run; no timeout/threshold changes and no coverage claim.",
-          "tests": 161,
-          "passed": 161
         }
       },
       {
         "dimension": "interaction",
-        "status": "in_progress",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
-        "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
+        "status": "passed",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "remediationChecks": [
           {
             "kind": "semantic",
@@ -12586,27 +12732,28 @@
         ],
         "checks": [
           {
-            "name": "coverage",
-            "command": "/tmp/apollo-audit-toolchain/pnpm",
-            "args": [
+            "kind": "coverage",
+            "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+            "command": [
+              "/tmp/apollo-audit-toolchain/pnpm",
               "run",
               "test:coverage",
               "--reporter=default",
               "--reporter=json",
-              "--outputFile=/tmp/apollo-final-coverage-1adf76dc.json"
+              "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
             ],
-            "exitCode": 1,
+            "exitCode": 0,
             "signal": null,
-            "durationMs": 2188674,
-            "log": "/tmp/apollo-final-coverage-1adf76dc-coverage.log",
-            "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+            "durationMs": 1507822,
+            "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+            "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
           }
         ]
       },
       {
         "dimension": "types",
         "status": "passed",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
         "note": "Strict noEmit and all 2389 public type cases passed after the common build; only the two Docs probes and reviewed baseline/state files changed afterward. Production, dependency and type-check inputs unchanged.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
@@ -12772,7 +12919,7 @@
           "failed": 0
         },
         "frozenInputs": {
-          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
@@ -12788,37 +12935,38 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
+          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
         }
       },
       {
         "dimension": "a11y",
-        "status": "in_progress",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
-        "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
+        "status": "passed",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "checks": [
           {
-            "name": "coverage",
-            "command": "/tmp/apollo-audit-toolchain/pnpm",
-            "args": [
+            "kind": "coverage",
+            "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+            "command": [
+              "/tmp/apollo-audit-toolchain/pnpm",
               "run",
               "test:coverage",
               "--reporter=default",
               "--reporter=json",
-              "--outputFile=/tmp/apollo-final-coverage-1adf76dc.json"
+              "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
             ],
-            "exitCode": 1,
+            "exitCode": 0,
             "signal": null,
-            "durationMs": 2188674,
-            "log": "/tmp/apollo-final-coverage-1adf76dc-coverage.log",
-            "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+            "durationMs": 1507822,
+            "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+            "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
           }
         ]
       },
       {
         "dimension": "visual",
         "status": "passed",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
         "note": "Complete 1875-case comparison executed on frozen 1adf76dc; 1869 passed and six intended compact Timeline baselines were individually reviewed and updated. Both three-case official comparisons passed on ea70e52d. Exact ID union, no missing or duplicate cases; unchanged input/baseline checks support reuse. Original nonzero full comparison remains in firstCompleteComparison. No threshold or scenario removed.",
         "checks": [
           {
@@ -13578,10 +13726,11 @@
           "missing": 0,
           "duplicateIds": 0,
           "idSetSha256": "1b30b6daf79d4911fda71bdbe97afe99e2ad452fadd02e408a03000794cee0f8",
-          "exact": 1875
+          "exact": 1875,
+          "antialiasNoise": 0
         },
         "frozenInputs": {
-          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
@@ -13597,13 +13746,13 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
+          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
         }
       },
       {
         "dimension": "docs",
         "status": "passed",
-        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
         "note": "All six existing Docs browser scopes now pass against the same prebuilt Docs/UI artifacts, plus Docs types/tests. The default-open vertical Menu can legitimately retain an overflow flip. The original preferred rightTop geometry assertion now runs after the existing real close/reopen, with all 28 assertions, timings, 3px/5px tolerances and console/error checks preserved. No Menu/Trigger/position product change. Original failed runs retained.",
         "remediation": {
           "scope": [
@@ -14057,7 +14206,7 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
@@ -14073,7 +14222,7 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
+          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
         },
         "previousTargetedAttempt": [
           {
