@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type Component, h, ref, type StyleValue, shallowRef } from 'vue';
+import type { TriggerAlign } from '../../../_internal/trigger';
 import { ConfigProvider } from '../../../config-provider';
 import type { ConfigProviderProps } from '../../../config-provider/interface';
 import { Tooltip } from '../../../tooltip';
@@ -43,6 +44,7 @@ const steps = shallowRef<[TourStepProps, TourStepProps]>([
   { title: 'Step one', description: 'Second description', target: () => target2.value },
 ]);
 const origins: Component[] = [];
+const lastAlign = shallowRef<TriggerAlign>();
 const events = {
   current: [] as number[],
   close: [] as number[],
@@ -53,6 +55,10 @@ const events = {
   outside: 0,
   otherClose: 0,
 };
+function onPopupAlign(_element: HTMLElement, align: TriggerAlign) {
+  events.align++;
+  lastAlign.value = align;
+}
 function remember(component: Component) {
   origins.push(component);
   return component;
@@ -144,6 +150,7 @@ defineExpose({
   patch,
   events: () => ({
     ...events,
+    lastAlign: lastAlign.value,
     current: [...events.current],
     open: [...events.open],
     close: [...events.close],
@@ -167,7 +174,7 @@ defineExpose({
     <Tour
       id="native-tour" :open="open" :current="current" :steps="steps" :mask="mask" :disabled-interaction="disabledInteraction"
       :get-popup-container="container" :scroll-into-view-options="false" :style="style" :z-index="zIndex"
-      @update:open="updateOpen" @update:current="updateCurrent" @close="events.close.push($event)" @finish="events.finish++" @popup-align="events.align++"
+      @update:open="updateOpen" @update:current="updateCurrent" @close="events.close.push($event)" @finish="events.finish++" @popup-align="onPopupAlign"
     >
       <template #title="{ current }"><strong>Guide {{ current }}</strong></template>
       <template v-if="showDescriptionSlot" #description><span v-if="descriptionContent">Dynamic description</span></template>

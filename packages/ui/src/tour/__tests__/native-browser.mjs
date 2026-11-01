@@ -29,6 +29,7 @@ const alias = Object.fromEntries(
 alias.vue = path.join(repo, 'node_modules/vue/dist/vue.esm-bundler.js');
 let server, browser, page, failure;
 const diagnostics = [];
+const alignmentMetrics = [];
 let behaviorPassed = false;
 const started = performance.now();
 try {
@@ -61,6 +62,9 @@ window.tourState={patch:k=>fixture.value.patch(k),events:()=>fixture.value.event
     window.tourFrames = new Set();
     window.tourListeners = [];
     window.addEventListener('error', (event) => window.tourErrors.push(event.message));
+    window.addEventListener('unhandledrejection', (event) =>
+      window.tourErrors.push(String(event.reason)),
+    );
     const Resize = window.ResizeObserver;
     window.ResizeObserver = class extends Resize {
       targets = new Set();
@@ -137,21 +141,33 @@ window.tourState={patch:k=>fixture.value.patch(k),events:()=>fixture.value.event
       () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
     );
   const popup = page.locator('#native-tour');
-  const snapshot = () =>
-    popup.evaluate((root) => {
+  const snapshot = (targetSelector = '#tour-target-one') =>
+    popup.evaluate((root, targetSelector) => {
       const prefix = root.classList.contains('orbit-tour') ? 'orbit-tour' : 'apollo-tour';
       const mask = root.parentElement.querySelector(`.${prefix}-mask`);
-      const target = document.querySelector('#tour-target-one').getBoundingClientRect();
+      const target = document.querySelector(targetSelector).getBoundingClientRect();
       const hole = mask?.querySelector('mask > rect[fill="black"]');
       const rect = root.getBoundingClientRect();
       const close = root.querySelector(`.${prefix}-close`);
+      const arrow = root.querySelector(`.${prefix}-arrow`);
+      const arrowRect = arrow?.getBoundingClientRect();
       return {
         z: getComputedStyle(root).zIndex,
         maskZ: mask && getComputedStyle(mask).zIndex,
         close: close && getComputedStyle(close).width,
         width: rect.width,
         top: rect.top,
+        bottom: rect.bottom,
+        targetTop: target.top,
         targetBottom: target.bottom,
+        placement: root.className,
+        points: window.tourState.events().lastAlign?.points,
+        arrow: arrowRect && {
+          top: arrowRect.top,
+          bottom: arrowRect.bottom,
+          topInset: getComputedStyle(arrow).top,
+          bottomInset: getComputedStyle(arrow).bottom,
+        },
         hole: hole && {
           x: Number(hole.getAttribute('x')),
           y: Number(hole.getAttribute('y')),
@@ -160,7 +176,7 @@ window.tourState={patch:k=>fixture.value.patch(k),events:()=>fixture.value.event
         },
         owner: root.parentElement.id,
       };
-    });
+    }, targetSelector);
   await page.locator('#tour-opener').click();
   await popup.waitFor({ state: 'visible' });
   await page.waitForFunction(
@@ -198,6 +214,68 @@ window.tourState={patch:k=>fixture.value.patch(k),events:()=>fixture.value.event
       document.querySelector('.apollo-tooltip') &&
       getComputedStyle(document.querySelector('.apollo-tooltip')).zIndex === '2700',
   );
+
+  // Issue #71: keep final points, placement class and the real styled arrow in sync.
+  const beforeFlip = (await page.evaluate(() => window.tourState.events())).align;
+  const originalLayout = await page.locator('#tour-target-one').evaluate((target) => {
+    const original = {
+      target: target.style.cssText,
+      minHeight: document.body.style.minHeight,
+    };
+    target.style.cssText = 'position:absolute;left:950px;top:900px';
+    document.body.style.minHeight = '1800px';
+    return original;
+  });
+  await page.setViewportSize({ width: 1440, height: 980 });
+  await page.waitForFunction((before) => window.tourState.events().align > before, beforeFlip);
+  await ticks();
+  const assertTopAligned = (value) => {
+    assert.deepEqual(value.points, ['bc', 'tc']);
+    assert.ok(
+      value.placement.split(' ').includes('apollo-tour-placement-top'),
+      JSON.stringify(value),
+    );
+    assert.ok(Math.abs(value.bottom - value.targetTop + 18) < 2, JSON.stringify(value));
+    assert.ok(Math.abs(value.arrow.top - value.bottom) < 2, JSON.stringify(value));
+    assert.equal(value.arrow.bottomInset, '0px');
+  };
+  const flipped = await snapshot();
+  alignmentMetrics.push({ phase: 'bottom-flips-to-top', ...flipped });
+  assertTopAligned(flipped);
+  await popup.evaluate((root) => {
+    window.tourAlignedPopup = root;
+  });
+  const beforeFlippedScroll = (await page.evaluate(() => window.tourState.events())).align;
+  await page.evaluate(() => window.scrollTo(0, 60));
+  await page.waitForFunction(
+    (before) => window.scrollY === 60 && window.tourState.events().align > before,
+    beforeFlippedScroll,
+  );
+  await ticks();
+  const scrolled = await snapshot();
+  alignmentMetrics.push({ phase: 'scroll-retains-final-alignment', ...scrolled });
+  assertTopAligned(scrolled);
+  assert.ok(Math.abs(scrolled.top - flipped.top + 60) < 2, JSON.stringify(scrolled));
+  assert.equal(await popup.evaluate((root) => root === window.tourAlignedPopup), true);
+  await page.screenshot({ path: '/tmp/apollo-issue71-tour-flipped.png' });
+
+  await page.locator('#tour-target-one').evaluate((target, original) => {
+    target.style.cssText = original.target;
+    document.body.style.minHeight = original.minHeight;
+    window.scrollTo(0, 0);
+  }, originalLayout);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.waitForFunction(
+    () => window.tourState.events().lastAlign?.points?.join('/') === 'tc/bc',
+  );
+  await ticks();
+  const restored = await snapshot();
+  assert.ok(restored.placement.split(' ').includes('apollo-tour-placement-bottom'));
+  assert.ok(Math.abs(restored.top - restored.targetBottom - 18) < 2, JSON.stringify(restored));
+  assert.ok(Math.abs(restored.arrow.bottom - restored.top) < 2, JSON.stringify(restored));
+  assert.equal(await popup.evaluate((root) => root === window.tourAlignedPopup), true);
+  alignmentMetrics.push({ phase: 'target-return-restores-bottom', ...restored });
+
   const draft = popup.getByRole('textbox', { name: 'Tour draft' });
   await draft.fill('Retained input');
   await draft.focus();
@@ -254,6 +332,12 @@ window.tourState={patch:k=>fixture.value.patch(k),events:()=>fixture.value.event
     () => document.querySelector('#native-tour .apollo-tour-title')?.textContent === 'Guide 1',
   );
   assert.equal(await page.evaluate(() => window.tourState.originsStable()), true);
+  const advanced = await snapshot('#tour-target-two');
+  assert.deepEqual(advanced.points, ['tc', 'bc']);
+  assert.ok(advanced.placement.split(' ').includes('apollo-tour-placement-bottom'));
+  assert.ok(Math.abs(advanced.top - advanced.targetBottom - 24) < 2, JSON.stringify(advanced));
+  assert.ok(Math.abs(advanced.arrow.bottom - advanced.top) < 2, JSON.stringify(advanced));
+  alignmentMetrics.push({ phase: 'next-step-retains-effective-alignment', ...advanced });
   assert.equal(
     await popup.locator('.apollo-tour-next-btn').evaluate((button) => button === window.tourNext),
     true,
@@ -429,6 +513,7 @@ const result = {
   exitCode: failure || diagnostics.length ? 1 : 0,
   durationMs: Math.round(performance.now() - started),
   diagnostics,
+  alignmentMetrics,
   ...(failure ? { failure: failure.stack ?? String(failure) } : {}),
 };
 await writeFile('/tmp/apollo-tour-browser-result.json', `${JSON.stringify(result, null, 2)}\n`);

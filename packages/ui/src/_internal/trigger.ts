@@ -381,6 +381,8 @@ export const Trigger = defineComponent({
         flipMemory.value,
       );
       flipMemory.value = outcome.flip;
+      // Keep the request unchanged while exposing the engine's effective placement.
+      const effectiveAlign: TriggerAlign = { ...placementInfo, points: outcome.points };
 
       // ── stretch（rc-trigger 的 stretchStyle：'minWidth' ⇒ 浮层 min-width = 目标宽）──
       // 用 getBoundingClientRect（rc 同款，**不取整** —— offsetWidth 的整数化会让
@@ -418,9 +420,9 @@ export const Trigger = defineComponent({
         arrowY: outcome.arrowY,
         scaleX: result.scaleX,
         scaleY: result.scaleY,
-        align: placementInfo,
+        align: effectiveAlign,
       };
-      props.onPopupAlign?.(ele, placementInfo);
+      props.onPopupAlign?.(ele, effectiveAlign);
     };
 
     /** 合帧：同一 tick 内多次触发只对齐一次（rc 的 alignCountRef 协议）。 */

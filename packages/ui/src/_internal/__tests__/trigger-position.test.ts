@@ -1,8 +1,8 @@
-import { getPlacements } from '@apollo-design/position';
+import { getPlacements, type Placement } from '@apollo-design/position';
 import { mount, type VueWrapper } from '@vue/test-utils';
 import { afterEach, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
-import { Trigger } from '../trigger';
+import { Trigger, type TriggerAlign } from '../trigger';
 
 const wrappers: VueWrapper[] = [];
 afterEach(() => {
@@ -129,3 +129,116 @@ it.each<{ mode: 'visible' | 'scroll' | 'visibleFirst'; top: number }>([
     expect(popup.style.top).toBe(`${top}px`);
   });
 });
+
+it.each<{
+  placement: Placement;
+  target: [number, number];
+  actual: Placement;
+  arrowSide: 'top' | 'bottom' | 'left' | 'right';
+  oppositeSide: 'top' | 'bottom' | 'left' | 'right';
+}>([
+  {
+    placement: 'bottom',
+    target: [150, 260],
+    actual: 'top',
+    arrowSide: 'bottom',
+    oppositeSide: 'top',
+  },
+  {
+    placement: 'top',
+    target: [150, 10],
+    actual: 'bottom',
+    arrowSide: 'top',
+    oppositeSide: 'bottom',
+  },
+  {
+    placement: 'right',
+    target: [350, 120],
+    actual: 'left',
+    arrowSide: 'right',
+    oppositeSide: 'left',
+  },
+  {
+    placement: 'left',
+    target: [10, 120],
+    actual: 'right',
+    arrowSide: 'left',
+    oppositeSide: 'right',
+  },
+  {
+    placement: 'bottom',
+    target: [150, 100],
+    actual: 'bottom',
+    arrowSide: 'top',
+    oppositeSide: 'bottom',
+  },
+  { placement: 'top', target: [150, 120], actual: 'top', arrowSide: 'bottom', oppositeSide: 'top' },
+  {
+    placement: 'right',
+    target: [150, 120],
+    actual: 'right',
+    arrowSide: 'left',
+    oppositeSide: 'right',
+  },
+  {
+    placement: 'left',
+    target: [150, 120],
+    actual: 'left',
+    arrowSide: 'right',
+    oppositeSide: 'left',
+  },
+])(
+  'keeps $placement → $actual coordinates, placement, arrow and notification consistent',
+  async ({ placement, target: [x, y], actual, arrowSide, oppositeSide }) => {
+    for (const [name, value] of [
+      ['clientWidth', 400],
+      ['clientHeight', 300],
+      ['scrollWidth', 400],
+      ['scrollHeight', 300],
+    ] as const) {
+      vi.spyOn(document.documentElement, name, 'get').mockReturnValue(value);
+    }
+    const wrapper = render(document.body, document.body);
+    await vi.waitFor(() => expect(document.querySelector('.position-trigger')).not.toBeNull());
+    const target = wrapper.get('button').element;
+    const popup = document.querySelector<HTMLElement>('.position-trigger');
+    if (!popup) throw new Error('Expected an actual popup');
+    vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(new DOMRect(x, y, 40, 20));
+    vi.spyOn(popup, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 80));
+    const builtinPlacements = getPlacements({ arrowWidth: 4, borderRadius: 6, offset: 4 });
+    const popupAlign: TriggerAlign = {
+      htmlRegion: 'visible',
+      dynamicInset: false,
+      targetOffset: [0, 0],
+    };
+    const input = JSON.stringify({ builtinPlacements, popupAlign });
+    const onPopupAlign = vi.fn<(element: HTMLElement, align: TriggerAlign) => void>();
+    await wrapper.setProps({
+      placement,
+      builtinPlacements,
+      popupAlign,
+      popupStyle: { width: '100px', height: '80px' },
+      arrow: {},
+      onPopupAlign,
+    });
+    await vi.waitFor(() => expect(onPopupAlign).toHaveBeenCalled());
+    await nextTick();
+    const left = Number.parseFloat(popup.style.left);
+    const top = Number.parseFloat(popup.style.top);
+    if (actual === 'top') expect(top + 80).toBe(y - 6);
+    if (actual === 'bottom') expect(top).toBe(y + 20 + 6);
+    if (actual === 'left') expect(left + 100).toBe(x - 6);
+    if (actual === 'right') expect(left).toBe(x + 40 + 6);
+    expect(onPopupAlign).toHaveBeenLastCalledWith(popup, {
+      ...builtinPlacements[placement],
+      ...popupAlign,
+      points: builtinPlacements[actual].points,
+    });
+    expect(popup.classList.contains(`position-trigger-placement-${actual}`)).toBe(true);
+    const arrow = popup.querySelector<HTMLElement>('.position-trigger-arrow');
+    if (!arrow) throw new Error('Expected an actual arrow');
+    expect(arrow.style[arrowSide]).toBe('0px');
+    expect(arrow.style[oppositeSide]).toBe('');
+    expect(JSON.stringify({ builtinPlacements, popupAlign })).toBe(input);
+  },
+);
