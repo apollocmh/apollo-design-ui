@@ -21,7 +21,12 @@ const columns: TableColumnsType = [
       rowSpan: index === 0 ? 3 : index === 3 ? 2 : 0,
     }),
   },
-  { title: 'Age', dataIndex: 'age' },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    // 第二行跨 Age + Home phone，与 sharedOnCell 的 colSpan: 0 成对。
+    onCell: (_record, rowIndex) => ({ colSpan: rowIndex === 1 ? 2 : 1 }),
+  },
   { title: 'Home phone', dataIndex: 'tel', onCell: sharedOnCell },
   { title: 'Phone', dataIndex: 'phone' },
   { title: 'Address', dataIndex: 'address' },

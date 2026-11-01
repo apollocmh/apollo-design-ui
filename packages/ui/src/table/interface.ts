@@ -387,6 +387,7 @@ export type GetPopupContainer = (triggerNode: HTMLElement) => HTMLElement | Shad
 
 export interface TableScrollConfig {
   x?: number | true | string;
+  /** Body height limit: numbers are CSS pixels, including 0. Virtual tables require a number. */
   y?: number | string;
   scrollToFirstRowOnChange?: boolean;
 }

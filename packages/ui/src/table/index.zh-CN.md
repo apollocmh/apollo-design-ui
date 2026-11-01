@@ -59,6 +59,8 @@ import { Table } from '@apollo-design/ui';
 
 > `virtual` 需要数值型 `scroll.x`、`scroll.y`；估算行高由当前 Token 和 size 推导。
 
+`scroll.y` 的数值以 CSS 像素为单位；`0` 保留明确的零高度表体。非虚拟表格也接受 CSS 长度字符串，移除 `scroll.y` 会取消高度限制。
+
 
 ### Slots
 
@@ -103,11 +105,13 @@ import { Table } from '@apollo-design/ui';
 
 `columns` 的每一项支持分组列（`children`）与普通列，`ColumnGroupType | ColumnType`。
 
+`onCell(record, rowIndex)` 返回原生单元格属性，包含 `colSpan`、`rowSpan` 和事件监听。跨度为 `0` 时不渲染该格，其位置必须由另一格的跨度覆盖。
+
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | align | 列内容的对齐方式 | `'left' \| 'right' \| 'center'` | - |
 | colSpan | 表头列合并（设 0 不渲染表头） | number | - |
-| onCell | 单元格事件透传 | (record: T, rowIndex) => Record<string, unknown> | - |
+| onCell | 单元格属性、合并跨度和原生事件 | (record: T, rowIndex) => Record<string, unknown> | - |
 | onHeaderCell | 表头单元格事件透传 | (column) => Record<string, unknown> | - |
 | defaultSortOrder | 默认排序顺序 | `'ascend' \| 'descend'` | - |
 | ellipsis | 超过宽度将自动省略（单行） | boolean \| { showTitle?: boolean } | false |

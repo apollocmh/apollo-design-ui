@@ -1,7 +1,13 @@
 import { expectTypeOf, test } from 'vitest';
 import { h, type VNodeChild } from 'vue';
 import { Summary, Table } from '../index';
-import type { ColumnsType, TableProps, TableRef, TableSlots } from '../interface';
+import type {
+  ColumnsType,
+  TableProps,
+  TableRef,
+  TableScrollConfig,
+  TableSlots,
+} from '../interface';
 
 test('preserves native generic rows, slots, summary, expose and invalid inputs', () => {
   interface User {
@@ -93,6 +99,50 @@ test('preserves native generic rows, slots, summary, expose and invalid inputs',
     const wrongRecord: NonNullable<Slots['bodyCell']> = ({ record }: { record: { id: number } }) =>
       h('span', record.id);
     return [bad, old, nested, wrongField, wrongRecord];
+  };
+  void negative;
+});
+
+test('keeps scroll lengths and onCell spans on the actual generic constructor', () => {
+  interface Row {
+    id: number;
+    age: number;
+  }
+  type Props = Parameters<typeof Table<Row>>[0];
+  const props: Props = {
+    dataSource: [{ id: 1, age: 32 }],
+    rowKey: 'id',
+    columns: [
+      {
+        dataIndex: 'age',
+        onCell: (record, index) => ({
+          colSpan: index === 1 ? 2 : 1,
+          rowSpan: record.id === 1 ? 2 : 0,
+          'data-age': record.age,
+        }),
+      },
+    ],
+  };
+  for (const y of [0, 240, '25vh']) h(Table<Row>, { ...props, scroll: { y } });
+  expectTypeOf<NonNullable<Props['scroll']>['y']>().toEqualTypeOf<number | string | undefined>();
+  expectTypeOf<TableScrollConfig['y']>().toEqualTypeOf<number | string | undefined>();
+  // Columns keep unknown metadata; that does not define a second cell service.
+  type Column = NonNullable<Props['columns']>[number];
+  expectTypeOf<Column['customCell']>().toBeUnknown();
+  const negative = () => {
+    const height: Props = {
+      scroll: {
+        // @ts-expect-error The real constructor accepts a CSS length or number, not a boolean.
+        y: true,
+      },
+    };
+    const metadata: Column = {
+      dataIndex: 'age',
+      customCell: () => ({ rowSpan: 2 }),
+    };
+    // @ts-expect-error Unknown column metadata is not a callable public cell service.
+    metadata.customCell();
+    return [height, metadata];
   };
   void negative;
 });

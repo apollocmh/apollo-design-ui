@@ -567,7 +567,11 @@ const NativeTable = defineComponent(
     const pureColWidths = computed(() => colsKeys.value.map((k) => colsWidths.value.get(k)));
     const colWidths = computed(() => pureColWidths.value);
     const stickyOffsets = useStickyOffsets(colWidths, filledColumns);
-    const fixHeader = computed(() => Boolean(mergedScroll.value?.y));
+    const fixHeader = computed(() => {
+      const y = mergedScroll.value?.y;
+      // Zero is an explicit CSS height, so it keeps the normal/virtual body branch.
+      return y === 0 || Boolean(y);
+    });
     const horizonScroll = computed(() => {
       return Boolean(mergedScroll.value?.x) || Boolean(expandableConfig.value.fixed);
     });

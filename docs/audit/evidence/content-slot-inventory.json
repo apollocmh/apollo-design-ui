@@ -50,6 +50,7 @@
           "packages/ui/src/affix/__tests__/index.test.ts",
           "packages/ui/src/affix/__tests__/native-contracts.test.ts",
           "packages/ui/src/affix/__tests__/s54-issue54.test.ts",
+          "packages/ui/src/affix/__tests__/s72-outer-scroll.test.ts",
           "packages/ui/src/affix/__tests__/semantic.test.ts"
         ]
       },
@@ -15581,6 +15582,7 @@
           "packages/ui/src/table/__tests__/native-contracts.test.ts",
           "packages/ui/src/table/__tests__/native-data.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/scroll-span.test.ts",
           "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]
@@ -15733,6 +15735,7 @@
           "packages/ui/src/table/__tests__/native-contracts.test.ts",
           "packages/ui/src/table/__tests__/native-data.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/scroll-span.test.ts",
           "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]
@@ -15879,6 +15882,7 @@
           "packages/ui/src/table/__tests__/native-contracts.test.ts",
           "packages/ui/src/table/__tests__/native-data.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/scroll-span.test.ts",
           "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]
@@ -15923,7 +15927,7 @@
       "owner": "TableBodyCellSlotProps",
       "prop": "originNode",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/table/interface.ts:513",
+      "source": "packages/ui/src/table/interface.ts:514",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -15948,7 +15952,7 @@
       "owner": "TableComponents",
       "prop": "body",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:411",
+      "source": "packages/ui/src/table/interface.ts:412",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -15977,7 +15981,7 @@
       "owner": "TableComponents",
       "prop": "header",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:405",
+      "source": "packages/ui/src/table/interface.ts:406",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16004,7 +16008,7 @@
       "owner": "TableComponents",
       "prop": "table",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:404",
+      "source": "packages/ui/src/table/interface.ts:405",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16032,7 +16036,7 @@
       "owner": "TableHeaderCellSlotProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/table/interface.ts:517",
+      "source": "packages/ui/src/table/interface.ts:518",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -16062,6 +16066,7 @@
           "packages/ui/src/table/__tests__/native-contracts.test.ts",
           "packages/ui/src/table/__tests__/native-data.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/scroll-span.test.ts",
           "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]

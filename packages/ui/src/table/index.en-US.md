@@ -54,6 +54,8 @@ The `drag-reorder` example combines existing onRow/onHeaderCell hooks with nativ
 | onRow | Row event passthrough (click, mouseenter, ...) | (record, index) => Record<string, unknown> | - |
 | onHeaderRow | Header row event passthrough | (columns, index) => Record<string, unknown> | - |
 
+Numeric `scroll.y` values are CSS pixels; `0` keeps an explicit zero-height body. Non-virtual tables also accept CSS length strings; removing `scroll.y` removes that height limit. Virtual tables require numeric `scroll.x` and `scroll.y`.
+
 
 ### Slots
 
@@ -89,11 +91,13 @@ getCheckboxProps follows the actual selection kind: checkbox/radio change receiv
 
 ### ColumnsType
 
+`onCell(record, rowIndex)` returns native cell attributes, including `colSpan`, `rowSpan` and event listeners. A zero span omits that cell; another spanning cell must cover its position.
+
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | align | Alignment of the column content | `'left' \| 'right' \| 'center'` | - |
 | colSpan | Span of the header column (0 hides the header) | number | - |
-| onCell | Cell event passthrough | (record: T, rowIndex) => Record<string, unknown> | - |
+| onCell | Cell attributes, spans and native events | (record: T, rowIndex) => Record<string, unknown> | - |
 | onHeaderCell | Header cell event passthrough | (column) => Record<string, unknown> | - |
 | defaultSortOrder | Default sort order | `'ascend' \| 'descend'` | - |
 | ellipsis | Ellipsize long content to a single line | boolean \| { showTitle?: boolean } | false |
