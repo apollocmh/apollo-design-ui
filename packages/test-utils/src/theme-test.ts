@@ -72,6 +72,8 @@ const DEFAULT_TOKEN_OVERRIDE: ThemeTokenOverride = {
 export interface ThemeTestOptions extends RenderSource {
   /** 期望的 demo 条数。语义同 `demoTest` 的 `expectCount`。 */
   expectCount?: number;
+  /** 单个 demo 的完整渲染、更新和卸载预算（ms）；省略时使用 Vitest 默认值。 */
+  timeout?: number;
   /** 只跑这些态。默认四态全跑。 */
   variants?: readonly ThemeVariant[];
   /** `token-override` 态覆盖的 Seed Token。 */
@@ -152,10 +154,10 @@ export function themeTest(name: string, options: ThemeTestOptions): void {
           assertNoUnexpectedWarnings(capture.records, options.allow, `${context} → ${variant}`);
         });
 
-        // Each demo keeps its own failure location and normal test deadline.
+        // Each demo keeps its own failure location and individual test deadline.
         // The matrix still mounts, updates and disposes every original case.
         for (const testCase of cases) {
-          it(testCase.id, async () => {
+          it(testCase.id, { timeout: options.timeout }, async () => {
             const mounted = mountCase(testCase.render, {
               ...(options.global ? { global: options.global } : {}),
               // ThemeProvider 在**外**，调用方的 wrap 在**内**（见文件头）。
