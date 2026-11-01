@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 246,
+  "revision": 247,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12115,12 +12115,12 @@
   ],
   "finalAcceptance": {
     "status": "in_progress",
-    "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+    "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
     "gates": [
       {
         "dimension": "api",
         "status": "passed",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "Public API/type/behavior regressions and published consumers passed. Architecture evidence remains dated; historical acceptance is not promoted.",
         "checks": [
           {
@@ -12167,10 +12167,11 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "docs/KNOWN-ISSUES.md",
             "docs/audit/tools/stage2-demo-probe.mjs",
             "packages/docs/tests/menu-browser.mjs",
             "registry/vue-native-audit.json",
@@ -12182,13 +12183,13 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers, matrix and published artifacts are identical to the full run; only two Docs probes and six reviewed baselines changed."
+          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
         }
       },
       {
         "dimension": "tokens",
         "status": "in_progress",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
         "checks": [
           {
@@ -12212,7 +12213,7 @@
       {
         "dimension": "styles",
         "status": "failed",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "The current UI build completed CSS/SSR/export checks with exactly one failure: unchanged B6 budget, 13/73 entries, full 2236.7 KB. No size optimization or threshold change. Unchanged foundation build evidence remains dated and is not claimed as a new 151-check run.",
         "remainingBudget": {
           "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
@@ -12341,10 +12342,11 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "docs/KNOWN-ISSUES.md",
             "docs/audit/tools/stage2-demo-probe.mjs",
             "packages/docs/tests/menu-browser.mjs",
             "registry/vue-native-audit.json",
@@ -12356,13 +12358,13 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers, matrix and published artifacts are identical to the full run; only two Docs probes and six reviewed baselines changed."
+          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
         }
       },
       {
         "dimension": "unit",
         "status": "in_progress",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
@@ -12519,7 +12521,7 @@
       {
         "dimension": "interaction",
         "status": "in_progress",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
         "remediationChecks": [
           {
@@ -12604,7 +12606,7 @@
       {
         "dimension": "types",
         "status": "passed",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "Strict noEmit and all 2389 public type cases passed after the common build; only the two Docs probes and reviewed baseline/state files changed afterward. Production, dependency and type-check inputs unchanged.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
@@ -12770,10 +12772,11 @@
           "failed": 0
         },
         "frozenInputs": {
-          "candidateCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "docs/KNOWN-ISSUES.md",
             "docs/audit/tools/stage2-demo-probe.mjs",
             "packages/docs/tests/menu-browser.mjs",
             "registry/vue-native-audit.json",
@@ -12785,13 +12788,13 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers, matrix and published artifacts are identical to the full run; only two Docs probes and six reviewed baselines changed."
+          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
         }
       },
       {
         "dimension": "a11y",
         "status": "in_progress",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "First full runtime/coverage execution completed 786 files / 17335 tests with five unchanged-5000ms theme timeouts; 17330 passed. The two theme files passed all 161 focused cases without changing timeouts or assertions. A dedicated full coverage rerun is pending; focused recovery is not a fresh full-library pass. First failure and older validated evidence retained under unit.",
         "checks": [
           {
@@ -12815,7 +12818,7 @@
       {
         "dimension": "visual",
         "status": "passed",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
         "note": "Complete 1875-case comparison executed on frozen 1adf76dc; 1869 passed and six intended compact Timeline baselines were individually reviewed and updated. Both three-case official comparisons passed on ea70e52d. Exact ID union, no missing or duplicate cases; unchanged input/baseline checks support reuse. Original nonzero full comparison remains in firstCompleteComparison. No threshold or scenario removed.",
         "checks": [
           {
@@ -13578,10 +13581,11 @@
           "exact": 1875
         },
         "frozenInputs": {
-          "candidateCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "docs/KNOWN-ISSUES.md",
             "docs/audit/tools/stage2-demo-probe.mjs",
             "packages/docs/tests/menu-browser.mjs",
             "registry/vue-native-audit.json",
@@ -13593,14 +13597,14 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers, matrix and published artifacts are identical to the full run; only two Docs probes and six reviewed baselines changed."
+          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
         }
       },
       {
         "dimension": "docs",
-        "status": "failed",
-        "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
-        "note": "Docs types/tests and four unchanged browser projects passed. Stage2 lazy DatePicker locale activation now passes with all original assertions. Official Menu retest still fails one of 28 geometry assertions; initial-open sticky flip versus test precondition remains under read-only diagnosis. No blanket browser pass or product workaround claimed.",
+        "status": "passed",
+        "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+        "note": "All six existing Docs browser scopes now pass against the same prebuilt Docs/UI artifacts, plus Docs types/tests. The default-open vertical Menu can legitimately retain an overflow flip. The original preferred rightTop geometry assertion now runs after the existing real close/reopen, with all 28 assertions, timings, 3px/5px tolerances and console/error checks preserved. No Menu/Trigger/position product change. Original failed runs retained.",
         "remediation": {
           "scope": [
             "packages/docs/tests/demo-audit.test.ts",
@@ -13813,16 +13817,21 @@
             "log": "/tmp/apollo-final-targeted-ea70e52d-stage2-demo-probe.log"
           },
           {
-            "name": "menu-browser",
+            "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
             "command": [
               "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
               "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/menu-browser.mjs"
             ],
-            "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
-            "exitCode": 1,
+            "exitCode": 0,
             "signal": null,
-            "durationMs": 9280,
-            "log": "/tmp/apollo-final-targeted-ea70e52d-menu-browser.log"
+            "durationMs": 11201,
+            "log": "/tmp/apollo-final-menu-9f9f1677.log",
+            "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+            "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+            "outputRoot": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-menu-9f9f-fIusaK",
+            "frozenSource": true,
+            "name": "menu-browser",
+            "checksPassed": 28
           }
         ],
         "previousBrowserFailures": {
@@ -14030,6 +14039,56 @@
             "log": "/tmp/apollo-final-targeted-ea70e52d-stage2-demo-probe.log"
           },
           {
+            "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/menu-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11201,
+            "log": "/tmp/apollo-final-menu-9f9f1677.log",
+            "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+            "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+            "outputRoot": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-menu-9f9f-fIusaK",
+            "frozenSource": true,
+            "name": "menu-browser",
+            "checksPassed": 28
+          }
+        ],
+        "frozenInputs": {
+          "candidateCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+          "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+          "changedFiles": [
+            "docs/KNOWN-ISSUES.md",
+            "docs/audit/tools/stage2-demo-probe.mjs",
+            "packages/docs/tests/menu-browser.mjs",
+            "registry/vue-native-audit.json",
+            "tests/visual/baselines/apollo/manifest.json",
+            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
+            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
+            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
+            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
+            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
+            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
+          ],
+          "reuse": "Only two Docs browser probes, reviewed baselines and audit records changed after the complete run. Production source, dependencies, build/test configuration, renderers/matrix and actual published artifacts are identical. Relevant Docs probes and all six changed comparisons ran separately; runtime coverage rerun remains pending."
+        },
+        "previousTargetedAttempt": [
+          {
+            "name": "stage2-demo-probe",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "/Users/nanren/Code/apollo-design-ui/docs/audit/tools/stage2-demo-probe.mjs"
+            ],
+            "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10883,
+            "log": "/tmp/apollo-final-targeted-ea70e52d-stage2-demo-probe.log"
+          },
+          {
             "name": "menu-browser",
             "command": [
               "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
@@ -14042,23 +14101,18 @@
             "log": "/tmp/apollo-final-targeted-ea70e52d-menu-browser.log"
           }
         ],
-        "frozenInputs": {
-          "candidateCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
-          "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
-          "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
-          "changedFiles": [
-            "docs/audit/tools/stage2-demo-probe.mjs",
-            "packages/docs/tests/menu-browser.mjs",
-            "registry/vue-native-audit.json",
-            "tests/visual/baselines/apollo/manifest.json",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
-          ],
-          "reuse": "Production source, dependencies, configuration, renderers, matrix and published artifacts are identical to the full run; only two Docs probes and six reviewed baselines changed."
+        "placementFinding": {
+          "classification": "TEST_PRECONDITION",
+          "evidence": "/tmp/apollo-menu-sticky-flip-ea70e52d/summary.json",
+          "firstTitleY": 819.578,
+          "firstPopupY": 679,
+          "centerTitleY": 430.578,
+          "centerPopupY": 290,
+          "movedTogether": 389,
+          "stableFrames": 92,
+          "sameDom": true,
+          "afterRealReopen": "Preferred top alignment within original 3px",
+          "productChanges": false
         }
       }
     ]
