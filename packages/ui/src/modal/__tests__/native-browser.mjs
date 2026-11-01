@@ -34,13 +34,18 @@ await writeFile(
   `<!doctype html><html lang="en"><head><title>Modal native contracts</title><link rel="icon" href="data:,"><style>*,*::before,*::after{box-sizing:border-box;animation:none!important;transition:none!important}</style></head><body><div id="app"></div><script type="module">
 import {createApp,defineComponent,h,nextTick,shallowRef} from 'vue';
 import NativeModal from '/@fs${repo}/packages/ui/src/modal/__tests__/fixtures/NativeModal.vue';
+import PurePanelDemo from '/@fs${repo}/packages/ui/src/modal/demo/render-panel.vue';
 import ConfigProvider from '/@fs${repo}/packages/ui/src/config-provider/ConfigProvider.ts';
+import {darkAlgorithm,getDesignToken,transformToken} from '@apollo-design/theme';
 import {genModalStyle} from '/@fs${repo}/packages/ui/src/modal/style/index.ts';
 import {genButtonStyle} from '/@fs${repo}/packages/ui/src/button/style/index.ts';
-const css=document.createElement('style');css.textContent=genModalStyle('apollo')+genModalStyle('brand')+genButtonStyle('apollo');document.head.append(css);
+import {genSpaceStyle} from '/@fs${repo}/packages/ui/src/space/style/index.ts';
+for(const [name,value]of Object.entries(transformToken(getDesignToken()).vars))document.documentElement.style.setProperty(name,value);
+const css=document.createElement('style');css.textContent=genModalStyle('apollo')+genModalStyle('brand')+genButtonStyle('apollo')+genSpaceStyle('apollo');document.head.append(css);
 const prefix=shallowRef('apollo');const theme=shallowRef({components:{Modal:{contentBg:'#112233',titleFontSize:23,titleLineHeight:2,headerBg:'#223344',footerBg:'#334455',titleColor:'#445566'}}});
-const app=createApp(defineComponent({setup:()=>()=>h(ConfigProvider,{theme:theme.value,prefixCls:prefix.value},()=>h(NativeModal))}));app.mount('#app');
-window.modalState={async prefix(){prefix.value='brand';await nextTick()},async patch(){theme.value={components:{Modal:{contentBg:'#f6ffed',titleFontSize:'19px',titleLineHeight:0,headerBg:'#fff1f0',footerBg:'#d6e4ff',titleColor:'#123456'}}};await nextTick()},unmount(){app.unmount()}};
+const darkPanels=shallowRef(false);
+const app=createApp(defineComponent({setup:()=>()=>[h(ConfigProvider,{theme:theme.value,prefixCls:prefix.value},()=>h(NativeModal)),h(ConfigProvider,{theme:darkPanels.value?{algorithm:darkAlgorithm}:undefined},()=>h('section',{id:'pure-panel-demo'},[h(PurePanelDemo)]))]}));app.mount('#app');
+window.modalState={async prefix(){prefix.value='brand';await nextTick()},async patch(){theme.value={components:{Modal:{contentBg:'#f6ffed',titleFontSize:'19px',titleLineHeight:0,headerBg:'#fff1f0',footerBg:'#d6e4ff',titleColor:'#123456'}}};await nextTick()},async pureTheme(dark){darkPanels.value=dark;await nextTick()},unmount(){app.unmount()}};
 </script></body></html>`,
 );
 let server, browser;
@@ -56,12 +61,75 @@ try {
   await server.listen();
   browser = (await launchBrowser()).browser;
   const page = await browser.newPage({ viewport: { width: 1100, height: 800 } });
+  await page.addInitScript(() => {
+    window.modalErrors = [];
+    window.addEventListener('error', (event) => window.modalErrors.push(event.message));
+    window.addEventListener('unhandledrejection', (event) =>
+      window.modalErrors.push(String(event.reason)),
+    );
+  });
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => {
-    if (m.type() === 'error' || m.text().includes('[Vue warn]')) errors.push(m.text());
+    if (m.type() === 'error' || m.type() === 'warning') errors.push(m.text());
   });
   await page.goto(server.resolvedUrls.local[0]);
+  const purePanels = [];
+  for (const dark of [false, true]) {
+    await page.evaluate((value) => window.modalState.pureTheme(value), dark);
+    const panels = await page
+      .locator('#pure-panel-demo .apollo-modal-pure-panel')
+      .evaluateAll((roots) =>
+        roots.map((root) => {
+          const rect = root.getBoundingClientRect();
+          const container = root.querySelector('.apollo-modal-container');
+          const content = root.querySelector('.apollo-modal-confirm-content');
+          const box = (element) => {
+            const bounds = element.getBoundingClientRect();
+            return {
+              top: bounds.top,
+              bottom: bounds.bottom,
+              right: bounds.right,
+              width: bounds.width,
+            };
+          };
+          return {
+            top: rect.top,
+            bottom: rect.bottom,
+            right: rect.right,
+            width: rect.width,
+            height: rect.height,
+            container: box(container),
+            content: content && {
+              ...box(content),
+              widthStyle: content.style.width,
+              heightStyle: content.style.height,
+            },
+            background: getComputedStyle(container).backgroundColor,
+          };
+        }),
+      );
+    assert.equal(panels.length, 4);
+    for (const [index, value] of panels.entries()) {
+      assert.equal(value.height, [200, 150, 200, 200][index]);
+      if (index > 0) {
+        assert.equal(value.width, [0, 200, 300, 380][index]);
+        assert.ok(value.top >= panels[index - 1].bottom + 15, JSON.stringify(panels));
+      }
+      assert.ok(value.container.bottom <= value.bottom + 1, JSON.stringify(value));
+      if (value.content) {
+        assert.equal(value.content.widthStyle, '');
+        assert.equal(value.content.heightStyle, '');
+        assert.ok(value.content.right <= value.right + 1, JSON.stringify(value));
+        assert.ok(value.content.bottom <= value.bottom + 1, JSON.stringify(value));
+      }
+    }
+    purePanels.push({ theme: dark ? 'dark' : 'light', panels });
+    await page.locator('#pure-panel-demo').screenshot({
+      path: `/tmp/apollo-issue74-panels-${dark ? 'dark' : 'light'}.png`,
+    });
+  }
+  assert.notEqual(purePanels[0].panels[1].background, purePanels[1].panels[1].background);
   await page.locator('#native-open').click();
   const panel = page.locator('#native-modal');
   await panel.waitFor({ state: 'visible' });
@@ -71,7 +139,7 @@ try {
     () => document.querySelector('#native-panel-ref')?.textContent === 'native-modal',
   );
   const style = (selector, property) =>
-    page
+    panel
       .locator(selector)
       .evaluate((el, name) => getComputedStyle(el).getPropertyValue(name), property);
   assert.equal(await style('.apollo-modal-container', 'background-color'), 'rgb(17, 34, 51)');
@@ -124,6 +192,7 @@ try {
   await page.evaluate(() => window.modalState.unmount());
   assert.equal(await page.locator('[role="dialog"]').count(), 0);
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  errors.push(...(await page.evaluate(() => window.modalErrors)));
   assert.deepEqual(errors, []);
   console.log(
     JSON.stringify({
@@ -138,8 +207,10 @@ try {
         'OK stays open',
         'Escape/reopen/close/restore',
         'unmount/scroll-lock cleanup',
+        'PurePanel Demo root-only dimensions and no overlap in light/dark',
       ],
       errors,
+      purePanels,
     }),
   );
 } finally {

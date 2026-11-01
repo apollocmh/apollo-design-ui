@@ -1,7 +1,7 @@
 import { en_US as enUS, zh_CN as zhCN } from '@apollo-design/locale';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, mergeProps, nextTick, ref, shallowRef } from 'vue';
+import { defineComponent, h, mergeProps, nextTick, ref, type StyleValue, shallowRef } from 'vue';
 import type { ConfigProviderProps } from '../../config-provider';
 import ConfigProvider from '../../config-provider';
 import destroyFns from '../destroyFns';
@@ -496,6 +496,66 @@ describe('Modal native contracts', () => {
     expect(wrapper.find('.apollo-modal-confirm-title').text()).toBe('0');
     expect(wrapper.find('.apollo-modal-confirm-content').text()).toBe('0');
   });
+
+  it.each([undefined, 'success', 'confirm'] as const)(
+    'keeps %s PurePanel native dimensions and events on its root',
+    async (type) => {
+      vi.useFakeTimers();
+      const style = shallowRef<StyleValue>([
+        { width: '240px', height: '160px', backgroundColor: 'rgb(1, 2, 3)' },
+      ]);
+      const clicked = vi.fn();
+      const wrapper = host(
+        defineComponent({
+          setup: () => () =>
+            h(
+              Modal._InternalPanelDoNotUseOrYouWillBeFired,
+              {
+                type,
+                title: 'Panel title',
+                id: 'owned-panel',
+                class: 'owned-root',
+                'data-owned': 'root',
+                style: style.value,
+                styles: { body: { color: 'rgb(4, 5, 6)' } },
+                onClick: clicked,
+              },
+              { default: () => h('button', { type: 'button', class: 'body-action' }, 'Body') },
+            ),
+        }),
+      );
+      await nextTick();
+      const panel = wrapper.get<HTMLElement>('#owned-panel');
+      const content = panel.get<HTMLElement>(
+        type ? '.apollo-modal-confirm-content' : '.apollo-modal-body',
+      );
+      expect(panel.classes()).toContain('owned-root');
+      expect(panel.element.style.width).toBe('240px');
+      expect(panel.element.style.height).toBe('160px');
+      expect(panel.element.style.backgroundColor).toBe('rgb(1, 2, 3)');
+      expect(content.element.style.width).toBe('');
+      expect(content.element.style.height).toBe('');
+      expect(content.element.style.backgroundColor).toBe('');
+      expect(content.element.style.color).toBe('rgb(4, 5, 6)');
+      expect(content.classes()).not.toContain('owned-root');
+      expect(content.attributes('data-owned')).toBeUndefined();
+      await content.get('.body-action').trigger('click');
+      expect(clicked).toHaveBeenCalledTimes(1);
+      style.value = 'width:260px;height:180px;background-color:rgb(7,8,9)';
+      await nextTick();
+      expect(panel.element.style.width).toBe('260px');
+      expect(panel.element.style.height).toBe('180px');
+      expect(panel.element.style.backgroundColor).toBe('rgb(7, 8, 9)');
+      expect(content.element.style.width).toBe('');
+      expect(content.element.style.height).toBe('');
+      style.value = undefined;
+      await nextTick();
+      expect(panel.element.style.width).toBe('');
+      expect(panel.element.style.height).toBe('');
+      expect(panel.element.style.backgroundColor).toBe('');
+      expect(content.element.style.color).toBe('rgb(4, 5, 6)');
+    },
+  );
 
   it('restores the trigger and releases its panel ref when an open instance unmounts', async () => {
     vi.useFakeTimers();
