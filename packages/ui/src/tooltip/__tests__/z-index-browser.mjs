@@ -167,7 +167,11 @@ try {
   await server.listen();
   const launched = await launchBrowser();
   browser = launched.browser;
-  result.browser = { version: browser.version(), channel: launched.channel };
+  result.browser = {
+    version: browser.version(),
+    channel: launched.channel,
+    executablePath: launched.executablePath,
+  };
   result.base = server.resolvedUrls.local[0];
   for (const item of cases) {
     const context = await browser.newContext({

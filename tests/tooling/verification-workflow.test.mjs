@@ -418,6 +418,18 @@ test('CI keeps PR feedback scoped and Docs browser checks on the single explicit
   assert.equal(ci.jobs.acceptance.env?.TMPDIR, undefined);
   const acceptance = ci.jobs.acceptance.steps.find((step) => step.run?.includes('verify-full.mjs'));
   assert.equal(acceptance.env.TMPDIR, '$' + '{{ runner.temp }}');
+  const chrome = ci.jobs.acceptance.steps.find((step) => step.id === 'visual_chrome');
+  const baseline = JSON.parse(
+    fs.readFileSync(path.join(root, 'tests/visual/baselines/apollo/manifest.json'), 'utf8'),
+  );
+  const versions = new Set(
+    Object.values(baseline.entries).map((entry) => entry.environment.split('/')[2]),
+  );
+  assert.deepEqual([...versions], [chrome.env.APOLLO_BASELINE_CHROME_VERSION]);
+  assert.equal(
+    acceptance.env.APOLLO_CHROME_EXECUTABLE,
+    '$' + '{{ steps.visual_chrome.outputs.executable }}',
+  );
   const docs = read('docs-ci.yml');
   assert.deepEqual(Object.keys(docs.on), ['workflow_dispatch']);
   const docsCommands = docs.jobs.docs.steps.flatMap((step) => step.run ?? '').join('\n');

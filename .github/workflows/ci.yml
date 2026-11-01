@@ -72,9 +72,21 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install visual browser
         run: pnpm exec playwright install --with-deps chromium
+      - name: Install the exact approved visual Chrome
+        id: visual_chrome
+        env:
+          APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
+        run: |
+          set -eu
+          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
+          ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
+          apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
+          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
       - name: One build, coverage/runtime once, immutable consumers and full native visuals
         env:
           TMPDIR: ${{ runner.temp }}
+          APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
         run: node scripts/verify-full.mjs --report /tmp/final-acceptance.json
       - name: Package the same artifacts for optional reference diagnostics
         if: ${{ inputs.reference_visual }}

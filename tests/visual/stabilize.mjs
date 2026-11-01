@@ -10,8 +10,11 @@
  * （`playwright install chromium` 直接报 `does not support chromium on mac12`）。
  * 所以默认走 `channel: 'chrome'` 用系统 Chrome；只有在拿不到系统 Chrome 时才退回
  * Playwright 自带的 Chromium（macOS 13+ 的机器上会走这条）。
+ * CI 可用 APOLLO_CHROME_EXECUTABLE 指定固定版本的真实 Chrome；配置后启动失败直接
+ * 抛错，避免静默回退到不同版本的浏览器。
  */
 
+import { isAbsolute } from 'node:path';
 import { chromium } from 'playwright';
 
 /** 注入到每个页面的稳定化 CSS。 */
@@ -60,9 +63,18 @@ export const STABILIZE_INIT = () => {
 
 /**
  * 启动浏览器。
- * @returns {Promise<{browser: import('playwright').Browser, channel: string}>}
+ * @returns {Promise<{browser: import('playwright').Browser, channel: string, executablePath?: string}>}
  */
 export async function launchBrowser() {
+  const executablePath = process.env.APOLLO_CHROME_EXECUTABLE;
+  if (executablePath !== undefined) {
+    if (!isAbsolute(executablePath)) {
+      throw new Error('APOLLO_CHROME_EXECUTABLE must be a non-empty absolute path.');
+    }
+    const browser = await chromium.launch({ channel: 'chrome', executablePath });
+    return { browser, channel: '系统 Chrome', executablePath };
+  }
+
   // 先试系统 Chrome（mac12 的唯一可行解），失败再退回自带 Chromium。
   const attempts = [
     { channel: 'chrome', label: '系统 Chrome' },
