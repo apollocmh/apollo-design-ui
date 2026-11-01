@@ -85,4 +85,4 @@ CI 修正的定向验证为 58 项 tooling 和固定官方 Chrome 的 Empty / Re
 
 标签 CI 复验单独跟进。旧取消运行的实际截图已查看并按原比较阈值复核，确认有约 15px 的经典滚动槽差额及部分文字/Canvas 差异；批准机器使用自动叠加滚动条和中文区域设置。云端具体字体及原生偏好仍需实测，尚不能把所有差异归因于字体。当前不接受新截图、不降低视觉标准，用少量代表案例做原生环境对照。
 
-短对照运行 [41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353) 对应独立临时分支 `ci/v017-visual-environment` 的 `1c2b726a`。六个既有用例依次核对原生配置、叠加滚动条、中文语言/区域三种环境，原始失败、实际字体、Canvas、截图和差异均留存。只修改临时 runner 偏好，不改变组件源码、基线或阈值，不取消正在执行的完整复验；结果待跟进。
+短对照运行 [41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353) 对应独立临时分支 `ci/v017-visual-environment` 的 `1c2b726a`，实际耗时 8 分 41 秒，结论 failure。六个既有用例依次核对原生配置、叠加滚动条、中文语言/区域，分别 0/6、4/6、4/6 通过；各阶段只读同一构建产物。`WhenScrolling` 确实消除 15px 尺寸差，已将该原生设置纳入后续完整 CI。仍失败的 Affix 与 Watermark 保留 FAIL；区域设置不能消除全部文字差异，不能将其冒称为六例全通过。原始截图、差异和探针保存在该 run artifact，紧凑结果见[环境对照证据](evidence/visual-environment-2026-11-01.json)。没有改组件 CSS、字体、基线或阈值，也没有重跑已知仍会失败的完整流程。

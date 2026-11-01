@@ -61,17 +61,19 @@ jobs:
   acceptance:
     if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
     name: Complete nine-dimension acceptance on one frozen commit
-    # Approved Apollo images use Darwin/x64 system fonts; keep release visuals
-    # in that platform family and let the unchanged comparator judge pixels.
+    # Approved Apollo images use Darwin/x64 and overlay scrollbars.
+    # OS font differences remain visible to the unchanged pixel comparator.
     runs-on: macos-15-intel
     # The complete native visual matrix follows ~44 minutes of build/runtime work.
-    # The first tag run hit 120 minutes mid-matrix; test-level limits stay unchanged.
+    # The first tag run hit 120 minutes mid-matrix; case limits remain test-owned.
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+      - name: Match the reviewed native overlay scrollbar setting
+        run: defaults write -g AppleShowScrollBars -string WhenScrolling
       - name: Install visual browser
         run: pnpm exec playwright install --with-deps chromium
       - name: Install the exact approved visual Chrome

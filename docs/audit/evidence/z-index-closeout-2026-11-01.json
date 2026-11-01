@@ -901,8 +901,8 @@
       "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353",
       "sourceCommit": "1c2b726a01c239e91d93dfafb9bebb4b7908ba7b",
       "branch": "ci/v017-visual-environment",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "cases": [
         "affix/basic-desktop",
         "watermark/multi-line-desktop",
@@ -918,7 +918,9 @@
         "comparison thresholds",
         "browser version"
       ],
-      "scope": "Temporary runner preferences only; all phase results retained; no local-user preferences modified."
+      "scope": "Temporary runner preferences only; all phase results retained; no local-user preferences modified.",
+      "evidence": "docs/audit/evidence/visual-environment-2026-11-01.json",
+      "result": "0/6 native pass; 4/6 pass with overlay scrollbars; 4/6 pass with additionally matched language. Affix and text Watermark remain block-diff FAIL under unchanged comparator."
     }
   },
   "docsTests": {

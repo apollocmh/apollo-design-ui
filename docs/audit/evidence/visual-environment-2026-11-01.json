@@ -1,0 +1,466 @@
+{
+  "runId": 41322884353,
+  "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353",
+  "sourceCommit": "1c2b726a01c239e91d93dfafb9bebb4b7908ba7b",
+  "conclusion": "failure",
+  "packageDigest": "3be0698d759c5db35b4581ea7c919b5d029a559a0dff468df1c1f8abe251b193",
+  "baselineAndThresholdsChanged": false,
+  "phases": [
+    {
+      "name": "01-native",
+      "passed": 0,
+      "total": 6,
+      "preferences": {
+        "AppleShowScrollBars": "",
+        "AppleLanguages": "(\n    en\n)",
+        "AppleLocale": "en_US"
+      },
+      "canvasMetrics": [
+        {
+          "font": "16px sans-serif",
+          "text": "Ant Design",
+          "width": 78.265625,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "16px sans-serif",
+          "text": "Happy Working",
+          "width": 109.09375,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "16px sans-serif",
+          "text": "AFFIX",
+          "width": 45.3359375,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Ant Design",
+          "width": 58.69921875,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Happy Working",
+          "width": 81.8203125,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "AFFIX",
+          "width": 34.001953125,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        }
+      ],
+      "cases": [
+        {
+          "id": "affix/basic__light__desktop",
+          "verdict": "FAIL",
+          "reason": "size-mismatch",
+          "reactSize": {
+            "width": 1440,
+            "height": 212
+          },
+          "vueSize": {
+            "width": 1425,
+            "height": 212
+          },
+          "diffPixels": 26,
+          "diffRatio": 8.516771488469602e-05,
+          "isolatedRatio": 0.6153846153846154
+        },
+        {
+          "id": "watermark/multi-line__light__desktop",
+          "verdict": "FAIL",
+          "reason": "size-mismatch",
+          "reactSize": {
+            "width": 1440,
+            "height": 292
+          },
+          "vueSize": {
+            "width": 1425,
+            "height": 292
+          },
+          "diffPixels": 2305,
+          "diffRatio": 0.005481830289193303,
+          "isolatedRatio": 0.4806941431670282
+        },
+        {
+          "id": "watermark/image__light__mobile",
+          "verdict": "FAIL",
+          "reason": "size-mismatch",
+          "reactSize": {
+            "width": 375,
+            "height": 292
+          },
+          "vueSize": {
+            "width": 360,
+            "height": 292
+          },
+          "diffPixels": 456,
+          "diffRatio": 0.004164383561643835,
+          "isolatedRatio": 0.015350877192982455
+        },
+        {
+          "id": "config-provider/empty-reset__light__mobile",
+          "verdict": "FAIL",
+          "reason": "size-mismatch",
+          "reactSize": {
+            "width": 375,
+            "height": 429
+          },
+          "vueSize": {
+            "width": 360,
+            "height": 452
+          },
+          "diffPixels": 34715,
+          "diffRatio": 0.20480825958702065,
+          "isolatedRatio": 0.011407172691919919
+        },
+        {
+          "id": "list/theme-dark-compact__light__mobile",
+          "verdict": "FAIL",
+          "reason": "size-mismatch",
+          "reactSize": {
+            "width": 375,
+            "height": 452
+          },
+          "vueSize": {
+            "width": 360,
+            "height": 512
+          },
+          "diffPixels": 41316,
+          "diffRatio": 0.2151875,
+          "isolatedRatio": 0.008447090715461323
+        },
+        {
+          "id": "checkbox/basic__light__desktop",
+          "verdict": "FAIL",
+          "reason": "size-mismatch",
+          "reactSize": {
+            "width": 1440,
+            "height": 152
+          },
+          "vueSize": {
+            "width": 1425,
+            "height": 152
+          },
+          "diffPixels": 0,
+          "diffRatio": 0,
+          "isolatedRatio": 1
+        }
+      ]
+    },
+    {
+      "name": "02-overlay-scrollbars",
+      "passed": 4,
+      "total": 6,
+      "preferences": {
+        "AppleShowScrollBars": "WhenScrolling",
+        "AppleLanguages": "(\n    en\n)",
+        "AppleLocale": "en_US"
+      },
+      "canvasMetrics": [
+        {
+          "font": "16px sans-serif",
+          "text": "Ant Design",
+          "width": 78.265625,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "16px sans-serif",
+          "text": "Happy Working",
+          "width": 109.09375,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "16px sans-serif",
+          "text": "AFFIX",
+          "width": 45.3359375,
+          "fontBoundingBoxAscent": 14,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Ant Design",
+          "width": 58.69921875,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Happy Working",
+          "width": 81.8203125,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "AFFIX",
+          "width": 34.001953125,
+          "fontBoundingBoxAscent": 11,
+          "fontBoundingBoxDescent": 3
+        }
+      ],
+      "cases": [
+        {
+          "id": "affix/basic__light__desktop",
+          "verdict": "FAIL",
+          "reason": "block-diff",
+          "reactSize": {
+            "width": 1440,
+            "height": 212
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 212
+          },
+          "diffPixels": 26,
+          "diffRatio": 8.516771488469602e-05,
+          "isolatedRatio": 0.6153846153846154
+        },
+        {
+          "id": "watermark/multi-line__light__desktop",
+          "verdict": "FAIL",
+          "reason": "block-diff",
+          "reactSize": {
+            "width": 1440,
+            "height": 292
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 292
+          },
+          "diffPixels": 2320,
+          "diffRatio": 0.005517503805175038,
+          "isolatedRatio": 0.4810344827586207
+        },
+        {
+          "id": "watermark/image__light__mobile",
+          "verdict": "PASS",
+          "reason": "antialias-noise",
+          "reactSize": {
+            "width": 375,
+            "height": 292
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 292
+          },
+          "diffPixels": 7,
+          "diffRatio": 6.392694063926941e-05,
+          "isolatedRatio": 1
+        },
+        {
+          "id": "config-provider/empty-reset__light__mobile",
+          "verdict": "PASS",
+          "reason": "antialias-noise",
+          "reactSize": {
+            "width": 375,
+            "height": 429
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 429
+          },
+          "diffPixels": 2,
+          "diffRatio": 1.2432012432012433e-05,
+          "isolatedRatio": 1
+        },
+        {
+          "id": "list/theme-dark-compact__light__mobile",
+          "verdict": "PASS",
+          "reason": "antialias-noise",
+          "reactSize": {
+            "width": 375,
+            "height": 452
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 452
+          },
+          "diffPixels": 1,
+          "diffRatio": 5.899705014749263e-06,
+          "isolatedRatio": 1
+        },
+        {
+          "id": "checkbox/basic__light__desktop",
+          "verdict": "PASS",
+          "reason": "exact",
+          "reactSize": {
+            "width": 1440,
+            "height": 152
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 152
+          },
+          "diffPixels": 0,
+          "diffRatio": 0,
+          "isolatedRatio": 1
+        }
+      ]
+    },
+    {
+      "name": "03-baseline-native-language",
+      "passed": 4,
+      "total": 6,
+      "preferences": {
+        "AppleShowScrollBars": "WhenScrolling",
+        "AppleLanguages": "(\n    \"zh-Hans-CN\"\n)",
+        "AppleLocale": "zh_CN"
+      },
+      "canvasMetrics": [
+        {
+          "font": "16px sans-serif",
+          "text": "Ant Design",
+          "width": 84.52799987792969,
+          "fontBoundingBoxAscent": 17,
+          "fontBoundingBoxDescent": 5
+        },
+        {
+          "font": "16px sans-serif",
+          "text": "Happy Working",
+          "width": 117.87199401855469,
+          "fontBoundingBoxAscent": 17,
+          "fontBoundingBoxDescent": 5
+        },
+        {
+          "font": "16px sans-serif",
+          "text": "AFFIX",
+          "width": 44.60801696777344,
+          "fontBoundingBoxAscent": 17,
+          "fontBoundingBoxDescent": 5
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Ant Design",
+          "width": 63.515899658203125,
+          "fontBoundingBoxAscent": 13,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "Happy Working",
+          "width": 88.55987548828125,
+          "fontBoundingBoxAscent": 13,
+          "fontBoundingBoxDescent": 4
+        },
+        {
+          "font": "12px sans-serif",
+          "text": "AFFIX",
+          "width": 33.515960693359375,
+          "fontBoundingBoxAscent": 13,
+          "fontBoundingBoxDescent": 4
+        }
+      ],
+      "cases": [
+        {
+          "id": "affix/basic__light__desktop",
+          "verdict": "FAIL",
+          "reason": "block-diff",
+          "reactSize": {
+            "width": 1440,
+            "height": 212
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 212
+          },
+          "diffPixels": 26,
+          "diffRatio": 8.516771488469602e-05,
+          "isolatedRatio": 0.6153846153846154
+        },
+        {
+          "id": "watermark/multi-line__light__desktop",
+          "verdict": "FAIL",
+          "reason": "block-diff",
+          "reactSize": {
+            "width": 1440,
+            "height": 292
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 292
+          },
+          "diffPixels": 1617,
+          "diffRatio": 0.00384560502283105,
+          "isolatedRatio": 0.5225726654298083
+        },
+        {
+          "id": "watermark/image__light__mobile",
+          "verdict": "PASS",
+          "reason": "antialias-noise",
+          "reactSize": {
+            "width": 375,
+            "height": 292
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 292
+          },
+          "diffPixels": 7,
+          "diffRatio": 6.392694063926941e-05,
+          "isolatedRatio": 1
+        },
+        {
+          "id": "config-provider/empty-reset__light__mobile",
+          "verdict": "PASS",
+          "reason": "antialias-noise",
+          "reactSize": {
+            "width": 375,
+            "height": 429
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 429
+          },
+          "diffPixels": 2,
+          "diffRatio": 1.2432012432012433e-05,
+          "isolatedRatio": 1
+        },
+        {
+          "id": "list/theme-dark-compact__light__mobile",
+          "verdict": "PASS",
+          "reason": "antialias-noise",
+          "reactSize": {
+            "width": 375,
+            "height": 452
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 452
+          },
+          "diffPixels": 1,
+          "diffRatio": 5.899705014749263e-06,
+          "isolatedRatio": 1
+        },
+        {
+          "id": "checkbox/basic__light__desktop",
+          "verdict": "PASS",
+          "reason": "exact",
+          "reactSize": {
+            "width": 1440,
+            "height": 152
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 152
+          },
+          "diffPixels": 0,
+          "diffRatio": 0,
+          "isolatedRatio": 1
+        }
+      ]
+    }
+  ]
+}
