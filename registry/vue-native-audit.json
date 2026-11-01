@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 243,
+  "revision": 244,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12613,7 +12613,7 @@
         "dimension": "visual",
         "status": "in_progress",
         "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
-        "note": "First reviewed independent batch accepted. Known cropped or overconstrained scenarios remain unapproved pending corrected recapture; complete unchanged visual comparison still required.",
+        "note": "All 660 originally missing candidates reviewed and accepted in two explicit batches. No missing approved baseline remains; unchanged full 1875-case pixel comparison is still pending and acceptance is not complete.",
         "checks": [
           {
             "kind": "visual",
@@ -12625,8 +12625,8 @@
         ],
         "selection": {
           "selected": 1875,
-          "approved": 1683,
-          "missingApprovedBaselines": 192
+          "approved": 1875,
+          "missingApprovedBaselines": 0
         },
         "supplement": {
           "kind": "approved-visual-subset",
@@ -12785,6 +12785,109 @@
             },
             "fullVisualComparison": "not_started",
             "note": "Actual image review and applicable key interactions, not capture success alone. Date/Table/Tour/Notification/Popover/Slider/Pagination/Splitter/Listy/Carousel/Menu/Anchor remain pending corrected recapture."
+          },
+          {
+            "captureCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+            "acceptedAt": "2026-11-01T02:49:22.394Z",
+            "newImages": 192,
+            "rows": [
+              {
+                "group": "A",
+                "component": "date-picker",
+                "count": 27,
+                "report": "/tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-A-26e5ddd0/date-picker"
+              },
+              {
+                "group": "B",
+                "component": "table",
+                "count": 24,
+                "report": "/tmp/apollo-visual-closeout-B-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-B-26e5ddd0/table"
+              },
+              {
+                "group": "C",
+                "component": "tour",
+                "count": 9,
+                "report": "/tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-C-26e5ddd0/tour"
+              },
+              {
+                "group": "C",
+                "component": "notification",
+                "count": 9,
+                "report": "/tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-C-26e5ddd0/notification"
+              },
+              {
+                "group": "C",
+                "component": "popover",
+                "count": 6,
+                "report": "/tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-C-26e5ddd0/popover"
+              },
+              {
+                "group": "D",
+                "component": "slider",
+                "count": 24,
+                "report": "/tmp/apollo-visual-closeout-D-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-D-26e5ddd0/slider"
+              },
+              {
+                "group": "D",
+                "component": "pagination",
+                "count": 30,
+                "report": "/tmp/apollo-visual-closeout-D-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-D-26e5ddd0/pagination"
+              },
+              {
+                "group": "E",
+                "component": "anchor",
+                "count": 24,
+                "report": "/tmp/apollo-visual-closeout-E-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-E-26e5ddd0/anchor"
+              },
+              {
+                "group": "E",
+                "component": "carousel",
+                "count": 12,
+                "report": "/tmp/apollo-visual-closeout-E-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-E-26e5ddd0/carousel"
+              },
+              {
+                "group": "E",
+                "component": "listy",
+                "count": 9,
+                "report": "/tmp/apollo-visual-closeout-E-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-E-26e5ddd0/listy"
+              },
+              {
+                "group": "E",
+                "component": "menu",
+                "count": 9,
+                "report": "/tmp/apollo-visual-closeout-E-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-E-26e5ddd0/menu"
+              },
+              {
+                "group": "E",
+                "component": "splitter",
+                "count": 9,
+                "report": "/tmp/apollo-visual-closeout-E-26e5ddd0/review.json",
+                "candidateDir": "/tmp/apollo-visual-closeout-E-26e5ddd0/splitter"
+              }
+            ],
+            "existingEntriesUnchanged": 1683,
+            "selection": {
+              "selected": 1875,
+              "approved": 1875,
+              "missingApprovedBaselines": 0
+            },
+            "fullVisualComparison": "not_started",
+            "sourceFixes": [
+              "be303e4f mobile DatePicker popup flow",
+              "40a8212b responsive Pagination wrapping"
+            ],
+            "note": "Corrected fixture captures and actual image review, preserving original rejected evidence. Only these exact reviewed new IDs accepted; complete visual comparison still required."
           }
         ]
       },

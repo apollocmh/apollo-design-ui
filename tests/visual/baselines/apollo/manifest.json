@@ -15146,6 +15146,1734 @@
       "capturedAt": "2026-11-01T01:52:24.310Z",
       "reviewedAt": "2026-11-01T02:18:32.751Z",
       "reviewNote": "native_form_core/root: all 12 actual PNGs reviewed with view_image across mobile/tablet/desktop, with raw-image detail checks where needed; layout/content/states and applicable native interactions verified. Independent accepted scope from /tmp/apollo-visual-closeout-E-20e62f85/review.json; failed/clipped/superseded scenarios excluded. Root integrates acceptance; complete visual comparison still pending."
+    },
+    "date-picker/basic__light__desktop": {
+      "sha256": "8750acf58c49933a7adf69202efb055e9355b10731eb22457f2b5645eaa29185",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:21.981Z",
+      "reviewedAt": "2026-11-01T02:49:21.448Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/basic__light__mobile": {
+      "sha256": "65244eb7641858538f62ee54985ff9ac76fdc65376253489a74fcaca5673cf45",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:18.349Z",
+      "reviewedAt": "2026-11-01T02:49:21.450Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/basic__light__tablet": {
+      "sha256": "205c5b9d51a6e7304194aafcea5a61bcedb020a0b035ba322e7db2474d92a4ab",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:20.160Z",
+      "reviewedAt": "2026-11-01T02:49:21.450Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/datetime__light__desktop": {
+      "sha256": "4227f92637ece6196a1bab2de825f5e7828135fbaa176d0688d4a73cdc7a2541",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:33.635Z",
+      "reviewedAt": "2026-11-01T02:49:21.451Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/datetime__light__mobile": {
+      "sha256": "c8771965c82e142a26b8a03fafb8820703a9c5786a7602dcb77860b6b51d2ade",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:29.451Z",
+      "reviewedAt": "2026-11-01T02:49:21.451Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/datetime__light__tablet": {
+      "sha256": "960855da6cdda64c6dd30a30987415d56dc5d806d1d4a44b33fc21dcb206d7bb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:31.307Z",
+      "reviewedAt": "2026-11-01T02:49:21.452Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/month__light__desktop": {
+      "sha256": "f084c040dc2b93583588494a4594c6ae752e5d48b103a464cd170841868d9236",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:40.615Z",
+      "reviewedAt": "2026-11-01T02:49:21.452Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/month__light__mobile": {
+      "sha256": "36c2149e412bbd87d681a7bd983f2b59c1398037af9998251c004edc5848f88a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:35.976Z",
+      "reviewedAt": "2026-11-01T02:49:21.452Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/month__light__tablet": {
+      "sha256": "0315015c6aa2fbed5a31b4487594c57398c208be4c3dbc959a03af3f5ed5da34",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:38.218Z",
+      "reviewedAt": "2026-11-01T02:49:21.453Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/multiple__light__desktop": {
+      "sha256": "574c7afb546de147cc7733a7b550149120db54852491464541df7bf19de3a624",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:54.560Z",
+      "reviewedAt": "2026-11-01T02:49:21.453Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/multiple__light__mobile": {
+      "sha256": "f5f0fa74a9b61905c365c05589ec25f720c2102a4351be398910ccafea3f59aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:49.905Z",
+      "reviewedAt": "2026-11-01T02:49:21.453Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/multiple__light__tablet": {
+      "sha256": "e21fac799169c4d0d66a25a85e1ce18baa648554030c23857ed09a52762ff07d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:52.202Z",
+      "reviewedAt": "2026-11-01T02:49:21.454Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/range-value__light__desktop": {
+      "sha256": "32dd9063c9e3812dcfff6638355db4bf8d953664bd8a83ad0765674a5bc29e7b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:14.394Z",
+      "reviewedAt": "2026-11-01T02:49:21.454Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/range-value__light__mobile": {
+      "sha256": "c1c4f2b6569633db4b8a0449b9661f9c91cc90b8185029d969c50852909fee76",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:10.376Z",
+      "reviewedAt": "2026-11-01T02:49:21.454Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/range-value__light__tablet": {
+      "sha256": "3e165940d02124d7ce8c0598552de1037f228ec987664307738742cbc9469b55",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:12.447Z",
+      "reviewedAt": "2026-11-01T02:49:21.455Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/range__light__desktop": {
+      "sha256": "4d5fbea36f16fe4a1a8cdc1f32813c8741875223a7446420f74fc8a6486272f9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:08.284Z",
+      "reviewedAt": "2026-11-01T02:49:21.455Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/range__light__mobile": {
+      "sha256": "d3c2122d8e670d5c21c222e84b036b37bdba01ca0d580f26760c2a54cbc237ba",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:03.706Z",
+      "reviewedAt": "2026-11-01T02:49:21.456Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/range__light__tablet": {
+      "sha256": "ffd51f94f489c404512e9827ce90e52b32a66eed91da11395f88970fc1d61655",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:06.064Z",
+      "reviewedAt": "2026-11-01T02:49:21.456Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/value__light__desktop": {
+      "sha256": "917b529e36dff430d40236c61e70347d9a7f60157ecf162eb4298f8ae95ff2db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:27.603Z",
+      "reviewedAt": "2026-11-01T02:49:21.456Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/value__light__mobile": {
+      "sha256": "e988552a00e3ff46f2f0aa46419044bae0153e7053a60ec8de5c1bdb8dfd9cc2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:23.776Z",
+      "reviewedAt": "2026-11-01T02:49:21.457Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/value__light__tablet": {
+      "sha256": "f9f9dabe73d62fadd5b3de58855351f27cc02a2a777525ea9e9bf04770c8df73",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:25.789Z",
+      "reviewedAt": "2026-11-01T02:49:21.457Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/variants__light__desktop": {
+      "sha256": "af119e444464b575a159bb74d28478df132272ecddb72247591d7d26a0c439ea",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:01.339Z",
+      "reviewedAt": "2026-11-01T02:49:21.458Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/variants__light__mobile": {
+      "sha256": "f99ca92fd54b65bf36a51ed0bdb4d00e816e3822f1d822e70c2b50be52ef6224",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:56.819Z",
+      "reviewedAt": "2026-11-01T02:49:21.458Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/variants__light__tablet": {
+      "sha256": "5eb8f81896b18b4ab11f72e5784f352f0220f0497795503a6fa52918650ae0c9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:59.056Z",
+      "reviewedAt": "2026-11-01T02:49:21.458Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/year__light__desktop": {
+      "sha256": "a6876acd90d0478582dc5f669bb91ea9a1663a5be6379e906a0089efbef7bb82",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:47.436Z",
+      "reviewedAt": "2026-11-01T02:49:21.459Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/year__light__mobile": {
+      "sha256": "f059c915bbbe1c972b7df72e2b6602982fb88ae8a415fce3ea8e2d8c83ef94cf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:42.892Z",
+      "reviewedAt": "2026-11-01T02:49:21.459Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "date-picker/year__light__tablet": {
+      "sha256": "61d9bec6b3cf344d74f9bd8a84ac0dc42756412e8699a652cafb9f4cf4384911",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:45.247Z",
+      "reviewedAt": "2026-11-01T02:49:21.460Z",
+      "reviewNote": "Root/native_picker: all 27 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-A-26e5ddd0/acceptable-ids.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/basic__light__mobile": {
+      "sha256": "9f5c331cc62ae3bc160d2c7fa7610b5b15a19ab4cb829f0a82b4d691cdd4750a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:17.743Z",
+      "reviewedAt": "2026-11-01T02:49:21.484Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/basic__light__tablet": {
+      "sha256": "61c580b37056a0f4c3005e40a1d10df89d0ba688a06cd274061750070664d77d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:19.510Z",
+      "reviewedAt": "2026-11-01T02:49:21.484Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/basic__light__desktop": {
+      "sha256": "4106ee6d8b98a8641eb365c0d1df3cee0ceb26d831a7e1145125216b44e43d00",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:21.255Z",
+      "reviewedAt": "2026-11-01T02:49:21.485Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/bordered-size__light__mobile": {
+      "sha256": "652b7705c67814826ae0f5d6b86bae191f64f418205b80361dd6f8b0a2f8ef7f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:23.015Z",
+      "reviewedAt": "2026-11-01T02:49:21.485Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/bordered-size__light__tablet": {
+      "sha256": "cac5a8a8ba98378a20922fb817b4012f8c4715fbd8aca8a9e75c3eb43f435f14",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:24.835Z",
+      "reviewedAt": "2026-11-01T02:49:21.485Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/bordered-size__light__desktop": {
+      "sha256": "e42c514aafee839edb4f1a5e784f4443f74ba25911ae38f651d399ee9425c88a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:26.785Z",
+      "reviewedAt": "2026-11-01T02:49:21.486Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/empty__light__mobile": {
+      "sha256": "f594c2e438b6c5530a4e4b57ad80a89d9798bfaf33946e3e41d6f26ee9103b6f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:28.616Z",
+      "reviewedAt": "2026-11-01T02:49:21.486Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/empty__light__tablet": {
+      "sha256": "6e00610f08a571c29c5a966d9c6573a123f0439e25ad8c0561ebdb8e491f256c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:30.476Z",
+      "reviewedAt": "2026-11-01T02:49:21.486Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/empty__light__desktop": {
+      "sha256": "dd9880bf28f2dbb15074968c07dc96fa957cec40cfd1ae3875b32278f9f0eb7d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:32.987Z",
+      "reviewedAt": "2026-11-01T02:49:21.487Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/expand__light__mobile": {
+      "sha256": "0c3bbec959a46f6993250600b814776ac928643c07c6feab29a337f136538164",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:35.688Z",
+      "reviewedAt": "2026-11-01T02:49:21.487Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/expand__light__tablet": {
+      "sha256": "21dc95eaf5b6a6b72da9ed51d3f7beb4f7b3f0883d7e8b938a7226d629adb565",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:38.127Z",
+      "reviewedAt": "2026-11-01T02:49:21.488Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/expand__light__desktop": {
+      "sha256": "3fd36cc0d3b448a9bf843549beed7495c33a67cc978b669da7cb9fa1bc3ff638",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:40.523Z",
+      "reviewedAt": "2026-11-01T02:49:21.488Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/selection__light__mobile": {
+      "sha256": "c49d8b38caf1f144741a2af70d17d412ee1454a883feecb8111d1480881f56c2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:42.890Z",
+      "reviewedAt": "2026-11-01T02:49:21.488Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/selection__light__tablet": {
+      "sha256": "419b37a3826d43d264461ca83470d47b6bbc520662c456e19278aefa069a7b52",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:45.250Z",
+      "reviewedAt": "2026-11-01T02:49:21.489Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/selection__light__desktop": {
+      "sha256": "2f87ce526ad647142e17095684ba59aa3c542f36f30d3b4aa519eb3a6ffc4e42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:47.452Z",
+      "reviewedAt": "2026-11-01T02:49:21.489Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/sorter-filter__light__mobile": {
+      "sha256": "f9204fc62a2f4d467c45aa4b04ea47511ad3cb9a139c14e30e0467860a635a41",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:49.823Z",
+      "reviewedAt": "2026-11-01T02:49:21.490Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/sorter-filter__light__tablet": {
+      "sha256": "a22dad2ae40bbacd58bb4a9ece043ceeeb03fda73ac8b28edd347907dce3e070",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:52.117Z",
+      "reviewedAt": "2026-11-01T02:49:21.490Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/sorter-filter__light__desktop": {
+      "sha256": "6ea3b5d8640381fa8e358483f4be3ab292b8d30eb11fcc9c9f237992157711c0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:54.456Z",
+      "reviewedAt": "2026-11-01T02:49:21.490Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/fixed-summary__light__mobile": {
+      "sha256": "5db9d440f91cc84cd7672f2345a33ae80d981e5072dd2cfd912f4bef7f38b7fe",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:56.789Z",
+      "reviewedAt": "2026-11-01T02:49:21.491Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/fixed-summary__light__tablet": {
+      "sha256": "1a527c03014f29640e1462e0bd3480ae1bc6bbb54dace51749f3115d6f83e681",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:59.022Z",
+      "reviewedAt": "2026-11-01T02:49:21.491Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/fixed-summary__light__desktop": {
+      "sha256": "0f4501ae55a198f69595e13a1d16a445d170a195790d7f620f39dbb29928b655",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:01.407Z",
+      "reviewedAt": "2026-11-01T02:49:21.492Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/virtual__light__mobile": {
+      "sha256": "6138dee1fc40ae8465f9be084ac657824d9d0ba522f5c950c6a3af1f9b3ded05",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:03.707Z",
+      "reviewedAt": "2026-11-01T02:49:21.492Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/virtual__light__tablet": {
+      "sha256": "9abde537f51b30620f9d16f3a346d3fa874a01ec4f24d0860d149a5351c38c6e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:06.042Z",
+      "reviewedAt": "2026-11-01T02:49:21.492Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "table/virtual__light__desktop": {
+      "sha256": "b14d156f3d0af9a6f77dea2e5efb6ee0d2e37ba392ed0925965342322760c086",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:08.261Z",
+      "reviewedAt": "2026-11-01T02:49:21.493Z",
+      "reviewNote": "Root/native_select: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-B-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/basic__light__mobile": {
+      "sha256": "3992a61e8c21502f37fc0e1d7363341ec23749008caf9ac784c66181cd02a5eb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:26.567Z",
+      "reviewedAt": "2026-11-01T02:49:21.513Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/basic__light__tablet": {
+      "sha256": "eeeb6c4878c0adfbf9fcbed1959d721f3b3ff16db46693453970b5c499839f0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:28.483Z",
+      "reviewedAt": "2026-11-01T02:49:21.513Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/basic__light__desktop": {
+      "sha256": "3d822836b431e826591dc8d10dd4e4e88156c35282ab1aa0198b445b8d3f6111",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:30.396Z",
+      "reviewedAt": "2026-11-01T02:49:21.514Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/non-modal__light__mobile": {
+      "sha256": "e0a03ba11110b2d923ec43ddef90b77ea3cf09d1f77ad68dac14051a3c887199",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:32.914Z",
+      "reviewedAt": "2026-11-01T02:49:21.514Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/non-modal__light__tablet": {
+      "sha256": "1b9b8ed3021526f79415fa0a29c5f11e826c720d955608254885c0e776a72791",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:35.618Z",
+      "reviewedAt": "2026-11-01T02:49:21.514Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/non-modal__light__desktop": {
+      "sha256": "a3b15c2d6b5ff41081c057f517a4dbd282c422c68375828af40cb6d182491572",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:38.047Z",
+      "reviewedAt": "2026-11-01T02:49:21.515Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/render-panel__light__mobile": {
+      "sha256": "5390892f9515289df6eecdcabed52d80affa721815449d3899d8617866e08c49",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:40.463Z",
+      "reviewedAt": "2026-11-01T02:49:21.515Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/render-panel__light__tablet": {
+      "sha256": "cbcc5ee905a333360add003e9c7503822351c27ce91051994c53ff23884ccda7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:42.748Z",
+      "reviewedAt": "2026-11-01T02:49:21.515Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "tour/render-panel__light__desktop": {
+      "sha256": "29dd7512d4a5508f4f06096ee1f39b7c2d7064ec2d4d1f89829ff8e1dd2c6685",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:45.055Z",
+      "reviewedAt": "2026-11-01T02:49:21.516Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/basic__light__mobile": {
+      "sha256": "658042ef5555c865338d7d47721c1b6791d490b7db93457a8a4804bb31760bef",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:49.929Z",
+      "reviewedAt": "2026-11-01T02:49:21.540Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/basic__light__tablet": {
+      "sha256": "6253c2cf90d7aad8edff7eceed4b790735d6a7c47e6700be04df12e884a64cdf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:52.117Z",
+      "reviewedAt": "2026-11-01T02:49:21.540Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/basic__light__desktop": {
+      "sha256": "7958f82e0f3bce6bb4fe32a595de6cbeb0fcb184d72462bf64719570c16949b8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:54.317Z",
+      "reviewedAt": "2026-11-01T02:49:21.540Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/placement__light__mobile": {
+      "sha256": "f4f2cfa1b64344156b1f9f9928b883bfadf8c93d9e361f75d7ee8848e601a967",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:56.571Z",
+      "reviewedAt": "2026-11-01T02:49:21.541Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/placement__light__tablet": {
+      "sha256": "d8ca6610c9191e5544483d6d1ba6e083fd8e0bb5076b4aeee509efbe36ac959f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:58.875Z",
+      "reviewedAt": "2026-11-01T02:49:21.541Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/placement__light__desktop": {
+      "sha256": "1b234b91a9e1992b3ae4a99ac5a34c5867efc70bd9190c0219dda27aaa6c349d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:01.223Z",
+      "reviewedAt": "2026-11-01T02:49:21.542Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/actions__light__mobile": {
+      "sha256": "f7d5aeb0a3c81e3115af72fb0e5f26ff3eec3b923c5fcd0f12350ba64a040f28",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:03.505Z",
+      "reviewedAt": "2026-11-01T02:49:21.542Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/actions__light__tablet": {
+      "sha256": "ef01a2a4457cdc56ef31b7b443e84cfa91f37dd4d07298bfdba60a03c44f6aea",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:05.756Z",
+      "reviewedAt": "2026-11-01T02:49:21.542Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "notification/actions__light__desktop": {
+      "sha256": "b7359f7735677ef2daa98bfc00ed7b95cc11352b63cce1b51d7d5b8fee2d8637",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:08.008Z",
+      "reviewedAt": "2026-11-01T02:49:21.547Z",
+      "reviewNote": "Root/native_color_picker: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "popover/basicOpen__light__mobile": {
+      "sha256": "5e6e23c5a483d2a1cad3d6d9e6d5864005e6167439888e731ea740326176ba22",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:12.555Z",
+      "reviewedAt": "2026-11-01T02:49:21.566Z",
+      "reviewNote": "Root/native_color_picker: all 6 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "popover/basicOpen__light__tablet": {
+      "sha256": "6ad6611dd1f8e9f387dd66e488f918f2b4742577ff792e3456c33421456712c1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:14.457Z",
+      "reviewedAt": "2026-11-01T02:49:21.566Z",
+      "reviewNote": "Root/native_color_picker: all 6 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "popover/basicOpen__light__desktop": {
+      "sha256": "2b7666b3c1f918a93a467e795d5f98f6b3ed0f7e7a115d6dd65402f29ae4a5c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:16.218Z",
+      "reviewedAt": "2026-11-01T02:49:21.566Z",
+      "reviewNote": "Root/native_color_picker: all 6 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "popover/purePanel__light__mobile": {
+      "sha256": "06489d941a50f3aabe3673613b660a08fd98ee20ddfd019de7bb9474f4d3e7da",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:18.002Z",
+      "reviewedAt": "2026-11-01T02:49:21.567Z",
+      "reviewNote": "Root/native_color_picker: all 6 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "popover/purePanel__light__tablet": {
+      "sha256": "7c9b247a0a69a110a27b90b7eedc369a303e00627e9dbacf2ec33c2774ba2f5a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:19.913Z",
+      "reviewedAt": "2026-11-01T02:49:21.567Z",
+      "reviewNote": "Root/native_color_picker: all 6 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "popover/purePanel__light__desktop": {
+      "sha256": "63a3cd155f16b0719cb575eac81d34b20355320f501f0b80583f870d7e563930",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:22.121Z",
+      "reviewedAt": "2026-11-01T02:49:21.567Z",
+      "reviewNote": "Root/native_color_picker: all 6 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-C-26e5ddd0/review-summary.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/basic__light__mobile": {
+      "sha256": "0a0325942937abc6bb0699c58105cb03be7b5e927741324251f317f53cc18c4f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:35.884Z",
+      "reviewedAt": "2026-11-01T02:49:21.588Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/basic__light__tablet": {
+      "sha256": "42d9a7a42344140f32340f9c08eb82c9d9d0713012352b9873af02a28998fa29",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:38.115Z",
+      "reviewedAt": "2026-11-01T02:49:21.588Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/basic__light__desktop": {
+      "sha256": "a359fb54c8009745eb7460048432d1cfa64f4b0afe23ded22d62c0ce8a1c5634",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:40.446Z",
+      "reviewedAt": "2026-11-01T02:49:21.588Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/range__light__mobile": {
+      "sha256": "cbb0933a114c9c3fc42a1b60b150fffa06f034d1a7d07948a3dd299aa1c1f50c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:42.689Z",
+      "reviewedAt": "2026-11-01T02:49:21.589Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/range__light__tablet": {
+      "sha256": "bc758aa94db99da1d205f90ae8af581f644d1b875d8f21adce41fdd064044a7b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:45.007Z",
+      "reviewedAt": "2026-11-01T02:49:21.589Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/range__light__desktop": {
+      "sha256": "aba64bc5faa1a699b62d704c13d6ca2d5c2dad4ea3c4ec8ae4e93cc9cb82a5a3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:47.227Z",
+      "reviewedAt": "2026-11-01T02:49:21.589Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/marks__light__mobile": {
+      "sha256": "8898a930d0567079a0d35c1233d307f6e721f18bfe784b5cbac36952b33eefa4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:49.635Z",
+      "reviewedAt": "2026-11-01T02:49:21.590Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/marks__light__tablet": {
+      "sha256": "2485bdaf7a82425921d56bf61901ccfb7ae2f352ae80ba96ec112d32e82531e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:51.953Z",
+      "reviewedAt": "2026-11-01T02:49:21.590Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/marks__light__desktop": {
+      "sha256": "c94f5018d1813b4696e65df6a88f5137a00b816eca77ad08949d5d0e54aed6a6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:54.214Z",
+      "reviewedAt": "2026-11-01T02:49:21.590Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/dots__light__mobile": {
+      "sha256": "046d48e25e46e616ebfa303e40770f9bd36fcf854f9f7388f6419150b04723d2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:56.460Z",
+      "reviewedAt": "2026-11-01T02:49:21.590Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/dots__light__tablet": {
+      "sha256": "0be8568d3d025b4e49e8f4c112cb079d5acb1964264011e434223bf30d1dc9cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:32:58.772Z",
+      "reviewedAt": "2026-11-01T02:49:21.591Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/dots__light__desktop": {
+      "sha256": "3dae88bc8c4a6c10cdd038fe87645296c54b2ac13bb146ddb1476f6698bfa6b7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:01.092Z",
+      "reviewedAt": "2026-11-01T02:49:21.591Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/vertical__light__mobile": {
+      "sha256": "e62d252e2461f96216131de91d8541c5983d346cd785ddb9fbef15906a3a335f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:03.438Z",
+      "reviewedAt": "2026-11-01T02:49:21.591Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/vertical__light__tablet": {
+      "sha256": "a9661fa35c820ab715c9c8954c9efc76ece0972a602dd9ec25c809e5caccfbe2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:05.736Z",
+      "reviewedAt": "2026-11-01T02:49:21.591Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/vertical__light__desktop": {
+      "sha256": "06d5a9523bae12a639c74a339cba820ba47608f574c6f44217f2bcef6a4b07f9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:08.007Z",
+      "reviewedAt": "2026-11-01T02:49:21.592Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/reverse__light__mobile": {
+      "sha256": "6ef9345a99b14aa0c8fa243ece89fabd155875eeffd4e0220d8d83054fad1f64",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:09.954Z",
+      "reviewedAt": "2026-11-01T02:49:21.592Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/reverse__light__tablet": {
+      "sha256": "f52b53be99a6a0fade8fd1d94c015554e66f250a2ef3a7ff05b26accf6398c67",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:12.019Z",
+      "reviewedAt": "2026-11-01T02:49:21.592Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/reverse__light__desktop": {
+      "sha256": "58f21da91e37d1cec3f97f697912e5923862bb8ce93cfec44250b63e0d130e9d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:13.735Z",
+      "reviewedAt": "2026-11-01T02:49:21.592Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/disabled__light__mobile": {
+      "sha256": "fb49756dc5474d30b50f29ed12f7c8734852eac48ac483b64663d9844641f906",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:15.457Z",
+      "reviewedAt": "2026-11-01T02:49:21.593Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/disabled__light__tablet": {
+      "sha256": "6cbd267e94e3cc813f72814e9e48d905af9dd305443b8f70c05781b966760f92",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:17.155Z",
+      "reviewedAt": "2026-11-01T02:49:21.593Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/disabled__light__desktop": {
+      "sha256": "6aeefd9328ed75d3dd994ac33445f0214adc53a2843c164c1a34cddbde1fc3d0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:18.880Z",
+      "reviewedAt": "2026-11-01T02:49:21.593Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/includedOff__light__mobile": {
+      "sha256": "2f8c62150a07e65129ccfd2e47968767b584ecf7963adc224b06ae35aa7af8c5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:20.819Z",
+      "reviewedAt": "2026-11-01T02:49:21.593Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/includedOff__light__tablet": {
+      "sha256": "018931aeab9774c0f72e4b1f4d4e6028d810d5b4db0f5b8a02c705e35db20f5c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:22.784Z",
+      "reviewedAt": "2026-11-01T02:49:21.594Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "slider/includedOff__light__desktop": {
+      "sha256": "567f2421796237141b88a5d6c462f55212432d98e6e7e3c9d049513675a6e40b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:24.859Z",
+      "reviewedAt": "2026-11-01T02:49:21.594Z",
+      "reviewNote": "Root/native_portal: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/basic__light__mobile": {
+      "sha256": "3823b7f5eefb890cd90cfbeb161e75496ca22026fdd58cf808d26e214f3ce0f7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:28.541Z",
+      "reviewedAt": "2026-11-01T02:49:21.615Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/basic__light__tablet": {
+      "sha256": "f6fb1c893c85ac073cf718dc05ef0fa00d2e25b7646513df5e3eda1e801a9c18",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:30.268Z",
+      "reviewedAt": "2026-11-01T02:49:21.615Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/basic__light__desktop": {
+      "sha256": "befd2a9a72bc3930f3179b97bb6adebb004ad3735500c3c05e530991f8e13eb8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:31.986Z",
+      "reviewedAt": "2026-11-01T02:49:21.615Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/totalText__light__mobile": {
+      "sha256": "ff8fd5ab27b8766a39df346e4be92db296c176cf64542d2decec158f5df7f7ce",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:33.717Z",
+      "reviewedAt": "2026-11-01T02:49:21.615Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/totalText__light__tablet": {
+      "sha256": "11ef07726ebcdf12de2916325607692e621220e4ae0814f41654518568f70e16",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:35.485Z",
+      "reviewedAt": "2026-11-01T02:49:21.616Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/totalText__light__desktop": {
+      "sha256": "026e5d71eae6322f081bf8b9a327b09ebb45c8e55cb37d95809afb0b70a46713",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:37.253Z",
+      "reviewedAt": "2026-11-01T02:49:21.616Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/simple__light__mobile": {
+      "sha256": "9e07545370d432424899647cbdf225c1bd5190f629ad7da6879607374dadb3b8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:38.986Z",
+      "reviewedAt": "2026-11-01T02:49:21.616Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/simple__light__tablet": {
+      "sha256": "af177ed36ea58449bd25d46e45f2354e8a9052da38ee6a77a13b094f6ca04c0a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:40.728Z",
+      "reviewedAt": "2026-11-01T02:49:21.616Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/simple__light__desktop": {
+      "sha256": "96244686d13c90ddcc0c12d659674bedce7b0ad8b3b70c1f625baf3e63360e6f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:42.449Z",
+      "reviewedAt": "2026-11-01T02:49:21.616Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/quickJumper__light__mobile": {
+      "sha256": "084054caf0941f6c0470eb4697f3d3d31a87019ef8dde6360f42d86ac09043eb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:44.182Z",
+      "reviewedAt": "2026-11-01T02:49:21.617Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/quickJumper__light__tablet": {
+      "sha256": "fc11cd5c341bd526870bd02a8ab3a19f9778197e8b6ab243e415d225b4577f29",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:45.939Z",
+      "reviewedAt": "2026-11-01T02:49:21.617Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/quickJumper__light__desktop": {
+      "sha256": "063f4cb375ee327900273886fad38b3cacf1549b3f0d796f18de75deb1cefb3a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:47.693Z",
+      "reviewedAt": "2026-11-01T02:49:21.617Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/quickJumperButton__light__mobile": {
+      "sha256": "084054caf0941f6c0470eb4697f3d3d31a87019ef8dde6360f42d86ac09043eb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:49.431Z",
+      "reviewedAt": "2026-11-01T02:49:21.618Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/quickJumperButton__light__tablet": {
+      "sha256": "55095dec5517623aaa8c00deee696dd2e953525ceb2e540a5bff3f0398ccdccb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:51.188Z",
+      "reviewedAt": "2026-11-01T02:49:21.618Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/quickJumperButton__light__desktop": {
+      "sha256": "21537bb501ce309a5ac98b7e5d7bdd834c1f1457fca9c20930691d12457789f7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:52.964Z",
+      "reviewedAt": "2026-11-01T02:49:21.618Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/sizeChanger__light__mobile": {
+      "sha256": "084054caf0941f6c0470eb4697f3d3d31a87019ef8dde6360f42d86ac09043eb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:54.698Z",
+      "reviewedAt": "2026-11-01T02:49:21.619Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/sizeChanger__light__tablet": {
+      "sha256": "8b32880184028b306db83e85f27deec36967a572c1b77aca13b89e77d522d9f5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:56.449Z",
+      "reviewedAt": "2026-11-01T02:49:21.619Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/sizeChanger__light__desktop": {
+      "sha256": "d57d1869d0b2a2a175bf6ca50c8c16b95fdc56d262583a7a3f4ecb1bd6387eee",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:33:58.484Z",
+      "reviewedAt": "2026-11-01T02:49:21.619Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/disabled__light__mobile": {
+      "sha256": "ec983d465169432a05a88f55bc5c82bf988b21ebbd3c2e4680081c68141cba6a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:00.338Z",
+      "reviewedAt": "2026-11-01T02:49:21.619Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/disabled__light__tablet": {
+      "sha256": "87f9336c1c6aa38e46194cc02b9cb730adbc346fe54eae433ce19df843ca30e2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:02.091Z",
+      "reviewedAt": "2026-11-01T02:49:21.620Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/disabled__light__desktop": {
+      "sha256": "423948fbd84e63af6ab123e315f17a1569546649f09d265f0af8ea59866b5b21",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:03.843Z",
+      "reviewedAt": "2026-11-01T02:49:21.620Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/large__light__mobile": {
+      "sha256": "9fdf2689f10ca44ed662613420d17346c06d590aeb9fb3b4bffc8506e303d0b9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:05.580Z",
+      "reviewedAt": "2026-11-01T02:49:21.620Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/large__light__tablet": {
+      "sha256": "650deb6bb9e0cf8a7cc5adaf6211a4381ac138b0f77375244e771198c90ceff9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:07.336Z",
+      "reviewedAt": "2026-11-01T02:49:21.620Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/large__light__desktop": {
+      "sha256": "3471ce32bef5970d5836785e47f4b61cdc8032ddcd19ceb120ab6c8d6acf4ba6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:09.115Z",
+      "reviewedAt": "2026-11-01T02:49:21.621Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/alignCenter__light__mobile": {
+      "sha256": "624fa7fbf9ee5e77c2c6fcf87b3e8d86ddedbad6f238c81bab6f0817771ce998",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:10.870Z",
+      "reviewedAt": "2026-11-01T02:49:21.621Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/alignCenter__light__tablet": {
+      "sha256": "2aa6af7946e2adcaf84480a9b60d24fc1eeac91dd79883e764b7f63deecf112f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:12.626Z",
+      "reviewedAt": "2026-11-01T02:49:21.621Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/alignCenter__light__desktop": {
+      "sha256": "6a18c3981ffecc6a5fc90b96771f58e4b0c2430e838819d1ec926383f4702aef",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:14.362Z",
+      "reviewedAt": "2026-11-01T02:49:21.621Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/lessItems__light__mobile": {
+      "sha256": "56077770b17af2bb76fee55c4660370004e979583f9ead5a82397a15df86b912",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:16.110Z",
+      "reviewedAt": "2026-11-01T02:49:21.622Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/lessItems__light__tablet": {
+      "sha256": "836eda759649f903a2f7750dd9146601f2222925d726f10113158cce13afd8be",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:17.885Z",
+      "reviewedAt": "2026-11-01T02:49:21.622Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "pagination/lessItems__light__desktop": {
+      "sha256": "e9f4344a30999459cf5fb74f2b19a58eca5e35fff6f6303af1b7bc72f0758773",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:19.639Z",
+      "reviewedAt": "2026-11-01T02:49:21.622Z",
+      "reviewNote": "Root/native_portal: all 30 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-D-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/active-last__light__desktop": {
+      "sha256": "9a9aee1325acad3b7ed9d7851ddfa96c7791f699f9cfec24b04edbaa3e93f6bc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:58.332Z",
+      "reviewedAt": "2026-11-01T02:49:21.642Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/active-last__light__mobile": {
+      "sha256": "0da73e5626d47ac237818739d6377320d7e902e955141fb6e58057abffa4bd32",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:54.954Z",
+      "reviewedAt": "2026-11-01T02:49:21.642Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/active-last__light__tablet": {
+      "sha256": "d7cb628c76e9eb29c26f19b62737d9d1ab857b0117a14d1c69ad805fabc47a60",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:56.644Z",
+      "reviewedAt": "2026-11-01T02:49:21.642Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/active__light__desktop": {
+      "sha256": "5eb5dc0874ac6ebe6b2389d30fd33dddf8ec5a21a1936ca2ce1c2f0c000e5b9e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:53.273Z",
+      "reviewedAt": "2026-11-01T02:49:21.643Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/active__light__mobile": {
+      "sha256": "47f1dd7c5605c45afe4bad81ec558820a349df882666b59c4c955d51b187b896",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:49.881Z",
+      "reviewedAt": "2026-11-01T02:49:21.643Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/active__light__tablet": {
+      "sha256": "86f2e8d64f84c86619e18249ec41b8b7f6a8da4b11f774eae5c7c0a3402ae0d3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:51.583Z",
+      "reviewedAt": "2026-11-01T02:49:21.643Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/basic__light__desktop": {
+      "sha256": "d4d83213e54509e8bdeb60c5cb7858cebc99c0fbe944ecc3b270d652bb5da68d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:48.182Z",
+      "reviewedAt": "2026-11-01T02:49:21.644Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/basic__light__mobile": {
+      "sha256": "051eaa5e64baac8a258884ff5561035f4592049578b69e255acf9bad0d24895f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:44.795Z",
+      "reviewedAt": "2026-11-01T02:49:21.644Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/basic__light__tablet": {
+      "sha256": "2c87382fc811cad43f00a87b7e7aafeb25cf181456c574eb5d22186c207a838b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:46.507Z",
+      "reviewedAt": "2026-11-01T02:49:21.644Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/horizontal-active__light__desktop": {
+      "sha256": "d1029a01e1c3a0cb238f62576c0ad0be718a2eff8ab7b467a1e66ba4c50972b4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:08.561Z",
+      "reviewedAt": "2026-11-01T02:49:21.644Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/horizontal-active__light__mobile": {
+      "sha256": "ea5a15cc05384b83a0213a39d54f2fba5d39220759e2713022976b3aff2c561e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:05.154Z",
+      "reviewedAt": "2026-11-01T02:49:21.645Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/horizontal-active__light__tablet": {
+      "sha256": "ce655c0a06659f2f563dbb2e5966f48099774889a06511b5619a86d5c3106233",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:06.840Z",
+      "reviewedAt": "2026-11-01T02:49:21.645Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/horizontal__light__desktop": {
+      "sha256": "d8654953a5652d7754602da5b05380d193377e51f6f9a1fde7b9f25df14393b4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:03.436Z",
+      "reviewedAt": "2026-11-01T02:49:21.645Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/horizontal__light__mobile": {
+      "sha256": "f81038e94ed940e33d3841696112aa6175be6f64f2c494d4ae512800df3da87d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:00.032Z",
+      "reviewedAt": "2026-11-01T02:49:21.645Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/horizontal__light__tablet": {
+      "sha256": "743980b8b63ea8a00c2d798e2f961b99fd7ec82560e0e8857392799ecbb7ff8a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:01.732Z",
+      "reviewedAt": "2026-11-01T02:49:21.646Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/nested__light__desktop": {
+      "sha256": "f72f09170b62ae1958b2c97180681cfeeac1432f19cdb81c73f90bf418ef46fe",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:13.659Z",
+      "reviewedAt": "2026-11-01T02:49:21.646Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/nested__light__mobile": {
+      "sha256": "f2db47cb879828accc06f26f9e627b2d4240fd444b8a155b094fa7e49fcb5bb9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:10.246Z",
+      "reviewedAt": "2026-11-01T02:49:21.646Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/nested__light__tablet": {
+      "sha256": "a520e29b5f2c08e28ddd4cfea44feaf5996ff22413f369d5f6eaa7ae65455bf9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:11.950Z",
+      "reviewedAt": "2026-11-01T02:49:21.646Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/rtl-active__light__desktop": {
+      "sha256": "3d4b6b2d1bdd993f232a14828687aa88b4432a4a2e961ee0516d12cd973ac203",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:23.869Z",
+      "reviewedAt": "2026-11-01T02:49:21.647Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/rtl-active__light__mobile": {
+      "sha256": "4e9cf799559675b719d08caaf9fee3b28ad27a53b257888163db55795be9d8fc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:20.459Z",
+      "reviewedAt": "2026-11-01T02:49:21.647Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/rtl-active__light__tablet": {
+      "sha256": "9b4ad9e900879ffa96c7716355ee4ef5b83d065de11cebe92afa7a6558f5f0f1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:22.143Z",
+      "reviewedAt": "2026-11-01T02:49:21.647Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/semantic__light__desktop": {
+      "sha256": "ad757975cd5ef6fd51cc8dd2515ac47991bc8b0ebaeafe894275e7f01ea1d403",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:18.757Z",
+      "reviewedAt": "2026-11-01T02:49:21.647Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/semantic__light__mobile": {
+      "sha256": "e19f3977e49e72d8d6c62244c82324377f64e1f36d48d5517a69e34dafefef2a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:15.346Z",
+      "reviewedAt": "2026-11-01T02:49:21.648Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "anchor/semantic__light__tablet": {
+      "sha256": "42804d8a39306c477c2788b458634fdb82a6718ef940d26ab3b7fc060129115e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:36:17.050Z",
+      "reviewedAt": "2026-11-01T02:49:21.648Z",
+      "reviewNote": "Root/native_form_core: all 24 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/arrows__light__desktop": {
+      "sha256": "06acfea5cad910d1c0dcb3188e5d63eecd52d00cec5b49a932a50d43df2e35a5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:17.403Z",
+      "reviewedAt": "2026-11-01T02:49:21.668Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/arrows__light__mobile": {
+      "sha256": "6d38130a204f2ca6b1bde4fe1843e45d06f25acbfc12276ae314ffe6ba5042db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:13.795Z",
+      "reviewedAt": "2026-11-01T02:49:21.669Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/arrows__light__tablet": {
+      "sha256": "9638648780162b2d8909f0548de176d8b0a987281109ee18d6b4f7d7b81fe647",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:15.640Z",
+      "reviewedAt": "2026-11-01T02:49:21.669Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/basic__light__desktop": {
+      "sha256": "d62d66295cd71d10c660c34f10c3bef87ed35ace948020d9724f08d68b4c80b5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:06.875Z",
+      "reviewedAt": "2026-11-01T02:49:21.669Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/basic__light__mobile": {
+      "sha256": "9f064ee22cad6d0c9486b0b0e602d7c22912a0088f4ff8669da3e03e4b1ee0ad",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:03.432Z",
+      "reviewedAt": "2026-11-01T02:49:21.669Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/basic__light__tablet": {
+      "sha256": "1a9e8ab73f2a8b76aa9720c6a84757c03c8a831368b558a7d6a6c2c0b894e6be",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:05.148Z",
+      "reviewedAt": "2026-11-01T02:49:21.670Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/fade__light__desktop": {
+      "sha256": "d62d66295cd71d10c660c34f10c3bef87ed35ace948020d9724f08d68b4c80b5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:12.045Z",
+      "reviewedAt": "2026-11-01T02:49:21.670Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/fade__light__mobile": {
+      "sha256": "9f064ee22cad6d0c9486b0b0e602d7c22912a0088f4ff8669da3e03e4b1ee0ad",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:08.600Z",
+      "reviewedAt": "2026-11-01T02:49:21.670Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/fade__light__tablet": {
+      "sha256": "1a9e8ab73f2a8b76aa9720c6a84757c03c8a831368b558a7d6a6c2c0b894e6be",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:10.319Z",
+      "reviewedAt": "2026-11-01T02:49:21.670Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/vertical__light__desktop": {
+      "sha256": "642cc24035660109305861c919f2f9fbeddbabae31a20cf4c19ad7141fcfcc4a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:22.586Z",
+      "reviewedAt": "2026-11-01T02:49:21.671Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/vertical__light__mobile": {
+      "sha256": "e3600d6ae0ed07b2f25040c3794e19daccee6d029b08274c396e6ff41c17bda9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:19.126Z",
+      "reviewedAt": "2026-11-01T02:49:21.671Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "carousel/vertical__light__tablet": {
+      "sha256": "f1ca7daff7dbb751b6703c680242c391088d619b37d1dec6eb54e15be8cb3b27",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:20.847Z",
+      "reviewedAt": "2026-11-01T02:49:21.671Z",
+      "reviewNote": "Root/native_form_core: all 12 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/basic__light__desktop": {
+      "sha256": "120fe8fa8924e0885d8dd66ffdee79ce5fa4f6e7618f7399803401698153f476",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:49.282Z",
+      "reviewedAt": "2026-11-01T02:49:21.690Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/basic__light__mobile": {
+      "sha256": "caf39a9cc0948c8f78a8984f56ab9c098287ceb9650739a91f619e10605bfaa1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:45.862Z",
+      "reviewedAt": "2026-11-01T02:49:21.691Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/basic__light__tablet": {
+      "sha256": "99c422f0e00d455fd6ca09b8920961e98bdf8708dd815b14f8d760d7201c2f96",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:47.572Z",
+      "reviewedAt": "2026-11-01T02:49:21.691Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/groupSticky__light__desktop": {
+      "sha256": "d1a499afacca5dc5ee4c0e3d2aa675a9562fc9a4e89993764d2fa878df8744e7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:54.409Z",
+      "reviewedAt": "2026-11-01T02:49:21.691Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/groupSticky__light__mobile": {
+      "sha256": "d9dd0c8d73ec4d97aeb34570ea9bd2c9914dca1643629b297cbce0fab9d28d1f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:51.003Z",
+      "reviewedAt": "2026-11-01T02:49:21.692Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/groupSticky__light__tablet": {
+      "sha256": "97af8af83f000eab783ab7da8ba200f812fee1d7670c3d37f215fa94a805d32a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:52.692Z",
+      "reviewedAt": "2026-11-01T02:49:21.692Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/height__light__desktop": {
+      "sha256": "c2bcfaea7ca572708c8e8dda358f18d36c0993419424b4e17d3b8e239aeadb09",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:59.531Z",
+      "reviewedAt": "2026-11-01T02:49:21.692Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/height__light__mobile": {
+      "sha256": "7b6d61c4b1c72338e33fc4b89f9c4c3183fd22149318751d4a1a98d524ac79d2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:56.116Z",
+      "reviewedAt": "2026-11-01T02:49:21.692Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "listy/height__light__tablet": {
+      "sha256": "19cab3d686984d40bf0472e75f0ebf18919b64b0546c33e569ae06fbe87dd172",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:57.829Z",
+      "reviewedAt": "2026-11-01T02:49:21.693Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/dark__light__desktop": {
+      "sha256": "435580965536080e69704aa9daab2279a1efeb327de180859e67a287f8f80a94",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:40.493Z",
+      "reviewedAt": "2026-11-01T02:49:21.712Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/dark__light__mobile": {
+      "sha256": "d4c843d6f742fb5c0681e7b00a32225932c27686268123cc1592f0be3c6d87a1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:37.034Z",
+      "reviewedAt": "2026-11-01T02:49:21.712Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/dark__light__tablet": {
+      "sha256": "de8e70c132d10752bc4c80e4ba7ecfeeb5462a732d87e1be2d8b5210560d1853",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:38.752Z",
+      "reviewedAt": "2026-11-01T02:49:21.713Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/inline__light__desktop": {
+      "sha256": "d68bb4b57a7e5ff687f5350e3df18dd875236b59dff632df4410eb23ccb3dca2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:35.331Z",
+      "reviewedAt": "2026-11-01T02:49:21.713Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/inline__light__mobile": {
+      "sha256": "1bfd5d73026446bce9c73821959ecd4e0aaa88975dfdb696182d688a7dbc2f4c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:31.881Z",
+      "reviewedAt": "2026-11-01T02:49:21.713Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/inline__light__tablet": {
+      "sha256": "dfe8ac2dee8a100133915bc1bd85ca221f89e79e2355a81ca2ddac182831648a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:33.603Z",
+      "reviewedAt": "2026-11-01T02:49:21.713Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/vertical__light__desktop": {
+      "sha256": "29e290fbfd47c350958d41722ee31eda95be4815a1e736780668355aa802d917",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:30.157Z",
+      "reviewedAt": "2026-11-01T02:49:21.714Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/vertical__light__mobile": {
+      "sha256": "6774df540951b2c08332b2d286c74919d28506231a6e65bd770e8cb36b3b8314",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:26.636Z",
+      "reviewedAt": "2026-11-01T02:49:21.714Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "menu/vertical__light__tablet": {
+      "sha256": "24d67411fb3115f01ee6222a4428e395a3b8738b610d524454208ffabdbfd468",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:35:28.397Z",
+      "reviewedAt": "2026-11-01T02:49:21.714Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/basic__light__desktop": {
+      "sha256": "9ec74b538db330a1665d46c9c21c48e08b7b794e6c1895873f35c3a48a4a1c07",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:31.866Z",
+      "reviewedAt": "2026-11-01T02:49:21.733Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/basic__light__mobile": {
+      "sha256": "6b3edfa12c42189835e6eeb2d72d4b4c02afa246fa77dae20fd1a4b488d759f6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:28.443Z",
+      "reviewedAt": "2026-11-01T02:49:21.734Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/basic__light__tablet": {
+      "sha256": "773026879b8dd9cfc35b6282c51a7a0f543744ebb81adcedef2097e066d679f0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:30.157Z",
+      "reviewedAt": "2026-11-01T02:49:21.734Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/multiple__light__desktop": {
+      "sha256": "f2d447670d42f568a25286cba2e04f088d079256639edf9c8797864586833928",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:42.130Z",
+      "reviewedAt": "2026-11-01T02:49:21.734Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/multiple__light__mobile": {
+      "sha256": "b05a8743a5cac97d6b3be84bf6d3b457337cd114ed2879eb98265fc9d442cf7f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:38.704Z",
+      "reviewedAt": "2026-11-01T02:49:21.734Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/multiple__light__tablet": {
+      "sha256": "90acd40b23d2c33a48ac28e137bb988b1d40d7bd23abb3eeb2876b14119513db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:40.425Z",
+      "reviewedAt": "2026-11-01T02:49:21.735Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/vertical__light__desktop": {
+      "sha256": "9b416bf00be7a9df02ea6e6677440fae8dfb822da126b08d9b70d033a3a9e857",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:37.001Z",
+      "reviewedAt": "2026-11-01T02:49:21.735Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/vertical__light__mobile": {
+      "sha256": "28e25126bc89bb1fbe743a52c845e4f9de4cb32018ac30671cffcc51dafd36af",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:33.591Z",
+      "reviewedAt": "2026-11-01T02:49:21.735Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
+    },
+    "splitter/vertical__light__tablet": {
+      "sha256": "aaea173e6e5deba85690154efa64875efd35443ea5b3e4630ea5385039eba499",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+      "dirty": false,
+      "capturedAt": "2026-11-01T02:34:35.296Z",
+      "reviewedAt": "2026-11-01T02:49:21.735Z",
+      "reviewNote": "Root/native_form_core: all 9 corrected candidates actually reviewed across three viewports; rejected originals and failures retained, raw detail and real-clock native interaction checks passed. Exact reviewed scope: /tmp/apollo-visual-closeout-E-26e5ddd0/review.json. No hidden content, skipped cases, lowered pixel/coverage thresholds or automatic acceptance. Full matrix comparison remains pending."
     }
   }
 }
