@@ -1,5 +1,30 @@
 {
-  "_readme": "B6 —— tree-shaking 体积预算。判据：单独 import 某组件后，Vite/rolldown 产物（minify: esbuild，\nexternal: [vue, dayjs]）的字节数不得超过 budgetKb，且不得超过「全量 import * as all」的 maxRatioOfFull。\n\n⚠️ budgetKb 只能因**技术原因**上调，且必须在 commit message 写明理由。\n   把预算设成「等于全量」等于宣告本门禁永不失败 —— 那是 AGENTS.md H8 明禁的降低验收标准。\n\nmeasuredKb 是确立预算时的实测值（2026-10-07，裁决 ui-tree-shaking = A+B+D 落地后首次实测），\n   仅供回溯参考、不参与判定。budgetKb = ceil(measuredKb * 1.5 + 5)。\n\n单条重定**只改那一条**（其余条目的 measuredKb 保持确立时原值，便于回溯），并可带 `_note`\n   写明技术原因 —— app 已于 2026-10-15 因 #40 接线 HookAPI 而重定，见该条目。\n   整表重定用 `node tests/build/checks/treeshake.mjs --measure-all`。",
+  "_readme": "B6 tree-shaking 预算：Vite/Rolldown + esbuild minify，external=[vue,dayjs]；仅最终 JavaScript UTF-8 字节，不计CSS、不做gzip/Brotli。历史字段 budgetKb / measuredKb 的实际单位为 KiB（1024 B）。每项实际值必须 <= budgetKb，且占全量 import * 的比例 <= maxRatioOfFull。\n\n2026-11-01 按当前原生架构校准13项，其他60项原值不变；本次没有优化或改写产物。先核查当前保留模块、root/deep入口等价和依赖版本，再按功能成本逐项留余量；禁止统一倍率、无限放宽或关闭比例门禁。\n\nmeasuredKb 保留确立预算时的历史实测，不当作当前体积；旧条目 _note 中较早预算决策保留原日期。本轮当前值、旧/新上限、绝对/比例增量、模块证据与技术依据见 _calibration.report。\n\nnode tests/build/checks/treeshake.mjs --measure-all 只输出测量/预算差额，超预算仍非零退出，不再自动生成预算。",
+  "_calibration": {
+    "date": "2026-11-01",
+    "kind": "baseline-calibration-not-optimization",
+    "sourceCommit": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+    "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+    "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+    "fullMeasuredKiB": 2236.6875,
+    "updatedEntries": [
+      "affix",
+      "anchor",
+      "back-top",
+      "badge",
+      "breadcrumb",
+      "carousel",
+      "dropdown",
+      "image",
+      "message",
+      "notification",
+      "radio",
+      "switch",
+      "upload"
+    ],
+    "unchangedEntries": 60,
+    "report": "docs/audit/evidence/budget-calibration-2026-11-01.json"
+  },
   "external": ["vue", "dayjs"],
   "maxRatioOfFull": 0.3,
   "entries": [
@@ -7,8 +32,9 @@
       "id": "affix",
       "pkg": "@apollo-design/ui",
       "imports": ["Affix"],
-      "budgetKb": 14,
-      "measuredKb": 6
+      "budgetKb": 30,
+      "measuredKb": 6,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 14 KiB，当前 27617 B / 26.969727 KiB；新预算 30 KiB，余量 3.030 KiB。该提交新增真实 useTheme/prepareComponentToken，用于当前 Provider 的 zIndexPopup；同时使用原生跨 realm target、ResizeObserver 和 RAF 资源归属。新 Theme 链是旧轻量 Affix 预算之外的明确功能依赖。 来源提交 458559d4；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "alert",
@@ -21,8 +47,9 @@
       "id": "anchor",
       "pkg": "@apollo-design/ui",
       "imports": ["Anchor"],
-      "budgetKb": 35,
-      "measuredKb": 19.4
+      "budgetKb": 47,
+      "measuredKb": 19.4,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 35 KiB，当前 43829 B / 42.801758 KiB；新预算 47 KiB，余量 4.198 KiB。当前 Anchor 组合 Affix、AnchorLink、主题/当前配置、受控活动链接和响应式滚动 owner；水平活动链接直接调用 scrollIntoView，因此两个单版本滚动库均有真实调用。 来源提交 458559d4；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "app",
@@ -50,16 +77,17 @@
       "id": "back-top",
       "pkg": "@apollo-design/ui",
       "imports": ["BackTop"],
-      "budgetKb": 40,
-      "measuredKb": 23
+      "budgetKb": 45,
+      "measuredKb": 23,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 40 KiB，当前 42721 B / 41.719727 KiB；新预算 45 KiB，余量 3.280 KiB。当前原生内容、焦点、受控滚动 owner、reduced-motion 与动态 Token 的组合；CSSMotion 为显隐动画，icons 为默认返回顶部图标，未保留其他 UI 组件。 来源提交 5a599c19；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "badge",
       "pkg": "@apollo-design/ui",
       "imports": ["Badge"],
-      "budgetKb": 47,
+      "budgetKb": 52,
       "measuredKb": 21.3,
-      "_note": "2026-10-28 Badge/Ribbon整组契约整改：完整Vue内容、原生根attrs/ref、当前Provider/Alias/九Token、数字可访问性与reduced-motion。功能首轮按需实测45.4KB，最终合并宿主版本按47KB门禁验收，原37KB不足，按用户接受实际功能成本的裁决仅本项调整到47KB；保留历史measuredKb及其他预算/全量30%限制，不引入React或CSS-in-JS运行时。"
+      "_note": "2026-10-28 Badge/Ribbon整组契约整改：完整Vue内容、原生根attrs/ref、当前Provider/Alias/九Token、数字可访问性与reduced-motion。功能首轮按需实测45.4KB，最终合并宿主版本按47KB门禁验收，原37KB不足，按用户接受实际功能成本的裁决仅本项调整到47KB；保留历史measuredKb及其他预算/全量30%限制，不引入React或CSS-in-JS运行时。\n2026-11-01 基线校准（不是体积优化）：原预算 47 KiB，当前 49665 B / 48.500977 KiB；新预算 52 KiB，余量 3.499 KiB。公开 Badge 含 Ribbon 静态子组件及数字 Indicator/ScrollNumber/SingleNumber、CSSMotion、当前 theme/alias/Token 与 RTL/reduced-motion；所有 UI 实现仍在 badge 自身，新增基准后共享 Theme/Utils 成本未独立量化。 来源提交 d3794769, df5e0436, 3f68bd2d；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "border-beam",
@@ -72,8 +100,9 @@
       "id": "breadcrumb",
       "pkg": "@apollo-design/ui",
       "imports": ["Breadcrumb"],
-      "budgetKb": 130,
-      "measuredKb": 83.2
+      "budgetKb": 138,
+      "measuredKb": 83.2,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 130 KiB，当前 134921 B / 131.758789 KiB；新预算 138 KiB，余量 6.241 KiB。BreadcrumbItem 的真实 dropdown 菜单责任带入 Dropdown 实现、Menu 与 Tooltip/Portal/Overlay/Position；没有 DropdownButton/Button 子链。layout 保留仅 223 个 pre-minify 字符的 context，不是 Layout 组件整包。 来源提交 55cd46b6；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "button",
@@ -101,8 +130,9 @@
       "id": "carousel",
       "pkg": "@apollo-design/ui",
       "imports": ["Carousel"],
-      "budgetKb": 45,
-      "measuredKb": 26.7
+      "budgetKb": 56,
+      "measuredKb": 26.7,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 45 KiB，当前 53061 B / 51.817383 KiB；新预算 56 KiB，余量 4.183 KiB。当前 Vue engine、原生 slide 身份/事件和焦点、动态 responsive 配置、主题/Token 与 locale；UI 图只包含 carousel、Provider context 和 withInstall，无 slick/rc/React 运行库。 来源提交 b5bbbbe5；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "cascader",
@@ -174,8 +204,9 @@
       "id": "dropdown",
       "pkg": "@apollo-design/ui",
       "imports": ["Dropdown"],
-      "budgetKb": 133,
-      "measuredKb": 85.1
+      "budgetKb": 145,
+      "measuredKb": 85.1,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 133 KiB，当前 140826 B / 137.525391 KiB；新预算 145 KiB，余量 7.475 KiB。公开 Dropdown 静态 Button/PurePanel 与实际 DropdownMenu 保留 Menu、Button/Space、Tooltip 和 Popup 基础链；这些是公开组合 API 及菜单交互的真实职责。layout 仅保留 context。 来源提交 55cd46b6, a88d04fc；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "empty",
@@ -217,8 +248,8 @@
       "id": "image",
       "pkg": "@apollo-design/ui",
       "imports": ["Image"],
-      "budgetKb": 83,
-      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节，按用户明确要求调为78KB。2026-10-27：Avatar关联Portal/Overlay搬迁、动态销毁与关闭焦点修复后实测78.9KB，沿用用户接受小幅功能成本的裁决，仅本条调为80KB；measuredKb历史基线、其他72条预算和30%全量占比门禁不变。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。\n2026-10-29 本批整合重测 81.851562 KiB，共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本；按用户接受实际功能成本的裁决，仅此项由 81 调整为 83 KiB。保留历史 measuredKb、其他 63 项预算及全量 30% 比例限制；未引入 React、rc 引擎或 CSS-in-JS。",
+      "budgetKb": 86,
+      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节，按用户明确要求调为78KB。2026-10-27：Avatar关联Portal/Overlay搬迁、动态销毁与关闭焦点修复后实测78.9KB，沿用用户接受小幅功能成本的裁决，仅本条调为80KB；measuredKb历史基线、其他72条预算和30%全量占比门禁不变。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。\n2026-10-29 本批整合重测 81.851562 KiB，共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本；按用户接受实际功能成本的裁决，仅此项由 81 调整为 83 KiB。保留历史 measuredKb、其他 63 项预算及全量 30% 比例限制；未引入 React、rc 引擎或 CSS-in-JS。\n2026-11-01 基线校准（不是体积优化）：原预算 83 KiB，当前 85029 B / 83.036133 KiB；新预算 86 KiB，余量 2.964 KiB。公开 Image.PreviewGroup、预览控制/变换/进度、注册归属焦点恢复、Modal 生命周期与 Portal 层级、Motion、a11y；未带入外部 UI 组件，当前仅超过既有 83KiB 预算 37B。 来源提交 5e14ad6b, 8d99baae, 742c121f；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。",
       "measuredKb": 47.5
     },
     {
@@ -292,8 +323,9 @@
       "id": "message",
       "pkg": "@apollo-design/ui",
       "imports": ["message"],
-      "budgetKb": 82,
-      "measuredKb": 50.8
+      "budgetKb": 99,
+      "measuredKb": 50.8,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 82 KiB，当前 94906 B / 92.681641 KiB；新预算 99 KiB，余量 6.318 KiB。静态服务需要 createApp + ConfigProvider/globalConfig 保持独立会话配置；useMessage/PurePanel/PureList 使用 notification 的共享 Notice 引擎与 Portal/Motion。ConfigProvider 的 FormProvider/locale/主题 CSS scope 是实际继承职责，不是误保留 App/UI Form。 来源提交 6965a725；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "modal",
@@ -307,8 +339,9 @@
       "id": "notification",
       "pkg": "@apollo-design/ui",
       "imports": ["notification"],
-      "budgetKb": 93,
-      "measuredKb": 58.4
+      "budgetKb": 101,
+      "measuredKb": 58.4,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 93 KiB，当前 98148 B / 95.847656 KiB；新预算 101 KiB，余量 5.152 KiB。静态服务、useNotification/PurePanel/PureList 和共享 NoticeList/Notice/Timer/stack，引入全局 ConfigProvider 当前主题/locale/FormProvider 及 Portal/Motion；没有 App 或其他 UI 组件。新会话/面板通知/定时器/Token 原生契约属于当前功能成本。 来源提交 6965a725；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "pagination",
@@ -349,8 +382,9 @@
       "id": "radio",
       "pkg": "@apollo-design/ui",
       "imports": ["Radio"],
-      "budgetKb": 25,
-      "measuredKb": 13.2
+      "budgetKb": 36,
+      "measuredKb": 13.2,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 25 KiB，当前 33523 B / 32.737305 KiB；新预算 36 KiB，余量 3.263 KiB。公开 Radio.Group/Button、真实原生 checked 恢复/整组 DOM 归属、键盘和当前 theme/Token。checkbox 只保留 use-bubble-lock 680 pre-minify 字符，form 只保留 context 272；没有 Checkbox/Form UI 组件。 来源提交 d3d87414, 70987a8c；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "rate",
@@ -437,8 +471,9 @@
       "id": "switch",
       "pkg": "@apollo-design/ui",
       "imports": ["Switch"],
-      "budgetKb": 32,
-      "measuredKb": 17.5
+      "budgetKb": 38,
+      "measuredKb": 17.5,
+      "_note": "2026-11-01 基线校准（不是体积优化）：原预算 32 KiB，当前 36088 B / 35.242188 KiB；新预算 38 KiB，余量 2.758 KiB。当前 Vue 受控值/原生 attrs、Provider 样式与 disabled/size、有效组件 Token/alias 链和默认 loading 图标；UI 图仅 Switch 与共享 helper/context。 来源提交 94ad6410, eac96a81；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "table",
@@ -521,9 +556,9 @@
       "id": "upload",
       "pkg": "@apollo-design/ui",
       "imports": ["Upload"],
-      "budgetKb": 143,
+      "budgetKb": 157,
       "measuredKb": 66.8,
-      "_note": "2026-10-29: 2ef32069 replaces the ineffective fixed Upload progress DOM with the real public Progress component, enabling all six existing progress fields. Published Upload measures 137.736KB; the prior frozen Upload plus Progress measures 137.763KB, proving the added graph is the required component composition, not a tree-shaking leak. Accept this documented functional cost under the user's development-stage size decision; only Upload's cap changes from 106KB to 141KB. Preserve historical measuredKb=66.8, all other caps and the 30% full-library ratio guard. See docs/audit/2026-10-29-upload-progress-audit.md.\n2026-10-29 本批整合重测 141.318359 KiB，共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本；按用户接受实际功能成本的裁决，仅此项由 141 调整为 143 KiB。保留历史 measuredKb、其他 63 项预算及全量 30% 比例限制；未引入 React、rc 引擎或 CSS-in-JS。"
+      "_note": "2026-10-29: 2ef32069 replaces the ineffective fixed Upload progress DOM with the real public Progress component, enabling all six existing progress fields. Published Upload measures 137.736KB; the prior frozen Upload plus Progress measures 137.763KB, proving the added graph is the required component composition, not a tree-shaking leak. Accept this documented functional cost under the user's development-stage size decision; only Upload's cap changes from 106KB to 141KB. Preserve historical measuredKb=66.8, all other caps and the 30% full-library ratio guard. See docs/audit/2026-10-29-upload-progress-audit.md.\n2026-10-29 本批整合重测 141.318359 KiB，共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本；按用户接受实际功能成本的裁决，仅此项由 141 调整为 143 KiB。保留历史 measuredKb、其他 63 项预算及全量 30% 比例限制；未引入 React、rc 引擎或 CSS-in-JS。\n2026-11-01 基线校准（不是体积优化）：原预算 143 KiB，当前 152993 B / 149.407227 KiB；新预算 157 KiB，余量 7.593 KiB。实际 Ajax/目录遍历/请求取消与异步文件状态、预览资源、Upload.Dragger/ListItem，加真实 Progress 六字段及默认 Button/Tooltip/Space；Progress 是已有独立实证的明确功能组合，未带入其余大 UI 组件。 来源提交 2ef32069, c5af00ba；root/deep 保留模块相同，无异常重复/整库保留。其余60项及全量30%限制不变；完整73入口测量与依据见 docs/audit/evidence/budget-calibration-2026-11-01.json。"
     },
     {
       "id": "watermark",

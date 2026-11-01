@@ -57,7 +57,8 @@ export function exportNamesOf(dirName) {
 }
 
 /**
- * 构建一个只 import 指定导出的入口，返回产物的**未压缩字节数**。
+ * 构建一个只 import 指定导出的入口，返回 esbuild minify 后的 JS UTF-8 字节数。
+ * 不计 CSS/其他 asset，不做 gzip/Brotli；budgetKb / actualKb 的实际单位均为 KiB。
  *
  * @param repoRoot 仓库根（探针目录建在这里，保证模块解析可达）
  * @param pkg      被测包名（如 `@apollo-design/ui`）
@@ -172,44 +173,34 @@ export function listComponentDirs(repoRoot, uiDistModule) {
 }
 
 /**
- * CLI：重新测量全部组件，把**可直接写入 budget.json 的 JSON**打到 stdout。
+ * CLI：按现有口径重测全部预算入口，输出事实与旧预算差额，不生成新阈值。
  *
- *   node tests/build/checks/treeshake.mjs --measure-all > tests/build/budget.json
+ *   node tests/build/checks/treeshake.mjs --measure-all > /tmp/apollo-budget-measurement.json
  *
- * 为什么需要它：budget.json 里有 73 个数字，没有再生手段它们就是**只能手工维护的死数**
- * —— 下一次产物形态变化时会有人手改甚至放弃这条门禁。有了这条命令，重新定预算是
- * 一次可复现的操作（改完仍需人工 review diff 并在 commit message 说明理由）。
- *
- * ⚠️ 预算系数（1.5× + 5 KB）写在这里，与 budget.json 的 `_readme` 保持一致。
+ * 先检查保留模块、依赖及功能来源，再逐项确定合理余量并记录依据。
+ * 不覆盖 budget.json，也不再用统一倍率把实测值自动变成预算。
+ * 超预算仍非零退出；测量输出不能被复制成一份自动放宽的预算。
  */
 async function measureAll() {
   const repoRoot = resolve(join(new URL(import.meta.url).pathname, '..'), '../../..');
   const mod = await import(pathToFileURL(join(repoRoot, 'packages/ui/dist/index.mjs')).href);
-  const external = ['vue', 'dayjs'];
-  const pkg = '@apollo-design/ui';
-
-  const fullKb = (await measureImportSize({ repoRoot, pkg, imports: [], external })) / 1024;
-  const entries = [];
-  for (const dir of listComponentDirs(repoRoot, mod)) {
-    const imports = exportNamesOf(dir);
-    const missing = imports.filter((n) => !(n in mod));
-    if (missing.length) {
-      console.error(`跳过 ${dir}：包入口没有导出 ${missing.join(',')}`);
-      continue;
-    }
-    // eslint-disable-next-line no-await-in-loop -- 串行，避免并发构建的内存峰值
-    const kb = (await measureImportSize({ repoRoot, pkg, imports, external })) / 1024;
-    entries.push({
-      id: dir,
-      pkg,
-      imports,
-      budgetKb: Math.ceil(kb * 1.5 + 5),
-      measuredKb: Number(kb.toFixed(1)),
-    });
-    console.error(`  ${dir.padEnd(18)} ${kb.toFixed(1).padStart(8)} KB`);
+  const budget = JSON.parse(readFileSync(join(repoRoot, 'tests/build/budget.json'), 'utf8'));
+  const expected = listComponentDirs(repoRoot, mod);
+  const configured = budget.entries.map((entry) => entry.id).sort();
+  if (JSON.stringify(expected) !== JSON.stringify(configured)) {
+    throw new Error('budget.entries 必须与全部组件入口一致，不能跳过缺失或重复入口');
   }
-  console.error(`  全量 ${fullKb.toFixed(1)} KB；共 ${entries.length} 条`);
-  process.stdout.write(`${JSON.stringify({ external, maxRatioOfFull: 0.3, entries }, null, 2)}\n`);
+  const out = await runBudgetChecks(repoRoot, budget);
+  const results = out.results.map((entry) => ({
+    ...entry,
+    actualBytes: entry.actualKb * 1024,
+    deltaBytes: (entry.actualKb - entry.budgetKb) * 1024,
+    deltaPercent: (entry.actualKb / entry.budgetKb - 1) * 100,
+  }));
+  process.stdout.write(
+    `${JSON.stringify({ unit: 'KiB (1024 bytes), minified JS, no gzip/Brotli or CSS', ...out, results }, null, 2)}\n`,
+  );
+  if (out.failures.length) process.exitCode = 1;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

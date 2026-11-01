@@ -1,0 +1,2533 @@
+{
+  "kind": "baseline-calibration-not-optimization",
+  "sourceCommit": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+  "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+  "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+  "measurement": {
+    "tool": "Existing tests/build/checks/treeshake.mjs:runBudgetChecks",
+    "unit": "KiB (1024 bytes)",
+    "output": "minified JavaScript code, not gzip/Brotli; CSS assets are not counted",
+    "minify": "esbuild",
+    "bundler": "Vite/Rolldown",
+    "external": [
+      "vue",
+      "dayjs"
+    ],
+    "maxRatioOfFull": 0.3
+  },
+  "measuredAt": "2026-11-01T04:46:30.743Z",
+  "durationMs": 16941,
+  "fullKb": 2236.6875,
+  "entries": [
+    {
+      "id": "affix",
+      "actualKb": 26.9697265625,
+      "budgetKb": 14,
+      "fullKb": 2236.6875,
+      "ratio": 0.012057887640763406,
+      "ok": false,
+      "detail": "Affix: 27.0 KB / 全量 2236.7 KB (1.2%) / 预算 14 KB",
+      "actualBytes": 27617,
+      "oldBudgetBytes": 14336,
+      "deltaBytes": 13281,
+      "deltaPct": 92.64090401785714,
+      "newBudgetKb": 30
+    },
+    {
+      "id": "alert",
+      "actualKb": 51.1650390625,
+      "budgetKb": 53,
+      "fullKb": 2236.6875,
+      "ratio": 0.02287536326040182,
+      "ok": true,
+      "detail": "Alert: 51.2 KB / 全量 2236.7 KB (2.3%) / 预算 53 KB",
+      "actualBytes": 52393,
+      "oldBudgetBytes": 54272,
+      "deltaBytes": -1879,
+      "deltaPct": -3.4621904481132115,
+      "newBudgetKb": 53
+    },
+    {
+      "id": "anchor",
+      "actualKb": 42.8017578125,
+      "budgetKb": 35,
+      "fullKb": 2236.6875,
+      "ratio": 0.01913622614357169,
+      "ok": false,
+      "detail": "Anchor: 42.8 KB / 全量 2236.7 KB (1.9%) / 预算 35 KB",
+      "actualBytes": 43829,
+      "oldBudgetBytes": 35840,
+      "deltaBytes": 7989,
+      "deltaPct": 22.290736607142847,
+      "newBudgetKb": 47
+    },
+    {
+      "id": "app",
+      "actualKb": 149.208984375,
+      "budgetKb": 194,
+      "fullKb": 2236.6875,
+      "ratio": 0.06670980383938302,
+      "ok": true,
+      "detail": "App: 149.2 KB / 全量 2236.7 KB (6.7%) / 预算 194 KB",
+      "actualBytes": 152790,
+      "oldBudgetBytes": 198656,
+      "deltaBytes": -45866,
+      "deltaPct": -23.08815238402062,
+      "newBudgetKb": 194
+    },
+    {
+      "id": "auto-complete",
+      "actualKb": 156.7978515625,
+      "budgetKb": 212,
+      "fullKb": 2236.6875,
+      "ratio": 0.07010270838572666,
+      "ok": true,
+      "detail": "AutoComplete: 156.8 KB / 全量 2236.7 KB (7.0%) / 预算 212 KB",
+      "actualBytes": 160561,
+      "oldBudgetBytes": 217088,
+      "deltaBytes": -56527,
+      "deltaPct": -26.038749262971695,
+      "newBudgetKb": 212
+    },
+    {
+      "id": "avatar",
+      "actualKb": 90.9697265625,
+      "budgetKb": 120,
+      "fullKb": 2236.6875,
+      "ratio": 0.0406716300611954,
+      "ok": true,
+      "detail": "Avatar: 91.0 KB / 全量 2236.7 KB (4.1%) / 预算 120 KB",
+      "actualBytes": 93153,
+      "oldBudgetBytes": 122880,
+      "deltaBytes": -29727,
+      "deltaPct": -24.191894531250004,
+      "newBudgetKb": 120
+    },
+    {
+      "id": "back-top",
+      "actualKb": 41.7197265625,
+      "budgetKb": 40,
+      "fullKb": 2236.6875,
+      "ratio": 0.018652461089222343,
+      "ok": false,
+      "detail": "BackTop: 41.7 KB / 全量 2236.7 KB (1.9%) / 预算 40 KB",
+      "actualBytes": 42721,
+      "oldBudgetBytes": 40960,
+      "deltaBytes": 1761,
+      "deltaPct": 4.299316406250009,
+      "newBudgetKb": 45
+    },
+    {
+      "id": "badge",
+      "actualKb": 48.5009765625,
+      "budgetKb": 47,
+      "fullKb": 2236.6875,
+      "ratio": 0.021684288289043507,
+      "ok": false,
+      "detail": "Badge: 48.5 KB / 全量 2236.7 KB (2.2%) / 预算 47 KB",
+      "actualBytes": 49665,
+      "oldBudgetBytes": 48128,
+      "deltaBytes": 1537,
+      "deltaPct": 3.193567154255317,
+      "newBudgetKb": 52
+    },
+    {
+      "id": "border-beam",
+      "actualKb": 7.7880859375,
+      "budgetKb": 11,
+      "fullKb": 2236.6875,
+      "ratio": 0.0034819732025595886,
+      "ok": true,
+      "detail": "BorderBeam: 7.8 KB / 全量 2236.7 KB (0.3%) / 预算 11 KB",
+      "actualBytes": 7975,
+      "oldBudgetBytes": 11264,
+      "deltaBytes": -3289,
+      "deltaPct": -29.19921875,
+      "newBudgetKb": 11
+    },
+    {
+      "id": "breadcrumb",
+      "actualKb": 131.7587890625,
+      "budgetKb": 130,
+      "fullKb": 2236.6875,
+      "ratio": 0.05890800081035013,
+      "ok": false,
+      "detail": "Breadcrumb: 131.8 KB / 全量 2236.7 KB (5.9%) / 预算 130 KB",
+      "actualBytes": 134921,
+      "oldBudgetBytes": 133120,
+      "deltaBytes": 1801,
+      "deltaPct": 1.3529146634615463,
+      "newBudgetKb": 138
+    },
+    {
+      "id": "button",
+      "actualKb": 42.0576171875,
+      "budgetKb": 45,
+      "fullKb": 2236.6875,
+      "ratio": 0.018803528515941543,
+      "ok": true,
+      "detail": "Button: 42.1 KB / 全量 2236.7 KB (1.9%) / 预算 45 KB",
+      "actualBytes": 43067,
+      "oldBudgetBytes": 46080,
+      "deltaBytes": -3013,
+      "deltaPct": -6.538628472222219,
+      "newBudgetKb": 45
+    },
+    {
+      "id": "calendar",
+      "actualKb": 214.3662109375,
+      "budgetKb": 294,
+      "fullKb": 2236.6875,
+      "ratio": 0.09584093036577528,
+      "ok": true,
+      "detail": "Calendar: 214.4 KB / 全量 2236.7 KB (9.6%) / 预算 294 KB",
+      "actualBytes": 219511,
+      "oldBudgetBytes": 301056,
+      "deltaBytes": -81545,
+      "deltaPct": -27.086322810374153,
+      "newBudgetKb": 294
+    },
+    {
+      "id": "card",
+      "actualKb": 170.1982421875,
+      "budgetKb": 178,
+      "fullKb": 2236.6875,
+      "ratio": 0.07609388534942857,
+      "ok": true,
+      "detail": "Card: 170.2 KB / 全量 2236.7 KB (7.6%) / 预算 178 KB",
+      "actualBytes": 174283,
+      "oldBudgetBytes": 182272,
+      "deltaBytes": -7989,
+      "deltaPct": -4.38301000702247,
+      "newBudgetKb": 178
+    },
+    {
+      "id": "carousel",
+      "actualKb": 51.8173828125,
+      "budgetKb": 45,
+      "fullKb": 2236.6875,
+      "ratio": 0.02316701944840305,
+      "ok": false,
+      "detail": "Carousel: 51.8 KB / 全量 2236.7 KB (2.3%) / 预算 45 KB",
+      "actualBytes": 53061,
+      "oldBudgetBytes": 46080,
+      "deltaBytes": 6981,
+      "deltaPct": 15.149739583333343,
+      "newBudgetKb": 56
+    },
+    {
+      "id": "cascader",
+      "actualKb": 144.3349609375,
+      "budgetKb": 172,
+      "fullKb": 2236.6875,
+      "ratio": 0.06453067803951155,
+      "ok": true,
+      "detail": "Cascader: 144.3 KB / 全量 2236.7 KB (6.5%) / 预算 172 KB",
+      "actualBytes": 147799,
+      "oldBudgetBytes": 176128,
+      "deltaBytes": -28329,
+      "deltaPct": -16.084325036337212,
+      "newBudgetKb": 172
+    },
+    {
+      "id": "checkbox",
+      "actualKb": 9.4609375,
+      "budgetKb": 19,
+      "fullKb": 2236.6875,
+      "ratio": 0.004229887948137592,
+      "ok": true,
+      "detail": "Checkbox: 9.5 KB / 全量 2236.7 KB (0.4%) / 预算 19 KB",
+      "actualBytes": 9688,
+      "oldBudgetBytes": 19456,
+      "deltaBytes": -9768,
+      "deltaPct": -50.205592105263165,
+      "newBudgetKb": 19
+    },
+    {
+      "id": "collapse",
+      "actualKb": 53.0576171875,
+      "budgetKb": 54,
+      "fullKb": 2236.6875,
+      "ratio": 0.023721515494453293,
+      "ok": true,
+      "detail": "Collapse: 53.1 KB / 全量 2236.7 KB (2.4%) / 预算 54 KB",
+      "actualBytes": 54331,
+      "oldBudgetBytes": 55296,
+      "deltaBytes": -965,
+      "deltaPct": -1.745153356481477,
+      "newBudgetKb": 54
+    },
+    {
+      "id": "color-picker",
+      "actualKb": 341.9697265625,
+      "budgetKb": 424,
+      "fullKb": 2236.6875,
+      "ratio": 0.15289115111632715,
+      "ok": true,
+      "detail": "ColorPicker: 342.0 KB / 全量 2236.7 KB (15.3%) / 预算 424 KB",
+      "actualBytes": 350177,
+      "oldBudgetBytes": 434176,
+      "deltaBytes": -83999,
+      "deltaPct": -19.346762603183965,
+      "newBudgetKb": 424
+    },
+    {
+      "id": "config-provider",
+      "actualKb": 37.7353515625,
+      "budgetKb": 83,
+      "fullKb": 2236.6875,
+      "ratio": 0.016871087964903456,
+      "ok": true,
+      "detail": "ConfigProvider: 37.7 KB / 全量 2236.7 KB (1.7%) / 预算 83 KB",
+      "actualBytes": 38641,
+      "oldBudgetBytes": 84992,
+      "deltaBytes": -46351,
+      "deltaPct": -54.535721009036145,
+      "newBudgetKb": 83
+    },
+    {
+      "id": "date-picker",
+      "actualKb": 214.8134765625,
+      "budgetKb": 254,
+      "fullKb": 2236.6875,
+      "ratio": 0.09604089823120128,
+      "ok": true,
+      "detail": "DatePicker: 214.8 KB / 全量 2236.7 KB (9.6%) / 预算 254 KB",
+      "actualBytes": 219969,
+      "oldBudgetBytes": 260096,
+      "deltaBytes": -40127,
+      "deltaPct": -15.427765132874017,
+      "newBudgetKb": 254
+    },
+    {
+      "id": "descriptions",
+      "actualKb": 38.63671875,
+      "budgetKb": 51,
+      "fullKb": 2236.6875,
+      "ratio": 0.017274079973174615,
+      "ok": true,
+      "detail": "Descriptions: 38.6 KB / 全量 2236.7 KB (1.7%) / 预算 51 KB",
+      "actualBytes": 39564,
+      "oldBudgetBytes": 52224,
+      "deltaBytes": -12660,
+      "deltaPct": -24.24172794117647,
+      "newBudgetKb": 51
+    },
+    {
+      "id": "divider",
+      "actualKb": 29.3505859375,
+      "budgetKb": 30,
+      "fullKb": 2236.6875,
+      "ratio": 0.013122345404755917,
+      "ok": true,
+      "detail": "Divider: 29.4 KB / 全量 2236.7 KB (1.3%) / 预算 30 KB",
+      "actualBytes": 30055,
+      "oldBudgetBytes": 30720,
+      "deltaBytes": -665,
+      "deltaPct": -2.164713541666663,
+      "newBudgetKb": 30
+    },
+    {
+      "id": "drawer",
+      "actualKb": 88.951171875,
+      "budgetKb": 96,
+      "fullKb": 2236.6875,
+      "ratio": 0.039769155000419144,
+      "ok": true,
+      "detail": "Drawer: 89.0 KB / 全量 2236.7 KB (4.0%) / 预算 96 KB",
+      "actualBytes": 91086,
+      "oldBudgetBytes": 98304,
+      "deltaBytes": -7218,
+      "deltaPct": -7.342529296875,
+      "newBudgetKb": 96
+    },
+    {
+      "id": "dropdown",
+      "actualKb": 137.525390625,
+      "budgetKb": 133,
+      "fullKb": 2236.6875,
+      "ratio": 0.06148618911895381,
+      "ok": false,
+      "detail": "Dropdown: 137.5 KB / 全量 2236.7 KB (6.1%) / 预算 133 KB",
+      "actualBytes": 140826,
+      "oldBudgetBytes": 136192,
+      "deltaBytes": 4634,
+      "deltaPct": 3.4025493421052655,
+      "newBudgetKb": 145
+    },
+    {
+      "id": "empty",
+      "actualKb": 35.1083984375,
+      "budgetKb": 56,
+      "fullKb": 2236.6875,
+      "ratio": 0.015696604213820662,
+      "ok": true,
+      "detail": "Empty: 35.1 KB / 全量 2236.7 KB (1.6%) / 预算 56 KB",
+      "actualBytes": 35951,
+      "oldBudgetBytes": 57344,
+      "deltaBytes": -21393,
+      "deltaPct": -37.30643136160714,
+      "newBudgetKb": 56
+    },
+    {
+      "id": "flex",
+      "actualKb": 24.5419921875,
+      "budgetKb": 25,
+      "fullKb": 2236.6875,
+      "ratio": 0.010972472545896554,
+      "ok": true,
+      "detail": "Flex: 24.5 KB / 全量 2236.7 KB (1.1%) / 预算 25 KB",
+      "actualBytes": 25131,
+      "oldBudgetBytes": 25600,
+      "deltaBytes": -469,
+      "deltaPct": -1.8320312499999991,
+      "newBudgetKb": 25
+    },
+    {
+      "id": "float-button",
+      "actualKb": 127.8349609375,
+      "budgetKb": 161,
+      "fullKb": 2236.6875,
+      "ratio": 0.057153697571743926,
+      "ok": true,
+      "detail": "FloatButton: 127.8 KB / 全量 2236.7 KB (5.7%) / 预算 161 KB",
+      "actualBytes": 130903,
+      "oldBudgetBytes": 164864,
+      "deltaBytes": -33961,
+      "deltaPct": -20.599403144409933,
+      "newBudgetKb": 161
+    },
+    {
+      "id": "form",
+      "actualKb": 166.951171875,
+      "budgetKb": 230,
+      "fullKb": 2236.6875,
+      "ratio": 0.07464215357532064,
+      "ok": true,
+      "detail": "Form: 167.0 KB / 全量 2236.7 KB (7.5%) / 预算 230 KB",
+      "actualBytes": 170958,
+      "oldBudgetBytes": 235520,
+      "deltaBytes": -64562,
+      "deltaPct": -27.412533967391305,
+      "newBudgetKb": 230
+    },
+    {
+      "id": "grid",
+      "actualKb": 28.80078125,
+      "budgetKb": 44,
+      "fullKb": 2236.6875,
+      "ratio": 0.012876533378042307,
+      "ok": true,
+      "detail": "Row+Col: 28.8 KB / 全量 2236.7 KB (1.3%) / 预算 44 KB",
+      "actualBytes": 29492,
+      "oldBudgetBytes": 45056,
+      "deltaBytes": -15564,
+      "deltaPct": -34.54367897727273,
+      "newBudgetKb": 44
+    },
+    {
+      "id": "image",
+      "actualKb": 83.0361328125,
+      "budgetKb": 83,
+      "fullKb": 2236.6875,
+      "ratio": 0.037124601810713385,
+      "ok": false,
+      "detail": "Image: 83.0 KB / 全量 2236.7 KB (3.7%) / 预算 83 KB",
+      "actualBytes": 85029,
+      "oldBudgetBytes": 84992,
+      "deltaBytes": 37,
+      "deltaPct": 0.04353350903614217,
+      "newBudgetKb": 86
+    },
+    {
+      "id": "input",
+      "actualKb": 100.0849609375,
+      "budgetKb": 102,
+      "fullKb": 2236.6875,
+      "ratio": 0.04474695769413474,
+      "ok": true,
+      "detail": "Input: 100.1 KB / 全量 2236.7 KB (4.5%) / 预算 102 KB",
+      "actualBytes": 102487,
+      "oldBudgetBytes": 104448,
+      "deltaBytes": -1961,
+      "deltaPct": -1.8774892769607865,
+      "newBudgetKb": 102
+    },
+    {
+      "id": "input-number",
+      "actualKb": 62.5205078125,
+      "budgetKb": 67,
+      "fullKb": 2236.6875,
+      "ratio": 0.02795227666471065,
+      "ok": true,
+      "detail": "InputNumber: 62.5 KB / 全量 2236.7 KB (2.8%) / 预算 67 KB",
+      "actualBytes": 64021,
+      "oldBudgetBytes": 68608,
+      "deltaBytes": -4587,
+      "deltaPct": -6.6858092350746245,
+      "newBudgetKb": 67
+    },
+    {
+      "id": "layout",
+      "actualKb": 34.9951171875,
+      "budgetKb": 37,
+      "fullKb": 2236.6875,
+      "ratio": 0.01564595733087434,
+      "ok": true,
+      "detail": "Layout: 35.0 KB / 全量 2236.7 KB (1.6%) / 预算 37 KB",
+      "actualBytes": 35835,
+      "oldBudgetBytes": 37888,
+      "deltaBytes": -2053,
+      "deltaPct": -5.418602195945943,
+      "newBudgetKb": 37
+    },
+    {
+      "id": "layout-sider",
+      "actualKb": 34.9951171875,
+      "budgetKb": 37,
+      "fullKb": 2236.6875,
+      "ratio": 0.01564595733087434,
+      "ok": true,
+      "detail": "LayoutSider: 35.0 KB / 全量 2236.7 KB (1.6%) / 预算 37 KB",
+      "actualBytes": 35835,
+      "oldBudgetBytes": 37888,
+      "deltaBytes": -2053,
+      "deltaPct": -5.418602195945943,
+      "newBudgetKb": 37
+    },
+    {
+      "id": "list",
+      "actualKb": 196.359375,
+      "budgetKb": 256,
+      "fullKb": 2236.6875,
+      "ratio": 0.0877902590326096,
+      "ok": true,
+      "detail": "List: 196.4 KB / 全量 2236.7 KB (8.8%) / 预算 256 KB",
+      "actualBytes": 201072,
+      "oldBudgetBytes": 262144,
+      "deltaBytes": -61072,
+      "deltaPct": -23.297119140625,
+      "newBudgetKb": 256
+    },
+    {
+      "id": "listy",
+      "actualKb": 47.638671875,
+      "budgetKb": 62,
+      "fullKb": 2236.6875,
+      "ratio": 0.02129876072316763,
+      "ok": true,
+      "detail": "Listy: 47.6 KB / 全量 2236.7 KB (2.1%) / 预算 62 KB",
+      "actualBytes": 48782,
+      "oldBudgetBytes": 63488,
+      "deltaBytes": -14706,
+      "deltaPct": -23.163432459677423,
+      "newBudgetKb": 62
+    },
+    {
+      "id": "masonry",
+      "actualKb": 51.7138671875,
+      "budgetKb": 68,
+      "fullKb": 2236.6875,
+      "ratio": 0.02312073867605555,
+      "ok": true,
+      "detail": "Masonry: 51.7 KB / 全量 2236.7 KB (2.3%) / 预算 68 KB",
+      "actualBytes": 52955,
+      "oldBudgetBytes": 69632,
+      "deltaBytes": -16677,
+      "deltaPct": -23.9501953125,
+      "newBudgetKb": 68
+    },
+    {
+      "id": "mentions",
+      "actualKb": 126.2578125,
+      "budgetKb": 165,
+      "fullKb": 2236.6875,
+      "ratio": 0.05644857071003437,
+      "ok": true,
+      "detail": "Mentions: 126.3 KB / 全量 2236.7 KB (5.6%) / 预算 165 KB",
+      "actualBytes": 129288,
+      "oldBudgetBytes": 168960,
+      "deltaBytes": -39672,
+      "deltaPct": -23.48011363636363,
+      "newBudgetKb": 165
+    },
+    {
+      "id": "menu",
+      "actualKb": 111.3857421875,
+      "budgetKb": 145,
+      "fullKb": 2236.6875,
+      "ratio": 0.04979942087909017,
+      "ok": true,
+      "detail": "Menu: 111.4 KB / 全量 2236.7 KB (5.0%) / 预算 145 KB",
+      "actualBytes": 114059,
+      "oldBudgetBytes": 148480,
+      "deltaBytes": -34421,
+      "deltaPct": -23.182246767241377,
+      "newBudgetKb": 145
+    },
+    {
+      "id": "message",
+      "actualKb": 92.681640625,
+      "budgetKb": 82,
+      "fullKb": 2236.6875,
+      "ratio": 0.04143700924916869,
+      "ok": false,
+      "detail": "message: 92.7 KB / 全量 2236.7 KB (4.1%) / 预算 82 KB",
+      "actualBytes": 94906,
+      "oldBudgetBytes": 83968,
+      "deltaBytes": 10938,
+      "deltaPct": 13.02639100609757,
+      "newBudgetKb": 99
+    },
+    {
+      "id": "modal",
+      "actualKb": 135.201171875,
+      "budgetKb": 175,
+      "fullKb": 2236.6875,
+      "ratio": 0.06044705479643446,
+      "ok": true,
+      "detail": "Modal: 135.2 KB / 全量 2236.7 KB (6.0%) / 预算 175 KB",
+      "actualBytes": 138446,
+      "oldBudgetBytes": 179200,
+      "deltaBytes": -40754,
+      "deltaPct": -22.7421875,
+      "newBudgetKb": 175
+    },
+    {
+      "id": "notification",
+      "actualKb": 95.84765625,
+      "budgetKb": 93,
+      "fullKb": 2236.6875,
+      "ratio": 0.0428525023053064,
+      "ok": false,
+      "detail": "notification: 95.8 KB / 全量 2236.7 KB (4.3%) / 预算 93 KB",
+      "actualBytes": 98148,
+      "oldBudgetBytes": 95232,
+      "deltaBytes": 2916,
+      "deltaPct": 3.061995967741926,
+      "newBudgetKb": 101
+    },
+    {
+      "id": "pagination",
+      "actualKb": 174.154296875,
+      "budgetKb": 228,
+      "fullKb": 2236.6875,
+      "ratio": 0.07786259675301087,
+      "ok": true,
+      "detail": "Pagination: 174.2 KB / 全量 2236.7 KB (7.8%) / 预算 228 KB",
+      "actualBytes": 178334,
+      "oldBudgetBytes": 233472,
+      "deltaBytes": -55138,
+      "deltaPct": -23.616536458333336,
+      "newBudgetKb": 228
+    },
+    {
+      "id": "popconfirm",
+      "actualKb": 114.458984375,
+      "budgetKb": 142,
+      "fullKb": 2236.6875,
+      "ratio": 0.05117343588453908,
+      "ok": true,
+      "detail": "Popconfirm: 114.5 KB / 全量 2236.7 KB (5.1%) / 预算 142 KB",
+      "actualBytes": 117206,
+      "oldBudgetBytes": 145408,
+      "deltaBytes": -28202,
+      "deltaPct": -19.395081426056336,
+      "newBudgetKb": 142
+    },
+    {
+      "id": "popover",
+      "actualKb": 80.5751953125,
+      "budgetKb": 106,
+      "fullKb": 2236.6875,
+      "ratio": 0.03602434193981054,
+      "ok": true,
+      "detail": "Popover: 80.6 KB / 全量 2236.7 KB (3.6%) / 预算 106 KB",
+      "actualBytes": 82509,
+      "oldBudgetBytes": 108544,
+      "deltaBytes": -26035,
+      "deltaPct": -23.985664799528305,
+      "newBudgetKb": 106
+    },
+    {
+      "id": "progress",
+      "actualKb": 94.2421875,
+      "budgetKb": 127,
+      "fullKb": 2236.6875,
+      "ratio": 0.042134713722860255,
+      "ok": true,
+      "detail": "Progress: 94.2 KB / 全量 2236.7 KB (4.2%) / 预算 127 KB",
+      "actualBytes": 96504,
+      "oldBudgetBytes": 130048,
+      "deltaBytes": -33544,
+      "deltaPct": -25.793553149606296,
+      "newBudgetKb": 127
+    },
+    {
+      "id": "qr-code",
+      "actualKb": 73.0908203125,
+      "budgetKb": 101,
+      "fullKb": 2236.6875,
+      "ratio": 0.03267815477687428,
+      "ok": true,
+      "detail": "QrCode: 73.1 KB / 全量 2236.7 KB (3.3%) / 预算 101 KB",
+      "actualBytes": 74845,
+      "oldBudgetBytes": 103424,
+      "deltaBytes": -28579,
+      "deltaPct": -27.63285117574258,
+      "newBudgetKb": 101
+    },
+    {
+      "id": "radio",
+      "actualKb": 32.7373046875,
+      "budgetKb": 25,
+      "fullKb": 2236.6875,
+      "ratio": 0.014636512560426971,
+      "ok": false,
+      "detail": "Radio: 32.7 KB / 全量 2236.7 KB (1.5%) / 预算 25 KB",
+      "actualBytes": 33523,
+      "oldBudgetBytes": 25600,
+      "deltaBytes": 7923,
+      "deltaPct": 30.949218750000007,
+      "newBudgetKb": 36
+    },
+    {
+      "id": "rate",
+      "actualKb": 87.9873046875,
+      "budgetKb": 120,
+      "fullKb": 2236.6875,
+      "ratio": 0.03933821988431553,
+      "ok": true,
+      "detail": "Rate: 88.0 KB / 全量 2236.7 KB (3.9%) / 预算 120 KB",
+      "actualBytes": 90099,
+      "oldBudgetBytes": 122880,
+      "deltaBytes": -32781,
+      "deltaPct": -26.677246093749996,
+      "newBudgetKb": 120
+    },
+    {
+      "id": "result",
+      "actualKb": 62.5419921875,
+      "budgetKb": 79,
+      "fullKb": 2236.6875,
+      "ratio": 0.027961882108028056,
+      "ok": true,
+      "detail": "Result: 62.5 KB / 全量 2236.7 KB (2.8%) / 预算 79 KB",
+      "actualBytes": 64043,
+      "oldBudgetBytes": 80896,
+      "deltaBytes": -16853,
+      "deltaPct": -20.832921281645568,
+      "newBudgetKb": 79
+    },
+    {
+      "id": "segmented",
+      "actualKb": 83.1083984375,
+      "budgetKb": 116,
+      "fullKb": 2236.6875,
+      "ratio": 0.03715691102914466,
+      "ok": true,
+      "detail": "Segmented: 83.1 KB / 全量 2236.7 KB (3.7%) / 预算 116 KB",
+      "actualBytes": 85103,
+      "oldBudgetBytes": 118784,
+      "deltaBytes": -33681,
+      "deltaPct": -28.35482893318966,
+      "newBudgetKb": 116
+    },
+    {
+      "id": "select",
+      "actualKb": 151.3515625,
+      "budgetKb": 205,
+      "fullKb": 2236.6875,
+      "ratio": 0.0676677285047643,
+      "ok": true,
+      "detail": "Select: 151.4 KB / 全量 2236.7 KB (6.8%) / 预算 205 KB",
+      "actualBytes": 154984,
+      "oldBudgetBytes": 209920,
+      "deltaBytes": -54936,
+      "deltaPct": -26.169969512195124,
+      "newBudgetKb": 205
+    },
+    {
+      "id": "skeleton",
+      "actualKb": 37.8056640625,
+      "budgetKb": 38,
+      "fullKb": 2236.6875,
+      "ratio": 0.016902523961214968,
+      "ok": true,
+      "detail": "Skeleton: 37.8 KB / 全量 2236.7 KB (1.7%) / 预算 38 KB",
+      "actualBytes": 38713,
+      "oldBudgetBytes": 38912,
+      "deltaBytes": -199,
+      "deltaPct": -0.5114103618421018,
+      "newBudgetKb": 38
+    },
+    {
+      "id": "slider",
+      "actualKb": 103.9365234375,
+      "budgetKb": 138,
+      "fullKb": 2236.6875,
+      "ratio": 0.04646895171430967,
+      "ok": true,
+      "detail": "Slider: 103.9 KB / 全量 2236.7 KB (4.6%) / 预算 138 KB",
+      "actualBytes": 106431,
+      "oldBudgetBytes": 141312,
+      "deltaBytes": -34881,
+      "deltaPct": -24.683678668478258,
+      "newBudgetKb": 138
+    },
+    {
+      "id": "space",
+      "actualKb": 33.67578125,
+      "budgetKb": 34,
+      "fullKb": 2236.6875,
+      "ratio": 0.015056095788973649,
+      "ok": true,
+      "detail": "Space: 33.7 KB / 全量 2236.7 KB (1.5%) / 预算 34 KB",
+      "actualBytes": 34484,
+      "oldBudgetBytes": 34816,
+      "deltaBytes": -332,
+      "deltaPct": -0.9535845588235281,
+      "newBudgetKb": 34
+    },
+    {
+      "id": "spin",
+      "actualKb": 34.6728515625,
+      "budgetKb": 35,
+      "fullKb": 2236.6875,
+      "ratio": 0.015501875681113253,
+      "ok": true,
+      "detail": "Spin: 34.7 KB / 全量 2236.7 KB (1.6%) / 预算 35 KB",
+      "actualBytes": 35505,
+      "oldBudgetBytes": 35840,
+      "deltaBytes": -335,
+      "deltaPct": -0.9347098214285698,
+      "newBudgetKb": 35
+    },
+    {
+      "id": "splitter",
+      "actualKb": 47.4462890625,
+      "budgetKb": 49,
+      "fullKb": 2236.6875,
+      "ratio": 0.02121274834437086,
+      "ok": true,
+      "detail": "Splitter: 47.4 KB / 全量 2236.7 KB (2.1%) / 预算 49 KB",
+      "actualBytes": 48585,
+      "oldBudgetBytes": 50176,
+      "deltaBytes": -1591,
+      "deltaPct": -3.1708386479591844,
+      "newBudgetKb": 49
+    },
+    {
+      "id": "statistic",
+      "actualKb": 44.1220703125,
+      "budgetKb": 46,
+      "fullKb": 2236.6875,
+      "ratio": 0.01972652429653226,
+      "ok": true,
+      "detail": "Statistic: 44.1 KB / 全量 2236.7 KB (2.0%) / 预算 46 KB",
+      "actualBytes": 45181,
+      "oldBudgetBytes": 47104,
+      "deltaBytes": -1923,
+      "deltaPct": -4.082455842391308,
+      "newBudgetKb": 46
+    },
+    {
+      "id": "steps",
+      "actualKb": 93.43359375,
+      "budgetKb": 125,
+      "fullKb": 2236.6875,
+      "ratio": 0.041773199765277894,
+      "ok": true,
+      "detail": "Steps: 93.4 KB / 全量 2236.7 KB (4.2%) / 预算 125 KB",
+      "actualBytes": 95676,
+      "oldBudgetBytes": 128000,
+      "deltaBytes": -32324,
+      "deltaPct": -25.253124999999997,
+      "newBudgetKb": 125
+    },
+    {
+      "id": "switch",
+      "actualKb": 35.2421875,
+      "budgetKb": 32,
+      "fullKb": 2236.6875,
+      "ratio": 0.015756419929024507,
+      "ok": false,
+      "detail": "Switch: 35.2 KB / 全量 2236.7 KB (1.6%) / 预算 32 KB",
+      "actualBytes": 36088,
+      "oldBudgetBytes": 32768,
+      "deltaBytes": 3320,
+      "deltaPct": 10.1318359375,
+      "newBudgetKb": 38
+    },
+    {
+      "id": "table",
+      "actualKb": 377.66796875,
+      "budgetKb": 484,
+      "fullKb": 2236.6875,
+      "ratio": 0.1688514684103166,
+      "ok": true,
+      "detail": "Table: 377.7 KB / 全量 2236.7 KB (16.9%) / 预算 484 KB",
+      "actualBytes": 386732,
+      "oldBudgetBytes": 495616,
+      "deltaBytes": -108884,
+      "deltaPct": -21.969427944214882,
+      "newBudgetKb": 484
+    },
+    {
+      "id": "tabs",
+      "actualKb": 152.404296875,
+      "budgetKb": 158,
+      "fullKb": 2236.6875,
+      "ratio": 0.06813839522731718,
+      "ok": true,
+      "detail": "Tabs: 152.4 KB / 全量 2236.7 KB (6.8%) / 预算 158 KB",
+      "actualBytes": 156062,
+      "oldBudgetBytes": 161792,
+      "deltaBytes": -5730,
+      "deltaPct": -3.541584256329111,
+      "newBudgetKb": 158
+    },
+    {
+      "id": "tag",
+      "actualKb": 49.103515625,
+      "budgetKb": 51,
+      "fullKb": 2236.6875,
+      "ratio": 0.02195367731299075,
+      "ok": true,
+      "detail": "Tag: 49.1 KB / 全量 2236.7 KB (2.2%) / 预算 51 KB",
+      "actualBytes": 50282,
+      "oldBudgetBytes": 52224,
+      "deltaBytes": -1942,
+      "deltaPct": -3.7185968137254943,
+      "newBudgetKb": 51
+    },
+    {
+      "id": "time-picker",
+      "actualKb": 225.4853515625,
+      "budgetKb": 267,
+      "fullKb": 2236.6875,
+      "ratio": 0.10081218389359264,
+      "ok": true,
+      "detail": "TimePicker: 225.5 KB / 全量 2236.7 KB (10.1%) / 预算 267 KB",
+      "actualBytes": 230897,
+      "oldBudgetBytes": 273408,
+      "deltaBytes": -42511,
+      "deltaPct": -15.548557467228463,
+      "newBudgetKb": 267
+    },
+    {
+      "id": "timeline",
+      "actualKb": 98.3095703125,
+      "budgetKb": 129,
+      "fullKb": 2236.6875,
+      "ratio": 0.04395319878726912,
+      "ok": true,
+      "detail": "Timeline: 98.3 KB / 全量 2236.7 KB (4.4%) / 预算 129 KB",
+      "actualBytes": 100669,
+      "oldBudgetBytes": 132096,
+      "deltaBytes": -31427,
+      "deltaPct": -23.791030765503873,
+      "newBudgetKb": 129
+    },
+    {
+      "id": "tooltip",
+      "actualKb": 74.75390625,
+      "budgetKb": 101,
+      "fullKb": 2236.6875,
+      "ratio": 0.033421703411853465,
+      "ok": true,
+      "detail": "Tooltip: 74.8 KB / 全量 2236.7 KB (3.3%) / 预算 101 KB",
+      "actualBytes": 76548,
+      "oldBudgetBytes": 103424,
+      "deltaBytes": -26876,
+      "deltaPct": -25.98623143564357,
+      "newBudgetKb": 101
+    },
+    {
+      "id": "tour",
+      "actualKb": 110.908203125,
+      "budgetKb": 143,
+      "fullKb": 2236.6875,
+      "ratio": 0.04958591807080784,
+      "ok": true,
+      "detail": "Tour: 110.9 KB / 全量 2236.7 KB (5.0%) / 预算 143 KB",
+      "actualBytes": 113570,
+      "oldBudgetBytes": 146432,
+      "deltaBytes": -32862,
+      "deltaPct": -22.4418159965035,
+      "newBudgetKb": 143
+    },
+    {
+      "id": "transfer",
+      "actualKb": 307.603515625,
+      "budgetKb": 364,
+      "fullKb": 2236.6875,
+      "ratio": 0.13752637130801687,
+      "ok": true,
+      "detail": "Transfer: 307.6 KB / 全量 2236.7 KB (13.8%) / 预算 364 KB",
+      "actualBytes": 314986,
+      "oldBudgetBytes": 372736,
+      "deltaBytes": -57750,
+      "deltaPct": -15.493539663461542,
+      "newBudgetKb": 364
+    },
+    {
+      "id": "tree",
+      "actualKb": 100.607421875,
+      "budgetKb": 137,
+      "fullKb": 2236.6875,
+      "ratio": 0.04498054461117165,
+      "ok": true,
+      "detail": "Tree: 100.6 KB / 全量 2236.7 KB (4.5%) / 预算 137 KB",
+      "actualBytes": 103022,
+      "oldBudgetBytes": 140288,
+      "deltaBytes": -37266,
+      "deltaPct": -26.563925638686136,
+      "newBudgetKb": 137
+    },
+    {
+      "id": "tree-select",
+      "actualKb": 187.2568359375,
+      "budgetKb": 254,
+      "fullKb": 2236.6875,
+      "ratio": 0.08372060734344874,
+      "ok": true,
+      "detail": "TreeSelect: 187.3 KB / 全量 2236.7 KB (8.4%) / 预算 254 KB",
+      "actualBytes": 191751,
+      "oldBudgetBytes": 260096,
+      "deltaBytes": -68345,
+      "deltaPct": -26.276836245078737,
+      "newBudgetKb": 254
+    },
+    {
+      "id": "typography",
+      "actualKb": 121.4541015625,
+      "budgetKb": 154,
+      "fullKb": 2236.6875,
+      "ratio": 0.05430088090647442,
+      "ok": true,
+      "detail": "Typography: 121.5 KB / 全量 2236.7 KB (5.4%) / 预算 154 KB",
+      "actualBytes": 124369,
+      "oldBudgetBytes": 157696,
+      "deltaBytes": -33327,
+      "deltaPct": -21.133700284090907,
+      "newBudgetKb": 154
+    },
+    {
+      "id": "upload",
+      "actualKb": 149.4072265625,
+      "budgetKb": 143,
+      "fullKb": 2236.6875,
+      "ratio": 0.06679843588453908,
+      "ok": false,
+      "detail": "Upload: 149.4 KB / 全量 2236.7 KB (6.7%) / 预算 143 KB",
+      "actualBytes": 152993,
+      "oldBudgetBytes": 146432,
+      "deltaBytes": 6561,
+      "deltaPct": 4.480578015734271,
+      "newBudgetKb": 157
+    },
+    {
+      "id": "watermark",
+      "actualKb": 30.4404296875,
+      "budgetKb": 46,
+      "fullKb": 2236.6875,
+      "ratio": 0.013609603347584319,
+      "ok": true,
+      "detail": "Watermark: 30.4 KB / 全量 2236.7 KB (1.4%) / 预算 46 KB",
+      "actualBytes": 31171,
+      "oldBudgetBytes": 47104,
+      "deltaBytes": -15933,
+      "deltaPct": -33.82515285326087,
+      "newBudgetKb": 46
+    }
+  ],
+  "updatedEntries": [
+    {
+      "id": "affix",
+      "actualKb": 26.9697265625,
+      "budgetKb": 14,
+      "fullKb": 2236.6875,
+      "ratio": 0.012057887640763406,
+      "ok": false,
+      "detail": "Affix: 27.0 KB / 全量 2236.7 KB (1.2%) / 预算 14 KB",
+      "actualBytes": 27617,
+      "oldBudgetBytes": 14336,
+      "deltaBytes": 13281,
+      "deltaPct": 92.64090401785714,
+      "newBudgetKb": 30,
+      "headroomKb": 3.0302734375,
+      "headroomPercent": 11.235833001412177,
+      "reason": "该提交新增真实 useTheme/prepareComponentToken，用于当前 Provider 的 zIndexPopup；同时使用原生跨 realm target、ResizeObserver 和 RAF 资源归属。新 Theme 链是旧轻量 Affix 预算之外的明确功能依赖。",
+      "sourceCommits": [
+        "458559d4"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/affix/Affix.vue:3",
+        "packages/ui/src/affix/Affix.vue:38",
+        "packages/ui/src/affix/Affix.vue:41"
+      ],
+      "moduleEvidence": {
+        "id": "affix",
+        "rootBytes": 27617,
+        "deepBytes": 27617,
+        "deepMinusRootBytes": 0,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 27,
+        "oldBudgetBytes": 14336,
+        "overOldBudgetBytes": 13281,
+        "ratioToFull": 0.012057887640763406,
+        "retainedUI": [
+          {
+            "name": "affix",
+            "moduleCount": 4,
+            "renderedLength": 7587
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 1,
+            "renderedLength": 2126
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 1,
+            "renderedLength": 392
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "utils",
+            "moduleCount": 6,
+            "renderedLength": 15502
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "458559d4"
+        ],
+        "explanation": "该提交新增真实 useTheme/prepareComponentToken，用于当前 Provider 的 zIndexPopup；同时使用原生跨 realm target、ResizeObserver 和 RAF 资源归属。新 Theme 链是旧轻量 Affix 预算之外的明确功能依赖。",
+        "sourceEvidence": [
+          "packages/ui/src/affix/Affix.vue:3",
+          "packages/ui/src/affix/Affix.vue:38",
+          "packages/ui/src/affix/Affix.vue:41"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "anchor",
+      "actualKb": 42.8017578125,
+      "budgetKb": 35,
+      "fullKb": 2236.6875,
+      "ratio": 0.01913622614357169,
+      "ok": false,
+      "detail": "Anchor: 42.8 KB / 全量 2236.7 KB (1.9%) / 预算 35 KB",
+      "actualBytes": 43829,
+      "oldBudgetBytes": 35840,
+      "deltaBytes": 7989,
+      "deltaPct": 22.290736607142847,
+      "newBudgetKb": 47,
+      "headroomKb": 4.1982421875,
+      "headroomPercent": 9.808574231673095,
+      "reason": "当前 Anchor 组合 Affix、AnchorLink、主题/当前配置、受控活动链接和响应式滚动 owner；水平活动链接直接调用 scrollIntoView，因此两个单版本滚动库均有真实调用。",
+      "sourceCommits": [
+        "458559d4"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/anchor/Anchor.ts:10",
+        "packages/ui/src/anchor/Anchor.ts:228",
+        "packages/ui/src/anchor/use-anchor-theme.ts:1"
+      ],
+      "moduleEvidence": {
+        "id": "anchor",
+        "rootBytes": 43829,
+        "deepBytes": 43825,
+        "deepMinusRootBytes": -4,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 44,
+        "oldBudgetBytes": 35840,
+        "overOldBudgetBytes": 7989,
+        "ratioToFull": 0.01913622614357169,
+        "retainedUI": [
+          {
+            "name": "anchor",
+            "moduleCount": 8,
+            "renderedLength": 16817
+          },
+          {
+            "name": "affix",
+            "moduleCount": 4,
+            "renderedLength": 7593
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 3,
+            "renderedLength": 4911
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 1,
+            "renderedLength": 2126
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "utils",
+            "moduleCount": 11,
+            "renderedLength": 21443
+          }
+        ],
+        "retainedThirdParty": [
+          {
+            "name": "compute-scroll-into-view",
+            "version": "3.1.1",
+            "moduleCount": 1,
+            "renderedLength": 4124
+          },
+          {
+            "name": "scroll-into-view-if-needed",
+            "version": "3.1.0",
+            "moduleCount": 1,
+            "renderedLength": 1191
+          }
+        ],
+        "sourceCommits": [
+          "458559d4"
+        ],
+        "explanation": "当前 Anchor 组合 Affix、AnchorLink、主题/当前配置、受控活动链接和响应式滚动 owner；水平活动链接直接调用 scrollIntoView，因此两个单版本滚动库均有真实调用。",
+        "sourceEvidence": [
+          "packages/ui/src/anchor/Anchor.ts:10",
+          "packages/ui/src/anchor/Anchor.ts:228",
+          "packages/ui/src/anchor/use-anchor-theme.ts:1"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "back-top",
+      "actualKb": 41.7197265625,
+      "budgetKb": 40,
+      "fullKb": 2236.6875,
+      "ratio": 0.018652461089222343,
+      "ok": false,
+      "detail": "BackTop: 41.7 KB / 全量 2236.7 KB (1.9%) / 预算 40 KB",
+      "actualBytes": 42721,
+      "oldBudgetBytes": 40960,
+      "deltaBytes": 1761,
+      "deltaPct": 4.299316406250009,
+      "newBudgetKb": 45,
+      "headroomKb": 3.2802734375,
+      "headroomPercent": 7.862643664708213,
+      "reason": "当前原生内容、焦点、受控滚动 owner、reduced-motion 与动态 Token 的组合；CSSMotion 为显隐动画，icons 为默认返回顶部图标，未保留其他 UI 组件。",
+      "sourceCommits": [
+        "5a599c19"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/back-top/BackTop.ts:2",
+        "packages/ui/src/back-top/BackTop.ts:3",
+        "packages/ui/src/back-top/BackTop.ts:26"
+      ],
+      "moduleEvidence": {
+        "id": "back-top",
+        "rootBytes": 42721,
+        "deepBytes": 42721,
+        "deepMinusRootBytes": 0,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 44,
+        "oldBudgetBytes": 40960,
+        "overOldBudgetBytes": 1761,
+        "ratioToFull": 0.018652461089222343,
+        "retainedUI": [
+          {
+            "name": "back-top",
+            "moduleCount": 4,
+            "renderedLength": 4762
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 1,
+            "renderedLength": 2126
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 2,
+            "renderedLength": 1583
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "motion",
+            "moduleCount": 5,
+            "renderedLength": 21135
+          },
+          {
+            "name": "utils",
+            "moduleCount": 11,
+            "renderedLength": 20665
+          },
+          {
+            "name": "icons",
+            "moduleCount": 6,
+            "renderedLength": 6428
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "5a599c19"
+        ],
+        "explanation": "当前原生内容、焦点、受控滚动 owner、reduced-motion 与动态 Token 的组合；CSSMotion 为显隐动画，icons 为默认返回顶部图标，未保留其他 UI 组件。",
+        "sourceEvidence": [
+          "packages/ui/src/back-top/BackTop.ts:2",
+          "packages/ui/src/back-top/BackTop.ts:3",
+          "packages/ui/src/back-top/BackTop.ts:26"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "badge",
+      "actualKb": 48.5009765625,
+      "budgetKb": 47,
+      "fullKb": 2236.6875,
+      "ratio": 0.021684288289043507,
+      "ok": false,
+      "detail": "Badge: 48.5 KB / 全量 2236.7 KB (2.2%) / 预算 47 KB",
+      "actualBytes": 49665,
+      "oldBudgetBytes": 48128,
+      "deltaBytes": 1537,
+      "deltaPct": 3.193567154255317,
+      "newBudgetKb": 52,
+      "headroomKb": 3.4990234375,
+      "headroomPercent": 7.214336051545356,
+      "reason": "公开 Badge 含 Ribbon 静态子组件及数字 Indicator/ScrollNumber/SingleNumber、CSSMotion、当前 theme/alias/Token 与 RTL/reduced-motion；所有 UI 实现仍在 badge 自身，新增基准后共享 Theme/Utils 成本未独立量化。",
+      "sourceCommits": [
+        "d3794769",
+        "df5e0436",
+        "3f68bd2d"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/badge/index.ts",
+        "packages/ui/src/badge/BadgeIndicator.vue",
+        "packages/ui/src/badge/use-badge-theme.ts"
+      ],
+      "moduleEvidence": {
+        "id": "badge",
+        "rootBytes": 49665,
+        "deepBytes": 49665,
+        "deepMinusRootBytes": 0,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 41,
+        "oldBudgetBytes": 48128,
+        "overOldBudgetBytes": 1537,
+        "ratioToFull": 0.021684288289043507,
+        "retainedUI": [
+          {
+            "name": "badge",
+            "moduleCount": 8,
+            "renderedLength": 23304
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 4,
+            "renderedLength": 4702
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 1,
+            "renderedLength": 2126
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "motion",
+            "moduleCount": 5,
+            "renderedLength": 21135
+          },
+          {
+            "name": "utils",
+            "moduleCount": 8,
+            "renderedLength": 18560
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "d3794769",
+          "df5e0436",
+          "3f68bd2d"
+        ],
+        "explanation": "公开 Badge 含 Ribbon 静态子组件及数字 Indicator/ScrollNumber/SingleNumber、CSSMotion、当前 theme/alias/Token 与 RTL/reduced-motion；所有 UI 实现仍在 badge 自身，新增基准后共享 Theme/Utils 成本未独立量化。",
+        "sourceEvidence": [
+          "packages/ui/src/badge/index.ts",
+          "packages/ui/src/badge/BadgeIndicator.vue",
+          "packages/ui/src/badge/use-badge-theme.ts"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "breadcrumb",
+      "actualKb": 131.7587890625,
+      "budgetKb": 130,
+      "fullKb": 2236.6875,
+      "ratio": 0.05890800081035013,
+      "ok": false,
+      "detail": "Breadcrumb: 131.8 KB / 全量 2236.7 KB (5.9%) / 预算 130 KB",
+      "actualBytes": 134921,
+      "oldBudgetBytes": 133120,
+      "deltaBytes": 1801,
+      "deltaPct": 1.3529146634615463,
+      "newBudgetKb": 138,
+      "headroomKb": 6.2412109375,
+      "headroomPercent": 4.7368460061814055,
+      "reason": "BreadcrumbItem 的真实 dropdown 菜单责任带入 Dropdown 实现、Menu 与 Tooltip/Portal/Overlay/Position；没有 DropdownButton/Button 子链。layout 保留仅 223 个 pre-minify 字符的 context，不是 Layout 组件整包。",
+      "sourceCommits": [
+        "55cd46b6"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts:21",
+        "packages/ui/src/dropdown/DropdownMenu.ts",
+        "packages/ui/src/menu/MenuItem.ts"
+      ],
+      "moduleEvidence": {
+        "id": "breadcrumb",
+        "rootBytes": 134921,
+        "deepBytes": 134921,
+        "deepMinusRootBytes": 0,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 112,
+        "oldBudgetBytes": 133120,
+        "overOldBudgetBytes": 1801,
+        "ratioToFull": 0.05890800081035013,
+        "retainedUI": [
+          {
+            "name": "menu",
+            "moduleCount": 14,
+            "renderedLength": 54829
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 7,
+            "renderedLength": 28774
+          },
+          {
+            "name": "tooltip",
+            "moduleCount": 7,
+            "renderedLength": 17348
+          },
+          {
+            "name": "breadcrumb",
+            "moduleCount": 9,
+            "renderedLength": 15003
+          },
+          {
+            "name": "dropdown",
+            "moduleCount": 4,
+            "renderedLength": 11871
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 2,
+            "renderedLength": 2589
+          },
+          {
+            "name": "layout",
+            "moduleCount": 1,
+            "renderedLength": 223
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "utils",
+            "moduleCount": 20,
+            "renderedLength": 29818
+          },
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "motion",
+            "moduleCount": 6,
+            "renderedLength": 22107
+          },
+          {
+            "name": "position",
+            "moduleCount": 6,
+            "renderedLength": 20543
+          },
+          {
+            "name": "portal",
+            "moduleCount": 8,
+            "renderedLength": 15662
+          },
+          {
+            "name": "overlay",
+            "moduleCount": 4,
+            "renderedLength": 11458
+          },
+          {
+            "name": "icons",
+            "moduleCount": 9,
+            "renderedLength": 7814
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "55cd46b6"
+        ],
+        "explanation": "BreadcrumbItem 的真实 dropdown 菜单责任带入 Dropdown 实现、Menu 与 Tooltip/Portal/Overlay/Position；没有 DropdownButton/Button 子链。layout 保留仅 223 个 pre-minify 字符的 context，不是 Layout 组件整包。",
+        "sourceEvidence": [
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts:21",
+          "packages/ui/src/dropdown/DropdownMenu.ts",
+          "packages/ui/src/menu/MenuItem.ts"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "carousel",
+      "actualKb": 51.8173828125,
+      "budgetKb": 45,
+      "fullKb": 2236.6875,
+      "ratio": 0.02316701944840305,
+      "ok": false,
+      "detail": "Carousel: 51.8 KB / 全量 2236.7 KB (2.3%) / 预算 45 KB",
+      "actualBytes": 53061,
+      "oldBudgetBytes": 46080,
+      "deltaBytes": 6981,
+      "deltaPct": 15.149739583333343,
+      "newBudgetKb": 56,
+      "headroomKb": 4.1826171875,
+      "headroomPercent": 8.071841842407789,
+      "reason": "当前 Vue engine、原生 slide 身份/事件和焦点、动态 responsive 配置、主题/Token 与 locale；UI 图只包含 carousel、Provider context 和 withInstall，无 slick/rc/React 运行库。",
+      "sourceCommits": [
+        "b5bbbbe5"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/carousel/Carousel.ts:4",
+        "packages/ui/src/carousel/Carousel.ts:29",
+        "packages/ui/src/carousel/engine.ts:390",
+        "packages/ui/src/carousel/use-carousel-theme.ts:1"
+      ],
+      "moduleEvidence": {
+        "id": "carousel",
+        "rootBytes": 53061,
+        "deepBytes": 53061,
+        "deepMinusRootBytes": 0,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 33,
+        "oldBudgetBytes": 46080,
+        "overOldBudgetBytes": 6981,
+        "ratioToFull": 0.02316701944840305,
+        "retainedUI": [
+          {
+            "name": "carousel",
+            "moduleCount": 5,
+            "renderedLength": 44747
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 1,
+            "renderedLength": 2234
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 1,
+            "renderedLength": 392
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "utils",
+            "moduleCount": 8,
+            "renderedLength": 15584
+          },
+          {
+            "name": "locale",
+            "moduleCount": 3,
+            "renderedLength": 7387
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "b5bbbbe5"
+        ],
+        "explanation": "当前 Vue engine、原生 slide 身份/事件和焦点、动态 responsive 配置、主题/Token 与 locale；UI 图只包含 carousel、Provider context 和 withInstall，无 slick/rc/React 运行库。",
+        "sourceEvidence": [
+          "packages/ui/src/carousel/Carousel.ts:4",
+          "packages/ui/src/carousel/Carousel.ts:29",
+          "packages/ui/src/carousel/engine.ts:390",
+          "packages/ui/src/carousel/use-carousel-theme.ts:1"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "dropdown",
+      "actualKb": 137.525390625,
+      "budgetKb": 133,
+      "fullKb": 2236.6875,
+      "ratio": 0.06148618911895381,
+      "ok": false,
+      "detail": "Dropdown: 137.5 KB / 全量 2236.7 KB (6.1%) / 预算 133 KB",
+      "actualBytes": 140826,
+      "oldBudgetBytes": 136192,
+      "deltaBytes": 4634,
+      "deltaPct": 3.4025493421052655,
+      "newBudgetKb": 145,
+      "headroomKb": 7.474609375,
+      "headroomPercent": 5.43507590927812,
+      "reason": "公开 Dropdown 静态 Button/PurePanel 与实际 DropdownMenu 保留 Menu、Button/Space、Tooltip 和 Popup 基础链；这些是公开组合 API 及菜单交互的真实职责。layout 仅保留 context。",
+      "sourceCommits": [
+        "55cd46b6",
+        "a88d04fc"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/dropdown/index.ts:19",
+        "packages/ui/src/dropdown/DropdownMenu.ts",
+        "packages/ui/src/dropdown/DropdownButton.ts"
+      ],
+      "moduleEvidence": {
+        "id": "dropdown",
+        "rootBytes": 140826,
+        "deepBytes": 140822,
+        "deepMinusRootBytes": -4,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 111,
+        "oldBudgetBytes": 136192,
+        "overOldBudgetBytes": 4634,
+        "ratioToFull": 0.06148618911895381,
+        "retainedUI": [
+          {
+            "name": "menu",
+            "moduleCount": 14,
+            "renderedLength": 54829
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 8,
+            "renderedLength": 28930
+          },
+          {
+            "name": "dropdown",
+            "moduleCount": 7,
+            "renderedLength": 17451
+          },
+          {
+            "name": "tooltip",
+            "moduleCount": 7,
+            "renderedLength": 17348
+          },
+          {
+            "name": "button",
+            "moduleCount": 4,
+            "renderedLength": 16936
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 3,
+            "renderedLength": 3049
+          },
+          {
+            "name": "space",
+            "moduleCount": 1,
+            "renderedLength": 1861
+          },
+          {
+            "name": "layout",
+            "moduleCount": 1,
+            "renderedLength": 223
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "utils",
+            "moduleCount": 18,
+            "renderedLength": 27481
+          },
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "motion",
+            "moduleCount": 6,
+            "renderedLength": 22107
+          },
+          {
+            "name": "position",
+            "moduleCount": 6,
+            "renderedLength": 20543
+          },
+          {
+            "name": "portal",
+            "moduleCount": 8,
+            "renderedLength": 15662
+          },
+          {
+            "name": "overlay",
+            "moduleCount": 4,
+            "renderedLength": 11458
+          },
+          {
+            "name": "icons",
+            "moduleCount": 9,
+            "renderedLength": 7956
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "55cd46b6",
+          "a88d04fc"
+        ],
+        "explanation": "公开 Dropdown 静态 Button/PurePanel 与实际 DropdownMenu 保留 Menu、Button/Space、Tooltip 和 Popup 基础链；这些是公开组合 API 及菜单交互的真实职责。layout 仅保留 context。",
+        "sourceEvidence": [
+          "packages/ui/src/dropdown/index.ts:19",
+          "packages/ui/src/dropdown/DropdownMenu.ts",
+          "packages/ui/src/dropdown/DropdownButton.ts"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "image",
+      "actualKb": 83.0361328125,
+      "budgetKb": 83,
+      "fullKb": 2236.6875,
+      "ratio": 0.037124601810713385,
+      "ok": false,
+      "detail": "Image: 83.0 KB / 全量 2236.7 KB (3.7%) / 预算 83 KB",
+      "actualBytes": 85029,
+      "oldBudgetBytes": 84992,
+      "deltaBytes": 37,
+      "deltaPct": 0.04353350903614217,
+      "newBudgetKb": 86,
+      "headroomKb": 2.9638671875,
+      "headroomPercent": 3.5693704500817436,
+      "reason": "公开 Image.PreviewGroup、预览控制/变换/进度、注册归属焦点恢复、Modal 生命周期与 Portal 层级、Motion、a11y；未带入外部 UI 组件，当前仅超过既有 83KiB 预算 37B。",
+      "sourceCommits": [
+        "5e14ad6b",
+        "8d99baae",
+        "742c121f"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/image/index.ts:9",
+        "packages/ui/src/image/Preview.ts:178",
+        "packages/ui/src/image/Preview.ts:322",
+        "packages/ui/src/image/hooks/useImageTheme.ts:14"
+      ],
+      "moduleEvidence": {
+        "id": "image",
+        "rootBytes": 85029,
+        "deepBytes": 85033,
+        "deepMinusRootBytes": 4,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 78,
+        "oldBudgetBytes": 84992,
+        "overOldBudgetBytes": 37,
+        "ratioToFull": 0.037124601810713385,
+        "retainedUI": [
+          {
+            "name": "image",
+            "moduleCount": 13,
+            "renderedLength": 46622
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 4,
+            "renderedLength": 4421
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 1,
+            "renderedLength": 2126
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "utils",
+            "moduleCount": 18,
+            "renderedLength": 33317
+          },
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "motion",
+            "moduleCount": 5,
+            "renderedLength": 21135
+          },
+          {
+            "name": "portal",
+            "moduleCount": 8,
+            "renderedLength": 15662
+          },
+          {
+            "name": "icons",
+            "moduleCount": 13,
+            "renderedLength": 11826
+          },
+          {
+            "name": "a11y",
+            "moduleCount": 1,
+            "renderedLength": 2784
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "5e14ad6b",
+          "8d99baae",
+          "742c121f"
+        ],
+        "explanation": "公开 Image.PreviewGroup、预览控制/变换/进度、注册归属焦点恢复、Modal 生命周期与 Portal 层级、Motion、a11y；未带入外部 UI 组件，当前仅超过既有 83KiB 预算 37B。",
+        "sourceEvidence": [
+          "packages/ui/src/image/index.ts:9",
+          "packages/ui/src/image/Preview.ts:178",
+          "packages/ui/src/image/Preview.ts:322",
+          "packages/ui/src/image/hooks/useImageTheme.ts:14"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "message",
+      "actualKb": 92.681640625,
+      "budgetKb": 82,
+      "fullKb": 2236.6875,
+      "ratio": 0.04143700924916869,
+      "ok": false,
+      "detail": "message: 92.7 KB / 全量 2236.7 KB (4.1%) / 预算 82 KB",
+      "actualBytes": 94906,
+      "oldBudgetBytes": 83968,
+      "deltaBytes": 10938,
+      "deltaPct": 13.02639100609757,
+      "newBudgetKb": 99,
+      "headroomKb": 6.318359375,
+      "headroomPercent": 6.817271826860272,
+      "reason": "静态服务需要 createApp + ConfigProvider/globalConfig 保持独立会话配置；useMessage/PurePanel/PureList 使用 notification 的共享 Notice 引擎与 Portal/Motion。ConfigProvider 的 FormProvider/locale/主题 CSS scope 是实际继承职责，不是误保留 App/UI Form。",
+      "sourceCommits": [
+        "6965a725"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/message/index.ts:31",
+        "packages/ui/src/message/index.ts:280",
+        "packages/ui/src/message/useMessage.ts",
+        "packages/ui/src/config-provider/ConfigProvider.ts:282"
+      ],
+      "moduleEvidence": {
+        "id": "message",
+        "rootBytes": 94906,
+        "deepBytes": 94910,
+        "deepMinusRootBytes": 4,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 96,
+        "oldBudgetBytes": 83968,
+        "overOldBudgetBytes": 10938,
+        "ratioToFull": 0.04143700924916869,
+        "retainedUI": [
+          {
+            "name": "notification",
+            "moduleCount": 15,
+            "renderedLength": 31277
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 9,
+            "renderedLength": 21382
+          },
+          {
+            "name": "message",
+            "moduleCount": 7,
+            "renderedLength": 13823
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 3,
+            "renderedLength": 2217
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "utils",
+            "moduleCount": 17,
+            "renderedLength": 27904
+          },
+          {
+            "name": "motion",
+            "moduleCount": 7,
+            "renderedLength": 25869
+          },
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25833
+          },
+          {
+            "name": "portal",
+            "moduleCount": 8,
+            "renderedLength": 13038
+          },
+          {
+            "name": "icons",
+            "moduleCount": 10,
+            "renderedLength": 9339
+          },
+          {
+            "name": "locale",
+            "moduleCount": 3,
+            "renderedLength": 7725
+          },
+          {
+            "name": "form-core",
+            "moduleCount": 2,
+            "renderedLength": 1614
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "6965a725"
+        ],
+        "explanation": "静态服务需要 createApp + ConfigProvider/globalConfig 保持独立会话配置；useMessage/PurePanel/PureList 使用 notification 的共享 Notice 引擎与 Portal/Motion。ConfigProvider 的 FormProvider/locale/主题 CSS scope 是实际继承职责，不是误保留 App/UI Form。",
+        "sourceEvidence": [
+          "packages/ui/src/message/index.ts:31",
+          "packages/ui/src/message/index.ts:280",
+          "packages/ui/src/message/useMessage.ts",
+          "packages/ui/src/config-provider/ConfigProvider.ts:282"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "notification",
+      "actualKb": 95.84765625,
+      "budgetKb": 93,
+      "fullKb": 2236.6875,
+      "ratio": 0.0428525023053064,
+      "ok": false,
+      "detail": "notification: 95.8 KB / 全量 2236.7 KB (4.3%) / 预算 93 KB",
+      "actualBytes": 98148,
+      "oldBudgetBytes": 95232,
+      "deltaBytes": 2916,
+      "deltaPct": 3.061995967741926,
+      "newBudgetKb": 101,
+      "headroomKb": 5.15234375,
+      "headroomPercent": 5.375555283857025,
+      "reason": "静态服务、useNotification/PurePanel/PureList 和共享 NoticeList/Notice/Timer/stack，引入全局 ConfigProvider 当前主题/locale/FormProvider 及 Portal/Motion；没有 App 或其他 UI 组件。新会话/面板通知/定时器/Token 原生契约属于当前功能成本。",
+      "sourceCommits": [
+        "6965a725"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/notification/index.ts:13",
+        "packages/ui/src/notification/index.ts:159",
+        "packages/ui/src/notification/use-notice-theme.ts",
+        "packages/ui/src/config-provider/ConfigProvider.ts:282"
+      ],
+      "moduleEvidence": {
+        "id": "notification",
+        "rootBytes": 98148,
+        "deepBytes": 98160,
+        "deepMinusRootBytes": 12,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 99,
+        "oldBudgetBytes": 95232,
+        "overOldBudgetBytes": 2916,
+        "ratioToFull": 0.0428525023053064,
+        "retainedUI": [
+          {
+            "name": "notification",
+            "moduleCount": 21,
+            "renderedLength": 46487
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 9,
+            "renderedLength": 21382
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 4,
+            "renderedLength": 4843
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "utils",
+            "moduleCount": 18,
+            "renderedLength": 28507
+          },
+          {
+            "name": "motion",
+            "moduleCount": 7,
+            "renderedLength": 25869
+          },
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25833
+          },
+          {
+            "name": "portal",
+            "moduleCount": 8,
+            "renderedLength": 13038
+          },
+          {
+            "name": "icons",
+            "moduleCount": 11,
+            "renderedLength": 10337
+          },
+          {
+            "name": "locale",
+            "moduleCount": 4,
+            "renderedLength": 8462
+          },
+          {
+            "name": "form-core",
+            "moduleCount": 2,
+            "renderedLength": 1614
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "6965a725"
+        ],
+        "explanation": "静态服务、useNotification/PurePanel/PureList 和共享 NoticeList/Notice/Timer/stack，引入全局 ConfigProvider 当前主题/locale/FormProvider 及 Portal/Motion；没有 App 或其他 UI 组件。新会话/面板通知/定时器/Token 原生契约属于当前功能成本。",
+        "sourceEvidence": [
+          "packages/ui/src/notification/index.ts:13",
+          "packages/ui/src/notification/index.ts:159",
+          "packages/ui/src/notification/use-notice-theme.ts",
+          "packages/ui/src/config-provider/ConfigProvider.ts:282"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "radio",
+      "actualKb": 32.7373046875,
+      "budgetKb": 25,
+      "fullKb": 2236.6875,
+      "ratio": 0.014636512560426971,
+      "ok": false,
+      "detail": "Radio: 32.7 KB / 全量 2236.7 KB (1.5%) / 预算 25 KB",
+      "actualBytes": 33523,
+      "oldBudgetBytes": 25600,
+      "deltaBytes": 7923,
+      "deltaPct": 30.949218750000007,
+      "newBudgetKb": 36,
+      "headroomKb": 3.2626953125,
+      "headroomPercent": 9.966291799659931,
+      "reason": "公开 Radio.Group/Button、真实原生 checked 恢复/整组 DOM 归属、键盘和当前 theme/Token。checkbox 只保留 use-bubble-lock 680 pre-minify 字符，form 只保留 context 272；没有 Checkbox/Form UI 组件。",
+      "sourceCommits": [
+        "d3d87414",
+        "70987a8c"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/radio/index.ts:17",
+        "packages/ui/src/radio/Radio.ts",
+        "packages/ui/src/radio/Group.ts",
+        "packages/ui/src/radio/use-radio-theme.ts:1"
+      ],
+      "moduleEvidence": {
+        "id": "radio",
+        "rootBytes": 33523,
+        "deepBytes": 33523,
+        "deepMinusRootBytes": 0,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 36,
+        "oldBudgetBytes": 25600,
+        "overOldBudgetBytes": 7923,
+        "ratioToFull": 0.014636512560426971,
+        "retainedUI": [
+          {
+            "name": "radio",
+            "moduleCount": 7,
+            "renderedLength": 15360
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 3,
+            "renderedLength": 2939
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 3,
+            "renderedLength": 2597
+          },
+          {
+            "name": "checkbox",
+            "moduleCount": 1,
+            "renderedLength": 680
+          },
+          {
+            "name": "form",
+            "moduleCount": 1,
+            "renderedLength": 272
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "utils",
+            "moduleCount": 6,
+            "renderedLength": 14350
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "d3d87414",
+          "70987a8c"
+        ],
+        "explanation": "公开 Radio.Group/Button、真实原生 checked 恢复/整组 DOM 归属、键盘和当前 theme/Token。checkbox 只保留 use-bubble-lock 680 pre-minify 字符，form 只保留 context 272；没有 Checkbox/Form UI 组件。",
+        "sourceEvidence": [
+          "packages/ui/src/radio/index.ts:17",
+          "packages/ui/src/radio/Radio.ts",
+          "packages/ui/src/radio/Group.ts",
+          "packages/ui/src/radio/use-radio-theme.ts:1"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "switch",
+      "actualKb": 35.2421875,
+      "budgetKb": 32,
+      "fullKb": 2236.6875,
+      "ratio": 0.015756419929024507,
+      "ok": false,
+      "detail": "Switch: 35.2 KB / 全量 2236.7 KB (1.6%) / 预算 32 KB",
+      "actualBytes": 36088,
+      "oldBudgetBytes": 32768,
+      "deltaBytes": 3320,
+      "deltaPct": 10.1318359375,
+      "newBudgetKb": 38,
+      "headroomKb": 2.7578125,
+      "headroomPercent": 7.825315894480167,
+      "reason": "当前 Vue 受控值/原生 attrs、Provider 样式与 disabled/size、有效组件 Token/alias 链和默认 loading 图标；UI 图仅 Switch 与共享 helper/context。",
+      "sourceCommits": [
+        "94ad6410",
+        "eac96a81"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/switch/Switch.ts:7",
+        "packages/ui/src/switch/Switch.ts:88",
+        "packages/ui/src/switch/Switch.ts:100",
+        "packages/ui/src/switch/use-switch-theme.ts:1"
+      ],
+      "moduleEvidence": {
+        "id": "switch",
+        "rootBytes": 36088,
+        "deepBytes": 36092,
+        "deepMinusRootBytes": 4,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 41,
+        "oldBudgetBytes": 32768,
+        "overOldBudgetBytes": 3320,
+        "ratioToFull": 0.015756419929024507,
+        "retainedUI": [
+          {
+            "name": "switch",
+            "moduleCount": 4,
+            "renderedLength": 8281
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 2,
+            "renderedLength": 3896
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 3,
+            "renderedLength": 2939
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "utils",
+            "moduleCount": 11,
+            "renderedLength": 20729
+          },
+          {
+            "name": "icons",
+            "moduleCount": 6,
+            "renderedLength": 6449
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "94ad6410",
+          "eac96a81"
+        ],
+        "explanation": "当前 Vue 受控值/原生 attrs、Provider 样式与 disabled/size、有效组件 Token/alias 链和默认 loading 图标；UI 图仅 Switch 与共享 helper/context。",
+        "sourceEvidence": [
+          "packages/ui/src/switch/Switch.ts:7",
+          "packages/ui/src/switch/Switch.ts:88",
+          "packages/ui/src/switch/Switch.ts:100",
+          "packages/ui/src/switch/use-switch-theme.ts:1"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    },
+    {
+      "id": "upload",
+      "actualKb": 149.4072265625,
+      "budgetKb": 143,
+      "fullKb": 2236.6875,
+      "ratio": 0.06679843588453908,
+      "ok": false,
+      "detail": "Upload: 149.4 KB / 全量 2236.7 KB (6.7%) / 预算 143 KB",
+      "actualBytes": 152993,
+      "oldBudgetBytes": 146432,
+      "deltaBytes": 6561,
+      "deltaPct": 4.480578015734271,
+      "newBudgetKb": 157,
+      "headroomKb": 7.5927734375,
+      "headroomPercent": 5.081931853091315,
+      "reason": "实际 Ajax/目录遍历/请求取消与异步文件状态、预览资源、Upload.Dragger/ListItem，加真实 Progress 六字段及默认 Button/Tooltip/Space；Progress 是已有独立实证的明确功能组合，未带入其余大 UI 组件。",
+      "sourceCommits": [
+        "2ef32069",
+        "c5af00ba"
+      ],
+      "sourceEvidence": [
+        "packages/ui/src/upload/index.ts:15",
+        "packages/ui/src/upload/UploadList/UploadProgress.ts:3",
+        "packages/ui/src/upload/engine/AjaxUploader.ts",
+        "docs/audit/2026-10-29-upload-progress-audit.md"
+      ],
+      "moduleEvidence": {
+        "id": "upload",
+        "rootBytes": 152993,
+        "deepBytes": 152997,
+        "deepMinusRootBytes": 4,
+        "rootEqualsOriginalBudgetMeasurement": true,
+        "sameRetainedModuleIds": true,
+        "retainedModuleCountExcludingProbe": 121,
+        "oldBudgetBytes": 146432,
+        "overOldBudgetBytes": 6561,
+        "ratioToFull": 0.06679843588453908,
+        "retainedUI": [
+          {
+            "name": "upload",
+            "moduleCount": 15,
+            "renderedLength": 52874
+          },
+          {
+            "name": "progress",
+            "moduleCount": 9,
+            "renderedLength": 29577
+          },
+          {
+            "name": "_internal",
+            "moduleCount": 6,
+            "renderedLength": 18994
+          },
+          {
+            "name": "button",
+            "moduleCount": 4,
+            "renderedLength": 16940
+          },
+          {
+            "name": "tooltip",
+            "moduleCount": 5,
+            "renderedLength": 15178
+          },
+          {
+            "name": "config-provider",
+            "moduleCount": 3,
+            "renderedLength": 3049
+          },
+          {
+            "name": "space",
+            "moduleCount": 1,
+            "renderedLength": 1861
+          }
+        ],
+        "retainedFoundation": [
+          {
+            "name": "utils",
+            "moduleCount": 18,
+            "renderedLength": 27481
+          },
+          {
+            "name": "motion",
+            "moduleCount": 8,
+            "renderedLength": 26841
+          },
+          {
+            "name": "theme",
+            "moduleCount": 15,
+            "renderedLength": 25831
+          },
+          {
+            "name": "position",
+            "moduleCount": 6,
+            "renderedLength": 20543
+          },
+          {
+            "name": "portal",
+            "moduleCount": 8,
+            "renderedLength": 15662
+          },
+          {
+            "name": "icons",
+            "moduleCount": 16,
+            "renderedLength": 14307
+          },
+          {
+            "name": "overlay",
+            "moduleCount": 4,
+            "renderedLength": 11458
+          },
+          {
+            "name": "locale",
+            "moduleCount": 3,
+            "renderedLength": 7387
+          }
+        ],
+        "retainedThirdParty": [],
+        "sourceCommits": [
+          "2ef32069",
+          "c5af00ba"
+        ],
+        "explanation": "实际 Ajax/目录遍历/请求取消与异步文件状态、预览资源、Upload.Dragger/ListItem，加真实 Progress 六字段及默认 Button/Tooltip/Space；Progress 是已有独立实证的明确功能组合，未带入其余大 UI 组件。",
+        "sourceEvidence": [
+          "packages/ui/src/upload/index.ts:15",
+          "packages/ui/src/upload/UploadList/UploadProgress.ts:3",
+          "packages/ui/src/upload/engine/AjaxUploader.ts",
+          "docs/audit/2026-10-29-upload-progress-audit.md"
+        ],
+        "unexpectedDependencies": [],
+        "physicalDuplicateGroups": []
+      }
+    }
+  ],
+  "moduleGraph": {
+    "method": {
+      "reference": "tests/build/checks/treeshake.mjs:measureImportSize",
+      "configFile": false,
+      "logLevel": "silent",
+      "write": false,
+      "minify": "esbuild",
+      "external": [
+        "vue",
+        "dayjs"
+      ],
+      "format": "es",
+      "liveReference": "console.log(namedExport)",
+      "unit": "bytes of actual output chunk.code; no gzip/Brotli/CSS",
+      "graph": "Only chunk.modules entries with renderedLength > 0 are retained; lengths are pre-minify structural evidence, not emitted bytes.",
+      "probeLocation": "Unique .treeshake-probe-* under ignored repository node_modules to retain workspace resolution without changing .gitignore."
+    },
+    "manifestEvidence": {
+      "uiSideEffects": [
+        "**/*.css"
+      ],
+      "uiRootExport": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.mjs"
+      },
+      "uiDeepExports": {
+        "affix": {
+          "types": "./dist/affix/index.d.ts",
+          "import": "./dist/affix/index.mjs"
+        },
+        "anchor": {
+          "types": "./dist/anchor/index.d.ts",
+          "import": "./dist/anchor/index.mjs"
+        },
+        "back-top": {
+          "types": "./dist/back-top/index.d.ts",
+          "import": "./dist/back-top/index.mjs"
+        },
+        "badge": {
+          "types": "./dist/badge/index.d.ts",
+          "import": "./dist/badge/index.mjs"
+        },
+        "breadcrumb": {
+          "types": "./dist/breadcrumb/index.d.ts",
+          "import": "./dist/breadcrumb/index.mjs"
+        },
+        "carousel": {
+          "types": "./dist/carousel/index.d.ts",
+          "import": "./dist/carousel/index.mjs"
+        },
+        "dropdown": {
+          "types": "./dist/dropdown/index.d.ts",
+          "import": "./dist/dropdown/index.mjs"
+        },
+        "image": {
+          "types": "./dist/image/index.d.ts",
+          "import": "./dist/image/index.mjs"
+        },
+        "message": {
+          "types": "./dist/message/index.d.ts",
+          "import": "./dist/message/index.mjs"
+        },
+        "notification": {
+          "types": "./dist/notification/index.d.ts",
+          "import": "./dist/notification/index.mjs"
+        },
+        "radio": {
+          "types": "./dist/radio/index.d.ts",
+          "import": "./dist/radio/index.mjs"
+        },
+        "switch": {
+          "types": "./dist/switch/index.d.ts",
+          "import": "./dist/switch/index.mjs"
+        },
+        "upload": {
+          "types": "./dist/upload/index.d.ts",
+          "import": "./dist/upload/index.mjs"
+        }
+      },
+      "foundationSideEffects": {
+        "@apollo-design/a11y": false,
+        "@apollo-design/form-core": false,
+        "@apollo-design/icons": false,
+        "@apollo-design/locale": false,
+        "@apollo-design/motion": false,
+        "@apollo-design/overlay": false,
+        "@apollo-design/portal": false,
+        "@apollo-design/position": false,
+        "@apollo-design/theme": [
+          "**/*.css"
+        ],
+        "@apollo-design/utils": false
+      }
+    },
+    "summary": {
+      "all13RootByteCountsExactlyMatchOriginalRun": true,
+      "all13RootAndDeepRetainedModuleSetsEqual": true,
+      "maxAbsDeepRootByteDelta": 12,
+      "maxRatioToFull": 0.06679843588453908,
+      "reactRcCssInJsRetainedModules": [],
+      "physicalDuplicateModuleGroups": [],
+      "thirdPartyOnly": "Anchor: scroll-into-view-if-needed@3.1.0 -> compute-scroll-into-view@3.1.1, one physical copy/version each; other 12 retain no third-party runtime modules",
+      "wholeLibraryRetentionDetected": false,
+      "noSourceOrProductWrites": true,
+      "noBuildsOrBudgetUpdates": true,
+      "scratchDirectoriesRemoved": true
+    },
+    "sharedCostEvidence": [
+      {
+        "commits": [
+          "617ae554",
+          "5c527297",
+          "4637eb45"
+        ],
+        "scope": "Theme token derivation/CSS vars and current source/provider ownership are live in all 13; no UI static style generator is retained solely by root import."
+      },
+      {
+        "commits": [
+          "37010fe9",
+          "3700d8aa",
+          "742c121f"
+        ],
+        "scope": "Current native Vue/DOM/observer resources and portal ownership are shared runtime dependencies where used; historical per-commit minified byte contribution was not independently rebuilt or isolated."
+      }
+    ],
+    "commands": [
+      {
+        "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node /tmp/apollo-budget-graph-probe-31a1eece.mjs > /tmp/apollo-budget-module-graph-31a1eece.log 2>&1",
+        "exitCode": 1,
+        "signal": null,
+        "probeElapsedMs": 2824,
+        "timingScope": "monotonic probe timer after Vite import; full process duration not separately measured",
+        "reason": "Probe incorrectly requested a named deep message export; actual public deep service is default and root re-exports that default. Valid root/deep graphs are reused.",
+        "validProbeGraphsReused": 17,
+        "preservedLogAfterFailedAttempt": "/tmp/apollo-budget-module-graph-31a1eece-attempt1.log",
+        "preservedResultAfterFailedAttempt": "/tmp/apollo-budget-module-graph-31a1eece-attempt1.json"
+      },
+      {
+        "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node /tmp/apollo-budget-graph-probe-31a1eece.mjs > /tmp/apollo-budget-module-graph-31a1eece.log 2>&1",
+        "exitCode": 0,
+        "signal": null,
+        "probeElapsedMs": 1556,
+        "timingScope": "monotonic probe timer after Vite import; only remaining 9 root/deep builds, reusing 17 valid unchanged graphs",
+        "completedGraphs": 26
+      }
+    ],
+    "priorFailedProbeEvidence": "/tmp/apollo-budget-module-graph-31a1eece-attempt1.json",
+    "limits": [
+      "Module renderedLength is pre-minify structural evidence only. Final byte figures use actual chunk.code exactly as the repository measurement.",
+      "The minifier may rename identifiers differently for root/deep imports; identical retained module sets can differ by up to 12 emitted bytes.",
+      "No historical artifact rebuild; source commits explain required runtime responsibilities, not a measured per-commit byte allocation.",
+      "This investigation does not assert the unchanged 13 old budget caps pass and does not prescribe a universal budget multiplier."
+    ]
+  },
+  "validation": {
+    "beforeCalibration": {
+      "entries": 73,
+      "failed": 13,
+      "processExitCode": 1,
+      "cliReadOnly": true,
+      "cliDidNotGenerateThresholds": true
+    },
+    "afterCalibration": {
+      "status": "not_run"
+    },
+    "negativeChecks": {
+      "status": "not_run"
+    }
+  }
+}
