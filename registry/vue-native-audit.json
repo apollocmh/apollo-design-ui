@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 244,
+  "revision": 245,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12612,8 +12612,8 @@
       {
         "dimension": "visual",
         "status": "in_progress",
-        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
-        "note": "All 660 originally missing candidates reviewed and accepted in two explicit batches. No missing approved baseline remains; unchanged full 1875-case pixel comparison is still pending and acceptance is not complete.",
+        "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+        "note": "All 660 missing baselines reviewed and filled. Complete 1875-case first comparison passed 1869; the six intended compact Timeline changes were reviewed and accepted separately. Targeted comparison pending; no full acceptance claim.",
         "checks": [
           {
             "kind": "visual",
@@ -12888,8 +12888,450 @@
               "40a8212b responsive Pagination wrapping"
             ],
             "note": "Corrected fixture captures and actual image review, preserving original rejected evidence. Only these exact reviewed new IDs accepted; complete visual comparison still required."
+          },
+          {
+            "captureCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+            "acceptedAt": "2026-11-01T03:37:15.244Z",
+            "newImages": 0,
+            "updatedImages": 6,
+            "ids": [
+              "timeline/theme-compact__light__mobile",
+              "timeline/theme-compact__light__tablet",
+              "timeline/theme-compact__light__desktop",
+              "timeline/theme-dark-compact__light__mobile",
+              "timeline/theme-dark-compact__light__tablet",
+              "timeline/theme-dark-compact__light__desktop"
+            ],
+            "classification": "INTENDED",
+            "contractEvidence": [
+              {
+                "file": "packages/ui/src/timeline/index.en-US.md",
+                "line": 77,
+                "claim": "dotSize undefined keeps internal Steps fallback; clearing optional token restores fallback."
+              },
+              {
+                "file": "packages/ui/src/timeline/style/index.ts",
+                "line": 135,
+                "claim": "Timeline origin is actual internal Steps icon-size-active; custom optional token has priority."
+              },
+              {
+                "file": "packages/ui/src/steps/style/token.ts",
+                "line": 47,
+                "claim": "Current alias tokens derive the nine effective component defaults."
+              },
+              {
+                "file": "packages/ui/src/steps/use-theme.ts",
+                "line": 55,
+                "claim": "Each Steps root consumes its current scoped theme defaults and overrides."
+              },
+              {
+                "file": "packages/ui/src/timeline/__tests__/contracts.test.ts",
+                "line": 279,
+                "claim": "Existing compact/both-theme contract asserts optional dot-size remains undeclared."
+              }
+            ],
+            "existingEntriesUnchanged": 1869,
+            "originalCaptureAndReview": "/tmp/apollo-timeline-compact-diagnostic-1adf76dc/diagnosis.json",
+            "originalBaselineSource": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+            "fullVisualComparison": "Complete first run retained; only these six stale compact-theme baselines need targeted comparison after acceptance.",
+            "note": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
           }
-        ]
+        ],
+        "firstCompleteComparison": {
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+          "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+          "expected": 1875,
+          "executed": 1875,
+          "passed": 1869,
+          "failed": 6,
+          "pending": 0,
+          "checks": [
+            {
+              "name": "compare",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "args": [
+                "tests/visual/apollo.mjs",
+                "--no-build",
+                "--component",
+                "input",
+                "--component",
+                "collapse",
+                "--component",
+                "layout",
+                "--component",
+                "empty",
+                "--component",
+                "spin",
+                "--component",
+                "flex",
+                "--component",
+                "button",
+                "--component",
+                "skeleton",
+                "--component",
+                "card",
+                "--component",
+                "color-picker",
+                "--component",
+                "anchor",
+                "--component",
+                "slider",
+                "--component",
+                "affix",
+                "--component",
+                "radio",
+                "--component",
+                "carousel",
+                "--component",
+                "auto-complete",
+                "--component",
+                "dropdown",
+                "--component",
+                "listy",
+                "--component",
+                "modal",
+                "--component",
+                "progress",
+                "--component",
+                "splitter",
+                "--component",
+                "tour",
+                "--component",
+                "tree-select",
+                "--component",
+                "popover",
+                "--report-file",
+                "/tmp/apollo-final-visual-part-1-1adf76dc.json"
+              ],
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 1771813,
+              "log": "/tmp/apollo-final-visual-part-1-1adf76dc-compare.log",
+              "report": "/tmp/apollo-final-visual-part-1-1adf76dc.json",
+              "expected": 627,
+              "failures": 0
+            },
+            {
+              "name": "compare",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "args": [
+                "tests/visual/apollo.mjs",
+                "--no-build",
+                "--component",
+                "timeline",
+                "--component",
+                "list",
+                "--component",
+                "breadcrumb",
+                "--component",
+                "avatar",
+                "--component",
+                "tag",
+                "--component",
+                "grid",
+                "--component",
+                "result",
+                "--component",
+                "tabs",
+                "--component",
+                "calendar",
+                "--component",
+                "pagination",
+                "--component",
+                "image",
+                "--component",
+                "table",
+                "--component",
+                "checkbox",
+                "--component",
+                "switch",
+                "--component",
+                "segmented",
+                "--component",
+                "cascader",
+                "--component",
+                "float-button",
+                "--component",
+                "menu",
+                "--component",
+                "notification",
+                "--component",
+                "rate",
+                "--component",
+                "steps",
+                "--component",
+                "transfer",
+                "--component",
+                "upload",
+                "--component",
+                "app",
+                "--report-file",
+                "/tmp/apollo-final-visual-part-2-1adf76dc.json"
+              ],
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 1755223,
+              "log": "/tmp/apollo-final-visual-part-2-1adf76dc-compare.log",
+              "report": "/tmp/apollo-final-visual-part-2-1adf76dc.json",
+              "expected": 624,
+              "failures": 6
+            },
+            {
+              "name": "compare",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "args": [
+                "tests/visual/apollo.mjs",
+                "--no-build",
+                "--component",
+                "space",
+                "--component",
+                "alert",
+                "--component",
+                "descriptions",
+                "--component",
+                "divider",
+                "--component",
+                "badge",
+                "--component",
+                "config-provider",
+                "--component",
+                "typography",
+                "--component",
+                "qr-code",
+                "--component",
+                "statistic",
+                "--component",
+                "date-picker",
+                "--component",
+                "mentions",
+                "--component",
+                "form",
+                "--component",
+                "masonry",
+                "--component",
+                "time-picker",
+                "--component",
+                "watermark",
+                "--component",
+                "drawer",
+                "--component",
+                "input-number",
+                "--component",
+                "message",
+                "--component",
+                "popconfirm",
+                "--component",
+                "select",
+                "--component",
+                "tooltip",
+                "--component",
+                "tree",
+                "--component",
+                "border-beam",
+                "--component",
+                "back-top",
+                "--report-file",
+                "/tmp/apollo-final-visual-part-3-1adf76dc.json"
+              ],
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 1786571,
+              "log": "/tmp/apollo-final-visual-part-3-1adf76dc-compare.log",
+              "report": "/tmp/apollo-final-visual-part-3-1adf76dc.json",
+              "expected": 624,
+              "failures": 0
+            }
+          ],
+          "failures": [
+            {
+              "id": "timeline/theme-compact__light__mobile",
+              "reactSize": {
+                "width": 375,
+                "height": 559
+              },
+              "vueSize": {
+                "width": 375,
+                "height": 558
+              },
+              "sizeMismatch": true,
+              "diffPixels": 3482,
+              "totalPixels": 209625,
+              "diffRatio": 0.01661061419200954,
+              "isolatedRatio": 0.10683515221137277,
+              "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/timeline/theme-compact__light__mobile.png",
+              "verdict": "FAIL",
+              "reason": "size-mismatch",
+              "message": "尺寸不一致：React 375×559 vs Vue 375×558。尺寸差异本身即成块差异，必须人工分类（TESTING.md §4.3：BUG / INTENDED / PLATFORM / UPSTREAM）。",
+              "state": {
+                "roots": 3,
+                "passive": 0,
+                "width": 343,
+                "background": "rgb(255, 255, 255)",
+                "railOffsets": [
+                  0,
+                  0
+                ],
+                "overflow": []
+              }
+            },
+            {
+              "id": "timeline/theme-compact__light__tablet",
+              "reactSize": {
+                "width": 768,
+                "height": 483
+              },
+              "vueSize": {
+                "width": 768,
+                "height": 482
+              },
+              "sizeMismatch": true,
+              "diffPixels": 3522,
+              "totalPixels": 370944,
+              "diffRatio": 0.009494694616977226,
+              "isolatedRatio": 0.10732538330494037,
+              "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/timeline/theme-compact__light__tablet.png",
+              "verdict": "FAIL",
+              "reason": "size-mismatch",
+              "message": "尺寸不一致：React 768×483 vs Vue 768×482。尺寸差异本身即成块差异，必须人工分类（TESTING.md §4.3：BUG / INTENDED / PLATFORM / UPSTREAM）。",
+              "state": {
+                "roots": 3,
+                "passive": 0,
+                "width": 736,
+                "background": "rgb(255, 255, 255)",
+                "railOffsets": [
+                  0,
+                  0
+                ],
+                "overflow": []
+              }
+            },
+            {
+              "id": "timeline/theme-compact__light__desktop",
+              "reactSize": {
+                "width": 1440,
+                "height": 483
+              },
+              "vueSize": {
+                "width": 1440,
+                "height": 482
+              },
+              "sizeMismatch": true,
+              "diffPixels": 3521,
+              "totalPixels": 695520,
+              "diffRatio": 0.005062399355877617,
+              "isolatedRatio": 0.10707185458676512,
+              "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/timeline/theme-compact__light__desktop.png",
+              "verdict": "FAIL",
+              "reason": "size-mismatch",
+              "message": "尺寸不一致：React 1440×483 vs Vue 1440×482。尺寸差异本身即成块差异，必须人工分类（TESTING.md §4.3：BUG / INTENDED / PLATFORM / UPSTREAM）。",
+              "state": {
+                "roots": 3,
+                "passive": 0,
+                "width": 1408,
+                "background": "rgb(255, 255, 255)",
+                "railOffsets": [
+                  0,
+                  0
+                ],
+                "overflow": []
+              }
+            },
+            {
+              "id": "timeline/theme-dark-compact__light__mobile",
+              "reactSize": {
+                "width": 375,
+                "height": 559
+              },
+              "vueSize": {
+                "width": 375,
+                "height": 558
+              },
+              "sizeMismatch": true,
+              "diffPixels": 3671,
+              "totalPixels": 209625,
+              "diffRatio": 0.01751222420989863,
+              "isolatedRatio": 0.1089621356578589,
+              "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/timeline/theme-dark-compact__light__mobile.png",
+              "verdict": "FAIL",
+              "reason": "size-mismatch",
+              "message": "尺寸不一致：React 375×559 vs Vue 375×558。尺寸差异本身即成块差异，必须人工分类（TESTING.md §4.3：BUG / INTENDED / PLATFORM / UPSTREAM）。",
+              "state": {
+                "roots": 3,
+                "passive": 0,
+                "width": 343,
+                "background": "rgb(20, 20, 20)",
+                "railOffsets": [
+                  0,
+                  0
+                ],
+                "overflow": []
+              }
+            },
+            {
+              "id": "timeline/theme-dark-compact__light__tablet",
+              "reactSize": {
+                "width": 768,
+                "height": 483
+              },
+              "vueSize": {
+                "width": 768,
+                "height": 482
+              },
+              "sizeMismatch": true,
+              "diffPixels": 4124,
+              "totalPixels": 370944,
+              "diffRatio": 0.011117581090407178,
+              "isolatedRatio": 0.09481086323957323,
+              "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/timeline/theme-dark-compact__light__tablet.png",
+              "verdict": "FAIL",
+              "reason": "size-mismatch",
+              "message": "尺寸不一致：React 768×483 vs Vue 768×482。尺寸差异本身即成块差异，必须人工分类（TESTING.md §4.3：BUG / INTENDED / PLATFORM / UPSTREAM）。",
+              "state": {
+                "roots": 3,
+                "passive": 0,
+                "width": 736,
+                "background": "rgb(20, 20, 20)",
+                "railOffsets": [
+                  0,
+                  0
+                ],
+                "overflow": []
+              }
+            },
+            {
+              "id": "timeline/theme-dark-compact__light__desktop",
+              "reactSize": {
+                "width": 1440,
+                "height": 483
+              },
+              "vueSize": {
+                "width": 1440,
+                "height": 482
+              },
+              "sizeMismatch": true,
+              "diffPixels": 4795,
+              "totalPixels": 695520,
+              "diffRatio": 0.006894122383252818,
+              "isolatedRatio": 0.08133472367049009,
+              "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/timeline/theme-dark-compact__light__desktop.png",
+              "verdict": "FAIL",
+              "reason": "size-mismatch",
+              "message": "尺寸不一致：React 1440×483 vs Vue 1440×482。尺寸差异本身即成块差异，必须人工分类（TESTING.md §4.3：BUG / INTENDED / PLATFORM / UPSTREAM）。",
+              "state": {
+                "roots": 3,
+                "passive": 0,
+                "width": 1408,
+                "background": "rgb(20, 20, 20)",
+                "railOffsets": [
+                  0,
+                  0
+                ],
+                "overflow": []
+              }
+            }
+          ],
+          "idSetSha256": "1b30b6daf79d4911fda71bdbe97afe99e2ad452fadd02e408a03000794cee0f8"
+        }
       },
       {
         "dimension": "docs",

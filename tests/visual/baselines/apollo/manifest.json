@@ -6400,58 +6400,58 @@
       "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
     },
     "timeline/theme-compact__light__mobile": {
-      "sha256": "6860df929942e11e1346b3da45c390dcba8f81c24745381ae3041573ecadf655",
+      "sha256": "08ac27166d7e8c091dc60d30dfebfbf0e25aa6a249be35f85ee4bcd6f24f31e6",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
       "dirty": false,
-      "capturedAt": "2026-10-28T18:32:14.767Z",
-      "reviewedAt": "2026-10-28T18:43:34.544Z",
-      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+      "capturedAt": "2026-11-01T03:20:07.559Z",
+      "reviewedAt": "2026-11-01T03:37:14.742Z",
+      "reviewNote": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
     },
     "timeline/theme-compact__light__tablet": {
-      "sha256": "b94b860e2c078c396242f28a5dee56c6acc3505a785fcb89e3b98c5def98df07",
+      "sha256": "575ba9bcc1f504e094af17692b92de7347f876221ea655009599ba47c69962f8",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
       "dirty": false,
-      "capturedAt": "2026-10-28T18:32:16.844Z",
-      "reviewedAt": "2026-10-28T18:43:34.545Z",
-      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+      "capturedAt": "2026-11-01T03:20:11.060Z",
+      "reviewedAt": "2026-11-01T03:37:14.744Z",
+      "reviewNote": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
     },
     "timeline/theme-compact__light__desktop": {
-      "sha256": "300b2685a100f4bd0ee38eb5b9008509c222b6dbe8698c06a9b60d74a5f2cfc7",
+      "sha256": "dc7e690dd9fb4070054ca95fbaf523d50eaef141836eaa97455d5b5068efb413",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
       "dirty": false,
-      "capturedAt": "2026-10-28T18:32:18.947Z",
-      "reviewedAt": "2026-10-28T18:43:34.545Z",
-      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+      "capturedAt": "2026-11-01T03:20:14.255Z",
+      "reviewedAt": "2026-11-01T03:37:14.744Z",
+      "reviewNote": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
     },
     "timeline/theme-dark-compact__light__mobile": {
-      "sha256": "f0fba01b0f49e3b982b8e26cacceeb9b984ee9770f70b91d04065b40b77ad831",
+      "sha256": "5d6f4b78f693dde5a3c125b3f427ff3f50d71b97697e7f8c34713a05c66dfa7b",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
       "dirty": false,
-      "capturedAt": "2026-10-28T18:32:21.037Z",
-      "reviewedAt": "2026-10-28T18:43:34.545Z",
-      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+      "capturedAt": "2026-11-01T03:20:20.483Z",
+      "reviewedAt": "2026-11-01T03:37:14.768Z",
+      "reviewNote": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
     },
     "timeline/theme-dark-compact__light__tablet": {
-      "sha256": "fa7e06336d810814cc35430dbea927691dc309ac96bbb84d19fd51df055987db",
+      "sha256": "f770af560245562cf283fdeee773603a1f60ac2364a46c1ec920160245ff4a24",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
       "dirty": false,
-      "capturedAt": "2026-10-28T18:32:23.111Z",
-      "reviewedAt": "2026-10-28T18:43:34.546Z",
-      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+      "capturedAt": "2026-11-01T03:20:23.714Z",
+      "reviewedAt": "2026-11-01T03:37:14.769Z",
+      "reviewNote": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
     },
     "timeline/theme-dark-compact__light__desktop": {
-      "sha256": "9eb8b295310f1f29b9af07b14e1f6a8bac1e5016e995ffd5b7e08d3201d63be4",
+      "sha256": "9bd45f9c4b4048b73127cc238727ca58031ccdec30ec5b47dbc3370f3b6fbe96",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
       "dirty": false,
-      "capturedAt": "2026-10-28T18:32:25.340Z",
-      "reviewedAt": "2026-10-28T18:43:34.546Z",
-      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+      "capturedAt": "2026-11-01T03:20:27.013Z",
+      "reviewedAt": "2026-11-01T03:37:14.769Z",
+      "reviewNote": "Root and native_form_core individually reviewed all six native-size PNGs. INTENDED current Steps theme projection (618f0d24): Timeline dotSize is publicly undefined and inherits internal Steps fallback; compact dot=7/activeDot=8.75/iconFont=12 replaces old static 8/10/14. Restoring old defaults reproduces all six old RGBA images exactly; current candidates reproduce current screenshots. Layout/content/axes remain complete. Contract: timeline/index.en-US.md:77, timeline/style/index.ts:135, steps/style/token.ts:47, steps/use-theme.ts:55 and timeline/contracts.test.ts:279. Keep product implementation, thresholds and other baselines; original images remain in Git history. Full-comparison failures retained; targeted comparison still required."
     },
     "grid/basic__light__mobile": {
       "sha256": "963271a1ba3e9931fe1a168781d5bb4835e24bde3919619be2f1991f4cbfd502",
