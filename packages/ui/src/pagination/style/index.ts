@@ -1,6 +1,7 @@
 /**
- * Pagination 的静态样式（antd 6.6.4 `es/pagination/style/index.js` 的**机械移植**）。
+ * Pagination 的静态样式（源自 antd 6.6.4 `es/pagination/style/index.js`）。
  * Apollo 现有 itemLinkBg / miniOptionsSizeChangerTop 的消费于 2026-10-30 补齐。
+ * Apollo 的窄容器布局允许页项换行，保留总数文案和所有导航项。
  *
  * ── 这份文件是怎么来的 ──────────────────────────────────────────────────────
  *
@@ -8,7 +9,7 @@
  * node tests/visual/debug/extract-pagination-css.mjs --emit-static
  * ```
  *
- * 只做「删壳改名、不改值」：去 `:where(.css-dev-only-do-not-override-X)` 作用域壳、
+ * 原始提取只做「删壳改名、不改值」：去 `:where(.css-dev-only-do-not-override-X)` 作用域壳、
  * 去 css-var 声明块（那份由 `genTokenDecls` 自己产出）、`.ant-` → `.apollo-`（含属性选择器
  * 里的 `"ant-` 字面量）、空白折成**单空格**。
  *
@@ -79,13 +80,13 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
   ];
 }
 
-/** antd 产物机械转换段（108 条规则 + 2 个媒体查询，原序）。 */
+/** 基于参考产物的规则段（108 条规则 + 2 个媒体查询；Apollo 根规则允许换行）。 */
 const RULES = `
 .apollo-pagination{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-pagination::before,.apollo-pagination::after{box-sizing:border-box;}
 .apollo-pagination [class^="apollo-pagination"],.apollo-pagination [class*=" apollo-pagination"]{box-sizing:border-box;}
 .apollo-pagination [class^="apollo-pagination"]::before,.apollo-pagination [class*=" apollo-pagination"]::before,.apollo-pagination [class^="apollo-pagination"]::after,.apollo-pagination [class*=" apollo-pagination"]::after{box-sizing:border-box;}
-.apollo-pagination{--apollo-pagination-item-size-actual:var(--apollo-pagination-item-size);--apollo-pagination-item-spacing-actual:var(--apollo-margin-xs);box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);display:flex;align-items:center;}
+.apollo-pagination{--apollo-pagination-item-size-actual:var(--apollo-pagination-item-size);--apollo-pagination-item-spacing-actual:var(--apollo-margin-xs);box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);display:flex;flex-wrap:wrap;row-gap:var(--apollo-margin-xs);align-items:center;}
 .apollo-pagination-small{--apollo-pagination-item-size-actual:var(--apollo-pagination-item-size-sm);--apollo-pagination-item-spacing-actual:var(--apollo-margin-xxs);}
 .apollo-pagination-large{--apollo-pagination-item-size-actual:var(--apollo-pagination-item-size-lg);--apollo-pagination-item-spacing-actual:var(--apollo-margin-sm);}
 .apollo-pagination-start{justify-content:start;}
