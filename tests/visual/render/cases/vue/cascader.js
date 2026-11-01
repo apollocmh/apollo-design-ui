@@ -36,36 +36,47 @@ const box = (children) =>
         minHeight: '260px',
         padding: '24px',
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
         fontFamily: CONTEXT_FONT,
       },
     },
     children,
   );
 
+const contentStyle = {
+  position: 'relative',
+  width: '480px',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+};
+const panelStyle = {
+  position: 'absolute',
+  top: '100%',
+  left: 0,
+  width: '100%',
+  maxWidth: '480px',
+  boxSizing: 'border-box',
+};
+
 export default {
   basic: () =>
     box(
-      h('div', { style: { position: 'relative' } }, [
+      h('div', { style: contentStyle }, [
         h(Cascader, {
           options: OPTIONS,
           open: true,
           placement: 'bottomLeft',
           defaultValue: ['zhejiang', 'hangzhou'],
         }),
-        h('div', { style: { position: 'absolute', top: '100%', left: 0, minWidth: '480px' } }, [
-          h(CascaderPanel, { options: OPTIONS }),
-        ]),
+        h('div', { style: panelStyle }, [h(CascaderPanel, { options: OPTIONS })]),
       ]),
     ),
 
   multiple: () =>
     box(
-      h('div', { style: { position: 'relative' } }, [
+      h('div', { style: contentStyle }, [
         h(Cascader, { multiple: true, options: OPTIONS, open: true, placement: 'bottomLeft' }),
-        h('div', { style: { position: 'absolute', top: '100%', left: 0, minWidth: '480px' } }, [
-          h(CascaderPanel, { options: OPTIONS, multiple: true }),
-        ]),
+        h('div', { style: panelStyle }, [h(CascaderPanel, { options: OPTIONS, multiple: true })]),
       ]),
     ),
 

@@ -21,7 +21,7 @@ const card = ({ data, index }) =>
 
 const box = (children) => h('div', { style: MASONRY_BOX_STYLE }, [children]);
 
-const picker = (props) => box(h(Masonry, { itemRender: card, items: buildItems(), ...props }));
+const picker = (props) => box(h(Masonry, { items: buildItems(), ...props }, { item: card }));
 
 export default {
   /** 默认列数（3）+ gutter 16。 */
@@ -56,7 +56,7 @@ export default {
         { direction: 'rtl' },
         {
           default: () =>
-            h(Masonry, { columns: 3, gutter: 16, items: buildItems(), itemRender: card }),
+            h(Masonry, { columns: 3, gutter: 16, items: buildItems() }, { item: card }),
         },
       ),
     ),

@@ -9,7 +9,19 @@ import { Form, FormItem, Input } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { padding: '16px', background: '#fff', width: '420px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        padding: '16px',
+        background: '#fff',
+        width: '420px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 const input = () => h(Input, { placeholder: 'Please input' });
 
@@ -77,11 +89,23 @@ export default {
     ),
 
   sizes: () =>
-    h('div', { style: { padding: '16px', background: '#fff', width: '420px' } }, [
-      form({ name: 'small', size: 'small' }, [item({ label: 'Small', name: 'small' })]),
-      form({ name: 'middle' }, [item({ label: 'Middle', name: 'middle' })]),
-      form({ name: 'large', size: 'large' }, [item({ label: 'Large', name: 'large' })]),
-    ]),
+    h(
+      'div',
+      {
+        style: {
+          padding: '16px',
+          background: '#fff',
+          width: '420px',
+          maxWidth: '100%',
+          boxSizing: 'border-box',
+        },
+      },
+      [
+        form({ name: 'small', size: 'small' }, [item({ label: 'Small', name: 'small' })]),
+        form({ name: 'middle' }, [item({ label: 'Middle', name: 'middle' })]),
+        form({ name: 'large', size: 'large' }, [item({ label: 'Large', name: 'large' })]),
+      ],
+    ),
 
   col: () =>
     box(

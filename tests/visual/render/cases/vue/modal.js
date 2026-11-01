@@ -13,7 +13,15 @@ const PurePanel = Modal._InternalPanelDoNotUseOrYouWillBeFired;
 const stage = (children) =>
   h(
     'div',
-    { style: { position: 'relative', minHeight: '420px', width: '640px', overflow: 'hidden' } },
+    {
+      style: {
+        position: 'relative',
+        minHeight: '420px',
+        width: '100%',
+        maxWidth: '640px',
+        overflow: 'hidden',
+      },
+    },
     children,
   );
 
@@ -22,7 +30,12 @@ export default {
     stage([
       h(
         Modal,
-        { open: true, getContainer: false, title: 'Modal Title', width: 400 },
+        {
+          open: true,
+          getContainer: false,
+          title: 'Modal Title',
+          width: 'min(400px, 100%)',
+        },
         { default: () => [h('p', null, 'Some contents...'), h('p', null, 'Some contents...')] },
       ),
     ]),
@@ -44,7 +57,13 @@ export default {
     stage([
       h(
         Modal,
-        { open: true, getContainer: false, loading: true, title: 'Loading', width: 400 },
+        {
+          open: true,
+          getContainer: false,
+          loading: true,
+          title: 'Loading',
+          width: 'min(400px, 100%)',
+        },
         { default: () => h('p', null, 'Some contents...') },
       ),
     ]),

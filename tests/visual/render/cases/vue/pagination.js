@@ -8,18 +8,33 @@ import { h } from 'vue';
 // ⚠️ 本文件是 `.js`（rolldown 按**纯 JS** 解析）⇒ 不能写 TS 类型标注，
 //    否则构建期直接 `PARSE_ERROR: Expected ',' or ')' but found ':'`（实测）。
 const box = (children) =>
-  h('div', { style: { padding: '16px', background: '#fff', width: '640px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        padding: '16px',
+        background: '#fff',
+        width: '640px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 export default {
   basic: () => box(h(Pagination, { defaultCurrent: 3, total: 50 })),
 
   totalText: () =>
     box(
-      h(Pagination, {
-        defaultCurrent: 3,
-        total: 500,
-        showTotal: (t) => `共 ${t} 条`,
-      }),
+      h(
+        Pagination,
+        {
+          defaultCurrent: 3,
+          total: 500,
+        },
+        { total: ({ total }) => `共 ${total} 条` },
+      ),
     ),
 
   simple: () => box(h(Pagination, { defaultCurrent: 3, total: 500, simple: true })),
@@ -45,12 +60,15 @@ export default {
 
   alignCenter: () =>
     box(
-      h(Pagination, {
-        defaultCurrent: 3,
-        total: 500,
-        align: 'center',
-        showTotal: (t) => `${t} items`,
-      }),
+      h(
+        Pagination,
+        {
+          defaultCurrent: 3,
+          total: 500,
+          align: 'center',
+        },
+        { total: ({ total }) => `${total} items` },
+      ),
     ),
 
   lessItems: () => box(h(Pagination, { defaultCurrent: 10, total: 500, showLessItems: true })),

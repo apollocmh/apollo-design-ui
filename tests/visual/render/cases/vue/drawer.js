@@ -12,7 +12,15 @@ import { h } from 'vue';
 const stage = (children) =>
   h(
     'div',
-    { style: { position: 'relative', minHeight: '420px', width: '640px', overflow: 'hidden' } },
+    {
+      style: {
+        position: 'relative',
+        minHeight: '420px',
+        width: '100%',
+        maxWidth: '800px',
+        overflow: 'hidden',
+      },
+    },
     children,
   );
 
@@ -27,6 +35,7 @@ export default {
           open: true,
           getContainer: false,
           title: 'Drawer Title',
+          size: 'min(378px, 100%)',
         },
         {
           default: () => h('p', null, 'Some contents...'),
@@ -36,7 +45,7 @@ export default {
       ),
     ]),
 
-  // 左抽屉 + 尺寸预设 large（736px）
+  // 左抽屉 + 大尺寸（736px），公开 CSS 长度配置让窄视口仍能看到完整面板。
   size: () =>
     stage([
       h(
@@ -45,7 +54,7 @@ export default {
           open: true,
           getContainer: false,
           placement: 'left',
-          size: 'large',
+          size: 'min(736px, 100%)',
           title: 'Large Left',
         },
         { default: () => h('p', null, 'Some contents...') },

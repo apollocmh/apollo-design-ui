@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 241,
+  "revision": 242,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12114,7 +12114,7 @@
     }
   ],
   "finalAcceptance": {
-    "status": "failed",
+    "status": "in_progress",
     "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
     "gates": [
       {
@@ -12611,9 +12611,9 @@
       },
       {
         "dimension": "visual",
-        "status": "blocked",
+        "status": "in_progress",
         "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
-        "note": "Default full Apollo visual command exited 1 before rendering because 660 selected cases lack approved baselines. No baseline was generated, copied, accepted or excluded to turn the full gate green. The approved subset remains partial evidence only.",
+        "note": "User authorized the missing-baseline closeout: inspect actual screenshots in bounded batches and key interactions; fix demonstrated problems before review/acceptance; run the full unchanged visual matrix afterwards. Architecture tasks and existing approvals remain intact.",
         "checks": [
           {
             "kind": "visual",
@@ -12675,6 +12675,33 @@
           "fullVisual": "Still failed due to 660 missing approved baselines out of 1875; this subset does not replace the full result.",
           "baselineWrites": false,
           "packageDistBuilds": false
+        },
+        "previousAttempt": {
+          "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+          "status": "blocked",
+          "note": "Default full Apollo visual command exited 1 before rendering because 660 selected cases lack approved baselines. No baseline was generated, copied, accepted or excluded to turn the full gate green. The approved subset remains partial evidence only.",
+          "checks": [
+            {
+              "kind": "visual",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node tests/visual/apollo.mjs",
+              "exitCode": 1,
+              "signal": null,
+              "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c"
+            }
+          ],
+          "selection": {
+            "selected": 1875,
+            "approved": 1215,
+            "missingApprovedBaselines": 660
+          }
+        },
+        "scope": {
+          "baselineCommit": "755e0775be77fd7627d8326d9cd22438addf49a1",
+          "initialMissing": 660,
+          "initialApproved": 1215,
+          "expected": 1875,
+          "ownership": "Root owns shared runner/matrix, build, baseline manifest, acceptance and progress. Five independent private-fixture/review groups; no parallel package builds.",
+          "notIncluded": "Architecture re-audit, size optimization, threshold changes, unreviewed candidate acceptance"
         }
       },
       {

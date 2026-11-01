@@ -6,7 +6,19 @@ import { Segmented } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { minHeight: '120px', padding: '16px', width: '640px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '120px',
+        padding: '16px',
+        width: '640px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 const OPTIONS = ['Daily', 'Weekly', 'Monthly', 'Quarterly'];
 

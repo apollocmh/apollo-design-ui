@@ -9,7 +9,19 @@ import { Slider } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { padding: '16px', background: '#fff', width: '320px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        padding: '16px',
+        background: '#fff',
+        width: '320px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 export default {
   basic: () => box(h(Slider, { defaultValue: 30 })),

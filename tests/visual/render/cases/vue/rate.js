@@ -7,7 +7,19 @@ import { Rate } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { minHeight: '80px', padding: '16px', width: '480px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '80px',
+        padding: '16px',
+        width: '480px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 export default {
   basic: () =>

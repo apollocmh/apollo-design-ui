@@ -49,30 +49,36 @@ export default {
 
   /** `cellRender` ⇒ 只换格子**内容**。 */
   cell: () =>
-    box(h(Calendar, { value: V, cellRender: () => h('span', { style: CALENDAR_CELL_STYLE }) })),
+    box(h(Calendar, { value: V }, { cellRender: () => h('span', { style: CALENDAR_CELL_STYLE }) })),
 
   /** `fullCellRender` ⇒ 换**整个**格子。 */
   full: () =>
     box(
-      h(Calendar, {
-        value: V,
-        fullCellRender: (date) =>
-          h('div', { style: CALENDAR_FULL_CELL_STYLE }, String(date.date())),
-      }),
+      h(
+        Calendar,
+        { value: V },
+        {
+          fullCellRender: ({ current }) =>
+            h('div', { style: CALENDAR_FULL_CELL_STYLE }, String(current.date())),
+        },
+      ),
     ),
 
   /** `headerRender` ⇒ 整块 header 换掉。 */
   header: () =>
     box(
-      h(Calendar, {
-        value: V,
-        headerRender: ({ value }) =>
-          h(
-            'div',
-            { style: CALENDAR_CUSTOM_HEADER_STYLE },
-            `Custom header — ${value.format('YYYY-MM')}`,
-          ),
-      }),
+      h(
+        Calendar,
+        { value: V },
+        {
+          headerRender: ({ value }) =>
+            h(
+              'div',
+              { style: CALENDAR_CUSTOM_HEADER_STYLE },
+              `Custom header — ${value.format('YYYY-MM')}`,
+            ),
+        },
+      ),
     ),
 
   /** 6 个语义槽（**可见样式**，否则与 `basic` 逐字节相同 ⇒ 空转）。 */

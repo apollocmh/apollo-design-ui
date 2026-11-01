@@ -24,10 +24,10 @@ export default {
     stage([
       h(List, {
         items: [
-          { key: '1', type: 'info', content: 'This is an info message' },
-          { key: '2', type: 'success', content: 'This is a success message' },
-          { key: '3', type: 'warning', content: 'This is a warning message' },
-          { key: '4', type: 'error', content: 'This is an error message' },
+          { key: '1', type: 'info', content: 'This is an info message', duration: 0 },
+          { key: '2', type: 'success', content: 'This is a success message', duration: 0 },
+          { key: '3', type: 'warning', content: 'This is a warning message', duration: 0 },
+          { key: '4', type: 'error', content: 'This is an error message', duration: 0 },
         ],
       }),
     ]),

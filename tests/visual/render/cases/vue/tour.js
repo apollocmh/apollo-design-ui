@@ -11,7 +11,14 @@ import { h, ref } from 'vue';
 const box = (children) =>
   h(
     'div',
-    { style: { minHeight: '220px', padding: '24px', display: 'flex', alignItems: 'flex-end' } },
+    {
+      style: {
+        minHeight: '420px',
+        padding: '24px',
+        display: 'flex',
+        alignItems: 'flex-start',
+      },
+    },
     children,
   );
 
@@ -32,6 +39,7 @@ export default {
         ),
         h(Tour, {
           open: true,
+          placement: 'bottom',
           current: 0,
           steps: [
             {
@@ -60,6 +68,7 @@ export default {
         ),
         h(Tour, {
           open: true,
+          placement: 'bottom',
           type: 'primary',
           mask: false,
           current: 0,

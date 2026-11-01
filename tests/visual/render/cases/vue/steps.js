@@ -6,7 +6,19 @@ import { Steps } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { minHeight: '220px', padding: '16px', width: '640px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '220px',
+        padding: '16px',
+        width: '640px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 const items = [
   { title: 'Login', content: 'Enter your credentials' },

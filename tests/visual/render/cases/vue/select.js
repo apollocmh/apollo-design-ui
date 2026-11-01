@@ -6,7 +6,19 @@ import { Select } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { minHeight: '280px', padding: '16px', width: '420px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '280px',
+        padding: '16px',
+        width: '420px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 const options = [
   { value: 'jack', label: 'Jack' },
@@ -31,7 +43,7 @@ export default {
         options,
         mode: 'multiple',
         defaultValue: ['jack', 'tom'],
-        style: { width: '320px' },
+        style: { width: '320px', maxWidth: '100%' },
       }),
     ),
 

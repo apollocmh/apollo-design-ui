@@ -230,6 +230,10 @@ async function main() {
         width: item.width,
         height: item.height,
       });
+      // BorderBeam 在 reduced-motion 下按契约隐藏装饰；此场景验证正常模式的静态流光。
+      // 通用稳定化仍禁用动画并固定 offset-distance 的初始帧。
+      if (item.component === 'border-beam')
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
       page.on('console', (message) => {

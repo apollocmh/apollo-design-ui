@@ -11,8 +11,8 @@ import { h } from 'vue';
 const Panel = notification._InternalPanelDoNotUseOrYouWillBeFired;
 const List = notification._InternalListDoNotUseOrYouWillBeFired;
 
-const stage = (children) =>
-  h('div', { style: { minHeight: '240px', padding: '16px', width: '420px' } }, children);
+const stage = (children, style = {}) =>
+  h('div', { style: { minHeight: '240px', padding: '16px', width: '420px', ...style } }, children);
 
 export default {
   // 单条（success 图标 + 标题 + 描述 + 关闭按钮）
@@ -28,25 +28,35 @@ export default {
 
   // 方位（bottomRight 的定位规则 —— message 没有这个概念）
   placement: () =>
-    stage([
-      h(List, {
-        placement: 'bottomRight',
-        items: [
-          {
-            key: 'a',
-            type: 'info',
-            title: 'Notification topRight',
-            description: 'This is the content of the notification.',
-          },
-          {
-            key: 'b',
-            type: 'warning',
-            title: 'Notification bottomRight',
-            description: 'This is the content of the notification.',
-          },
-        ],
-      }),
-    ]),
+    stage(
+      [
+        h(List, {
+          placement: 'bottomRight',
+          items: [
+            {
+              key: 'a',
+              type: 'info',
+              duration: 0,
+              title: 'Notification topRight',
+              description: 'This is the content of the notification.',
+            },
+            {
+              key: 'b',
+              type: 'warning',
+              duration: 0,
+              title: 'Notification bottomRight',
+              description: 'This is the content of the notification.',
+            },
+          ],
+        }),
+      ],
+      {
+        // 列表保持真实 fixed bottomRight；截图舞台覆盖完整视口，不重写其定位规则。
+        height: 'calc(100vh - 32px)',
+        width: '100%',
+        boxSizing: 'border-box',
+      },
+    ),
 
   // actions 区（关闭按钮 + 操作按钮的几何）。C8-R2：actions 走 `#actions` 插槽
   actions: () =>

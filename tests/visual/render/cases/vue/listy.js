@@ -15,35 +15,33 @@ const groupItems = Array.from({ length: 8 }, (_, i) => ({
 }));
 const group = {
   key: (item) => item.group,
-  title: (key, groupItemsOfKey) => `${key} (${groupItemsOfKey.length})`,
 };
+const item = ({ item: row }) => row.content;
+const groupHeader = ({ groupKey, items: rows }) => `${groupKey} (${rows.length})`;
 
 export default {
   basic: () =>
     box(
       h('div', { style: { width: '420px' } }, [
-        h(Listy, { items, rowKey: 'key', itemRender: (item) => item.content }),
+        h(Listy, { items, rowKey: 'key' }, { default: item }),
       ]),
     ),
 
   groupSticky: () =>
     box(
       h('div', { style: { width: '420px' } }, [
-        h(Listy, {
-          items: groupItems,
-          rowKey: 'key',
-          group,
-          sticky: true,
-          height: 240,
-          itemRender: (item) => item.content,
-        }),
+        h(
+          Listy,
+          { items: groupItems, rowKey: 'key', group, sticky: true, height: 240 },
+          { default: item, groupHeader },
+        ),
       ]),
     ),
 
   height: () =>
     box(
       h('div', { style: { width: '420px' } }, [
-        h(Listy, { items, rowKey: 'key', height: 160, itemRender: (item) => item.content }),
+        h(Listy, { items, rowKey: 'key', height: 160 }, { default: item }),
       ]),
     ),
 };

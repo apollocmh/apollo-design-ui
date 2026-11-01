@@ -9,7 +9,19 @@ import { Button, Upload, UploadDragger } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const box = (children) =>
-  h('div', { style: { minHeight: '280px', padding: '16px', width: '420px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        minHeight: '280px',
+        padding: '16px',
+        width: '420px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 const THUMB =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='88'><rect width='88' height='88' fill='%23e6f4ff'/></svg>";

@@ -25,16 +25,18 @@ const box = (text) =>
   );
 
 export default {
-  basic: () => h('div', { style: CONTAINER }, [h(BorderBeam), box('Beam')]),
+  basic: () =>
+    h(BorderBeam, null, { default: () => h('div', { style: CONTAINER }, [box('Beam')]) }),
 
   color: () =>
-    h('div', { style: CONTAINER }, [
-      h(BorderBeam, {
+    h(
+      BorderBeam,
+      {
         color: [
           { color: '#722ed1', percent: 20 },
           { color: '#2db7f5', percent: 60 },
         ],
-      }),
-      box('Gradient'),
-    ]),
+      },
+      { default: () => h('div', { style: CONTAINER }, [box('Gradient')]) },
+    ),
 };

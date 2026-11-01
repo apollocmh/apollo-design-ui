@@ -107,7 +107,12 @@ const VIRTUAL_COLUMNS = [
   { title: 'Action', width: 150, fixed: 'end', render: () => 'Action' },
 ];
 
-const box = (children) => h('div', { style: { padding: '16px', width: '640px' } }, children);
+const box = (children) =>
+  h(
+    'div',
+    { style: { padding: '16px', width: '640px', maxWidth: '100%', boxSizing: 'border-box' } },
+    children,
+  );
 
 export default {
   basic: () =>
@@ -139,15 +144,20 @@ export default {
 
   expand: () =>
     box([
-      h(Table, {
-        columns: COLUMNS,
-        dataSource: DATA,
-        expandable: {
-          expandedRowRender: (r) => r.address,
-          defaultExpandAllRows: true,
+      h(
+        Table,
+        {
+          columns: COLUMNS,
+          dataSource: DATA,
+          expandable: {
+            defaultExpandAllRows: true,
+          },
+          style: { marginBottom: '24px' },
         },
-        style: { marginBottom: '24px' },
-      }),
+        {
+          expandedRow: ({ record }) => record.address,
+        },
+      ),
       h(Table, {
         columns: COLUMNS,
         dataSource: NEST_DATA,
@@ -175,22 +185,27 @@ export default {
         columns: FIXED_COLUMNS,
         dataSource: DATA,
         scroll: { x: 790 },
-        style: { width: '480px', marginBottom: '24px' },
+        style: { width: '480px', maxWidth: '100%', boxSizing: 'border-box', marginBottom: '24px' },
       }),
-      h(Table, {
-        columns: COLUMNS,
-        dataSource: DATA,
-        summary: () =>
-          h(Table.Summary, null, {
-            default: () =>
-              h(Table.Summary.Row, null, {
-                default: () => [
-                  h(Table.Summary.Cell, { index: 0, colSpan: 2 }, { default: () => 'Total' }),
-                  h(Table.Summary.Cell, { index: 2 }, { default: () => '102' }),
-                ],
-              }),
-          }),
-      }),
+      h(
+        Table,
+        {
+          columns: COLUMNS,
+          dataSource: DATA,
+        },
+        {
+          summary: () =>
+            h(Table.Summary, null, {
+              default: () =>
+                h(Table.Summary.Row, null, {
+                  default: () => [
+                    h(Table.Summary.Cell, { index: 0, colSpan: 2 }, { default: () => 'Total' }),
+                    h(Table.Summary.Cell, { index: 2 }, { default: () => '102' }),
+                  ],
+                }),
+            }),
+        },
+      ),
     ]),
 
   'sorter-filter': () =>

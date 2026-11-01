@@ -20,14 +20,13 @@
  *
  * ── 🚨 三条本组件特有的判据 ────────────────────────────────────────────────
  *
- * 1. **`defaultOpenValue` 是必须的** —— 时间面板的选中格与滚动位置全靠它；
- *    不给的话三列滚到 `00:00:00` 且一格不选中（核心视觉面一格没测）。
+ * 1. **用固定 `value` 锚定面板** —— 当前接受值决定选中格与滚动位置；
+ *    空值场景才使用 `defaultOpenValue` 作为面板模板，不把模板直接提交为值。
  * 2. ✅ **`use12Hours` / `minuteStep` 变体现已可写**（2026-10-13 修 Issue #6.2 之后）——
  *    此前这两条顶层时间 props 静默失效 ⇒ 必然是**空转变体**，所以刻意不写。
  *    ⚠️ 要加就**同时**改 `react/time-picker.jsx` 并**重新生成两侧基线**，
  *    不是只加一行。当前用 `format: 'HH:mm'`（两列）作「列数变化」的可测差异。
- * 3. **范围版的两个面板** —— 与 date-picker 的双面板不同，这里是**两个独立的时间面板**
- *    （各自三列），间距与对齐是独立的一段布局。
+ * 3. **范围版有两个输入端点** —— 固定时间轴使用当前端点的时间面板，保留区间值与分隔符场景。
  */
 
 import { TimePicker, TimeRangePicker } from '@apollo-design/ui';
@@ -61,8 +60,8 @@ const box = (children, minHeight) =>
   );
 
 /** 触发元素 + **内联的**浮层（`open` 受控静态帧 + `getPopupContainer`）。 */
-const picker = (props, minHeight) =>
-  box(h(TimePicker, { ...props, open: true, getPopupContainer: () => holderEl }), minHeight);
+const picker = (props, minHeight, slots) =>
+  box(h(TimePicker, { ...props, open: true, getPopupContainer: () => holderEl }, slots), minHeight);
 
 const rangePicker = (props, minHeight) =>
   box(h(TimeRangePicker, { ...props, open: true, getPopupContainer: () => holderEl }), minHeight);
@@ -77,15 +76,15 @@ export default {
   /** 两列（`format: 'HH:mm'`）—— 与 `value` 的三列形成**可测差异**。 */
   'no-seconds': () => picker({ value: VALUE, format: 'HH:mm' }, 380),
 
-  /** 页脚（`renderExtraFooter`）—— 上游 `addon` 的替代品。 */
+  /** 当前具名 extraFooter 槽，保留原页脚按钮场景。 */
   footer: () =>
     picker(
       {
         value: VALUE,
         format: TIME_PICKER_FORMAT,
-        renderExtraFooter: () => h('button', { type: 'button' }, 'OK'),
       },
       420,
+      { extraFooter: () => h('button', { type: 'button' }, 'OK') },
     ),
 
   /** 范围有值：两个输入框 + 分隔符 + **两个独立的时间面板**。 */

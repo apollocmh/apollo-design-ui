@@ -19,7 +19,19 @@ const itemsWithDisabled = [
 ];
 
 const box = (children) =>
-  h('div', { style: { padding: '16px', background: '#fff', width: '640px' } }, children);
+  h(
+    'div',
+    {
+      style: {
+        padding: '16px',
+        background: '#fff',
+        width: '640px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+      },
+    },
+    children,
+  );
 
 export default {
   basic: () => box(h(Tabs, { defaultActiveKey: '1', items })),
@@ -57,5 +69,6 @@ export default {
     ),
 
   indicatorStart: () =>
-    box(h(Tabs, { defaultActiveKey: '1', indicator: { align: 'start' }, items })),
+    // 短指示条让 start 对齐有可见差异，避免全宽指示条下空转。
+    box(h(Tabs, { defaultActiveKey: '1', indicator: { size: 18, align: 'start' }, items })),
 };
