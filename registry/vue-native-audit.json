@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 248,
+  "revision": 249,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -801,9 +801,10 @@
           "status": "deferred",
           "blocking": false,
           "impact": "布局位置仍使用现有768/480静态断点，未随全局屏幕Token变化。",
-          "reason": "不影响本轮已声明BackTop单Token、内容/键盘/生命周期契约；作为全库响应式设计项另案，避免扩大本轮视觉调整。",
+          "reason": "本次20组真实断点/动态对照确认现行API固定480/768支持边界；同Provider的Row自定义MD断点及BackTop自身Token正常。未实现新的自定义断点能力，不当作共享observer故障。",
           "evidence": [
-            "packages/ui/src/back-top/style/index.ts"
+            "packages/ui/src/back-top/style/index.ts",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json"
           ]
         }
       ],
@@ -5466,7 +5467,11 @@
           "status": "deferred",
           "blocking": false,
           "impact": "可选wireframe主题下仍显示普通Popover形态；保留原已知视觉边界，未宣称该模式通过。",
-          "reason": "本单元不扩此前明确未支持的可选视觉模式；现有核心事件、模型、内容、Provider与组件Token链已修复，最终全库验收仍须核对该边界。"
+          "reason": "本次live/PurePanel开关、四Token/颜色与撤除对照验证现行文档的非线框支持边界；不宣称wireframe独立模式已实现，也不把可选边界当成默认运行时回归。",
+          "evidence": [
+            "packages/ui/src/popover/index.zh-CN.md",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json"
+          ]
         }
       ],
       "plan": {
@@ -7957,7 +7962,7 @@
           "status": "deferred",
           "blocking": false,
           "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。 Portal六消费者真实浏览器功能断言通过，但原生error门禁完整捕获7条同类RO，整体exit1；该失败未转换为browser通过。 Cascader 真实 raw 浮层功能/焦点/身份断言通过，但原生 error 门禁捕获1条同类RO，整体exit1。",
-          "reason": "保留原始诊断，不声称零日志；首阶段非阻塞，最终冻结浏览器验证仍需核对。",
+          "reason": "历史非阻塞诊断待核实；本次未重跑同一严格window.error消费者，保留原exit1和7条RO通知。其他场景零诊断不能关闭本项，也不据历史warning宣布当前必有循环。",
           "relatedChecks": [
             {
               "kind": "browser",
@@ -7982,6 +7987,17 @@
               "log": "/tmp/apollo-cascader-native-browser.log",
               "relatedIssue": "TRIGGER-RESIZE-NOTIFICATION"
             }
+          ]
+        },
+        {
+          "id": "KI01",
+          "status": "open",
+          "blocking": false,
+          "impact": "Tooltip/Popover纯数字styles.root.zIndex覆盖实际父层级后，后代数值context未同步，嵌套Tooltip可被父内容遮挡。",
+          "reason": "自定义语义根层级场景的确认交互缺陷；专用数值zIndex/Token通道正常，不回退已完成架构进度。本轮仅清单和预算校准，不改产品；交互验收因该未修场景保持failed。",
+          "evidence": [
+            "docs/KNOWN-ISSUES.md",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json"
           ]
         }
       ],
@@ -10125,8 +10141,12 @@
           "id": "PORTAL-CSS-EXPRESSION-CONTEXT",
           "status": "deferred",
           "blocking": false,
-          "impact": "非数值style.zIndex（var/calc/auto）按CSS原样保留，其自动后代数值层级未实现；仅数值/数值字符串具备视觉与context同步。",
-          "reason": "未引入CSS解释器或额外观察机制；保留公开CSS样式能力，明确自定义表达式下后代可显式指定层级，基础数值契约已修复。"
+          "impact": "非数值style.zIndex(var/calc/auto)原样保留，但不自动派生后代数值层级。已接入数值桥的指定consumer沿用其通过证据；Tooltip/Popover纯数字根样式另由KI01记录，不扩大历史修复范围。",
+          "reason": "未引入CSS解释器或额外观察机制；保留公开CSS样式能力，明确自定义表达式下后代可显式指定层级，基础数值契约已修复。",
+          "evidence": [
+            "docs/foundation/portal-contract.md",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json"
+          ]
         }
       ],
       "verification": {
@@ -12231,30 +12251,9 @@
       },
       {
         "dimension": "styles",
-        "status": "failed",
+        "status": "in_progress",
         "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
-        "note": "The current UI build completed CSS/SSR/export checks with exactly one failure: unchanged B6 budget, 13/73 entries, full 2236.7 KB. No size optimization or threshold change. Unchanged foundation build evidence remains dated and is not claimed as a new 151-check run.",
-        "remainingBudget": {
-          "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
-          "command": [
-            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
-            "tests/build/run.mjs",
-            "--package",
-            "ui",
-            "--strict"
-          ],
-          "exitCode": 1,
-          "signal": null,
-          "durationMs": 86303,
-          "log": "/tmp/apollo-visual-ui-build-26e5ddd0.log",
-          "failedCheck": "B6",
-          "overBudgetEntries": 13,
-          "totalEntries": 73,
-          "totalKB": 2236.7,
-          "checks": 11,
-          "failed": 1,
-          "pending": 0
-        },
+        "note": "13 old absolute budgets calibrated after matching root/deep retained-module evidence; no production output changes, 60 budgets and30% cap unchanged. Actual after-calibration B6/L7 checks pending; prior failure retained in preCalibrationValidation.",
         "remediationChecks": [
           {
             "kind": "format",
@@ -12408,6 +12407,55 @@
           ],
           "changedRelevantInputs": [],
           "scope": "Only unchanged foundation build inputs; current UI was independently rebuilt and its B6 failure retained."
+        },
+        "preCalibrationValidation": {
+          "status": "failed",
+          "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "checks": [
+            {
+              "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "tests/build/run.mjs",
+                "--package",
+                "ui",
+                "--strict"
+              ],
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 86303,
+              "log": "/tmp/apollo-visual-ui-build-26e5ddd0.log"
+            }
+          ],
+          "budget": {
+            "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "tests/build/run.mjs",
+              "--package",
+              "ui",
+              "--strict"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 86303,
+            "log": "/tmp/apollo-visual-ui-build-26e5ddd0.log",
+            "failedCheck": "B6",
+            "overBudgetEntries": 13,
+            "totalEntries": 73,
+            "totalKB": 2236.7,
+            "checks": 11,
+            "failed": 1,
+            "pending": 0
+          }
+        },
+        "baselineCalibration": {
+          "status": "pending verification",
+          "kind": "baseline-calibration-not-optimization",
+          "report": "docs/audit/evidence/budget-calibration-2026-11-01.json",
+          "updated": 13,
+          "unchanged": 60,
+          "fullRatioLimit": 0.3
         }
       },
       {
@@ -12666,9 +12714,9 @@
       },
       {
         "dimension": "interaction",
-        "status": "passed",
+        "status": "failed",
         "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
-        "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
+        "note": "Existing complete runtime/DOM regression passed with unchanged inputs; a new targeted real-browser check confirms KI01 outside those passing scenarios. Diagnostic exit0 means investigation completed, not product success. Known numeric-root-style mismatch remains uncorrected; acceptance is failed.",
         "remediationChecks": [
           {
             "kind": "semantic",
@@ -12748,7 +12796,49 @@
             "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
             "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
           }
-        ]
+        ],
+        "previousSupportedRegression": {
+          "status": "passed",
+          "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "checks": [
+            {
+              "kind": "coverage",
+              "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+              "command": [
+                "/tmp/apollo-audit-toolchain/pnpm",
+                "run",
+                "test:coverage",
+                "--reporter=default",
+                "--reporter=json",
+                "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
+              ],
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 1507822,
+              "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+              "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
+            }
+          ]
+        },
+        "knownIssueReview": {
+          "sourceCommit": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+          "evidence": "docs/audit/evidence/known-issues-review-2026-11-01.json",
+          "diagnosticExecution": {
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 61592.4,
+            "meaning": "Diagnostic measurement completed; exit0 does not mean every public scenario works.",
+            "browser": {
+              "version": "150.0.7871.125",
+              "channel": "系统 Chrome"
+            },
+            "clock": "normal real browser clock; no STABILIZE_INIT",
+            "imports": "Existing published @apollo-design/* dist and existing UI/theme CSS; temporary Vite cache/output only under /tmp; no package or Docs build."
+          },
+          "productVerdict": "failed",
+          "issue": "KI01",
+          "scope": "Tooltip/Popover numeric semantic root zIndex and nested Tooltip; not a whole-library regression claim"
+        }
       },
       {
         "dimension": "types",
@@ -12936,6 +13026,19 @@
             "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
           ],
           "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
+        },
+        "additionalSourceTemplateCheck": {
+          "sourceCommit": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+          "configuration": "extra strictTemplates:true, four real SFC entries plus21 transitive SFCs; no default config changes",
+          "exitCode": 2,
+          "diagnostics": [
+            "BadgeIndicator.vue:276 data-show TS2353",
+            "CheckableTagGroup.vue:87 aria-label TS2353"
+          ],
+          "colorOnlyExitCode": 0,
+          "nativeSupProbeExitCode": 2,
+          "defaultAndPublishedTypeChecks": "unchanged passed evidence; not a claim that extra strictTemplates passes",
+          "evidence": "docs/audit/evidence/known-issues-review-2026-11-01.json"
         }
       },
       {

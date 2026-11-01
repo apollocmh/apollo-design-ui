@@ -1,0 +1,759 @@
+> 历史归档，来源提交 `31a1eecec989b2c75c2e8a40a8879f992414a3e5`，原位置 `docs/KNOWN-ISSUES.md`。正文事实、日期和阶段结论保留原义，仅调整相对链接以保持目标不变；不作为当前执行规范或开放问题数量。当前入口：[已知问题](../KNOWN-ISSUES.md)。原文件 SHA-256：`46a25aa2e54fd8adb3d508737d20faf8d522adde4f8994ed83da59fae8bbb823`。
+
+> 本轮任务状态统一读取 `registry/vue-native-audit.json`；本文件保留问题和带日期的证据，不再手写维护当前派发/完成计数。旧逐组件九维收口要求已由 `WORKFLOW.md`、`TESTING.md` 的两阶段流程替代。
+
+# Apollo Design · 发布前最终审计与整改台账
+
+> **审计日期：2026-10-23 · 目标：`master` · 基线 SHA：`dcecc4d512582b65a28e69e25c004df0ecada815`**  
+> 审计范围：72 个 UI 组件及子组件、13 个基础包、`ui/_internal`、文档站、Demo、Registry、规范与验收门禁。  
+> **这是一份可执行的整改规格，不是“72/72 已完成”的重复声明。**  
+> 证据分级：**A = 在 master 代码中直接确认；B = 历史有复现且最新代码仍存在对应结构，必须在当前提交复现；C = 基于静态模式确认的架构/体验风险；D = 来源为带日期的既有审计数据，须在当前 HEAD 重算。**  
+> **初始远程审计的限制（不含下方本地整改证据）**：原审计以 GitHub 连接直接读取 master 源码、Registry 和证据报告；未在本地克隆仓库、未执行 pnpm/Playwright、未真实操作页面。因此“源代码已确认”不等于“本轮已运行验证”。不得把 B/C/D 升级成已经通过或失败的运行时结果。
+
+## 2026-10-23 独立化衔接
+
+本台账的缺陷、证据等级与既有验收继续有效。条目中要求上游固定版对拍的文字保留为历史调查路径；最终修复依据当前 Apollo 公开契约、输入语义与用户场景，不再要求上游同构。D01–D05 未因项目独立化自动裁决。
+
+F03 本轮已建立 `packages/ui/src/form/__tests__/prefix-reactivity.test.ts`：修复前动态切换前缀失败；ItemHolder 改为 computed 派生后验证 f1→f2→f1、状态类、row 与节点身份。完整验证结果见本次独立化报告。其余事项保持未完成状态，不以治理变更关闭。
+
+## 2026-10-23 本地整改进展
+
+- **F01：功能修复已验证**。DatePicker / RangePicker / TimePicker / TimeRangePicker 的 `id`、Tab 顺序、输入 ARIA、name/required/autoComplete 接入实际 input；class/style/data 与鼠标事件留根。7 条初始回归修前全红，补充 autofocus 后 8 条通过；相关四层回归 27 文件 / 534 条通过，生产 dist 的真实 Chrome 四入口交互通过。SSR 水合、范围对象 id、禁用/只读、掩码/多选均有覆盖。完整发布验收仍需 Apollo 视觉基线，见本轮报告。
+- **D03：用户已明确裁决**。组件库尚在开发阶段且无现有用户，内容渲染函数 prop **直接改为 Vue 插槽，不保留函数兼容层或弃用期**。见 [ADR 0006](../adr/0006-development-template-slots.md)；此授权不自动改变 D02 的点击事件载荷。
+- **F06：按 D03 直接迁移**。Transfer 采用 `#item/#footer/#list/#selectAllLabel`，旧函数 prop 与专用返回值类型移除；调用示例、公开类型、文档和历史 DOM 对照同步迁移。5 条插槽复现修前全红；运行时四层与超时单独复验通过；相关三个组件的 154 条类型测试、严格类型、L7 UI、tarball 消费端、文档 84 路由构建通过，证据在本轮报告汇总。其他组件按同一裁决逐项推进，未宣称全仓函数渲染接口已清零。
+
+证据与未完成验证见 [F01 / F06 本地整改报告](../audit/2026-10-23-picker-transfer-remediation.md)。原审计源码描述保留为修前证据，不再作为这些修复后路径的实时描述。
+
+## 2026-10-23 持续整改进展（二）
+
+- **F02：功能修复已验证**。Select 的条件默认插槽、Fragment/Comment、分组与循环选项通过 render → 普通 Vue props 更新值、筛选和缓存链；AutoComplete 同步移除插槽分类 computed。7 条新回归通过；Select/AutoComplete/TreeSelect/Cascader 四层 30 文件 / 475 条通过。新增真实条件选项 Demo，验证不重挂载、最新 label/disabled、缓存、搜索、虚拟化和键盘。
+- **F04：已接入模板插槽**。InputNumber 外层/内部件均支持 typed #prefix/#suffix，空 slot 不回退，反馈图标与 Compact/addon/数字引擎保留；5 条修前失败、修后通过。示例改为真实可切换模板并带输入可访问名。
+- **F08：已消除渲染期状态写入**。Descriptions 的子项直接在当前 render 形成 rows，items 分支独立缓存，并跳过被覆盖的默认 slot；该未跳过路径已红灯复现。动态行/合并单元格/无关 attrs 单次更新/SSR 水合通过，**未复现死循环或额外更新**。InputNumber/Descriptions 四层合计 15 文件 / 216 条通过。
+- **H01：过期历史记录已清账**。Table 的双语 API 与文档管线实际存在，VNA-RECHECK-04 改 fixed；从实际 24 条历史 issue 重算汇总，修复旧 fixed=17/open=1 的陈旧计数。新增 registry:vue-native:check 与两条失败门禁测试，防文件/API 正文丢失和汇总漂移。历史审计零 open 不表示本台账全部关闭。
+
+严格类型、六组件 66 条类型测试、L7 UI 11 项和生产包 Chrome 三组交互通过，零页面错误。完整命令、Docs/消费端与视觉缺口见 [本批报告](../audit/2026-10-23-vue-reactivity-remediation.md)。原组件 completed 与 legacy-reference 视觉标记未冒充新验收。
+
+## 2026-10-24 持续整改进展（三）
+
+- **F05：已补齐 Badge 模板内容**。新增 typed #count/#text，支持同传、空内容、条件出现/移除及更新；富内容走静态 indicator，数字 count 的 overflow、showZero 与 ScrollNumber 缓存继续保留。首批 6 条修前全红；扩展空计数/独立文本、SSR 水合与默认插槽切换后 9 条通过，完整四层 94 条通过。新增可操作 Demo，未以富内容替代数字 prop。
+- **F07：已统一内容 slot 优先**。Alert 的 title/description、CollapsePanel 的 header 以 slot 存在为准，包括空 slot；移除条件 slot 才恢复 prop。旧文档确有 prop-first 承诺，本次按未发布开发版直接变更并单独写 [迁移记录](../migrations/content-slot-precedence.md)，不留兼容层。Collapse 每轮 render 仅收集一次当前面板子树，标题刷新保留输入状态。6 条修前全红；真实 Chrome 模板交互通过。
+- **F09：语义 change 已声明**。Switch 和 InputNumber 通过 typed emits 单次发送，onChange 注册同一事件；移除手调 attrs 通道，原生 DOM change 不混入语义事件。覆盖鼠标/键盘、监听器替换、禁用、v-model、stringMode/null 与类型负例。Switch click 已按 ADR 0007 直接改为原生 MouseEvent；修饰符、单次发送、键盘激活与迁移见 [D02 报告](../audit/2026-10-24-switch-native-events-remediation.md)。
+- **F10：DOM 目标归一与原生事件已验证**。pickAttrs 保留 className 数据输出，接受已知 Vue 原生事件键与 Once/Passive/Capture 后缀；DOM 目标使用 toVueDomAttrs/mergeDomAttrs。修复 ColorPicker @mousedown 被过滤、Rate @keydown 丢失及字符串 style 的 SSR 无效 CSS，监听器数组按函数身份单次合并，Tree 正确的 fallthrough 保持。utils/Badge/Rate/ColorPicker/Tree 四层 59 文件 / 1168 条通过，Chrome 真实模板通过，见 [F10 报告](../audit/2026-10-24-dom-attrs-remediation.md)。
+- **F11：当前来源清单已建立**。类型别名、继承及数据/配置/内部/deprecated 分流保留证据，十二个字段引用具体运行报告，其余继续逐项复审；[清单与限制](../audit/2026-10-24-slot-inventory.md)。
+- **H03：刷新数量并补实际能力场景**。新 Table 行/列原生拖放 Demo 提供等效键盘操作，96 条 Demo/axe 与真实浏览器通过；当前文件统计 990/1060，文档总量 994，不宣称能力矩阵已完成。
+- **H04：已消除无效动态导入并记录真实负载**。搜索代码导入统一；按需索引、单次下载/缓存、焦点返回与英文/暗色水合通过，首屏脚本原始/gzip 字节已留证。进一步改为视口附近加载示例并保留实例，Table 初始脚本 55→12、gzip 字节约减 4.35%；文档最终 157 条测试及真实滚动/iframe 截图准备通过。大 chunk 和元数据维护继续开放。
+- **H02：规范过期描述已清账**。核对现行规范与 ADR 0005/0006，use-id-test-env 的已裁决记录实际存在；更新台账陈旧描述，未重复立 ADR 或修改 AGENTS。
+
+F07/F09 的运行时、类型迁移、生产浏览器与文档证据见 [整改报告](../audit/2026-10-24-content-events-remediation.md)；Badge 的数字缓存与富内容离场证据见 [F05 报告](../audit/2026-10-24-badge-slots-remediation.md)。严格类型与 252 条类型测试、两包 L7 和 tarball Vite/Webpack 消费端均通过。视觉基线仍缺失，不以功能测试替代 L6。
+
+## 0. 先给结论：删除旧 `docs/KNOWN-ISSUES.md` 前应该如何收口
+
+**不建议现在直接删掉旧文件而不迁移内容。** 先把本台账的 `FIX`、`VERIFY`、`DECIDE` 项分别迁入可追踪 Issue / `docs/audit/FINAL-GAP-AUDIT.md` / ADR，确保以后即使删旧文档，也不会丢失待办与裁决。旧文件的大部分 §2、§3 是历史记录；已修、已证伪事项不继续开单。
+
+- **FIX（编号以 §1 为准）**：F01 DatePicker 输入属性（本轮已修）、F02 Select 条件插槽（已修）、F03 FormItem 前缀响应性（此前已修）、F04 InputNumber 内容插槽（已修）、F05 Badge 富内容插槽（已补）、F06 Transfer 模板接口（本轮已迁移）、F07 Alert / Collapse 插槽优先级（已改）。
+- **VERIFY（先写可失败的用例，不许凭推测改）**：F08 Descriptions render 写 ref（已移除，未复现循环）、F09 Vue 语义事件/React 回调冲突、F10 `pickAttrs` 的 DOM prop/原生事件（已验证修复）、F11 其它 VNodeChild 插槽及动态响应性的完整复算。
+- **DECIDE**：D01 不兼容变更边界；D02 原生 click 已按 ADR 0007 裁决实施、D03 已裁决（ADR 0006）；仍开放的包括 D04 非默认 `prefixCls` 的 CSS 策略、D05 上游调试/依赖第三方服务的 Demo 是否纳入完成标准。
+- **HOUSEKEEPING**：H01 Table 陈旧文档状态与汇总（已修）、H02 规范/台账陈旧矛盾（已清账）、H03 Demo 覆盖矩阵更新与例外清单、H04 文档构建警告分类处理。
+
+**本轮排除项**：Message / Notification 的进出场动画已由用户自主验收，不再以其动画为开放问题；Menu 的 Trigger 弹层整改、Icon 独立检索目录、文档站 V3 等已有实现及浏览器证据，不重复报“未做”。可保留 CI 回归，不重复返工。
+
+### 严重性与执行原则
+
+P1 = 破坏用户常见行为/可访问性；P2 = Vue API/生命周期/响应式问题；P3 = 示例/工程治理。**证据等级和优先级是两回事**。有“来源文件”但无最新运行复现时，修复 PR 必须先提交红灯复现用例。
+
+---
+
+## 1. 可落地问题与解决方案（逐条）
+
+### F01 · P1 · B → 本地功能修复已验证｜DatePicker / RangePicker / TimePicker：`id` 与 `tabindex` 没有落到实际输入框
+
+**源码**：[DatePicker.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/DatePicker.vue#L1480-L1513)；[RangePicker.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/RangePicker.vue#L1336-L1366)；[Selector.ts](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/components/Selector.ts#L668-L701)；[现有测试](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/__tests__/index.test.ts#L528-L575)。
+
+**证据**：旧文档 §1.3 记录实际测试：单值 `id` 丢失、`tabindex` 落根；新源码中 `selectorBindings()` 把调用方 attrs 传给 `Selector`，`Selector` 又把 `passthroughAttrs` 铺到外层 `div`，而 `h('input', …)` 不包含 `id`、`tabindex`。某些属性可能在 Trigger 链中进一步丢失，最终 DOM 必须用真实挂载测试确认。
+
+**修法（不复制 React 实现）**：
+1. 在 DatePicker / RangePicker 的 *入口* 显式分流根属性与**输入属性**：`class/style/data-*` 保持现有根语义；`id/tabindex/autoFocus` 和对应输入标签关联的 ARIA 属性要按上游固定版对拍后路由到输入。**不要**直接把所有 `$attrs` 无差别铺到 input，否则会破坏根 `class` / `data-*` / 鼠标事件。
+2. 在 `Selector.ts` 新增有明确类型的 `inputAttrs`（单值）或 `inputAttrsByIndex`（范围），渲染 `<input>` 时有序 `mergeProps`，内部受控 `value/onInput/onFocus` 不允许被任意 attrs 覆盖；避免把实际 input `ref`、事件、`value` 散落在不受控的对象扩展里。
+3. Range 的 `id` 是一个还是两个，需要先用同版本 React 对拍确定（不要凭直觉生成 `${id}-start`）。TimePicker 薄壳继续传递同一契约。
+4. 把旧的负向空转断言改成正向断言：**实际 `input.id === 'sample-id'`、`input.tabIndex === 5`、`label[for]` 焦点可达、`aria-labelledby` 能连接；根不出现错误的 tabindex**。
+
+**验收**：普通与范围 Picker、TimePicker；受控属性更新、disabled、readonly、键盘、SSR 水合、弹层开关、表单 `label for`。先验证原测试在修前真红；组件回归 + a11y + L4 DOM + L6 视觉。
+
+### F02 · P1 · B → 本地功能修复已验证｜Select：条件默认插槽在首次无内容后无法补出选项
+
+**源码**：[Select.ts#L300-L320](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/select/Select.ts#L300-L320)。
+
+**根因**：`parsed = computed(() => parseOptions(... convertChildrenToData(slots.default?.()) ...))` 把当前插槽视为可跟踪的响应式依赖。但父组件动态增删 slot 函数本身不是 `computed` 的 reactive 依赖；旧文档 §1.4 已实测“首次无 slot，后来出现 slot，选项数仍为 0”。master 仍保留这条结构。
+
+**当前实现**：公开 render 边界读取并归一化当前 slot，使用普通 Vue props 交给私有值引擎；由真实数据 props 驱动 parse/filter/cache/display 的 computed 正常失效。没有 render 写 reactive ref、bump version 或更换 key。显式 options（包括 []）保持优先且不执行默认插槽；AutoComplete 的分类也在 render 完成。下面方案文字保留为修前调查路径，当前证据见本批报告。
+
+**推荐方案 A（首选、Vue 原生）**：**把 slot VNode 的读取和归一化放到组件 render 阶段**，props.options 数据通道继续 computed 缓存。不要在 `computed` getter 里依赖插槽引用是否变化，也不要靠 render 中递增 `ref` 版本号来强制 computed 失效。为了避免全链路重构，可抽 `resolveParsedOptions(options, children, fieldNames, filterProp, optionLabelProp)` 纯函数，在 render 开始获取 `slots.default?.()`，把结果经只读的 render-local 上下文给本轮 BaseSelect / OptionList / 过滤与缓存链消费；**不得**在 render 中写 reactive ref 造成更新自激。
+
+**实现顺序**：先写动态 slot 回归 → 梳理所有 `parsed.value` 消费点与 `useCache` 依赖 → 将“props options”与“children VNode”明确两路 → 一次性更新依赖并复验 Select、AutoComplete、TreeSelect、Cascader。若选优化版缓存，只缓存纯数据 props 分支，不缓存不能被追踪的 slot 函数结果。
+
+**最小可失败样例**：
+
+```vue
+<Select open>
+  <template v-if="show" #default>
+    <SelectOption value="a">A</SelectOption>
+  </template>
+</Select>
+```
+
+初始 `show=false` → `true` → `false` → `true`：选项数 0→1→0→1；更新 `value/label/disabled` 与替换整棵 slot 均必须生效。另测异步 options、options 与 slot 同时存在的优先级、筛选与虚拟滚动，不允许通过给整个 Select 加 `:key` 重挂载规避。
+
+### F03 · P2 · 已修并验证真实控件/测量/SSR｜FormItem：动态 `prefixCls`
+
+**源码**：[ItemHolder.ts#L59](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/form/FormItem/ItemHolder.ts#L59)；[StatusProvider.ts#L79-L106](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/form/FormItem/StatusProvider.ts#L79-L106)。
+
+`ItemHolder` 原在 setup 中固定 `itemPrefixCls`。修复已由提交 `6867166a`（2026-10-23）完成，当前为：
+
+```ts
+const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
+// 在模板/渲染函数中使用 itemPrefixCls.value，拼接子类名时同理
+```
+
+2026-10-24 第一阶段只复跑基础 1 条，见 [复核记录](../audit/2026-10-24-form-prefix-recheck.md)。后续扩展使用真实 Input，新增 6 条先红后绿，发现 ErrorList 的前缀上下文缺失/快照冻结与 prefix/layout 切换后 margin 占位未重测两条遗漏，均已修复；另补 SSR hydration 并单独修复 F12 基础层问题。
+
+当前 prefix 回归共 8 条，覆盖三布局 f1→f2→f1、直接 Item prefix、真实反馈图标四状态、帮助/错误、独立及 Form.List ErrorList、margin-offset/additional min-height 与 SSR hydration。生产 Chrome 的对应矩阵、help 移除/恢复、用户输入值及 DOM 身份通过；相关 7 组组件的运行/DOM/axe/theme 共 48 文件 722 条通过。范围及所有命令见 [F03 整改报告](../audit/2026-10-24-form-prefix-remediation.md)。
+
+**边界**：`StatusProvider.ts` 的局部变量仍位于 `feedbackIcon` computed 内，保持原实现。前缀对应 CSS 需预生成/加载（D04），本批不引入运行时 CSS。Form 视觉检查缺 21 张已批准基线，动态 Form.List/异步校验等其他能力不由 F03 关闭。
+
+
+### F04 · P2 · A → 已接入模板插槽｜InputNumber：Vue 具名 `#prefix` / `#suffix` 缺失
+
+**源码**：[InputNumber.ts#L142-L152](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L142-L152)、[L716-L765](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L716-L765)。
+
+`InputNumberInternalComponent` 只有 `setup(props, { attrs, emit, expose })`，渲染前后缀直接读取 `props.prefix/suffix`，没有消费 `slots`；外层包装同样没有 slots 转发。用户需要构造 VNode prop，而不能在 `<InputNumber><template #prefix>…</template></InputNumber>` 中自然写模板。
+
+**推荐**：
+1. 给外层和内部件都增加明确的 `prefix/suffix` slots 类型，并通过**slot 函数转发**（不要在 setup 期执行并缓存 slot VNode）。
+2. 内容采用 `hasSlot('prefix') ? slots.prefix?.() : props.prefix`，有意允许空 slot 覆盖 prop；`hasSlot` 判断优先于 `??`，避免“明确提供空 slot 却回退旧 prop”。保持原有前后缀 wrapper、语义 class、`hasFeedback` 与动作按钮顺序。
+3. 简单内容值仍可使用 `prefix/suffix` prop，同时存在时**slot 优先**；这不是保留旧函数渲染接口；新增 `v-if` 出现/消失与动态内容测试、SSR/类型测试；必要时更新 InputNumber 文档的优先用法。
+
+### F05 · P2 · 已补模板插槽｜Badge：`count/text` 富内容缺少具名插槽通道
+
+**修前源码**：[Badge.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/badge/Badge.vue#L92-L204)、[模板](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/badge/Badge.vue#L255-L290)。
+
+组件只使用 `slots.default`，`count/text` 均是 VNodeChild prop。**不能**按 InputNumber 的办法直接把 count 改为 slot 结果：这里 `livingCount/displayCount/isDotCache` 缓存保证计数关闭时仍保持上一帧以播放 ScrollNumber 动画，普通 slot VNode 和数字计数的 overflow/滚动逻辑不同。
+
+**当前处理**：公开边界已在 render 消费并归一 #count/#text，私有指示器通过普通 props 跟踪当前内容；新增富内容分支不拆数字位，并保留离场最后可见内容。数字 prop 原有滚动状态不变，空 slot 不回退。以下方案保留为修前调查路径。
+
+**推荐**：先补 `#text`，提供 `#count` 的静态富内容分支（VNode 直接呈现，保留 indicator 语义/offset，但**不启动数字位滚动**），数字 `count` prop 原有滚动状态机保持不变。为 slot 动态显隐、`0`、`showZero`、`overflowCount`、status、离场、窄屏的结果分别建断言。确定是否完全替代 `count` 数字 prop 应单独裁决；默认**不替代**。
+
+### F06 · P2 · A → 按用户裁决直接迁移｜Transfer：函数 render API 缺少 Vue scoped slots
+
+**源码**：[Transfer.ts#L45-L75](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/transfer/Transfer.ts#L45-L75)、[L430-L453](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/transfer/Transfer.ts#L430-L453)、[interface.ts](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/transfer/interface.ts#L90-L125)。
+
+`render`, `footer`, `renderList` 全通过函数 props 传递，主件 setup 不读取 `slots`；从 Vue 用户视角，列表项、底栏、自定义列表这些模板扩展点缺少作用域插槽。
+
+**当前处理**：用户已否决保留函数兼容的方案。组件内容扩展直接使用 typed scoped slots：`#item`、`#footer`、`#list`、`#selectAllLabel`；旧 `render/footer/renderList/children` 以及选择计数函数接口移除。作用域只提供可保障字段，使用插槽存在性判定，空 slot 不回退；自定义列表与内嵌分页的限制保留。默认条目显示数据 title/key，搜索使用数据文本与 filterOption。完整契约、调用迁移和类型移除见 [迁移记录](../migrations/transfer-slots.md)。
+
+### F07 · P2 · 已迁移开发版内容优先级｜Alert / Collapse：内容 prop 优先于具名 slot，与 Vue 契约不一致
+
+**修前源码**：[Alert.ts#L253-L262](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/alert/Alert.ts#L253-L262)：`props.title ?? props.message ?? slots.title?.()`；`props.description ?? slots.description?.()`。 [Collapse.ts#L274-L290](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/collapse/Collapse.ts#L274-L290)：子面板 `header: cProps.header ?? headerSlot`。
+
+**修前问题**：源代码确实把 prop 放在 slot 之前；但仓库 `COMPATIBILITY.md` §2 将“插槽优先”写成默认映射。模板同时传 `title` 与 `#title` 时，开发者提供的 slot 被忽略；这不是 Vue 推荐的内容分发心智。尤其 Vue 模板中的可切换富文本不能被静态字符串 prop 阻挡。
+
+**当前处理**：已按 [独立行为迁移](../migrations/content-slot-precedence.md) 在开发版直接统一内容 slot 优先，并纠正旧 prop-first 文档/断言；空描述状态、prop-only 和面板输入身份均验证。以下文字保留为修前调查路径，不再作为待批准操作。
+
+**推荐**：内部统一 `resolveNode(slot, prop)`，先以**slot 是否存在**为准，再读 prop，**明确空 slot 不再回退**；`Alert` deprecated `message` 仅最后兜底，`Collapse.Panel` 也是同样顺序。先查已有 L4/测试是否刻意锁定 prop 优先、并向用户说明这是行为调整；若已被公共文档明确承诺 prop 优先，则先标 `DECIDE` 而非无声破坏。覆盖同传、空 slot、动态 slot 与旧 prop-only 兼容，避免改变样式层级。
+
+### F08 · P2 · 反模式已移除，未复现死循环｜Descriptions：render 期间写 `shallowRef`
+
+**源码**：[Descriptions.ts#L182-L232](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/descriptions/Descriptions.ts#L182-L232)、[L462-L470](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/descriptions/Descriptions.ts#L462-L470)。
+
+`return () => { currentChildren.value = collectChildren(slots.default?.() ?? []); ... rows.value ... }`：render effect 在构建 VNode 时修改了被 `rows` computed 消费的响应式 ref，这是 Vue 值得避免的“渲染期副作用”，可能造成额外排队更新；**不据此臆断已经发生无限循环**。
+
+**本地复验结果**：渲染期 ref 已移除；props.items（包括 []）优先且不调用被覆盖的默认 slot，该调用路径修前失败、修后通过。其余行切分、单次更新与水合回归通过，未把静态模式推断成实际发生的死循环。
+
+**首选改法**：把 `normalizeItems` / `getCalcRows` 的纯计算改成接收当前 render 中的 children（`render-local`）并当轮直接返回 rows；`props.items` 存在时可以安全走独立 computed，不依赖 slot；完全删掉 render 阶段对 `currentChildren.value` 的写入。不要改为 `watchEffect` 读取 slots，也不要在 render 里 bump version。添加反向门禁：只改父级无关状态不应造成无故二次更新；动态新增/删除 Descriptions.Item 要当帧出现，SSR 无 hydration warning，复杂响应式 items 表/合并单元仍通过。
+
+### F09 · P2 · 语义 change 已声明，原生 click 已裁决待迁移｜语义事件仍靠 React 回调式 `$attrs` 模拟
+
+**源码**：[Switch.ts#L91-L104](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/switch/Switch.ts#L91-L104)、[L158-L204](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/switch/Switch.ts#L158-L204)；[InputNumber.ts#L142-L154](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L142-L154)、[L345-L358](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L345-L358)。
+
+**修前事实**：`Switch` 只声明 `update:checked` / `update:value`，把 `onChange/onClick` 留在 attrs 里并手动调用；`InputNumber` 同样只声明 `update:value`，手调 `attrs.onChange`。**Vue 模板的 `@change` 仍可能按同一个 `onChange` 键正常调用，因此不是“@change 整体失效”**；真实问题是“组件没有把语义事件声明为 emits，开发体验/类型契约不够 Vue 原生”，而 `Switch` 的 `@click` 会收到布尔结果而不是通常的原生 `MouseEvent`。
+
+**当前处理**：两组件已声明 typed change emits，所有发送都经 emit，InputNumber 包装层单次转发；移除手动 attrs.onChange 调用。原生 change 不混入语义事件。Switch 的 click 已按 ADR 0007 直接改为 typed 原生 MouseEvent，移除手调 attrs 与旧布尔首参；Vue 修饰符、监听器数组/once、标准方向键和原生 Space/Enter 激活已有回归。另修复原生字符串/数组 style 的错误展开。详见 [D02 报告](../audit/2026-10-24-switch-native-events-remediation.md) 与 [迁移记录](../migrations/switch-native-events.md)。
+
+**解决方向（修前）**：将**语义 change** 明确声明为 emits 并只通过 `emit('change', payload...)` 发送；回调仍能通过 Vue `onChange` 注册语法自动接收 emit，无需再双调手工回调。⚠️ 真正危险的是 `click`：Vue `@click` 与 legacy React `onClick(result,event)` 使用同一监听键，不能在不破坏兼容的情况下承诺两套不同 payload。该段为修前调查；**D02 现已由 ADR 0007 裁决直接改为原生事件，无兼容层/弃用期**；不能简单同时 `emit('click')` + 手调 `attrs.onClick`，否则双触发。迁移时补负例断言“事件仅一次”，包括禁用、click、keyboard、v-model 和 TS 事件参数推断。
+
+### F10 · P3 · 已验证 DOM 目标与事件修复｜`pickAttrs` 的 `className` 处理依赖 DOM 特例
+
+**源码**：[pick-attrs.ts#L80-L104](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/utils/src/pick-attrs.ts#L80-L104)；[vue-native-audit](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) `OBS-PICKATTRS-01`。
+
+修前只归一旧事件拼写，未接受 Vue 模板事件键；`className` 保留。Vue 在部分原生 DOM 上恰好能借 `el.className` 生效，但不代表可以视作原生 Vue class 合并策略。**不能直接把底层 utils 的 `className` 改为 `class`**，因为它是 rc 契约级函数，且下游消费点另有 attrs 合并逻辑。
+
+**当前处理**：已新增独立 DOM 目标 helper，并保留 pickAttrs 的 className 数据契约。复现并修复 ColorPicker 的 @mousedown、Rate 的 @keydown 与字符串 style SSR；SSR class、Tree 唯一/动态 class 与 ColorPicker attrs-only 更新通过，未臆造这些路径的故障。原生事件选项及两种键同时注册的单次发送也有覆盖。List 根 id、字符串 style 与 attrs-only 更新已在 [F11 List 批次](../audit/2026-10-24-list-slots-remediation.md) 追加复现和修复。以下为原调查方案。
+
+**修法（修前）**：为真正的 Vue DOM 目标增加独立 `toVueDomAttrs` / `mergeDomAttrs` 适配层，归一 `className→class` 并以 `mergeProps` 保留内部类、外部 class、事件函数链；`pickAttrs` 的既有兼容路径继续保持。按 ColorPicker / Rate / Tree 现有消费点逐个迁移，验证不重复 class、无事件双调、SSR DOM 与已有 L4 一致。是否全局替换见 D01。
+
+### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
+
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、519 行 owner/field 清单。内容候选154、渲染候选67、数据/配置137、内部/废弃161；19个有具体运行报告的字段标verified，其余202个候选继续review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](../audit/2026-10-24-slot-inventory.md)。
+
+**旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
+
+**推荐四类规则**：
+1. **组件顶层展示内容**（prefix/suffix/title/extra/icon/text/empty 等）：优先具名 slot，兼容 primitive prop；F04/F05 为可确认样本。
+2. **数据面配置**（items[].label、columns[].render、Menu items、Tree 节点等）：保留纯数据 + 可选作用域 item slot，不因字段类型是 VNodeChild 就机械增加同名 slot。
+3. **回调式渲染**（renderItem/footer 等）：直接使用作用域 slot，移除旧顶层内容函数 prop，不留兼容层或弃用期（D03、ADR 0006）；F06 为首批样本。
+4. **内部与废弃字段**：注明 `SKIP` 原因，绝不为了统计好看新增公共 API。
+
+**重算脚本要求**：从 `packages/ui/src/**/interface.ts` 收集字段定义，排除数据项/内部/deprecated；对应到实际组件运行时判断 `slots.xxx` / `<slot name>` / `defineSlots`，**类型声明和 Demo 出现不足以证明运行时支持**。输出每行 `{component, prop, category, slotRuntime, slotType, slotDemo, slotTest, decision, reason}`。优先检查 Badge、InputNumber、Transfer、Image、Typography、Pagination、Timeline、Tabs、Descriptions、Breadcrumb、List、Mentions、Drawer；**Steps/Switch/Alert/Collapse 等已存在部分 slot 消费路径，不要统一报“完全没有 slot”**。
+
+**门禁**：能区分 slot“不传”、slot“传了但为空”、slot“异步出现”，能保证 `#foo` 优先级，所有 slot props 可通过 `vue-tsc` 推断类型，Vue SFC 消费 Demo 真正可运行。
+
+**2026-10-24 List 增量**：`renderItem` 已直接移除，12 个示例与单元/DOM/axe/视觉调用迁为泛型 `#item`；接通原先被忽略的 `header` / `footer` / `loadMore`，按 slot 存在性优先，空 slot 不回退。删除照搬上游的整组件废弃警告及 Demo 告警豁免；修复根 id 未透传、字符串 style 展开与 attrs-only 更新缓存。List 运行回归、SSR 与实际 Vue 模板类型推断等证据见 [List 报告](../audit/2026-10-24-list-slots-remediation.md)；Item/Meta 的 extra/actions/avatar/title/description 已在后续 [子组件批次](../audit/2026-10-24-list-item-slots-remediation.md) 接通，包含空/动态插槽、keyed actions、SSR hydration 与类型回归。根 `extra` 无渲染落点和 List 拖拽示例继续开放，未宣称全库 F11 完成。
+
+**2026-10-24 Drawer 增量**：四个具名内容槽已存在，未误报为新补齐。复现并修复标题重复求值、显式 `aria-labelledby` 被忽略、空头尾切换重建正文，以及 PurePanel 原生 attrs/style 被旧形态截获；导出 DrawerSlots 并对齐 Portal 容器类型。真实浏览器保留正文 DOM/输入值，详见 [Drawer 报告](../audit/2026-10-24-drawer-vue-remediation.md)。未宣称 F11 或 Drawer 新视觉验收完成。
+
+**2026-10-24 Tabs 增量**：移除 more.popupRender 函数入口，`#popupRender` 改为单个 `{ originNode, restTabs, onClose }` 参数；Tabs/TabNavList/OperationNode/Dropdown 全链路按原生 slot 转发。复现并修复 extra computed 与 Dropdown setup 的槽存在性快照，新增实际窄容器 Demo。详见 [Tabs 报告](../audit/2026-10-24-tabs-popup-remediation.md)，全库 F11 继续开放。
+
+**2026-10-24 Breadcrumb 增量**：移除四参数 itemRender 函数prop，直接提供含逐项paths/href的具名对象槽；修复默认插槽终身缓存和cloneVNode覆盖调用方key，原生子组件组合不再沿用整组件弃用警告。见 [Breadcrumb 报告](../audit/2026-10-24-breadcrumb-slots-remediation.md)。
+
+**2026-10-24 Pagination 增量**：直接移除三个渲染函数prop，页码/总数使用单对象槽，尺寸切换走原生槽。List/Table新增当前分页内容转发，修复动态槽缓存、根id/事件/string style丢失，补既有业务回调类型。详见 [Pagination 报告](../audit/2026-10-24-pagination-slots-remediation.md)，全库F11仍开放。
+
+**2026-10-24 Masonry 原生底层增量**：复现并修复根 attrs 丢弃、string style 挂载异常和 attrs-only 缓存；原生 load/error 捕获能在 fresh=false 时重测量图片并去重布局通知。见 [Masonry 媒体报告](../audit/2026-10-24-masonry-native-media-remediation.md)。itemRender/泛型槽和SSR首帧尚未在本批关闭。
+
+**2026-10-24 Masonry 后续增量**：泛型 #item / 当前数据与语义样式已直接迁移，见 [插槽报告](../audit/2026-10-24-masonry-slots-remediation.md)。继续复现并修复 React effect 造成的 SSR 空首屏：服务端输出实际内容、测量前正常网格流、水合保留条目/输入身份和值；见 [SSR报告](../audit/2026-10-24-masonry-ssr-remediation.md)。前阶段待办由此更新，全库F11与视觉验收仍开放。
+
+**2026-10-25 Timeline/Steps 响应性增量**：Timeline items/布局/原生属性/ConfigProvider 与 Steps 当前步骤/折叠索引存在 setup 快照，新增回归后修为当前值派生；支持已文档化的语义函数与原生字符串style。详见 [专项报告](../audit/2026-10-25-timeline-steps-reactivity-remediation.md)。Timeline富内容作用域槽仍另行处理，不以本批响应性修复宣称F11全部完成。
+
+**2026-10-25 Timeline 插槽增量**：新增单个 { item, index } 作用域的 itemTitle/itemContent/itemIcon，覆盖当前/空/条件/移除、反转显示索引和SSR，移除React空壳Item与无效默认槽类型，不留兼容层。见 [专项报告](../audit/2026-10-25-timeline-slots-remediation.md) 与 [迁移说明](../migrations/timeline-item-slots.md)。原生示例增至15个；不宣称全库F11或新视觉验收完成。
+
+**2026-10-25 Timeline 条目语义增量**：纯转换遗漏已声明的项级classNames/styles，三条回归先红后绿后补齐转发，验证当前DOM、样式优先级、原生槽共用/输入保持与SSR，见 [报告](../audit/2026-10-25-timeline-item-semantics-remediation.md)。
+
+**2026-10-25 断点响应性增量**：Steps固化初始responsive选择，共享useBreakpoint恢复发布时遗漏当前快照；三条回归修前全失败。修复getter/暂停缓存与立即恢复，扩展SSR/卸载、Avatar数值转响应式尺寸、List静态转响应式列与输入保持，见 [专项报告](../audit/2026-10-25-breakpoint-reactivity-remediation.md)。
+
+**2026-10-25 Steps 原生槽增量**：四个已实现的槽补齐组件声明与精确模板推断，移除never/unknown桥接及未消费的默认槽类型；inline itemRender递归挂载Tooltip、无itemRender时默认提示缺失均已独立复现并修复，见 [专项报告](../audit/2026-10-25-steps-native-slots-remediation.md)。新增原生Demo，未保留函数prop兼容层。
+
+
+**2026-10-25 浮层内容增量**：Tooltip / Popover / Popconfirm 及三种PurePanel统一当前槽优先，空槽不回退；移除内容函数prop，保留VNode/0数据和异步确认回调。9条首批回归修前8失败/1通过，补SSR水合、正文状态保持及kebab-case回调复现后共13条；六入口类型、模板及生产浏览器证据见 [专项报告](../audit/2026-10-25-overlay-content-slots-remediation.md)。浮层原生attrs与其他F11候选继续复审，不把本批视作全库验收。
+
+
+**2026-10-25 浮层原生style增量**：三种PurePanel、Popover及Popconfirm的字符串style导致挂载异常/SSR无效CSS，首批14条中10失败/4通过；补齐面板外层语义转发，并另以两条失败回归直接移除React路径的根/container原生style重复落点。现根style与styles.container分工明确，见 [专项报告](../audit/2026-10-25-overlay-native-styles-remediation.md) 与 [迁移记录](../migrations/overlay-native-styles.md)。未把原本通过的attrs-only更新报作computed故障；其他attrs与图标槽继续复审。
+
+
+**2026-10-25 Popconfirm图标槽增量**：六条回归修前全失败，补原生#icon并按当前函数转发，空槽不保留图标间距、移除槽恢复默认/VNode/false数据；正文输入与焦点、SSR及类型验证见 [专项报告](../audit/2026-10-25-popconfirm-icon-slot-remediation.md)。清单按具体报告关联六个浮层字段，verified18/review204，不代表剩余缺陷数。
+
+
+**2026-10-25 Mentions浮层增量**：旧popupRender函数prop直接迁为单对象原生槽，四层当前转发，末端在render向Trigger传VNode数据。两条条件/空/当前数据与键盘回归修前失败，SSR守卫原已通过；保留单次选择与编辑器状态，修正类名数组的as never警告，并移除已补可访问名Demo的label豁免，见 [专项报告](../audit/2026-10-25-mentions-popup-slot-remediation.md) 与 [迁移记录](../migrations/mentions-popup-slot.md)。其余Mentions内容/attrs问题不由本批关闭。
+
+
+**2026-10-25 Mentions包装绑定增量**：8条回归修前6失败/2裸形态通过，确认clear/Form反馈外层根style漏传、显式silent被loading值替代；四行修复支持三形态当前根样式/恢复、SSR及silent/loading独立控制，见 [专项报告](../audit/2026-10-25-mentions-native-bindings-remediation.md)。class原本正常，未误报为全部attrs丢弃；其他内容/事件继续复审。
+
+**2026-10-25 Mentions核心事件增量**：修前4条全失败，确认重复input处理导致model/change双发、DOM change/select误触发.once和函数prop不能接收监听器数组。移除重复通道，change/select/search直接改typed emits，两个Demo迁@search；其余原生事件仍待复审，见 [专项报告](../audit/2026-10-25-mentions-core-events-remediation.md) 与 [迁移记录](../migrations/mentions-core-events.md)。
+
+**2026-10-25 Mentions原生事件增量**：首批6条全失败，修正手调监听器数组、模板keydown/keyup丢失及卸载blur残留；公开原生/辅助事件走typed emits，追加复现并补齐包装根focused类。原生焦点协调、once和迁移边界见 [报告](../audit/2026-10-25-mentions-native-events-remediation.md) 与 [迁移记录](../migrations/mentions-native-events.md)。候选key/which状态机和其余内容继续复审。
+
+**2026-10-25 Mentions标准键盘增量**：6条修前全失败，候选改用标准key，控制键keyup不重搜/重开，IME组合中的箭头/Enter不误处理；旧which-only人工测试改标准事件并保留原断言，见 [报告](../audit/2026-10-25-mentions-keyboard-remediation.md) 与 [迁移记录](../migrations/mentions-keyboard.md)。不表示完整IME或其他内容已关闭。
+
+**2026-10-25 Mentions空内容增量**：9条修前5失败/4已有通过，新增原生notFoundContent槽，并修复组件全局配置被忽略、false字符串化和VNode数组递归；追加复现后抑制slot存在时的急切renderEmpty调用，追加候选label同源复现2失败/11通过后修正数据归一并保留单次选择；当前函数只在空菜单render求值，数据prop保留；具体范围及检查见 [报告](../audit/2026-10-25-mentions-empty-content-remediation.md)。option模板用法评估、完整IME和其他F11继续复审。
+
+**2026-10-25 Typography默认内容增量**：真实入口14条修前12失败/2已有通过，确认四个子组件缓存旧默认槽及CSS省略路径渲染外求槽。公开render→私有数据组件修正当前值、复制/编辑与量测边界；另有编辑名称漏传独立复现并修正，最终15条局部通过。容器与直接ref槽原已正常；范围和检查见 [报告](../audit/2026-10-25-typography-native-content-remediation.md)。其余配置/富内容扩展继续复审。
+
+**2026-10-25 Typography样式线索验证（VERIFY）**：21条真实公开入口CSR/SSR、编辑及样式移除回退在原实现全部通过，生产Chrome也验证五入口/编辑/富内容与实际Demo。SFC v-bind的Vue mergeProps已在对象展开前归一style，静态字符串风险在该公开路径被证伪；本批保留实现、补回归和示例，并修正semantic Demo残留root-class-name为原生class，见 [验证报告](../audit/2026-10-25-typography-style-verification.md)。
+
+**2026-10-25 Typography全局配置增量（F11）**：32条修前25失败/7已有通过，确认五入口setup解构捕获旧className/style/classNames/styles，导致整体对象和函数替换、晚加载及移除过期。合并层改在computed/getter现读当前配置，保留优先级与已有深字段/ref函数行为，32条局部通过；范围及检查见 [报告](../audit/2026-10-25-typography-provider-remediation.md)。
+
+**2026-10-25 Image缩略图增量（F11）**：顶层imageRender原只有类型/文档、实现未消费。13条修前8失败/5已有通过，直接迁原生单对象imageRender槽；当前VNode/optional实际src、空/移除、ref/load/error、预览/组注册与SSR局部13通过；真实浏览器另复现默认fade动画名不匹配CSS且关闭无兜底，同批修正前缀与500ms结束保护，保留正常及无结束事件的隐藏断言。见 [报告](../audit/2026-10-25-image-render-slot-remediation.md) 与 [迁移记录](../migrations/image-render-slot.md)；preview配置同名renderer及其他扩展继续独立复审。
+
+**2026-10-25 Image原生样式增量（F11/ADR0007）**：正式首批3条修前全失败，确认字符串style抛错、根样式覆盖img语义及Progress实际根丢attrs。按Vue数组合并根style、图片仅用styles.image；占位分支复用现有单根路由attrs并保护进度ARIA，补正确placeholder.progress嵌套schema。见 [报告](../audit/2026-10-25-image-native-styles-remediation.md) 与 [迁移说明](../migrations/image-native-styles.md)。Provider整体替换、前缀及预览配置扩展继续独立推进。
+
+**2026-10-25 Image全局配置增量（F11）**：15条修前12失败/3已有通过，确认setup解构捕获旧classNames/styles，字段对象、image/整map替换、晚出现和移除过期。合并getter现读当前typed配置，去两处Record<string, never>断言，静态对象契约与优先级保持，15条局部通过；见 [报告](../audit/2026-10-25-image-provider-remediation.md)。预览全局样式、PreviewGroup及前缀继续独立推进。
+
+**2026-10-25 Image/Group前缀增量（F11）**：14条修前10失败/4初始CSR/SSR已有通过，前缀由computed现读prop/Provider，覆盖移除后使用当前值；Group自定义预览mask-hidden按实际previewPrefix派生。局部14及全量17文件239条通过，见 [报告](../audit/2026-10-25-image-prefix-remediation.md)。仅修DOM命名，消费端预生成/预加载CSS，D04整体策略保持独立。
+
+**2026-10-25 Image原生事件增量（F11/ADR0007）**：正式最小7条修前6失败/1已有通过；click/error/keydown及update:open改typed emits，DOM原事件/数组/once及Root ARIA路由直接修正，Progress不打开潜在预览或接收img error。扩展20条通过，见 [报告](../audit/2026-10-25-image-native-events-remediation.md) 和 [迁移](../migrations/image-native-events.md)。公开文档v-model:open与顶层open缺失存在契约冲突，默认/受控Group/prev状态已有额外失败复现，后续独立整改，未以文案降级宣称完成。
+
+**2026-10-25 Image/Group Vue开合模型增量（F11/ADR0007）**：兑现旧文档v-model:open承诺，真实SFC隔离8红2绿、正式最小2全红；直接顶层open/defaultOpen和typed请求，删preview内5个状态字段，无第二来源。模型初值/外部驱动/内部回写、Group受控拒绝、default只初始化与prev捕获均修复，29状态条及迁移6文件91通过；见 [报告](../audit/2026-10-25-image-open-model-remediation.md) 和 [迁移](../migrations/image-open-model.md)。Group current/开合统一Vue通知，原非状态业务选项保留。
+
+**2026-10-25 Image/Group预览焦点增量**：真实Portal/CSSMotion正式13条修前10失败/3已有通过；弹层晚挂载入焦、外部焦点约束、Tab边界、Esc与关闭/卸载归还直接修正，自定义装饰图标保留按钮名称。局部13条通过，完整门禁与真实浏览器记录见 [报告](../audit/2026-10-25-image-preview-focus-remediation.md)。其他预览配置扩展与当前视觉验收继续开放。
+
+浏览器追加复现禁用导航按钮失焦、双层整体卸载及先卸外层后关闭内层三条失败路径；Vue更新守护与共享原语返回链修复后，完整生产Chrome均通过。基础原语22条、相关35文件588条运行回归、146条类型及发布消费/文档门禁通过，证据与视觉缺口见同一报告。
+
+**2026-10-25 Image组内注册顺序增量**：更新第一图src/alt会注销再注册，实际顺序移至末尾而current/计数不变。正式6条修前4失败/2已有通过，只保留同id upsert和卸载清理后6条通过；身份、通知及全序导航见 [报告](../audit/2026-10-25-image-registration-order-remediation.md)。不改变公开状态或registry协议。
+
+**2026-10-25 Image预览扩展原始复现（已分批整改，见后两条）**：源码公开入口隔离9条全部失败，严格类型通过。Image/Group各自imageRender/actionsRender/toolbarRender独立配置均未求值；Group countRender未求值；两个入口旋转实际生效但onTransform均未通知。探针为 `/tmp/apollo-image-preview-extension-repro/extensions.test.ts`，日志 `/tmp/apollo-image-preview-extension-red.log`。这些配置声明不能充当实现证据；渲染扩展按ADR0006直接迁原生作用域槽，通知按Vue公共契约独立整改，不夹带在焦点或注册修复内。
+
+**2026-10-25 Image变换事件增量**：上述两条通知缺陷直接改顶层typed transform事件，删preview.onTransform，无旧通道。正式11条修前9失败/2已有通过，扩展15条通过，包含数组/once/当前替换、快照、受控拒绝/复位、真实SFC和Group根DOM同名事件隔离；见 [报告](../audit/2026-10-25-image-transform-event-remediation.md) 与 [迁移](../migrations/image-transform-event.md)。其余7条renderer失败仍独立开放。
+
+**2026-10-25 Image预览槽增量（F11）**：其余7条renderer直接迁原生previewImage/previewActions/Group previewCount，删除四个旧配置字段与toolbar别名。正式13条修前11失败/2已有通过；扩展真实SFC、编辑器方向键与Progress CSR/SSR后19条通过。当前VNode/optional src、零基索引、typed动作、空/移除与稳定编辑器的证据见 [报告](../audit/2026-10-25-image-preview-slots-remediation.md) 和 [迁移](../migrations/image-preview-slots.md)。其他预览配置及视觉验收继续独立推进。
+
+**2026-10-25 Image/Group全局弹层语义增量（F11）**：18条修前14失败/4已有通过，确认Image丢全局popup样式、Group未接全局类名/样式；统一当前getter合并后18条通过，完整363条运行回归及62条类型通过。六个弹层节点、局部浅覆盖、根attrs隔离与打开时编辑器/焦点/旋转的生产证据见 [报告](../audit/2026-10-25-image-popup-provider-remediation.md)。其他预览配置与视觉验收继续开放。
+
+**2026-10-25 Image Group方向图标增量**：4条修前3失败/1已有通过，确认初始RTL默认图标消失及动态方向快照过期。当前方向getter与默认/自定义先合并再镜像后8条通过，保留单侧/显式空图标、当前替换、编辑器/焦点/旋转与相邻索引语义；见 [报告](../audit/2026-10-25-image-provider-direction-remediation.md)。其他RTL布局、预览配置与视觉验收独立开放。
+
+**2026-10-25 Image默认计数对比度增量**：真实Chrome确认白色页面的默认计数仅2.33:1，关闭遮罩为1:1；增加主题colorBgSpotlight背景，保留操作颜色继承与默认节点/槽分工。复现、全局主题矩阵和实际Demo证据见 [报告](../audit/2026-10-25-image-counter-contrast-remediation.md)。局部Provider主题跨Teleport的变量继承另行复审，不用其浅色回退冒充暗色覆盖；其他预览配置和视觉验收继续开放。
+
+**2026-10-25 Image当前缩放边界增量**：双入口6条修前全失败，确认变换内核固定setup的minScale/maxScale；改当前getter后另复现上限收紧的按钮/槽禁用2失败/12通过，改>=后14条通过。配置本身不变换/通知，下一次操作读当前限制并保持默认复位；运行、手势、编辑器身份与Demo证据见 [报告](../audit/2026-10-25-image-scale-bounds-remediation.md)。其他预览配置与视觉验收继续开放。
+
+**2026-10-25 Image关闭控件增量（F11）**：双入口14条修前10失败/4已有通过，确认closable/closeIcon未接入及原生关闭图标槽缺失。补当前转发与previewCloseIcon原生槽后扩展18条通过，覆盖空/移除/显式数据、稳定编辑器、按钮移除的焦点修复、Esc、Progress/SSR及Group所有权。新增实际Demo，详见 [报告](../audit/2026-10-25-image-preview-close-remediation.md)。mask/容器、局部主题及视觉验收继续开放。
+
+**2026-10-25 Image整改单元完整盘点（进行中）**：按当前源码建立 [统一契约清单](../audit/2026-10-25-image-contract-audit.md)，覆盖两公开入口、全部配置、Slots/Emits/模型/导出、Progress、状态/注册/变换、Provider/样式及关联基础包。真实无DOM Node发布包SSR已复现 `Image is not defined`（退出1），属于本轮必修；其余待核实项先补齐证据并集中评估API，再按根因成组修复和统一验收。前述独立增量均不表示Image或全库已完成。
+
+**2026-10-26 集中修复进行中**：资源状态/SSR/fallback候选、mask/当前容器/步长、分组模型与尺寸/兜底、精确类型已实施；351条四层运行回归（含57条入口回归）和34条类型通过，生产Node SSR及原有缩放/插槽/变换Chrome检查通过。全量浏览器盘点仍有主题和跨文档焦点5个失败，继续同一单元修复；迁移与其余未验证边界集中记录在上述统一清单，未标Image完成。
+
+共享焦点/容器组随后验证69文件1348条及严格通过；生产盘点21场景现为19通过/2主题失败。稳定/替换resolver、同文档及跨文档搬迁保留编辑焦点/值/选择区，原生iframe Tab、作用域重试清理及原有堆叠/卸载/拒绝关闭回归通过。整个Image仍开放，主题/Token、滚动锁、富缩略图交互、水合与视觉继续按统一清单处理。
+
+源主题/Token组随后验证56文件1059条（完整串行，未改5秒阈值）、严格/生产构建/模板消费/L7及Docs全检查通过；真实Node SSR和服务端输入水合通过。生产浏览器盘点现23场景全部通过，含两个实际Demo、全部7个Token及主题移除/恢复下的原节点、输入和焦点。Image仍未统一完成：滚动锁、富缩略图交互、motion偏好与最终视觉继续，详见同一清单。
+
+剩余交互已补红灯复现。Portal共享层正按实际ownerDocument/defaultView迁移滚动锁与Escape栈，覆盖稳定resolver、原生搬迁、inline及开/闭ShadowRoot；真实浏览器还复现覆盖式滚动条导致body由284px扩至300px，纳入同组修复。当前证据、提交及未验收的Image锁定接入/富内容/ShadowRoot焦点/motion统一记在同一清单，不另建逐字段完成报告。
+
+Portal容器副作用组已随 `899eba64` 提交推送。随后Image交互组改为富内容group根与独立可见的原生预览按钮，originNode保持普通img；进度交互控件独立于progressbar，焦点按层记忆并跨已知ShadowRoot，模态锁贯穿退场，当前motion/系统偏好生效。完整Image四层23文件378条、直接补充消费者19文件350条及相关352条类型通过；生产交互21场景和原有契约23场景通过。共享组279文件曾有1条旧根点击测试失败，按明确迁移改用真实图片并完整复验，未改写为一次全绿。当前生产构建、原有浏览器、消费端及Docs继续统一验收，Image视觉仍未关闭；证据统一见上述清单。
+
+冻结生产源码后，69文件1338条、严格/352类型、20组Chrome专项、四包L7、SSR/模板/tarball与Docs全部通过。按需图还复现生产env误判dev，已接通真实DEV/PROD/MODE及Node回落；在不改77KB预算下Image为76.98KB。分组数据所有权的三个显式补验与24张候选图的最终批准仍继续，不标整个Image完成。
+
+2026-10-26 分组所有权收口：items/注册切换、嵌套/同级隔离和当前项删除补验通过；删除打开者后的焦点候选改由Vue注册关系提供，普通/富内容/嵌套/Teleport及真实Demo共26生产场景零错误。最终Image四层23文件381条，严格、UI L7、SSR/模板消费者与Docs类型/14文件157条/SSG构建通过。新增逻辑成本按用户明确要求调整Image单条预算77→78KB。视觉24张候选仍待清洁提交批准，不代表全库门禁。证据仍统一见image-contract-audit。
+
+**2026-10-26 Image整改单元已收口**：完整契约清单逐项验收完成；分组焦点修复 `8d99baae`、视觉源码 `2df25090`，清洁 `798339f5` 重拍24张均与逐张审查候选一致，批准后像素复验24/24全0差异。当前Image四层381条、Chrome26场景、严格/UI L7/SSR/发布类型消费与Docs均通过。Registry视觉来源改为Apollo，保留历史参考证据。具体命令、提交、已验/未验边界统一见[清单](../audit/2026-10-25-image-contract-audit.md)；不是全库完成。
+
+**H05 · 已修｜全仓格式门禁存量**：基线9862a979的66错误集中在52个Vue/HTML文件，均为格式/导入排序；已集中修复，脚本与编译渲染结构等价，原样式内容保留。完整lint:format现退出0（3527文件/0错误），严格、61文件1246条四层回归、生产构建/L7、6组Chrome和Docs内容/157测试/SSG通过。现有37警告/5信息保持原规则与数量，另案核查；没有升级组件验收状态或重写Image视觉基线。完整范围、命令与边界见[H05清单](../audit/2026-10-26-repository-format-audit.md)。原基线失败保留 `/tmp/apollo-h05-format-baseline.json`。
+
+---
+
+### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
+
+F03 扩展测试发现：SSR 输出可见错误节点，客户端支持 appear 时首帧却按新挂载返回 null，造成 hydration mismatch 与 DOM 替换；forceRender 的隐藏分支也有复现。新增基础层 4 条回归，修前 3 失败 / 1 已通过。只在 Vue 已绑定服务端节点的 hydration setup 边界让初始快照匹配 SSR，onMounted 仍运行正常 appear；普通新挂载的 NONE/null、驱动和帧队列未变。
+
+基础单元、普通首帧矩阵、生产 SSR → Chromium 的原节点与预输入值、appear/leave/enter 及单次通知证据见 [F12 报告](../audit/2026-10-24-motion-hydration-remediation.md)。不修改动画时长、图片阈值或既有 Message/Notification 验收结论。
+
+---
+
+## 2. Registry、文档与基础包的清账
+
+### H01 · P2 · 已修（历史清账）｜Vue-native 审计 Registry 的 Table open 已过期
+
+原 `VNA-RECHECK-04` 报缺 Table 双语 API，已在本地确认文件、主要 API/导出、内容管线与 SSG 页面实际存在。条目现为 fixed，保留原观察并补充真实文件、日期、路由及报告。
+
+汇总由 `registry/tools/vue-native-status.mjs` 重算；旧 fixed=17/open=1 与实际 24 条 issue 不符，当前历史记录为 fixed=24/open=0。`pnpm run registry:vue-native:check` 已并入 registry:check，汇总漂移、已解决文档的文件/API 正文缺失均非零失败；覆盖 CLI 正反门禁。具体证据见 [本批报告](../audit/2026-10-23-vue-reactivity-remediation.md)，不宣称完整 Table 重新验收。
+
+### H02 · P2 · 已清账｜规范冲突和过期阶段声明
+
+原审计所引 `C3`、AGENTS 的“antd 是答案”、ARCHITECTURE 的“逐字对照”和兼容规范 §9.3 的未决项均来自已被替代的规范。当前 AGENTS、ARCHITECTURE、COMPONENT-RULES、COMPATIBILITY 与 [ADR 0005](../adr/0005-independent-apollo-contracts.md) 已明确职责、Apollo 独立契约及上游参考边界；历史差异表独立存入 docs/history，不再作为当前规范。
+
+开发阶段模板 API 的直接迁移另由 [ADR 0006](../adr/0006-development-template-slots.md) 覆盖，无函数兼容层或弃用期。2026-10-24 再核实 Registry：`use-id-test-env` 已于 2026-10-07 裁决为仅在断言侧归一 id 并保留引用关系，生产实现不固定编号；生成后的决策列表无 open。未新增重复 ADR，未改 AGENTS，也未把本台账 D01/D02/D04/D05 自动视作已裁决。Registry 生成/检查的本批结果见整改报告。
+
+### H03 · P2 · 已刷新快照并补行列重排，能力矩阵继续开放｜Demo 不能以文件数量代表完成
+
+**2026-10-24 当前刷新**：71 可比较组件 990/1060 个文件，93.4%，30 个较少；名称重合 83.8%。文档含 4 个不可直接比较的 QRCode Demo，共 994。历史 stage2 快照保留；本批 Table 行/列原生拖放、单元格对应关系、重置与键盘替代通过真实浏览器，Demo/axe 96 条通过。能力分流与未测项见 [H03 报告](../audit/2026-10-24-demo-capabilities.md)，不是数量达标即验收。
+
+**原最后一次全量矩阵的证据**：[demo-coverage-stage2.json](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/demo-coverage-stage2.json) 生成于 **2026-10-21**：71 个可比较组件，985 个本地 demo 对比 1060 个上游 demo；**文件数量覆盖 92.9%**；场景名重合 **83.8%**；31 个组件数量低于上游。2026-10-23 文档报告又确认文档构建处理 **989 个 demo（含 4 个不可直接对照项）**。
+
+**解决方案**：对缺口建立“能力场景”表，不以凑同名 `.vue` 文件为目标；先区分 `supported+missing-demo`、`unsupported+requires-design`、`external-dependency`、`debug-only`、`intentionally-different`。必须给每个重要能力提供：可交互 Vue 示例、中文/英文说明、单元或浏览器断言。**高价值优先**：Table 拖拽/列重排（前提是能力已实现；否则不要做空 demo）、Form.List 动态交互和多表单、List 拖拽、Badge 富内容、DatePicker 不同输入/格式、Splitter 状态重置、Collapse 自定义 icon。OSS/外部裁剪服务、上游 `debug-*` 不强制迁移；本地 mock 可展示真实行为时优先本地 mock。
+
+### H04 · P3 · 无效动态导入与 order 元数据已修，主包继续开放｜文档构建 warning 需要分级，而非放行也非清零数字
+
+2026-10-24 已定位并修复 search.ts 的静态/动态混用（TopBar 原先的动态导入并不拆包），保留索引按需、并发/重试；生产浏览器验证首次零请求、打开一次、重开复用、焦点返回、英文/暗色与 SSR 水合，零页面错误。DemoRenderer 的 mounted 全量加载也已改为视口附近单次激活，保留滚动状态并清理卸载资源；Table 初始模块请求 55→12，gzip 字节 687345→657437。157 条文档测试、真实滚动和 inline/iframe 截图准备通过。大 app chunk（约 2.2MB 原始 / 510kB gzip）的优化仍开放，首批交付记录见 [H04 报告](../audit/2026-10-24-docs-warnings.md)。后续已补齐 21 个组件的 303 个 Demo order，72 组件 / 994 Demo 顺序哈希完全一致，同生成条件下除 order 外全部页面数据及搜索索引相等，元数据提示为 0；见 [order 整改](../audit/2026-10-24-demo-order-remediation.md)。未提高阈值或屏蔽日志。另记录跨初始化状态的代码高亮 token 标签差异线索，本批未改高亮器，未宣称高亮确定性已经解决。
+
+原 [文档站报告](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md) 记录已有大 chunk、静态/动态 import 混用及 Demo frontmatter 提示。**不是本轮证明的构建失败**。建议：采集完整 warning、定位来源和首次出现提交；分为实际影响 chunk 的优化项、仅开发时诊断项、内容元数据缺失；对真实影响首屏的警告按包分析、路由懒加载和图标动态导入优化，**不得**一律调高 chunkSizeWarningLimit 或删日志。测 gzip 产物、首屏请求链、路由按需加载、SSG 84 routes、暗色/语言 hydration。
+
+### 13 个基础包：逐一关口
+
+Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维度均 `done`；这是历史完成**状态**，不是本轮逐行复检的结论。以下为最终抽检的**明确验收动作**（未发现源码缺陷的项目不要凭空造 Issue）。
+
+| 包 | 本轮处理 | 发布前专项检查 |
+|---|---|---|
+| `utils` | F10 | `pickAttrs` 事件/原生 attrs；`mergeProps` 不双调，事件大小写 |
+| `theme` | D04 | 单 CSS 路径、暗/紧凑主题、SSR CSS 变量与范围覆盖 |
+| `icons` | 已实现目录 | 848 个图标清单和动态加载、tree-shaking、无运行时 SVG 数据包依赖 |
+| `motion` | 保持已验收行为 | 真实 `transitionend` / deadline、首帧、卸载取消、SSR、reduced-motion |
+| `portal` | 验收门禁 | Teleport 容器销毁、嵌套弹层、SSR、跨窗口容器 |
+| `position` | 验收门禁 | 翻转、RTL、滚动、浏览器缩放/边界、与 Trigger 接线 |
+| `a11y` | F01/F09 关联 | 语义角色、焦点陷阱、键盘、读屏、可访问名 |
+| `virtual-list` | 验收门禁 | 变高行、动态过滤、滚动定位、键盘导航、卸载监听 |
+| `overlay` | 验收门禁 | stacking/zIndex、外部点击、冒泡、嵌套 overlay |
+| `locale` | 验收门禁 | 语言覆盖、动态语言、locale chunk/导出正确性 |
+| `form-core` | F03 关联 | prefix 动态变化、校验状态、异步竞态、reset/unmount |
+| `picker` | F01 关联 | 真实 input 绑定、范围焦点、键盘、时间时区边界 |
+| `test-utils` | H03/H04 关联 | 门禁不能空跑；保证失败时非零退出、对拍基线/实际构建版本相同 |
+
+**内核 `ui/_internal`**：单独对 Trigger / NodeRenderer / semantic merge / Overflow / useAllowClear 做共享层回归。特别核对类型隔离、原生 `$attrs` 合并、不重复 `class` 和事件，以及子组件卸载时取消 RAF/监听；之前已修项只保留哨兵用例。
+
+---
+
+## 3. 72 个组件逐项清点：剩余行动与 Demo 基线
+
+以下 **72 项均来自 master 的 `registry/components.json`（完成状态）**，Demo 统计使用 **2026-10-21 的最后一份全量矩阵**。`本地/上游` 只表示文件数，**不是运行质量结论**；`—` 表示当前没有新确认的源码缺陷，不表示在本轮逐页实测零缺陷。所有组件在发布前均需通过统一的“API/slots/emits/expose/attrs、动态更新、disabled、RTL/a11y、SSR、类型、真实 Demo”冒烟。
+
+| 组件 | Demo 本地/上游 | 最终关注点 / 行动 |
+|---|---:|---|
+| Empty | 6/6 | —；检查 `description` 插槽已有实现不回归 |
+| ConfigProvider | 8/10 | Phase2 props / 全局 class/style / 动态上下文；缺 `holderRender` 类场景时先核功能 |
+| Button | 20/22 | —；不要重报已裁决并修复的 children wrapper |
+| Space | 15/15 | —；紧凑模式与响应式 |
+| Flex | 6/6 | —；gap/RTL |
+| Grid | 13/13 | —；断点/SSR |
+| Divider | 9/9 | —；语义 attrs |
+| Typography | 14/14 | F11：四子入口当前默认槽、复制/编辑回退、CSS求槽告警及编辑名称已修；其他内容/交互继续复审 |
+| Layout | 11/12 | 固定布局；`custom-trigger-debug` 非强制 |
+| Tag | 12/12 | —；close emit 与动画 |
+| Badge | 12/17 | **F05**；富内容、数字滚动、status、Demo |
+| Alert | 14/15 | **F07**；title / description slot 顺序 |
+| Skeleton | 8/8 | —；loading 变换与 Token |
+| Spin | 9/10 | —；`tip` 场景按现有能力补演示或说明 |
+| Result | 10/10 | —；extra slot |
+| Watermark | 5/6 | —；portal/观察器/调试例不强求 |
+| BorderBeam | 8/10 | —；非均匀圆角/Token 变体 |
+| Statistic | 7/7 | —；精度/locale |
+| Affix | 5/4 | —；监听销毁/视口 |
+| BackTop | 1/1 | —；嵌入预览 viewport 已实现 |
+| Checkbox | 8/11 | —；Group / v-model / disabled 表单事件 |
+| Radio | 14/16 | —；Group / 键盘交互 |
+| Switch | 7/7 | **F09、D02** 已专项修复；原生 click 与语义 change 分离，15 张 Apollo 已批准图仍缺失 |
+| Input | 24/27 | —；Search/OTP 已实现，不重复报缺 |
+| InputNumber | 20/22 | **F04、F09**；前后缀 Vue slot、更新事件 |
+| Listy | 8/8 | 虚拟无限/拖拽类功能按支持范围决定 |
+| QRCode | 4/不适用 | —；独立命名差异，不纳入上游数量对拍 |
+| Upload | 23/24 | 浏览器文件操作、拖拽排序、文件本地 mock |
+| Splitter | 10/14 | 受控/重置/嵌套 Tabs 与 resize 手势 Demo |
+| Carousel | 9/7 | —；自动切换计时器、键盘/触控 |
+| Collapse | 9/13 | **F07**；header slot 优先、动态图标/混合模式 |
+| Descriptions | 13/13 | **F08**；render 期间写 ref；复杂 slot 子项 |
+| Tooltip | 15/15 | F11：当前/空标题槽、VNode/0数据与类型、静态面板原生style已整改；其他attrs和Apollo视觉继续复审 |
+| Popover | 12/12 | F11：内容函数迁为原生槽、优先级/当前值/正文状态及原生style已修；其他attrs继续复审 |
+| Menu | 14/18 | 已整改 Trigger；`custom-popup-render` 能力按真实 API 核实 |
+| Dropdown | 19/21 | —；菜单容器滚动和键盘 |
+| Modal | 23/23 | —；focus/关闭/SSR motion 门禁 |
+| Drawer | 18/18 | F11：四个现有内容槽已验证动态/空内容、ARIA 和正文身份；9 张 Apollo 基线仍缺失 |
+| Message | 11/11 | **用户已验收动画**；保持回归即可 |
+| Notification | 14/14 | **用户已验收动画**；保持回归即可 |
+| App | 2/2 | —；上下文 API、静态方法隔离 |
+| Image | 18/18 | F11：配置/资源/主题组已修并验证；交互组统一验收及Apollo视觉继续 |
+| Select | 36/35 | **F02**；条件选项Demo完整axe无豁免，动态slot、options、虚拟列表 |
+| AutoComplete | 14/17 | F02 消费者；条件 default slot / 自定义 clear |
+| Cascader | 23/23 | F02 消费者；异步加载/slot |
+| Tree | 19/19 | —；虚拟/拖拽/键盘 |
+| TreeSelect | 19/15 | F02 消费者；`checkable` / renderPanel 类型与 Demo |
+| Popconfirm | 10/11 | F11：四内容槽、kebab-case业务回调/Promise链及面板style/语义已修；原生图标槽已补；其他attrs与视觉继续复审 |
+| Tour | 9/9 | —；定位/焦点/清理 |
+| FloatButton | 14/16 | 自定义浮层/拖动能力先定支持范围 |
+| Form | 35/44 | **F03 前缀/占位已验证**；动态 Form.List、验证竞态与 Demo 能力继续审查 |
+| Slider | 15/15 | —；键盘/范围 |
+| Rate | 9/9 | F10 消费 `pickAttrs`；class 和键盘 |
+| Segmented | 16/16 | —；受控 / 响应式选项 |
+| Steps | 21/20 | 四个原生槽已接精确类型，inline提示递归/缺失已修；Apollo基线仍缺失 |
+| Progress | 17/17 | —；aria 值/动画 |
+| Pagination | 15/16 | F11/F10：原生item/total/size槽及List/Table转发已专项修复；Apollo基线仍待验收 |
+| Breadcrumb | 10/10 | F11：itemRender 单对象槽和默认子组件更新/key已修复；24张Apollo基线缺失 |
+| Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
+| Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
+| Timeline | 15/14 | 原生itemTitle/itemContent/itemIcon与当前作用域、空槽、SSR/输入保持已修；Apollo基线仍缺失 |
+| Masonry | 6/6 | F10原生attrs/图片测量、F11泛型item槽及当前数据/语义样式已修复；SSR内容/网格首屏/水合已专项修复，Apollo基线仍缺失 |
+| Anchor | 12/12 | —；滚动观察器/动态路由 |
+| List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
+| Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
+| Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
+| Mentions | 16/16 | F11：popupRender已直接迁为当前单对象槽；clear/反馈根style及silent已修；change/select/search已改typed emits且去除input双发；公开原生/辅助事件及blur清理已修；候选标准key及组合输入控制键已修；notFoundContent原生槽/配置/数据归一已修；option模板用法评估、完整IME及其他契约继续复审 |
+| ColorPicker | 16/16 | F10 消费 `pickAttrs`；颜色与 alpha/键盘 |
+| DatePicker | 28/32 | **F01**；实际 input 属性与可访问性 |
+| TimePicker | 16/17 | **F01** 消费者；`render-panel` 场景按 API 决定 |
+| Calendar | 9/10 | —；农历 `lunar` 依赖明确注明，不强求 |
+| Avatar | 9/10 | —；图像加载、group 溢出 |
+
+**对账要求**：本表不能独自证明“逐个组件最终验收通过”。逐项复审必须产生可机读 `docs/audit/evidence/final-component-gates.json`，每个组件至少记录 `api,vueNative,slots,emits,attrs,reactivity,a11y,ssr,demo,unit,l4,l6,status,reason`；无证据的状态必须是 `not-run` 而非 `pass`。不得把 `completed` 当作新一轮门禁结果。
+
+---
+
+## 4. 用户裁决与待裁决事项
+
+| 决策 | 选项 | 推荐及理由 |
+|---|---|---|
+| **D01：已公开 prop/slot 优先级的变更边界** | 逐组件核实旧契约、当前使用和行为影响 | F07 在当前未发布开发版直接统一内容 slot 优先，独立记录迁移与回归；不据此宣布所有未审查组件均已迁移 |
+| **D02：Switch @click 事件载荷** | **已裁决并实施：直接使用原生 DOM 事件** | 用户 2026-10-24 要求不得为 React 回调/DOM 形态牺牲 Vue 公共用法，见 ADR 0007；状态由 change/update 表达，修饰符、单次发送与键盘激活已专项验证；无旧载荷兼容，见 D02 报告 |
+| **D03：内容渲染函数 prop 的处理** | **已裁决：直接改为 Vue 插槽** | 用户 2026-10-23 明确要求当前开发阶段直接修改，不保留旧函数兼容层或弃用期；2026-10-24 再扩展到妨碍 Vue 用法的 React 回调/DOM 形态，见 ADR 0006 / 0007。业务/算法函数按职责保留，数据项渲染逐项评估 |
+| **D04：动态 `prefixCls` 与零运行时 CSS** | A 不支持动态前缀；B 允许 DOM 前缀变更但 CSS 需预生成/预加载；C 恢复运行时样式注入 | **B**：遵循已裁决零运行时原则；不得因为 F03 重新引入运行时 CSS-in-JS |
+| **D05：补齐上游 Demo 的口径** | A 逐个文件 100%；B 核心能力全覆盖、debug/外部依赖例外；C 停止补 Demo | **B**：把“支持 API 能否用 Vue 示例真实操作”作为验收判据，不做文件数量游戏 |
+
+裁决完成后：写 ADR；更新 `COMPATIBILITY.md` / Registry 决策源；同步类型和文档；需破坏 API 时明确版本/迁移说明。不得直接在 Registry 生成文件中手改决策状态。
+
+---
+
+## 5. 执行顺序、测试命令与删除旧文件条件
+
+### 建议分批（减少相互污染）
+
+1. **第一批 · 真实故障（P1）**：F01 → F02，各自先复现、单组件 PR、测试和构建门禁，再合并。
+2. **第二批 · 小型响应式/Vue 增量（P2）**：F03 → F04 → F05 → F07；F08 先写防自激门禁再调整。
+3. **第三批 · 公共 API 整理**：F06、F09/F10/F11；D03 已裁决直接迁移，D01/D02 按具体影响处理，再按组件分批，**不要全仓同一 PR 换掉所有回调与渲染器**。
+4. **第四批 · 交付清账**：H01/H02 → H03/H04 → 72/13 证据矩阵 → 全量门禁 → 删除旧文件。
+
+### 必须复验的门禁（**下面是要执行的命令，不是本轮运行结果**）
+
+```bash
+# 源码修复之后，先构建 UI——L6 读取的是 dist
+pnpm run build:ui
+
+# 组件测试 + DOM/a11y/theme（具体项目名以 repo 的 vitest 配置为准）
+pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme
+
+# TS / 类型测试 / Registry / 构建产物
+pnpm run lint:types
+pnpm run test:types
+pnpm run registry:check
+pnpm run test:build
+
+# Docs 真浏览器/构建（项目报告中的可复现入口）
+pnpm --filter @apollo-design/docs run build
+node packages/docs/tests/smoke-browser.mjs
+node packages/docs/tests/catalog-browser.mjs
+
+# 视觉——对本次涉及的组件先单组件，最终全量
+node tests/visual/run.mjs --mode compare --component date-picker
+node tests/visual/run.mjs --mode compare --component select
+node tests/visual/run.mjs --mode compare
+```
+
+如果视觉环境与 canonical 基线平台不一致（原报告提及 macOS / Windows 滚动条宽度差），不得“重生基线让它变绿”；应在指定平台跑真门禁，保留差异证据。`--component` 参数实际支持需由本地脚本验证。
+
+### 完成定义（Definition of Done）
+
+- 每个 FIX 有“红灯复现 → 修复 → 绿灯”的证据，附源码链接、commit、至少一个 Vue template 消费示例。
+- 每个 VERIFY 有结果（确认 bug / 证伪关闭 / 仍待核实），**不可以无证据直接划 completed**。
+- 每个 DECIDE 有用户明确裁决、可读 ADR 和更新后的 Registry；旧已裁决问题不重新抛给用户。
+- Demo 差异按 API 场景闭环，外部依赖 / debug-only 有不补理由。72 个组件/13 包的检验表逐行都有“实测/不适用/未测+原因”，不使用笼统的“全部通过”。
+- `VNA-RECHECK-04` 陈旧 open 状态已校正；文档构建与 Registry 检查不再靠旧台账文字作为硬编码输入。
+- **满足以上条件后**，可以删除原来的 `docs/KNOWN-ISSUES.md`，或者将此文件作为新 `docs/audit/FINAL-GAP-AUDIT.md` 永久归档，再保留最短的链接索引。
+
+---
+
+## 6. 证据来源与不应重复开的事项
+
+- [旧 KNOWN-ISSUES.md](https://github.com/apollocmh/apollo-design-ui/blob/31a1eecec989b2c75c2e8a40a8879f992414a3e5/docs/KNOWN-ISSUES.md)：§1.2–§1.5 的历史复现、§2 已证伪、§3 已修留痕。
+- [Vue native Registry](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json)：72 个组件/共享层的历史审计，最后 open Table 条目已过期。
+- [Foundation Registry](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/foundation.json)：13/13 completed、6 维 done；不是本轮新运行证据。
+- [组件 Registry](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/components.json)：72/72 completed。
+- [Demo 覆盖数据（2026-10-21）](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/demo-coverage-stage2.json)：985/1060、92.9%、83.8%。
+- [2026-10-22 Menu/Notification 动画整改](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-22-menu-notification-motion-remediation.md)、[Motion 逐帧复审](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-22-motion-review-002.md)：已有浏览器验证与 CI 门禁；用户已验收效果。
+- [2026-10-23 Docs/Icon 页面证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md)：72 组件总览、848 个 Icon、989 Demo、84 路由及浏览器检查。
+
+**核心原则**：最后一次审计不是重新模仿 Ant Design，而是确保 `@apollo-design/ui` 作为自己的 Vue 3.5+ 组件库，能用 `<template #slot>`、`v-model`、`@event`、原生 `class/style`、真实响应式、SSR 与可访问语义自然使用。顶层内容渲染函数按已裁决 D03 直接迁移，不留兼容层或弃用期；业务/算法函数按职责保留。已公开行为的调整单独留迁移记录，未裁决边界继续明确跟踪。
+
+
+## 2026-10-26 List完整盘点后的阶段结果（整单元仍开放）
+
+List / Item / Meta按完整清单集中修复：既有extra与语义样式、稳定正文、当前Provider/前缀、分页受控状态、11个Token、嵌套/RTL/断点以及默认正常文字对比度。29文件508条相关四层、99文件1788条共享消费者unit、152条类型、生产Chrome55项与真实Demo交互通过；两组运行回归有交集，不累加为全库数字。两包构建/L7、Docs157条及SSG、Registry和格式检查通过。
+
+仍需完成Apollo List自有视觉基线、默认/暗色/紧凑矩阵与整单元最终复核，未宣称全部收口。完整清单、精确命令和边界见 [List统一报告](../audit/2026-10-26-list-contract-audit.md)；公开变更集中见 [迁移记录](../migrations/list-contracts.md)。已更新文档站进度页，历史completed/legacy-reference不作为本轮整单元完成证据。
+
+## 2026-10-26 List统一验收收口（取代以上阶段开放状态）
+
+List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item Props、4个Meta Props、9/3/3个槽、attrs/ref/Provider/分页/11个Token及12个实际Demo。本阶段补修带边框Token、Spin文案对比度与全屏正文流/真实mask、当前语义工厂和共享原生控件颜色。30文件512条相关四层、152类型、97项List生产Chrome、19项共享原生控件及715+59条命名消费者回归通过；数字仅对应这些明确范围，不累加为全库通过。
+
+清洁实现 `5336ff77` 的57张List和24张Image重新捕获，全部匹配审图哈希；批准List57张及6张有意颜色变化Image后，81张真实像素复验全部exact、0差异。12个List Demo和实际Spin全屏Demo逐页浏览器通过，UI构建/L7、13包tarball Vite/Webpack、Docs157条/SSG、Registry/来源和格式检查通过。完整逐项结论、实际命令和边界见同一 [List统一报告](../audit/2026-10-26-list-contract-audit.md) 与 [结构化证据](../audit/evidence/list-visual-contract.json)。
+
+下一单元为Spin完整契约盘点；本轮共享修复不宣称Spin整单元完成。全库内容候选仍202项待核实，其他组件、基础包与最终同一提交全量门禁继续开放。
+
+## 2026-10-26 QRCode完整盘点、集中实现与统一验收（已收口）
+
+已成组修正statusRender→原生#status、稳定refresh事件操作、当前语言/Provider/遮罩Token、根与图像尺寸、暗色背景对比度及图像名称；SVG属性修正，8个原机械场景保留并加强到完整路径/属性检查。75条四层、92条类型、44项生产浏览器、10项SSR、6组水合及全部5Demo/两组交互通过。状态Demo定时器泄漏有原源码失败复现，重复刷新与卸载归零通过。UI/L7/Docs通过。清洁实现f4b82b4d的12状态×3视口共36张自有视觉逐张审阅批准后全部exact，0像素差异；原127条批准记录保持不变。原始完整清单已核对，组件单元收口；进度页同步结果，最终发布回执另记，不以本轮局部验收宣称全库完成。见[完整清单](../audit/2026-10-26-qrcode-contract-audit.md)、[统一证据](../audit/evidence/qrcode-contract.json)和[集中迁移](../migrations/qrcode-contracts.md)。
+
+## 2026-10-26 Spin完整盘点、集中实现与统一验收（已收口）
+
+按11个Props、3个槽、7个语义落点、Provider/attrs/ref/程序化默认内容、4个Token及9个原Demo完整盘点后，集中修正原生内容/显式scope、稳定加载层、SSR确定进度、主题Token与嵌套/动画；新增1个Token Demo，原场景保留。15条失败复现修后全部通过；32项自身浏览器、160类型、生产ESM SSR/发布声明、UI/L7、Docs157条/SSG及97项List共享浏览器通过。相关899条断言以冻结生产源码分批取得通过证据，36个共享机械差异逐项更新而未改旧基线或共享归一化。
+
+后续已统一收口：实现57ab2894，验收afaea916补齐减少动画过渡；最终98条Spin单元、13主题、7组生产SSR水合通过；45张自有视觉经清洁提交批准并全部exact，相关List57张保持exact。完整清单、当前生产指纹、命令及未验边界见 [Spin统一报告](../audit/2026-10-26-spin-contract-audit.md) 与 [最终证据](../audit/evidence/spin-acceptance.json)，公开改动见 [集中迁移](../migrations/spin-contracts.md)。全库最终门禁仍待全部单元完成后执行。
+
+
+## 2026-10-27 Statistic整组完整清单统一验收（已收口）
+
+Statistic / Timer / Countdown实现111fa024/633c219b，已集中修正原生#value、当前方向/非负事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider/两字号Token及标题/加载可访问语义。最终86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合、原7实际Demo/两组交互及28主题组合通过；UI/发布声明/Docs161条及SSG通过。严格L7通过，必要的单项预算修订及最终43649字节实测另有技术记录。
+
+清洁633c219b的36张自有视觉逐张审阅批准后全部exact、0像素差异，原163条批准记录未改。原17机械场景保留，加载态7项有意结构/ARIA变化另有精确记录；首次111fa024的33候选未批准。原完整清单逐项核对完成，无受阻或待裁决的本轮缺陷，最终c6fff66e文档已上线，33项发布检查、九项实际Demo及13项共享主题检查通过，[发布回执](../audit/evidence/docs-publication-statistic-closure.json)另记。见[完整清单](../audit/2026-10-27-statistic-contract-audit.md)、[统一证据](../audit/evidence/statistic-contract.json)、[集中迁移](../migrations/statistic-contracts.md)。
+
+## 2026-10-27 Docs共享示例主题链路（已上线并核验）
+
+完整盘点后修正CSS暗色与Vue源主题失配、非响应的系统偏好、临时query未清理及iframe水合src不一致；同树主题变化保留原生输入身份/值/焦点。实际暗色发现的List/QRCode Token示例浅底文字配色已同步修正，不新增公共接口。Docs161条、严格类型/SSG、五个Token消费者亮/暗及三组生命周期共13项、72组件代表页亮/暗144次生产渲染通过，零页面/Vue/资源错误；代表页渲染不等同所有Demo交互验收。范围、修前复现和未验边界见[清单](../audit/2026-10-27-docs-demo-theme-audit.md)及[证据](../audit/evidence/docs-demo-theme.json)。
+
+Skeleton已进入整组契约整改，当前实现与未验边界见后续阶段记录。内容来源清单当前528行、199候选，候选不是已确认缺陷；全库其他组件、基础包及最终同一提交全量门禁继续开放。
+
+
+## 2026-10-27 Skeleton整组实现里程碑（完整验收继续）
+
+完整盘点Skeleton与五子组件后，集中修正根attrs/style、当前配置与语义Props、块配置丢失、Image默认槽、八Token及实际RTL/减少动画；无根的非loading分支保留。26条源码行为失败和旧发布89项中的67失败已复现。当前关联360条四层、128相关类型、92项生产浏览器、18项SSR、6组水合及根/SFC/发布声明消费通过；UI完整构建及严格L7通过。必要源主题成本按技术原因只将Skeleton预算27→36KB，历史测量及其他预算/占比不变。
+
+原48机械场景保留并精确核对新增原生ARIA/attrs；Card/Statistic相关回归通过，原React参考未改。原八Demo与新增Token Demo的实际亮/暗及五组交互23项、四算法36组合已通过；自有39图、相关像素和完整清单最终收口仍开放，不代表全库完成。见[完整清单](../audit/2026-10-27-skeleton-contract-audit.md)、[统一证据](../audit/evidence/skeleton-contract.json)与[迁移](../migrations/skeleton-contracts.md)。
+
+
+## 2026-10-27 Skeleton及五子组件完整清单统一验收（已收口）
+
+实现e6be1625已推送。根attrs/style、当前Provider/块配置、完整Image/Node槽、八Token、实际RTL/减少动画及原生文本行高均已修正；原完整清单逐项复核完成。关联360条四层、128相关类型、92项生产浏览器、18项SSR、6组水合、发布声明/UI/严格L7通过；九实际Demo亮暗及五交互23项、四算法36组合通过。
+
+清洁实现的39张自有视觉逐张审阅批准后，与相关Statistic36图同次75项全部exact、0像素差异。原199条批准记录/PNG不变，原48机械场景和24参考图保留。Registry记录本单元completed/Apollo；历史其他completed不代表本轮全库审计完成。最终站点发布与线上回执另记；199内容候选、其他组件/基础包及最终同一提交全量门禁继续开放。见[完整清单](../audit/2026-10-27-skeleton-contract-audit.md)与[结构化证据](../audit/evidence/skeleton-contract.json)。
+
+
+## 2026-10-27 Result完整清单统一验收（已收口）
+
+核心实现ca5d2740、共享修复7e63e3e1已推送。七Props、五完整槽、六语义、四Token、当前Provider/原生attrs/ref、三异常插画与原十Demo已逐项验收。初期共享Button对比度使原Demo20/40、实际Docs13/23通过；根因修复后分别40/40、23/23全部通过，原场景和axe规则保留。
+
+Result99四层、87生产浏览器、8 SSR、5组水合证据保留；最终2352关联四层、398公开类型、根/SFC严格检查、发布声明与UI严格L7通过。39自有图经清洁7e63e3e1逐张审阅批准，Button/Result/QRCode114图全部0像素差异；原15机械场景与9参考图不变。当前范围无代码阻塞，Registry解除blocked；文档站已部署2bad0f31（工作流40435214689、Pages7348326300），线上Result23项、Button43项及主页面20卡片/进展页实际验证通过；全库审计继续。见[完整清单](../audit/2026-10-27-result-contract-audit.md)及[证据](../audit/evidence/result-contract.json)。
+
+### 2026-10-27 · Button完整契约及Result关联整改（完整清单已收口）
+
+入口是Result原Demo的primary文字对比度4.1:1；完整盘点扩到Button19 Props、两个槽、58既有Token、20原Demo和13个实际消费文件。初始97项行为回归7通过/90失败；97颜色组合×三态×四算法及四次axe共1168检查，378通过/790失败。当前已成组实现稳定内容宿主、当前Provider、加载调度/忙碌语义、Token消费、有效square与独立color/variant；Search、Dropdown、FloatButton关联调整，原65机械场景与全部原Demo保留。
+
+最终同一生产实现7e63e3e1的2352相关四层、398公开类型、根/SFC严格检查、147生产浏览器、51实际消费者、1168颜色、8 SSR与20组水合通过；20原Demo四算法80/80，实际站点43/43。39自有图逐张审阅批准，连同Result/QRCode共114图全exact；原238批准记录中237项及PNG不变，唯一旧Button图明确审阅后更新环境与可读前景。原65机械场景与27参考图保留，69份CSS/发布声明/UI严格L7及Docs161测试/SSG/部署探针通过。技术预算仅Button37→41/Input89→92KB，有实现依据且其他限制不变。当前范围无代码阻塞；文档站2bad0f31已上线并完成实际浏览器验证，回执见两组件证据；全库后续审计继续，不据局部结论称全库完成。见[完整范围](../audit/2026-10-27-button-contract-audit.md)、[证据](../audit/evidence/button-contract.json)和[迁移](../migrations/button-contracts.md)。
+
+### 2026-10-27 · Empty核心阶段记录（下方已统一验收）
+
+已完整盘点六Props/三个内容槽、四语义、Provider/语言/主题及DefaultRenderEmpty实际消费者。39项修前复现11通过/28失败，集中修复当前配置快照、合法image数据、完整槽/空宿主、双透明NaN、媒体布局与说明对比度；六原Demo、类型和双语文档同步更新。当前1151相关四层、20类型、根/SFC严格检查、50项生产浏览器、24 Demo主题、8 SSR与6组水合通过。自有视觉、实际Docs及最终清单仍在验收；见[范围清单](../audit/2026-10-27-empty-contract-audit.md)、[证据](../audit/evidence/empty-contract.json)和[迁移](../migrations/empty-contracts.md)。
+
+
+Empty核心提交193cc3bb已推送。关联验收复现Trigger/Portal丢失主题CSS作用域，已补当前Alias桥接且保留显式popupStyle优先级；4项修前全红/修后全绿，八类实际公共弹层40项及六类Empty消费者18组通过，实际Docs17项通过。共享层统一回归及清洁提交的自有视觉仍验收中，不关闭整单。
+
+
+### 2026-10-27 · Empty完整清单统一验收
+
+实现193cc3bb/12cf9fee已推送：六Props/三原生完整槽/四语义、当前配置/方向/语言/源Alias、合法图片与自然布局/对比度、透明合成及六原Demo已逐项验收。关联Trigger主题作用域已修，22组2856四层与434类型、54生产浏览器、40实际popup、18消费者、24 Demo主题、8 SSR/6水合组、17实际Docs与严格发布检查通过。
+
+清洁12cf9fee的45自有视觉逐张审阅批准；连同List57张共102张全部diffPixels=0，原315记录/PNG及机械参考不变。当前范围已收口；最终Docs/Registry记录及线上发布回执继续写入[完整清单](../audit/2026-10-27-empty-contract-audit.md)和[证据](../audit/evidence/empty-contract.json)。全库仍继续，360/1332自有图已批准，余972项及最终全量门禁不据此宣称完成。
+
+
+Empty验收提交230fe3cf已上线；工作流40448643538、Pages7350216642成功。线上17项真实Demo/交互/六卡片及200进展页验证通过，Demo既有404 SPA兜底明确登记。实现、验收与授权文档发布已完成，回执见empty-contract.json；全库其他单元继续。
+
+
+### 2026-10-27 · Tag 三件套完整单元成组整改（验收中）
+
+按当前源码盘清公开字段、完整槽/语义、事件/模型/ref、当前 Provider/主题/语言/禁用、原生 attrs/style、颜色、共享 closable 与12原Demo后，建立32条5通过/27失败的红灯，颜色111通过/185失败、链接关闭4通过/5失败和真实SFC类型红灯。已集中修正稳定完整内容与所属原生按钮/内部链接、Vue事件与强类型模型、当前配置及三个已有Token；12Demo和双语API同步。阶段Tag128/128、相关共享629/629、生产颜色296/296、关闭9/9、原Demo57/57、SSR水合17通过，全库公开类型2289和根严格检查通过。安装类型精确化后的两处List测试显式实例化string，保留全部原场景/断言。当前发布产物、48真实关联Demo、Docs和45张自有视觉仍验收中，不声明Tag或全库全部完成。见[完整清单](../audit/2026-10-27-tag-contract-audit.md)、[证据](../audit/evidence/tag-contract.json)和[迁移](../migrations/tag-contracts.md)。
+
+Tag成组实现阶段补齐Select关联激活键红绿复现和默认CSS压缩后的实际色值检查；Tag131、相关不重复1088、全库公开类型2289、真实发布SFC、消费者50、颜色296及严格L7全部通过。清洁45张Apollo视觉与最终Demo/Docs仍待验收；未把启发式内容候选自动当成新公共API。
+
+
+### 2026-10-27 · Tag 三件套完整清单统一验收
+
+实现c49f300b已推送。一次统一运行1088/1088（Tag131，List153、Listy60及共享/实际消费者均纳入）、全库类型门禁2289、真实发布SFC/refs、严格L7通过。实际压缩颜色296、关闭9、消费者50、原Demo57（含真实指针拖拽）、SSR水合17、Docs29通过。45张清洁Tag自有图逐张审阅并原始RGBA全一致；连同List57图，102项按既有门禁0差异。List三加载SVG的原始AA差异明确登记，原360批准记录/PNG及13参考文件不变，未放宽比较设置。当前全库405/1368自有图已批准，963仍缺；本单元收口不代表其他组件/基础包或全库最终门禁通过。授权文档发布回执随后补记。见[完整清单](../audit/2026-10-27-tag-contract-audit.md)、[统一证据](../audit/evidence/tag-contract.json)及[迁移](../migrations/tag-contracts.md)。
+
+
+Tag验收提交db24a00c已上线；工作流40461805810与Pages7352080560成功。线上29项真实Demo/交互/十二卡片及200进度页通过，24条Demo既有404 SPA兜底明确登记。实现、验收与授权文档发布完成，回执见tag-contract.json；全库其他单元继续。
+
+
+### 2026-10-27 · Avatar / AvatarGroup 完整单元收口
+
+实现9af2a24f、共享ef832304、视觉/Docs证据8a2410d9已推送。Avatar143通过；最终相关273文件4484条中4461通过、23为Typography既有失败，已在独立原db24a00c和4e2d9d04复现相同23条，没有排除测试或假报整批全绿。72类型、42源/发布浏览器、46原Demo主题交互、17 SSR水合、16消费、三包严格L7通过；CI全包拓扑L7再验151项0失败/0pending。48清洁自有图逐张批准/原始RGBA一致，相关105视觉通过，原405批准/PNG和42参考文件不变。Docs161及27本地/线上通过，workflow40486797828/Pages7355783533发布成功；20条Demo深链的既有404 SPA边界明示。Image按用户接受功能成本的裁决，仅预算更新80KB，其他预算/比较设置不变。全库453/1380图批准，927待审；不是全库最终通过。见[完整清单](../audit/2026-10-27-avatar-contract-audit.md)、[证据](../audit/evidence/avatar-contract.json)、[发布](../audit/evidence/avatar-docs-publication.json)及[迁移](../migrations/avatar-contracts.md)。
+
+### 2026-10-27 · Typography完整契约审计（进行中）
+
+关联整批发现provider-reactivity.test.ts32条9通过/23失败，涉及五入口对象/函数替换、样式/类及业务宿主身份；Avatar前db24a00c与共享修复前4e2d9d04独立运行均为相同23失败，相关Typography/context/semantic helper源码一致。历史d1e9fb11的32通过报告不替代当前红灯。保留原断言，下一步先完整盘点Typography全部Props/Slots/Emits/model/expose、响应式/Provider/样式/关联子组件，再按根因成组修复，不只修这23个断言。见[基线证据](../audit/evidence/typography-provider-baseline-2026-10-27.json)。
+
+**Provider红灯裁定更正**：真实生产Chrome的五入口/编辑/富内容/原Demo全部通过；仅将该32条测试的Teleport默认替身改为真实Teleport，保持全部原断言与生产源码不变后，32/32通过。原23失败来自测试替身重挂载，不能认定Provider生产缺陷；原4484整批红灯作为历史真实结果保留，不改写。完整审计继续处理既有autoSize、两个标题Token、当前语言、attrs、复制/编辑/省略等实际链路，见[完整清单](../audit/2026-10-27-typography-contract-audit.md)。
+
+**2026-10-28 Typography功能阶段**：完整盘点后，复制/编辑/测量/原生链接与可访问性、当前语言与两Token、完整配置节点、关联Table当前主题变量已成组实现。1178相关四层、110类型、15生产契约、76实际Demo主题/交互及12 SSR/水合通过，发布声明与严格UI L7通过；自有视觉和Docs统一验收仍进行中。见 [完整清单](../audit/2026-10-27-typography-contract-audit.md) 和功能阶段证据；不标记全库收口。
+
+**2026-10-28 Typography完整清单收口**：冻结68547d9a（含c4883402/c75395fc及关联Table230892d9）。1186相关四层、110类型、17生产契约、76 Demo主题/交互、46消费渲染、12 SSR/水合、发布模板/根严格/UI L7通过；重拍42张逐张批准并全部原始RGBA exact，原453记录/PNG及所有参考证据不变。全库495/1398图批准、903待验收，其他审计继续；具体边界与最终Docs回执见完整清单及 typography-final-acceptance.json。
+
+
+Typography最终验收提交22186737已上线；workflow40670124684构建/Pages成功，CI文档161测试及全包L7 151项0失败0待定，线上36项真实页面/交互通过。28条Demo深链既有404 SPA回退明确保留，物理API/进展页200；回执见[typography-docs-publication.json](../audit/evidence/typography-docs-publication.json)。本单元交付完成，全库其他组件与最终统一门禁继续。
+
+
+### 2026-10-28 · Badge / Ribbon 完整契约功能阶段（统一验收中）
+
+当前清单盘清后建立32项8通过/24失败及146真实浏览器42通过/104失败，集中修正原生根style/ref、完整内容/类型、当前Provider/九Token、数字/偏移/reduced-motion与实色前景。相关1250四层、104类型、根严格、157发布浏览器、64实际Demo主题/交互、12 SSR水合、16消费渲染、13Demo发布声明与严格UI L7通过；原26规格/HTML与18参考图保留，仅两项自定义色有限差异。产物预算按功能成本仅Badge37→47KB。自有视觉和Docs最终发布仍待验收，不宣布整单元或全库完成。见[完整清单](../audit/2026-10-28-badge-contract-audit.md)、[阶段证据](../audit/evidence/badge-functional-stage-2026-10-28.json)和[迁移](../migrations/badge-contracts.md)。
+
+完整VNode计数的15项形态/空内容/标题复现与两个发布浏览器红灯已纳入本单元，统一以原生宿主和Vue空内容判定修复；条件业务组件不重挂载，旧节点属性断言保留。最终157浏览器与相关1250继续通过，细节见同一清单及指示器宿主复现证据。
+
+样式矩阵已集中收口：7 条复现修前 6 失败，172 发布浏览器修前 14 失败，修后全部通过；相关1257、类型104、64 Demo、12水合、16消费及UI L7通过。静态 @scope 保留消费构建后的原生方向，FloatButton 点定位同步；核心 Docs 已发布并线上32通过。当前冻结42张自有视觉并复核关联Avatar图片，最终发布仍待验收，见 badge-indicator-style-stage.json 与 badge-core-docs-publication.json。
+
+2026-10-28 Badge本地完整清单已统一验收：冻结d0bf2cef视觉42/42原始RGBA exact，Avatar48/48 exact；原495项492完全不变，三张已审前景更新各26像素。1257/104/172/64/12SSR/16消费/13Demo发布模板/UI L7及Docs161+32通过。最终Docs发布与线上回执待收口，详见[最终验收](../audit/evidence/badge-final-acceptance.json)。当前537/1422视觉批准、885待验收，全库其他整改单元继续。
+
+2026-10-28 Badge最终回执：验收47b98296、部署40701370080成功；CI Docs161/拓扑L7 151零失败零待定，线上32零错误/26既有SPA回退。完整单元已收口，其他审计继续。详见badge-docs-publication.json。
+
+### 2026-10-28 · 三路并行源码保存点（未完整验收）
+
+Descriptions cabc97c8、Timeline/Steps 48ca2313、Breadcrumb adec7ade 已按各自完整清单成组实施；Overlay延迟失效89afa186同步修复。合并源码73文件964运行时、10文件122类型、根严格、Descriptions源码消费类型通过。Descriptions真实Chrome62与水合10通过；Timeline源码浏览器17通过；Breadcrumb14项13通过/1失败，零浏览器错误。唯一真实红灯是共享Menu聚焦href项后Enter只关闭、不导航，属于本轮必修，保留复现，不归后续优化。
+
+三单元发布UI/声明消费、完整Demo主题矩阵、Docs/正式Apollo视觉及全库最终同提交门禁尚未执行；不能按源码绿灯标为全部完成。源码类型的两处集成红灯已修正，合并122类型通过。接续见[重启保存点](../audit/2026-10-28-restart-handoff.md)与[结构化证据](../audit/evidence/parallel-source-checkpoint.json)。
+
+### 2026-10-29 · 五组源码里程碑与发布产物验收
+
+Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Spacee0062edd已分别提交。修复覆盖当前原生内容/身份、Provider/Token、真实Demo与对比度、横向Timeline自然布局、Grid响应式字段和Space紧凑上下文。共享Menu原生操作e000152f已修复原Enter导航红灯（576相关运行时、11真实浏览器）；响应式观察器1588dd11隔离当前Provider断点并清理订阅（717相关消费回归），Select356161b4接入当前Compact尺寸与背景。各单元的完整清单、红绿证据与迁移说明分别保留；不同测试集合有交集，不累计为全库门禁。
+
+根严格检查及冻结e0062edd的UI/Overlay构建通过。五路发布JS/公开CSS、声明消费、真实Demo和SSR/水合验证并行执行中；正式原生视觉297张待审，原有537张批准不变，当前计划1602张、1065待验收。完整交付仍为13/72，五组未计入完成。Docs与最终同提交全库门禁尚待对应阶段执行；[实时完整清单](../audit/2026-10-28-global-audit-status.md)持续记录边界。
+
+公开按需CSS新增真实红灯：Timeline单独样式缺Steps基础布局，完整69入口/72组件正分五组追踪实际内部消费与已嵌入规则；全量CSS通过不代表按需入口通过。范围与验收见[共享CSS清单](../audit/2026-10-29-stylesheet-dependency-audit.md)。
+
+五组源码阶段Docs已发布：b485d136 / 部署40726245692成功，线上32/32零页面/Vue错误（22个既有Demo深链SPA回退）；首次单资源503已恢复，原命令重跑通过。按需CSS和正式视觉仍开放，见five-unit-docs-publication.json。
+
+### 2026-10-29 · 公共按需样式与Upload进度发布验证
+
+完整盘点72组件/69样式入口后，`3214ee10`补齐34组件的73条实际内部CSS依赖及Tabs共享动画片段；`76eb766a`将七条全局链接规则由Select移入基础层，消除按需/全量外观依赖。发布UI构建、严格L7 11项及69份实际CSS一致性通过；独立JS/CSS的24对真实浏览器几何/paint/rawRGBA全一致，原6个Breadcrumb差异归零。源码50条组合/前缀回归通过。证据与清单见[共享CSS报告](../audit/2026-10-29-stylesheet-dependency-audit.md)。
+
+`2ef32069`将Upload无效进度替身改为实际Progress，六个现有字段、动态清除、受控/非受控与ARIA均补齐；源码258运行时/48类型，发布全量与按需CSS各75浏览器断言通过。当前Upload137.736KB与旧Upload+Progress137.763KB相当，`a47d96ec`仅按真实功能成本修正Upload预算，其他预算与比例约束保留。[窄单元报告](../audit/2026-10-29-upload-progress-audit.md)，不宣称完整Upload/Progress收口。
+
+正式交叉审图另确认Space紧凑主题的Input字号/padding仍取默认Token，Addon underlined与borderless同绘制；两项纳入本轮必修，旧160绘制矩阵不足以证明底线语义。当前Source里程碑保留，整单元仍开放。四个其他组件222张新候选与原537张回归在清洁独立快照验收中，完整交付仍13/72、已批准视觉仍537/1602。
+
+四组件正式视觉里程碑：清洁a47d96ec的Descriptions51、Breadcrumb51、Timeline78、Grid42共222张已逐图审阅批准；其中171张通过相同尺寸/rawRGBA继承此前实际审图，Breadcrumb新51张逐张查看。原1692份PNG和537条批准记录全部未改，当前759/1602批准、843待验收。批准完整性222项检查通过；整单元Docs验收仍待对应阶段，交付计数暂保持13。[逐图证据](../audit/evidence/four-unit-native-visual-acceptance.json)。
+
+### 2026-10-29 · 四组件统一验收完成
+
+Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验收。52个发布Demo模板、222张正式审阅批准及批准后清洁重渲染raw精确、既存537回归、69样式产物与真实CSS消费者、根严格/UI L7及Docs161+32分别通过，原1692份PNG保持。完整交付计数由13升17/72，759/1602视觉批准。Addon下划线2f47f423已单独源/发布验收，Space仍待Input当前主题/autoSize/覆盖链与最终75图，不提前标全完。[最终范围与证据](../audit/evidence/four-unit-final-acceptance.json)。
+
+四单元进展已实际发布：faa80fed / [部署40755814408](https://github.com/apollocmh/apollo-design-ui/actions/runs/40755814408)成功；CI全部包构建、L7 151项零失败/待定（67不适用）、Docs161通过。线上原32条通过且零页面/Vue错误；验收脚本修正每次导航强制中文的问题后，新增可见中英文标题与17单元计数断言，两个实际语言都通过。原断言保留，22个Demo深链404为既有SPA回退。[线上回执](../audit/evidence/four-unit-docs-publication.json)。
+
+### 2026-10-29 · Flex / Alert / Layout源码里程碑与共享来源整改
+
+完整盘点后，Flex `13ba8d0d`、Layout家族 `e1ff1b47`、Alert/ErrorBoundary `29cba1e0` 已分别提交。Flex源码120回归/60浏览器；Layout198回归/35浏览器及全部11Demo；Alert142回归/29浏览器及全部15Demo的180组场景通过。新增typed Slots/Emits、当前Provider/native attrs、焦点/生命周期/Token和迁移说明同步；独立严格消费及所属类型均有实际exit 0证据。完整范围分别见三份2026-10-29组件清单，正式发布产物与视觉/Docs仍待统一验收，不能按源码阶段标整单元完成。
+
+共享主题来源已完整补盘844个UI运行文件中的102个主题导入，确认24条Alias writer及关联数据/Portal消费链。`5c527297`补明确来源元数据及最近Provider继承，`134ddbf7`修正数据消费者越过最近ThemeProvider；producer/reader相关100项通过。显式空ThemeProvider仍是默认主题来源，不能等同无来源；无theme的ConfigProvider也不能覆盖CSS-only作用域。消费端按同一根因成组整改中，Input主题/19既有字段/尺寸与autoSize关联链继续；完整Input公开API及Theme基础包其它生命周期能力没有据此关闭。范围见[主题来源清单](../audit/2026-10-29-theme-source-presence-audit.md)。
+
+本组原生视觉计划Flex42、Alert60、Layout51共153项，全部51个历史参考场景保持。当前计划1704张、批准仍759张、945待验收，完整交付仍17/72。Registry将三组件改为testing，Input登记原有19字段而非新增能力。当前源码/发布/视觉/线上证据严格分阶段，不把本次局部门禁称为最终同一提交全库门禁。
+
+### 2026-10-29 · Space / Flex / Alert / Layout本批完整收口
+
+四个完整单元已按各自清单统一验收：关联1978/118、Space发布87及15 Demo严格消费、Flex发布60/SSR4/6 Demo、Alert发布29/180 Demo/60状态、Layout发布95 Demo/51状态/11 Demo严格消费通过；Layout普通35契约按实现未变继承，不冒充重跑。228张自有视觉已批准且批准后严格rawRGBA精确；旧759回归通过，756严格精确及3个既有List loading差异如实保留，原记录/PNG不变。14dist/1982实际发布输入与Docs161+56分别通过。
+
+当前完整交付21/72、其余51组件仍开放；987/1704视觉批准、717待验收。Space关联Input当前主题/尺寸/style/autoSize窄链完成，Input完整公开API仍open；Theme来源专项不代表13基础包逐包完成，全库最终同一提交门禁仍待执行。本地Docs通过不等同已经部署，最终线上回执另记。详见[本批最终范围与证据](../audit/evidence/space-flex-alert-layout-final-acceptance.json)。
+
+本批线上交付完成：`ea36bd64` 的Docs部署40790318839成功；CI严格类型/Docs161及全部包/L7通过，真实线上56/56与中英文21/72计数通过，错误零。38个既有Demo深链接404→SPA恢复单独记录，不掩盖其他网络或运行错误。见[正式线上回执](../audit/evidence/space-flex-alert-layout-docs-publication.json)。
+
+### 2026-10-29 · Theme完整源码及自身发布消费里程碑
+
+完整盘点19源码/56根导出后，成组修复上下文深写与app/SSR隔离、Provider动态启停/目标/前缀、SSR副作用、多scope所有权、空算法/undefined覆盖和精确类型；直接移除无消费的theme.prefixCls。发布模板复核同时补齐原生DOM ref的null声明，未增加新的运行时行为。109运行、16类型场景/11负例、19真实发布浏览器、196消费与48 Node SSR通过；1978关联源回归、根严格类型及新鲜Theme/UI构建/L7分别有证据。仅9条体积预算各按实测增加1KiB，64条、历史测量与30%全量占比保持。
+
+本条记录源码及包自身消费，不宣称整个Theme/ConfigProvider/Tree整改单元或全库已完成。组件完整交付仍21/72，其余51与13基础包当前完整复核继续；CP/locale/form-core/icons关联链与Divider/Collapse/Input仍实施中。详见[范围、红绿与剩余边界](../audit/evidence/theme-foundation-source-acceptance.json)。
+
+
+### 2026-10-29 · 本批隔离验证的新线索与暂停边界
+
+- **FIX，另案已验证缺陷：不支持contrast-color的Button回退**。Chromium145的四组控制（无Provider、ThemeProvider{}、继承ConfigProvider、显式空theme）均为白字/默认蓝背景、4.1对比度；Button与样式入口源码逐字等于已提交版本，非当前ConfigProvider投射回归。既有正式视觉环境为系统Chrome150，不能据此声明旧浏览器通过。保留[同环境颜色/能力及源码控制证据](../audit/evidence/button-contrast-fallback-observation.json)；不称优化，不在当前CP结尾展开完整Button或派发新任务。
+- **VERIFY，额外全源码strictTemplates线索**。隔离617ae554加Divider/Collapse的额外检查在BadgeIndicator(data-show)、ColorHexInput/PanelPicker(onChange)、CheckableTagGroup(aria-label)出现四条内部模板诊断。原完整根strict TypeScript通过；本两单元源码SFC按真实根导出限域、发布完整入口SFC也通过。没有忽略诊断或降低既有门禁，不能宣称全库strictTemplates通过；当前并行Source变化后须重新判别，不能当最终当前缺陷数。见[本批里程碑证据](../audit/evidence/divider-collapse-published-milestone.json)。
+
+用户要求仅收尾当前批次，统一交付后暂停；上述另案不产生下一批自动派发。完整交付数仍21/72，最终同提交全库门禁依旧开放。
+
+
+## 2026-10-29 本批完整单元收口与暂停
+
+Divider、Collapse/Panel、完整Input六族和ConfigProvider已按当前源码完整清单成组整改并统一验收；包括D03内容渲染入口的原生插槽迁移、F07关联Panel内容身份，以及真实Event/Expose、当前主题/语言/表单/图标/通知消费链。根规范、实现、类型、原Demo和迁移同步，原owner冻结与首轮失败证据保留。冻结生产源码的全库四运行project、2309类型、严格类型/L7、发布消费、1215张已批准图关联回归及最终Docs均记录于[本批验收](../audit/evidence/current-batch-final-acceptance.json)。当前完整交付25/72；其他47组件与13基础包完整复核仍开放。
+
+按用户要求，本批交付后暂停，不派发新单元；Tree保持只读清单。既有Button在不支持contrast-color浏览器中的独立fallback对比度缺陷、D04/D05及其他开放项保留原边界。全部整改结束后的最终同提交全量门禁仍待执行。
+
+
+### 2026-10-29 用户新增反馈：Button亮色primary字色（已验收、上线并暂停）
+
+用户要求直接核对Ant Design后修正，无需配色裁决。已复现默认primaryColor/dangerColor被主题投射跳过，自动前景使浅色primary变成黑字。现在恢复默认colorTextLightSolid，三态保持白字；默认/预设实心色保留自动前景，显式组件/原生前景优先。按钮局部主/危险实色背景限制过高亮度，维持既有4.5:1门禁，全局Alias不变。可失败复现、完整范围与本次证据见[前景修复](../audit/2026-10-29-button-foreground.md)。实现00c6ecb6与两个关联Search Demo修复96ce538c已推送；1499关联运行、161发布浏览器、1168颜色、80原Demo、51真实消费者、SSR8/水合20及318原生视觉通过，54预期改色逐张审阅、264原RGBA不变。Chromium145不支持contrast-color时，实际主/危险×亮暗×三态12/12白字与4.5:1通过，原独立primary回退观察中的对比度失败已修复；不代表旧浏览器完整矩阵。本条窄修交付后恢复暂停，不派发新单元，线上7c95389e / 发布40850896942成功；Button43与Search2复验全通过，最终同提交1501相关运行通过。见[正式回执](../audit/evidence/button-foreground-publication.json)。
+
+## 2026-11-01 架构整改完成，冻结验收差额
+
+剩余架构任务已完成；当前组件、基础包及保留的历史交付状态统一见 [本轮状态](../../registry/vue-native-audit.json) 和 [派生进度页](../../packages/docs/content/guide/audit-progress.md)，上方旧批次数字保留原日期与原义。
+
+冻结候选 `7002592a` 沿用 `3b99ec0d` 的同一份产物；提交差额只有三个文档浏览器脚本，生产源码、依赖、配置和 Demo 未变。全库运行时与覆盖率、严格类型及公开类型、发布消费者、文档类型/测试通过，六个既有文档浏览器项目均有实际退出码 0 的证据。脚本修正按需加载示例的激活与水合等待，并以标题和弹层的实际位移验证跟随，保留原 5px 容差、动效和错误检查。
+
+最终验收仍未通过：L7 仅 B6 旧体积预算超标（13/73），按用户要求保留结果且不为压字节继续返工；完整视觉选择 1875 项，其中 660 项缺少已批准基线，尚未进入全量像素比较。Typography 的 42 项已批准用例全部 exact，只是局部证据。未修改预算、覆盖率或像素阈值，也未自动接受缺失基线；各维度命令、结果、复用依据和早先失败均保存在唯一状态的 `finalAcceptance.gates`。
+
+## 2026-11-01 视觉缺口收口与剩余门禁
+
+660 个缺失 Apollo 基线已由五个独立目录分组逐张审阅、必要真实交互及修正后补拍，再由主任务统一接受。产品修复为 DatePicker 窄屏时间/范围面板换行（`be303e4f`）和 Pagination 窄屏总数挤压/越界（`40a8212b`）；原失败截图及历史证据保留。未重做架构、压缩体积或降低阈值。
+
+冻结 `1adf76dc` 的完整矩阵实际执行 1875 项，1869 通过；Timeline 两种 compact 主题的 6 项按当前公开“未指定 dotSize 沿用内部 Steps 主题值”核对后归为预期变化，主任务与子任务逐张查看新图后更新。`ea70e52d` 的 6 项官方定向复测全部通过，合并未变输入的 1869 项得到完整 1875/1875，无遗漏、重复或缺失基线。首次非零退出及精确复用范围留在唯一状态的 visual gate，不把接受图片当作比较通过。
+
+整库验收仍未完成：本次 UI L7 为 11 项中仅 B6 失败，13/73 超原预算、全量 2236.7 KB，按用户要求保留。 当前九维中八项通过，样式维度仍因 B6 旧预算失败，因此最终状态为 failed，未标记整体验收完成。
+
+本轮冻结验收对应 `41ec765e`；UI / Docs 共用 `26e5ddd0` 构建产物且摘要未变。其后仅审计记录、定向浏览器脚本及已审阅图片变化，未变检查沿用真实来源，相关改动已单独复测。
+
+覆盖率首轮 786 文件 / 17335 条中 5 条原 5000ms 主题超时（其余 17330 通过）；相关 161 条定向复核通过后，在冻结 `41ec765e` 上独立复跑完整四项目覆盖率，786 文件 / 17335 条全部通过，exit 0 / signal null，用时 25.1 分钟；statements 92.06%、branches 83.82%、functions 91.82%、lines 93.03%。原阈值和 5000ms 超时未变，首次失败保留。
+
+Docs 类型/测试及六个浏览器项目现均通过。Stage2 先激活真实按需 Demo；Menu 首次 1/28 几何失败确认来自默认展开会话保留合法翻转，原首选位置断言移到已有关闭→重开后，正式 28/28 通过，全部原断言、250/150/500ms 与 3px/5px 均保留，定位产品代码未变。首次失败仍留证。
+
+原 85 项架构任务、25 个历史完整交付及其证据保持原义；本轮状态和命令/退出码见 [唯一台账](../../registry/vue-native-audit.json)，展示仍由它生成。

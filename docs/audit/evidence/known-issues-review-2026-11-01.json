@@ -1,0 +1,1446 @@
+{
+  "sourceCommit": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+  "scope": "Current known-issue verification only; no new component architecture audit or production change.",
+  "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+  "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+  "layering": {
+    "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node /tmp/apollo-tooltip-css-layer-probe-31a1eece.mjs",
+    "execution": {
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 61592.4,
+      "meaning": "Diagnostic measurement completed; exit0 does not mean every public scenario works.",
+      "browser": {
+        "version": "150.0.7871.125",
+        "channel": "系统 Chrome"
+      },
+      "clock": "normal real browser clock; no STABILIZE_INIT",
+      "imports": "Existing published @apollo-design/* dist and existing UI/theme CSS; temporary Vite cache/output only under /tmp; no package or Docs build."
+    },
+    "scope": [
+      "Parent Tooltip → nested Tooltip",
+      "Parent Popover → nested Tooltip",
+      "Dedicated numeric zIndex; numeric Provider component token; numeric/calc/var styles.root; native var style; explicit numeric child control",
+      "Actual computed z-index, public ZINDEX_KEY injection probe, overlap rectangles, elementFromPoint/elementsFromPoint and four manually viewed PNGs"
+    ],
+    "contracts": {
+      "zIndexProp": "number only; expression strings are rejected by current public types and were not passed to this prop.",
+      "styleInputs": "TooltipSemanticType.styles.root is Vue CSSProperties; current native class/style target popup root and override semantic root styles.",
+      "numericContext": "useZIndex accepts numeric custom getter and provides ComputedRef<number>; CSS expressions are not parsed or measured into this context."
+    },
+    "matrix": [
+      {
+        "parent": "Tooltip",
+        "input": "prop-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "2500",
+        "childComputedZ": "2600",
+        "childProvidedZ": "2600",
+        "cssLexicalValue": "2500",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": true,
+        "parentCoversPoint": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "input": "theme-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "2600",
+        "childComputedZ": "2700",
+        "childProvidedZ": "2700",
+        "cssLexicalValue": "",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": true,
+        "parentCoversPoint": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "input": "semantic-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1170",
+        "childComputedZ": "1270",
+        "childProvidedZ": "1270",
+        "cssLexicalValue": "2500",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "input": "semantic-calc",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1170",
+        "childComputedZ": "1270",
+        "childProvidedZ": "1270",
+        "cssLexicalValue": "calc(2500)",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "input": "semantic-var",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1170",
+        "childComputedZ": "1270",
+        "childProvidedZ": "1270",
+        "cssLexicalValue": "var(--probe-parent-layer)",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "input": "native-var",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1170",
+        "childComputedZ": "1270",
+        "childProvidedZ": "1270",
+        "cssLexicalValue": "var(--probe-parent-layer)",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "input": "semantic-calc-child-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1170",
+        "childComputedZ": "2600",
+        "childProvidedZ": "2600",
+        "cssLexicalValue": "calc(2500)",
+        "samplePoint": {
+          "x": 468.5078125,
+          "y": 257.640625
+        },
+        "childOnTop": true,
+        "parentCoversPoint": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "prop-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "2500",
+        "childComputedZ": "2600",
+        "childProvidedZ": "2600",
+        "cssLexicalValue": "2500",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": true,
+        "parentCoversPoint": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "theme-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "2600",
+        "childComputedZ": "2700",
+        "childProvidedZ": "2700",
+        "cssLexicalValue": "",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": true,
+        "parentCoversPoint": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "semantic-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1130",
+        "childComputedZ": "1230",
+        "childProvidedZ": "1230",
+        "cssLexicalValue": "2500",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "semantic-calc",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1130",
+        "childComputedZ": "1230",
+        "childProvidedZ": "1230",
+        "cssLexicalValue": "calc(2500)",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "semantic-var",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1130",
+        "childComputedZ": "1230",
+        "childProvidedZ": "1230",
+        "cssLexicalValue": "var(--probe-parent-layer)",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "native-var",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1130",
+        "childComputedZ": "1230",
+        "childProvidedZ": "1230",
+        "cssLexicalValue": "var(--probe-parent-layer)",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": false,
+        "parentCoversPoint": true,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "input": "semantic-calc-child-number",
+        "parentComputedZ": "2500",
+        "parentProvidedZ": "1130",
+        "childComputedZ": "2600",
+        "childProvidedZ": "2600",
+        "cssLexicalValue": "calc(2500)",
+        "samplePoint": {
+          "x": 472.5078125,
+          "y": 263.640625
+        },
+        "childOnTop": true,
+        "parentCoversPoint": false,
+        "measurementSucceeded": true
+      }
+    ],
+    "findings": [
+      {
+        "id": "tooltip-popover-css-expression-descendants",
+        "classification": "explicit_support_limitation_confirmed",
+        "phenomenon": "calc(2400 + 100) and var(--probe-parent-layer) are valid public root style values and resolve to2500 in Chrome, but remain outside numeric descendant context. Tooltip child1270 / Popover child1230 is covered at overlapping content; elementFromPoint hits parent. Native var style behaves the same.",
+        "impact": "A nested tooltip inside a popup whose high layer is supplied by CSS expression can be visually hidden and fail hit testing.",
+        "existingBoundary": [
+          "packages/portal/README.md:68",
+          "docs/foundation/portal-contract.md:13",
+          "packages/ui/src/mentions/index.zh-CN.md:150"
+        ],
+        "disposition": "Keep as explicit deferred integration boundary; do not mark fixed because numeric consumer bridges were delivered."
+      },
+      {
+        "id": "tooltip-popover-numeric-root-style-context",
+        "classification": "confirmed_defect",
+        "phenomenon": "The same hiding is also reproduced with styles.root.zIndex=2500 as a plain number: parent DOM2500 while provided context stays1170 (Tooltip) or1130 (Popover), child stays1270/1230. Therefore the remaining observation is not limited to nonnumeric CSS expressions.",
+        "impact": "High numeric semantic popup root overrides are accepted and applied but automatic nested Tooltip layer does not follow; not explained by the documented expression-only exception.",
+        "disposition": "Record separately from the expression support limitation. No component was changed in this read-only task.",
+        "existingSupportedControl": "Use dedicated numeric zIndex prop or a numeric component Token for inherited layers; explicit child zIndex2600 also makes the calc parent case visible."
+      },
+      {
+        "id": "numeric-prop-and-provider-token-control",
+        "classification": "verified_currently_working",
+        "phenomenon": "Both parent kinds at zIndex prop2500 provide2500 and render child2600 on top. A numeric ConfigProvider component zIndexPopup2500 renders parent2500 and child2700 on top. The elementFromPoint result is the actual child.",
+        "disposition": "Retain the valid numeric channel and current theme/provider evidence; do not rewrite it as a global layer regression."
+      },
+      {
+        "id": "other-consumers-and-host-boundaries",
+        "classification": "not_verified_in_this_scope",
+        "phenomenon": "No new audit of Dropdown/Picker/Mentions/Image/Select, Popconfirm, SSR, ShadowRoot, iframe or arbitrary external stacking contexts.",
+        "disposition": "Existing evidence keeps its original scope; this14-case probe is not a whole-library verdict."
+      }
+    ],
+    "rootCause": [
+      {
+        "file": "packages/ui/src/tooltip/Tooltip.ts",
+        "line": 273,
+        "meaning": "Numeric useZIndex getter reads only dedicated props.zIndex."
+      },
+      {
+        "file": "packages/ui/src/tooltip/Tooltip.ts",
+        "line": 303,
+        "meaning": "Provider and local semantic styles merge separately."
+      },
+      {
+        "file": "packages/ui/src/tooltip/Tooltip.ts",
+        "line": 350,
+        "meaning": "Semantic root and native styles normalize into popupStyle after numeric context selection."
+      },
+      {
+        "file": "packages/ui/src/popover/Popover.ts",
+        "line": 130,
+        "meaning": "Popover injects its current numeric theme base into the Tooltip implementation."
+      },
+      {
+        "file": "packages/ui/src/popover/Popover.ts",
+        "line": 267,
+        "meaning": "Dedicated numeric prop forwards independently from rootStyles forwarded at282."
+      },
+      {
+        "file": "packages/ui/src/_internal/trigger.ts",
+        "line": 731,
+        "meaning": "Actual DOM style uses numeric zIndex followed by popupStyle override, preserving the supplied CSS expression/number."
+      },
+      {
+        "file": "packages/portal/src/use-portal.ts",
+        "line": 294,
+        "meaning": "Numeric custom getter computes pair; pair[1] is provided at313, without CSS resolution."
+      }
+    ],
+    "history": [
+      {
+        "commit": "742c121f",
+        "title": "fix(portal): align consumer popup styles with inherited layers",
+        "scope": "Numeric bridges for Dropdown/DatePicker/RangePicker/TreeSelect/Mentions/Image; does not fix Tooltip/Popover styles.root context. Expression limitation explicitly preserved."
+      },
+      {
+        "commit": "ce79b91c",
+        "title": "fix(portal): align inherited diagnostics and release shadow containers",
+        "scope": "Preserved diagnostic-base and resource work; not a CSS expression-to-number bridge."
+      },
+      {
+        "commit": "0a2dea13",
+        "title": "fix(overlays): use Vue CSSProperties throughout semantic styles",
+        "scope": "Current legal semantic CSSProperties input contract."
+      }
+    ],
+    "verification": {
+      "measurements": 14,
+      "allMeasurementsCompleted": true,
+      "issueObserved": true,
+      "consoleErrorsAndVueWarnings": [],
+      "environmentWarnings": {
+        "kind": "Vue esm-bundler compile-time feature flags not explicitly defined by the temporary probe",
+        "occurrences": 14,
+        "rawPreserved": "/tmp/apollo-tooltip-css-layer-probe-31a1eece.log",
+        "notTreatedAsProductFailure": true
+      },
+      "screenshotsActuallyViewed": [
+        "/tmp/apollo-tooltip-css-layer-probe-31a1eece/Tooltip-prop-number.png",
+        "/tmp/apollo-tooltip-css-layer-probe-31a1eece/Tooltip-semantic-calc.png",
+        "/tmp/apollo-tooltip-css-layer-probe-31a1eece/Popover-prop-number.png",
+        "/tmp/apollo-tooltip-css-layer-probe-31a1eece/Popover-semantic-calc.png"
+      ],
+      "sourceHashesBefore": {
+        "packages/ui/src/tooltip/Tooltip.ts": "c06f04e8f3e7070956cb7a7b9ad0141f47455329767014b540ee9c7706a68cc4",
+        "packages/ui/src/tooltip/interface.ts": "f26108c9c859e51ac4a46680337b93b63cf2fd77aed1bcdc5330925d66816cbe",
+        "packages/ui/src/popover/Popover.ts": "c2f4dd290fbd6e527639292d601989c17d2a1989d0dc2d3d7633a63f94054c28",
+        "packages/ui/src/popover/interface.ts": "53c68643a8ef2b87af0130ae656dba0bc7fc5a1763418fa0a5120f0d72f969e2",
+        "packages/ui/src/_internal/trigger.ts": "7a6f171340be31aebb966213935b7ce1858306bb065583a03357161230b68bba",
+        "packages/ui/src/_internal/use-consumer-z-index.ts": "fff32c95313c61c7af6d3ea78e5659703b9505709cc49b3ba7a2e0301af6a0a0",
+        "packages/portal/src/use-portal.ts": "c2f82116dfd43ad5355df9d9cca859e3565058aeb8c7ac955edb9479708385f8",
+        "packages/portal/src/container.ts": "abf16ff00dc06ebb6082f226c5e5c8ff5893822e0b898e4c595914529d5d7648"
+      },
+      "sourceHashesAfter": {
+        "packages/ui/src/tooltip/Tooltip.ts": "c06f04e8f3e7070956cb7a7b9ad0141f47455329767014b540ee9c7706a68cc4",
+        "packages/ui/src/tooltip/interface.ts": "f26108c9c859e51ac4a46680337b93b63cf2fd77aed1bcdc5330925d66816cbe",
+        "packages/ui/src/popover/Popover.ts": "c2f4dd290fbd6e527639292d601989c17d2a1989d0dc2d3d7633a63f94054c28",
+        "packages/ui/src/popover/interface.ts": "53c68643a8ef2b87af0130ae656dba0bc7fc5a1763418fa0a5120f0d72f969e2",
+        "packages/ui/src/_internal/trigger.ts": "7a6f171340be31aebb966213935b7ce1858306bb065583a03357161230b68bba",
+        "packages/ui/src/_internal/use-consumer-z-index.ts": "fff32c95313c61c7af6d3ea78e5659703b9505709cc49b3ba7a2e0301af6a0a0",
+        "packages/portal/src/use-portal.ts": "c2f82116dfd43ad5355df9d9cca859e3565058aeb8c7ac955edb9479708385f8",
+        "packages/portal/src/container.ts": "abf16ff00dc06ebb6082f226c5e5c8ff5893822e0b898e4c595914529d5d7648"
+      },
+      "ownedSourcesUnchanged": true,
+      "artifactDigestUnchanged": true,
+      "gitBefore": {
+        "head": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+        "status": ""
+      },
+      "gitAfter": {
+        "head": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+        "status": ""
+      },
+      "mainProjectWrites": false
+    }
+  },
+  "backTopAndWireframe": {
+    "scope": [
+      "BackTop custom theme breakpoint observation",
+      "Popover wireframe observation"
+    ],
+    "sourceHead": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
+    "compiledInput": "Existing26e5ddd0 UI/theme dist; only a temporary Vite page/cache under this /tmp directory. No package or Docs build.",
+    "checks": [
+      {
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /tmp/apollo-known-observations-31a1eece/diagnose.mjs",
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 7101,
+        "log": "/tmp/apollo-known-observations-31a1eece/browser.log"
+      }
+    ],
+    "inputsUnchanged": true,
+    "inputHashes": {
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css": "e45cc2459297e358135a5da0a7b62201a72d7e9780cf2a6f05ddfc85da102c33",
+      "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/back-top/index.mjs": "d7bd5592f84be585be682948a00bf1a54e1577ef03d719797a97022b4afaeb0f",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/popover/index.mjs": "3d4e8b22a7879ed274c73461187675e6ad43f53d2e0f346940254f405daf7197",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/config-provider/index.mjs": "df9d5853e9c21d57ceac5f33e61040dfaba053dfb729098c9923617fc4896f15",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/grid/index.mjs": "b5629597989ff4f0acd599b2115c0d2e3d939c39a1d37be9dc956242d82a5c59",
+      "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/index.mjs": "1f028a1895431182e14b02c101faf9642a8bc599d9c493e13a33ed946dbc3123",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/src/back-top/style/index.ts": "92a5b4ea3ac50b081fa53838118787ddcd3b07219a9305a5e6e97f71ceb3da5b",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/src/back-top/use-back-top-theme.ts": "a211da255c03b7080ddb1909b0f88c5a4b04355275e9503ed05c752cf2894f68",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/src/popover/style/token.ts": "6ca1b1ee0c88c922975be6a9c701bd5e4771508f461be18e4387e6820e4027d2",
+      "/Users/nanren/Code/apollo-design-ui/packages/ui/src/popover/use-popover-theme.ts": "7b86981f090447c960e7b9ca722637857ae81648765b278beaf186368824391b"
+    },
+    "workingTreeBefore": "",
+    "workingTreeAfter": "",
+    "findings": [
+      {
+        "observation": "BackTop does not move its responsive inset thresholds with custom theme breakpoints",
+        "classification": "support-limitation",
+        "observationStillPresent": true,
+        "confirmedNewRegression": false,
+        "phenomenon": "Default and coherent custom breakpoint maps both use<=480px =>20px,<=768px=>60px,>768px=>100px with default controlHeightLG40. Checks include480/481,600/601,768/769,1000/1001 and dynamic replacements.",
+        "impact": "Only BackTop horizontal inset tier selection stays at the documented default CSS media boundaries. This is distinct from its visibilityHeight scroll threshold.",
+        "providerAndConsumerProof": [
+          {
+            "label": "dynamic-A-900",
+            "viewport": 900,
+            "token": {
+              "wireframe": false,
+              "screenXS": 600,
+              "screenXSMax": 699,
+              "screenSMMin": 700,
+              "screenMD": 1000,
+              "screenMDMin": 1000
+            },
+            "rowClass": "apollo-row apollo-row-center",
+            "insetInlineEnd": "100px",
+            "right": "100px",
+            "zIndex": "711",
+            "display": "block"
+          },
+          {
+            "label": "dynamic-B-900",
+            "viewport": 900,
+            "token": {
+              "wireframe": false,
+              "screenXS": 400,
+              "screenXSMax": 499,
+              "screenSMMin": 500,
+              "screenMD": 850,
+              "screenMDMin": 850
+            },
+            "rowClass": "apollo-row apollo-row-end",
+            "insetInlineEnd": "100px",
+            "right": "100px",
+            "zIndex": "712",
+            "display": "block"
+          },
+          {
+            "label": "dynamic-A-550",
+            "viewport": 550,
+            "token": {
+              "wireframe": false,
+              "screenXS": 600,
+              "screenXSMax": 699,
+              "screenSMMin": 700,
+              "screenMD": 1000,
+              "screenMDMin": 1000
+            },
+            "rowClass": "apollo-row apollo-row-start",
+            "insetInlineEnd": "60px",
+            "right": "60px",
+            "zIndex": "10",
+            "display": "block"
+          },
+          {
+            "label": "dynamic-B-550",
+            "viewport": 550,
+            "token": {
+              "wireframe": false,
+              "screenXS": 400,
+              "screenXSMax": 499,
+              "screenSMMin": 500,
+              "screenMD": 850,
+              "screenMDMin": 850
+            },
+            "rowClass": "apollo-row apollo-row-center",
+            "insetInlineEnd": "60px",
+            "right": "60px",
+            "zIndex": "10",
+            "display": "block"
+          }
+        ],
+        "sourceLocations": [
+          "packages/ui/src/back-top/style/index.ts:90",
+          "packages/ui/src/back-top/style/index.ts:95",
+          "packages/ui/src/back-top/style/index.ts:100",
+          "packages/ui/src/back-top/use-back-top-theme.ts:5",
+          "packages/ui/src/config-provider/ConfigProvider.ts:181",
+          "packages/ui/src/_internal/responsive-observer.ts:14",
+          "packages/ui/src/_internal/responsive-observer.ts:143"
+        ],
+        "currentContract": [
+          "packages/ui/src/back-top/index.zh-CN.md:47",
+          "packages/ui/src/back-top/README.md:55"
+        ],
+        "historicalEvidence": [
+          "docs/analysis/back-top.md:51",
+          "packages/ui/src/back-top/README.md:29"
+        ],
+        "minimumRecommendation": "Record the fixed480/768 media-query boundary as a supported limitation; do not describe this as a broken Provider/shared responsive observer or a visibilityHeight regression. No new implementation requested by this verification."
+      },
+      {
+        "observation": "wireframe alone has no independent Popover visual effect",
+        "classification": "support-limitation",
+        "observationStillPresent": true,
+        "confirmedNewRegression": false,
+        "phenomenon": "Under the same title/content, effective token.wireframe false->true->false updates correctly while actual live Popover and PurePanel computed styles remain unchanged. Container padding12, title min-width177/margin-bottom8/padding0/border-none and content padding0 retain the documented non-wireframe projection.",
+        "positiveControl": "Changing all4 public component Token values plus colorBgElevated updates both actual panels to padding22/min-width210/margin13/z-index2300 and rgb(208,224,240); removing overrides restores defaults.",
+        "sourceLocations": [
+          "packages/ui/src/popover/style/token.ts:43",
+          "packages/ui/src/popover/style/token.ts:53",
+          "packages/ui/src/popover/use-popover-theme.ts:40",
+          "packages/ui/src/popover/style/index.ts:56",
+          "packages/theme/src/css-var.ts:92"
+        ],
+        "currentContract": [
+          "packages/ui/src/popover/index.zh-CN.md:67",
+          "packages/ui/src/popover/index.zh-CN.md:74",
+          "packages/ui/src/popover/README.md:7"
+        ],
+        "historicalEvidence": [
+          "docs/analysis/popover.md:56",
+          "docs/analysis/popover.md:78"
+        ],
+        "b6Calibration": "wireframe is a boolean theme input and intentionally has no CSS variable. Its declaration alone does not prove a missing runtime consumer. Popover explicitly uses the non-wireframe branch; its4 current component Tokens and actual aliases do have working runtime consumers. Do not count the3 internal padding/border projection constants as3 newly promised public wireframe inputs.",
+        "minimumRecommendation": "Keep D84 as an explicit wireframe styling limitation rather than an inferred dead-token/runtime-regression defect; no public API or source change is justified by this verification."
+      }
+    ],
+    "browserEvidence": "/tmp/apollo-known-observations-31a1eece/browser-behavior.json",
+    "diagnostics": [],
+    "repositoryFilesModifiedByAgent": [],
+    "unverifiedBoundary": "This is a targeted check of these two observations, not a fresh audit of BackTop/Popover or a claim about all global wireframe/breakpoint consumers."
+  },
+  "extraStrictTemplates": {
+    "scope": "Read-only recheck of four historical internal SFC diagnostics, their complete actual source dependencies and one /tmp-only native HTML probe. No UI root barrel or tests project entry.",
+    "configuration": {
+      "rootConfig": "tsconfig.json",
+      "rootStrict": true,
+      "rootStrictTemplatesDeclared": false,
+      "temporaryConfig": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates.json",
+      "delta": "extends current root strict settings, noEmit:true, incremental:false, composite:false, explicit four SFC files, include:[], strictTemplates:true; no source cuts, stubs, assertions, any, diagnostic filters or checkUnknownProps override."
+    },
+    "commands": [
+      {
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js -p /tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates.json --noEmit --listFiles --pretty false",
+        "exitCode": 2,
+        "signal": null,
+        "durationMs": 11214,
+        "config": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates.json",
+        "log": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates.log",
+        "result": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates-result.json",
+        "diagnostics": [
+          "../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/badge/BadgeIndicator.vue(276,12): error TS2353: Object literal may only specify known properties, and ''data-show'' does not exist in type 'HTMLAttributes & ReservedProps'.",
+          "../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/tag/CheckableTagGroup.vue(87,8): error TS2353: Object literal may only specify known properties, and ''aria-label'' does not exist in type 'Partial<{ disabled: boolean; checked: boolean; }> & Omit<{ readonly disabled?: boolean | undefined; readonly checked?: boolean | undefined; readonly prefixCls?: string | undefined; readonly onChange?: ((_checked: boolean) => any) | undefined; readonly onClick?: ((_event: MouseEvent) => any) | undefined; readonly onK...'."
+        ],
+        "entryFiles": [
+          "packages/ui/src/badge/BadgeIndicator.vue",
+          "packages/ui/src/tag/CheckableTagGroup.vue",
+          "packages/ui/src/color-picker/components/ColorHexInput.vue",
+          "packages/ui/src/color-picker/components/PanelPicker.vue"
+        ],
+        "sourceSfcCount": 21,
+        "testFiles": []
+      },
+      {
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js -p /tmp/apollo-extra-strict-templates-31a1eece-mabZpI/color-current.json --noEmit --listFiles --pretty false",
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 18558,
+        "config": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/color-current.json",
+        "log": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/color-current.log",
+        "result": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/color-current-result.json",
+        "diagnostics": [],
+        "entryFiles": [
+          "/Users/nanren/Code/apollo-design-ui/packages/ui/src/color-picker/components/ColorHexInput.vue",
+          "/Users/nanren/Code/apollo-design-ui/packages/ui/src/color-picker/components/PanelPicker.vue"
+        ],
+        "sourceSfcCount": 18,
+        "testFiles": []
+      },
+      {
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js -p /tmp/apollo-extra-strict-templates-31a1eece-mabZpI/native-attrs-probe.json --noEmit --listFiles --pretty false",
+        "exitCode": 2,
+        "signal": null,
+        "durationMs": 1822,
+        "config": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/native-attrs-probe.json",
+        "log": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/native-attrs-probe.log",
+        "result": "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/native-attrs-probe-result.json",
+        "diagnostics": [
+          "../../../tmp/apollo-extra-strict-templates-31a1eece-mabZpI/NativeAttrs.vue(6,9): error TS2353: Object literal may only specify known properties, and ''data-show'' does not exist in type 'HTMLAttributes & ReservedProps'."
+        ],
+        "entryFiles": [
+          "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/NativeAttrs.vue"
+        ],
+        "sourceSfcCount": 0,
+        "testFiles": []
+      }
+    ],
+    "findings": [
+      {
+        "id": "BadgeIndicator-data-show",
+        "classification": "configuration-limit-reproduced",
+        "currentDiagnostic": true,
+        "location": "packages/ui/src/badge/BadgeIndicator.vue:276",
+        "code": "TS2353",
+        "reason": "Extra strictTemplates checks the legal native data-show attribute against Vue HTMLAttributes, which does not declare data-* keys. The /tmp-only native sup reproduces the exact diagnostic without any Apollo source dependency.",
+        "compilerEvidence": {
+          "package": "@vue/language-core@3.3.11",
+          "defaults": "lib/compilerOptions.js:202 checkUnknownProps=strictTemplates; :224 dataAttributes=[]",
+          "handling": "lib/codegen/template/elementProps.js:100 uses the supported dataAttributes patterns, while still checking bound expressions. No alternative option/allowance was enabled in these runs."
+        },
+        "impact": "This source SFC still fails the additional uncustomized strictTemplates mode. This diagnostic does not establish a default build or DOM runtime failure.",
+        "evidence": [
+          "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates.log",
+          "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/native-attrs-probe.log"
+        ]
+      },
+      {
+        "id": "CheckableTagGroup-aria-label",
+        "classification": "diagnostic-still-present",
+        "currentDiagnostic": true,
+        "location": "packages/ui/src/tag/CheckableTagGroup.vue:87",
+        "code": "TS2353",
+        "reason": "The actual CheckableTag constructor declares prefixCls/checked/disabled and owned emits, but its declared component props do not include aria-label. Extra strictTemplates rejects the Group binding at this component boundary.",
+        "runtimeBoundary": "CheckableTag.ts:73 merges actual attrs into its real native span; the present finding concerns strict template attr typing, not a demonstrated missing aria-label in the DOM.",
+        "supportingLocations": [
+          "packages/ui/src/tag/CheckableTag.ts:14",
+          "packages/ui/src/tag/CheckableTag.ts:73"
+        ],
+        "impact": "Additional strictTemplates over the current Group source still fails. Default root strict TypeScript/type-suite success is separate evidence and was not rerun or relabeled.",
+        "evidence": [
+          "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/strict-templates.log"
+        ]
+      },
+      {
+        "id": "ColorHexInput-onChange",
+        "classification": "fixed-and-current-extra-config-pass",
+        "currentDiagnostic": false,
+        "location": "packages/ui/src/color-picker/components/ColorHexInput.vue:77",
+        "reason": "Current @change consumes Input owned emit; input/input-emits.ts:5 declares its actual Event payload. The complete current SFC and dependencies pass the independent color-only strictTemplates command.",
+        "evidence": [
+          "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/color-current.log"
+        ]
+      },
+      {
+        "id": "PanelPicker-onChange",
+        "classification": "fixed-and-current-extra-config-pass",
+        "currentDiagnostic": false,
+        "location": "packages/ui/src/color-picker/components/PanelPicker.vue:225",
+        "reason": "Current @change consumes Segmented owned emit; Segmented.ts:72 declares the actual SegmentedValue payload. Current guarded onModeChange at PanelPicker.vue:74 accepts that real value and retains the single/gradient service boundary.",
+        "evidence": [
+          "/tmp/apollo-extra-strict-templates-31a1eece-mabZpI/color-current.log"
+        ]
+      }
+    ],
+    "summary": {
+      "historicalDiagnostics": 4,
+      "fixedAndCurrentPass": 2,
+      "configurationLimitsWithRemainingDiagnostic": 1,
+      "otherRemainingDiagnostics": 1,
+      "unverifiableHistoricalItems": [],
+      "combinedExtraStrictTemplatesPassed": false,
+      "colorOnlyExtraStrictTemplatesPassed": true
+    },
+    "snapshot": {
+      "tsconfig.json": {
+        "sha256": "525f4a37fb4fa484ecdb5f4c5cc03b0a3093b41ee8b496850692e0f309300ffb",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/badge/BadgeIndicator.vue": {
+        "sha256": "c9ddaff9fab7be8ccbfec4cd44644facb4983d5d2a006a6984f8ecd5e84c07ed",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/tag/CheckableTagGroup.vue": {
+        "sha256": "e0323a91b0495d0294bf58c7c3b0c5f8f3d3c005ce060f0db1f90239defee82b",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/tag/CheckableTag.ts": {
+        "sha256": "beaf987f1cbfc78aed21fc75b89ebe0426cfdc74358cd5cb97a2728fe2308d24",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/color-picker/components/ColorHexInput.vue": {
+        "sha256": "c9f25e3696cec3bd5d316a8631f72ceaf928004484af7fa680a1eb99dba7ed6f",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/color-picker/components/PanelPicker.vue": {
+        "sha256": "65cdd37fd6777a0f01cd55d758c7440df58a4c37ab7dec3ccc0a9ac0f143844a",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/input/input-emits.ts": {
+        "sha256": "012d1f8f3d19740f92e4c5bc46eda956ab30c48922ec7ab9343978f43c6ca945",
+        "matchesCheckedCommit": true
+      },
+      "packages/ui/src/segmented/Segmented.ts": {
+        "sha256": "3894316afe3ae3c53dfa88a741166d53fabcd217b3993caff047efaffb829481",
+        "matchesCheckedCommit": true
+      }
+    },
+    "notRun": [
+      "Full UI strictTemplates project",
+      "Existing 2389 type cases",
+      "Default root strict, runtime, browser or build (existing valid evidence retained)"
+    ],
+    "historicalEvidence": [
+      "docs/audit/evidence/divider-collapse-published-milestone.json:213",
+      "/tmp/apollo-divider-collapse-isolated-consumer-source-final.json"
+    ]
+  },
+  "inventoryAndOtherObservations": {
+    "commands": [
+      {
+        "command": [
+          "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "docs/audit/tools/content-slot-inventory.mjs",
+          "--check"
+        ],
+        "exitCode": 1,
+        "signal": null,
+        "durationSeconds": 6.166,
+        "log": "/tmp/apollo-known-issues-readonly-31a1eece/f11-check.log"
+      },
+      {
+        "command": [
+          "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "docs/audit/tools/content-slot-inventory.mjs",
+          "--output",
+          "/tmp/apollo-known-issues-readonly-31a1eece/content-slot-inventory-current.json"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationSeconds": 6.036,
+        "log": "/tmp/apollo-known-issues-readonly-31a1eece/f11-current.log"
+      }
+    ],
+    "findings": [
+      {
+        "id": "F11",
+        "classification": "真实维护缺陷：来源JSON漂移；不是已复现UI缺陷",
+        "commands": [
+          {
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "docs/audit/tools/content-slot-inventory.mjs",
+              "--check"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationSeconds": 6.166,
+            "log": "/tmp/apollo-known-issues-readonly-31a1eece/f11-check.log"
+          },
+          {
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "docs/audit/tools/content-slot-inventory.mjs",
+              "--output",
+              "/tmp/apollo-known-issues-readonly-31a1eece/content-slot-inventory-current.json"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationSeconds": 6.036,
+            "log": "/tmp/apollo-known-issues-readonly-31a1eece/f11-current.log"
+          }
+        ],
+        "storedSummary": {
+          "interfaceFiles": 73,
+          "rows": 562,
+          "byCategory": {
+            "data": 124,
+            "component-content-candidate": 155,
+            "deprecated": 54,
+            "internal": 151,
+            "render-function-candidate": 66,
+            "configuration": 12
+          },
+          "byDecision": {
+            "keep-data": 136,
+            "review": 199,
+            "skip": 205,
+            "implemented-verified": 22
+          }
+        },
+        "currentSummary": {
+          "interfaceFiles": 76,
+          "rows": 624,
+          "byCategory": {
+            "data": 141,
+            "internal": 249,
+            "component-content-candidate": 160,
+            "deprecated": 34,
+            "render-function-candidate": 30,
+            "configuration": 10
+          },
+          "byDecision": {
+            "keep-data": 151,
+            "skip": 283,
+            "review": 168,
+            "implemented-verified": 22
+          }
+        },
+        "historicalNumbers": [
+          {
+            "file": "docs/KNOWN-ISSUES.md:193",
+            "counts": "73 interfaces / 519 rows / verified19 / review202"
+          },
+          {
+            "file": "docs/audit/2026-10-24-slot-inventory.md:9",
+            "counts": "73 interfaces / 519 rows / verified18 / review204"
+          }
+        ],
+        "evidence": [
+          {
+            "file": "docs/audit/tools/content-slot-inventory.mjs",
+            "line": 47,
+            "claim": "只以interface.ts为根；仅遍历interface声明；含同一继承字段的多个owner，不是独立公开prop数"
+          },
+          {
+            "file": "docs/audit/tools/content-slot-inventory.mjs",
+            "line": 130,
+            "claim": "Slots类型线索只识别interface，type CardSlots等原生type alias不会记入slotType"
+          },
+          {
+            "file": "docs/audit/tools/content-slot-inventory.mjs",
+            "line": 183,
+            "claim": "implemented-verified只来自22个硬编码历史报告字段；不是本轮再次运行的判据"
+          },
+          {
+            "file": "packages/ui/src/card/interface.ts",
+            "line": 240,
+            "claim": "CardSlots为真实type alias；Card.title仍被来源扫描标review/slotType not-found"
+          },
+          {
+            "file": "packages/ui/src/card/Card.vue",
+            "line": 62,
+            "claim": "defineSlots<CardSlots>真实消费；152行当前title槽优先"
+          }
+        ],
+        "limitations": [
+          "静态slotRuntime按组件目录和同名字段归集，不证明目标组件真实消费；别名/动态key可漏检。",
+          "扫描不覆盖独立SFC/TS的内联props，也不把type alias owner作为行。",
+          "168 review是人工候选，不是缺失slot数；22 verified是历史具体字段索引，不是剩余任务完成率。",
+          "当前85架构done与最终2389类型/17335运行证据不能被旧候选数字推翻。"
+        ],
+        "history": {
+          "scriptLast": "4e2d9d04 2026-10-27",
+          "storedJSONLast": "c3910181 2026-10-29",
+          "datedReportLast": "efbe3279 2026-10-25"
+        },
+        "nextStep": "root按现有脚本刷新共享来源JSON并标注当前扫描版本；历史报告保留日期与原事实，在顶部说明已被当前来源索引替代。不要为清单review数字再审全部组件或机械新增slot。",
+        "rootRegenerationCommand": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node docs/audit/tools/content-slot-inventory.mjs",
+        "temporaryCurrentScan": "/tmp/apollo-known-issues-readonly-31a1eece/content-slot-inventory-current.json",
+        "delta": "/tmp/apollo-known-issues-readonly-31a1eece/f11-delta.json"
+      },
+      {
+        "id": "ResizeObserver historical diagnostics",
+        "classification": "待核实的历史非阻塞诊断；不是全库已知bug或全浏览器已解决保证",
+        "historicalEvidence": [
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 7610,
+            "functionalResult": "passed",
+            "diagnosticResult": "failed",
+            "resizeObserverDiagnostics": 7,
+            "otherDiagnostics": [],
+            "log": "/tmp/apollo-consumer-z-index-browser-final.log"
+          }
+        ],
+        "originalSource": {
+          "file": "packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+          "line": 61,
+          "claim": "严格原生window.error收集；162/163行同时断言console/pageerror及windowErrors为空，未过滤RO提示"
+        },
+        "currentEvidence": {
+          "utilsBrowser": {
+            "result": "/tmp/apollo-utils-native-browser.json",
+            "provenanceFailure": "/tmp/apollo-utils-native-browser-provenance.json",
+            "groups": 7,
+            "diagnostics": [],
+            "ownedResizeObservers": 1,
+            "ownedMutationObservers": 3,
+            "remainingOwnedTargets": 0,
+            "automationObserver": "Exactly one non-library creator InjectedScript._setupGlobalListenersRemovalDetection observes #document; all remaining creators are audited, no target-type filtering."
+          },
+          "utilsResult": "/tmp/apollo-utils-native-browser-final-result.json",
+          "virtualListBrowser": [
+            {
+              "kind": "core",
+              "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/virtual-list/src/__tests__/native-browser.mjs",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 5647,
+              "durationSource": "script performance.now through final assertions",
+              "log": "/tmp/apollo-virtual-list-browser-accepted-final.log",
+              "result": "System Chrome, 0 diagnostics and 0 retained ResizeObserver targets. All prior real keyboard/layout/focus/raw-virtual/key/RTL/holder/data assertions retained; actual bordered holder clientWidth540 vs offsetWidth560 now scrolls correctly to60. Actual viewport growth also reconciles accepted horizontal state."
+            }
+          ],
+          "finalDocsGate": "passed"
+        },
+        "scope": "原7条来自共享Trigger消费者浏览器，功能断言通过但整体exit1必须保留。Utils重复订阅独立释放/跨realm、VirtualList零保留target及Docs六browser通过，只证明所覆盖场景；本任务未重跑原consumer-z-index-browser，不推定当前仍有或已无同一诊断。",
+        "currentSource": [
+          {
+            "file": "packages/utils/src/observers/use-resize-observer.ts",
+            "line": 75,
+            "claim": "observeResize集中管理元素/回调；资源契约见foundation当前增量"
+          },
+          {
+            "file": "packages/docs/src/pages/DemoStandalonePage.vue",
+            "line": 100,
+            "claim": "Demo iframe自身RO挂载，107行卸载disconnect；不同于共享Trigger历史诊断"
+          }
+        ],
+        "nextStep": "若要关闭这条历史诊断，只需在当前冻结产物复核同一严格window.error消费者；先定位creator/target/实际循环，不因历史warning先加节流、吞错或兼容。"
+      },
+      {
+        "id": "H03 / D05 Demo coverage",
+        "classification": "旧数量与阶段未验结论归档；能力范围/示例例外按公开契约保留，非文件数缺陷",
+        "historicalEvidence": [
+          "docs/audit/2026-10-24-demo-capabilities.md:5",
+          "docs/KNOWN-ISSUES.md:340"
+        ],
+        "currentBuildManifest": {
+          "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+          "manifestGeneratedAt": "2026-11-01T02:29:46.417Z",
+          "components": 72,
+          "demos": 1009,
+          "scope": "既有冻结Docs构建manifest数量，不是能力覆盖率或运行覆盖率"
+        },
+        "evidence": [
+          {
+            "file": "docs/audit/tools/stage2-demo-probe.mjs",
+            "line": 80,
+            "claim": "当前Form.List原生增删/提交实际断言；最终Docs gate stage2-demo-probe exit0"
+          },
+          {
+            "file": "packages/ui/src/collapse/demo/custom.vue",
+            "line": 13,
+            "claim": "当前custom实际使用具名expandIcon和isActive；旧示例缺少此内容的描述已过期"
+          },
+          {
+            "file": "packages/ui/src/splitter/demo/control.vue",
+            "line": 30,
+            "claim": "当前真实重置30/70及预设控制示例；父控拒绝/接受/撤控已有native browser证据，但不外推任意嵌套Demo"
+          },
+          {
+            "file": "packages/ui/src/list/index.zh-CN.md",
+            "line": 32,
+            "claim": "List拖拽排序示例仍明确待审；未声明内建drag能力"
+          },
+          {
+            "file": "packages/ui/src/list/index.en-US.md",
+            "line": 32,
+            "claim": "英文同样保留List drag-reordering example under review"
+          }
+        ],
+        "nextStep": "归档990/1060、93.4%、旧completed及旧未验候选；现有局部证明只关闭相应场景。保留List拖拽示例待核实和debug/外部依赖的设计例外，不为凑上游文件数新增功能或全量能力审计。"
+      },
+      {
+        "id": "H04 Docs performance and content warnings",
+        "classification": "已修导入/加载链归档；大chunk是已测优化项；1条order缺失是当前非阻塞内容元数据缺口",
+        "fixedEvidence": [
+          {
+            "file": "packages/docs/src/components/site/TopBar.vue",
+            "line": 17,
+            "claim": "一致静态导入SearchModal与useSearch"
+          },
+          {
+            "file": "packages/docs/src/composables/search.ts",
+            "line": 35,
+            "claim": "按需索引首次加载、并发复用、失败后重试"
+          },
+          {
+            "file": "packages/docs/src/components/demo/DemoRenderer.vue",
+            "line": 69,
+            "claim": "视口附近单次激活；86行卸载清observer并使旧请求失效"
+          }
+        ],
+        "currentBuild": {
+          "report": "/tmp/apollo-visual-docs-build-26e5ddd0-result.json",
+          "log": "/tmp/apollo-visual-docs-build-26e5ddd0.log",
+          "exitCode": 0,
+          "durationMs": 157673,
+          "app": {
+            "asset": "packages/docs/dist/assets/app-CGaXnu7q.js",
+            "bytes": 2403943,
+            "buildGzipKB": 573.9
+          },
+          "additionalLargeChunk": {
+            "asset": "packages/docs/dist/assets/cascader-DFtzb5J3.js",
+            "bytes": 3849741,
+            "buildGzipKB": 321.76
+          },
+          "warningThresholdKB": 1500,
+          "warningThresholdSource": "packages/docs/vite.config.ts:62",
+          "scope": "静态资产体积与构建warning；不是完整首屏网络/CPU/LCP评分；未测cascader是否首屏加载"
+        },
+        "currentContentGap": {
+          "file": "packages/ui/src/menu/demo/component-token.md",
+          "line": 1,
+          "claim": "缺少数字order；同一冻结构建仅此1项提示，按文件名排序；不是运行失败"
+        },
+        "historicalEvidence": [
+          "docs/audit/2026-10-24-docs-warnings.md",
+          "docs/audit/2026-10-24-demo-order-remediation.md"
+        ],
+        "nextStep": "root可单独补Menu元数据order并保留原排序依据；Docs chunk优化保留明确影响与后续理由，不改1500阈值、不把旧303缺失或2.2MB/510KB当当前数字。性能优化另按实际请求链立项，不新增本轮性能平台。"
+      },
+      {
+        "id": "Code highlight cross-initialization variance",
+        "classification": "待核实；仅历史跨初始化实验线索，无当前用户可见bug复现",
+        "historicalEvidence": [
+          {
+            "file": "docs/audit/2026-10-24-demo-order-remediation.md",
+            "line": 11,
+            "claim": "同初始化状态完整页面相等通过；跨状态token标签/颜色分段差异只作线索"
+          },
+          {
+            "file": "docs/audit/2026-10-24-demo-order-remediation.md",
+            "line": 44,
+            "claim": "明确没有修高亮器或证明跨状态确定性"
+          }
+        ],
+        "currentSource": [
+          {
+            "file": "packages/docs/tooling/content/markdown.mjs",
+            "line": 39,
+            "claim": "共享highlighterPromise，await初始化后调用codeToHtml；该文件自2026-10-16仅格式改动"
+          },
+          {
+            "file": "packages/docs/tooling/content/build-manifest.mjs",
+            "line": 564,
+            "claim": "构建期await highlightCode产生codeHtml"
+          },
+          {
+            "file": "packages/docs/src/components/demo/DemoSource.vue",
+            "line": 37,
+            "claim": "客户端展示构建期codeHtml"
+          },
+          {
+            "file": "packages/docs/tests/smoke-browser.mjs",
+            "line": 37,
+            "claim": "现有SSR smoke只验证存在shiki高亮，不是跨进程确定性测试"
+          }
+        ],
+        "nextStep": "保留待核实即可；若出现当前问题，以相同源码/配置的独立进程输出比较定位实际HTML/视觉变化，不能先换高亮器、吞错或把构建成功写成确定性通过。"
+      },
+      {
+        "id": "D04 prefix CSS policy",
+        "classification": "已文档化支持限制；不是未兑现任意前缀运行时样式能力",
+        "evidence": [
+          {
+            "file": "ARCHITECTURE.md",
+            "line": 35,
+            "claim": "prefixCls只改变DOM命名，不运行时生成选择器"
+          },
+          {
+            "file": "COMPATIBILITY.md",
+            "line": 13,
+            "claim": "静态CSS不自动支持任意前缀"
+          },
+          {
+            "file": "packages/ui/src/config-provider/index.zh-CN.md",
+            "line": 54,
+            "claim": "发布默认apollo；自定义前缀Demo加载构建期brand CSS；cssVarPrefix也要求配套样式"
+          },
+          {
+            "file": "packages/ui/src/config-provider/index.en-US.md",
+            "line": 54,
+            "claim": "英文同边界"
+          },
+          {
+            "file": "packages/ui/src/config-provider/demo/prefix-cls.vue",
+            "line": 11,
+            "claim": "真实Demo单独引入prefix-cls.css"
+          },
+          {
+            "file": "packages/ui/src/config-provider/demo/prefix-cls.css",
+            "line": 1,
+            "claim": "已有genComponentCss(empty,brand)静态产物示例"
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/browser.mjs",
+            "line": 443,
+            "claim": "真实八个Demo包含配套静态自定义前缀CSS断言"
+          }
+        ],
+        "nextStep": "root可把旧D04待裁决表述收敛为当前支持边界：DOM前缀响应性保证，自定义CSS预生成/加载由消费者负责。不恢复运行时CSS-in-JS，不承诺任意prefix换名即有样式。"
+      }
+    ]
+  },
+  "history": {
+    "knownIssues": "docs/history/known-issues-2026-11-01.md",
+    "sourceSha256": "46a25aa2e54fd8adb3d508737d20faf8d522adde4f8994ed83da59fae8bbb823",
+    "previousInventory": "docs/history/content-slot-inventory-before-2026-11-01.json"
+  },
+  "validatedScopes": {
+    "libraryFreeze": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+    "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+    "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+    "validationCommits": {
+      "coverage": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+      "strictAndPublicTypes": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+      "consumer": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+      "fullVisual": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+      "updatedVisual": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+      "docsStage2": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+      "docsMenu": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+      "artifactBuild": "26e5ddd0622c3faeb1075cafd849042fc0938fb8"
+    },
+    "runtime": {
+      "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+      "passed": true,
+      "check": {
+        "kind": "coverage",
+        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "command": [
+          "/tmp/apollo-audit-toolchain/pnpm",
+          "run",
+          "test:coverage",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/tmp/apollo-final-coverage-41ec765e-dedicated.json"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 1507822,
+        "log": "/tmp/apollo-final-coverage-41ec765e-dedicated.log",
+        "report": "/tmp/apollo-final-coverage-41ec765e-dedicated.json"
+      },
+      "files": 786,
+      "result": {
+        "success": true,
+        "files": 786,
+        "total": 17335,
+        "passed": 17335,
+        "failed": 0,
+        "pending": 0
+      },
+      "coverage": {
+        "lines": {
+          "total": 38364,
+          "covered": 35692,
+          "skipped": 0,
+          "pct": 93.03
+        },
+        "statements": {
+          "total": 42476,
+          "covered": 39107,
+          "skipped": 0,
+          "pct": 92.06
+        },
+        "functions": {
+          "total": 11586,
+          "covered": 10639,
+          "skipped": 0,
+          "pct": 91.82
+        },
+        "branches": {
+          "total": 30747,
+          "covered": 25774,
+          "skipped": 0,
+          "pct": 83.82
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+      "parallelism": "Original two-worker coverage command; no concurrent build, public type suite or full visual shard."
+    },
+    "types": {
+      "checks": [
+        {
+          "name": "strict-types",
+          "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "args": [
+            "node_modules/vue-tsc/bin/vue-tsc.js",
+            "--noEmit",
+            "-p",
+            "tsconfig.json"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 224188,
+          "log": "/tmp/apollo-final-quality-1adf76dc-strict-types.log",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "name": "public-types",
+          "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "args": [
+            "node_modules/vitest/vitest.mjs",
+            "run",
+            "--project",
+            "types",
+            "--reporter=json",
+            "--outputFile=/tmp/apollo-final-types-1adf76dc.json"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 361190,
+          "log": "/tmp/apollo-final-quality-1adf76dc-public-types.log",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        }
+      ],
+      "result": {
+        "success": true,
+        "suites": 742,
+        "total": 2389,
+        "passed": 2389,
+        "failed": 0
+      }
+    },
+    "visual": {
+      "result": {
+        "expected": 1875,
+        "passed": 1875,
+        "failed": [],
+        "reusedPassingCases": 1869,
+        "recomparedCases": 6,
+        "missing": 0,
+        "duplicateIds": 0,
+        "idSetSha256": "1b30b6daf79d4911fda71bdbe97afe99e2ad452fadd02e408a03000794cee0f8",
+        "exact": 1875,
+        "antialiasNoise": 0
+      },
+      "firstSource": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
+      "firstExpected": 1875,
+      "firstPassed": 1869,
+      "firstFailed": 6,
+      "targeted": [
+        {
+          "name": "theme-compact",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "tests/visual/apollo.mjs",
+            "--no-build",
+            "--component",
+            "timeline",
+            "--variant",
+            "theme-compact",
+            "--report-file",
+            "/tmp/apollo-final-targeted-ea70e52d-theme-compact.json"
+          ],
+          "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 9984,
+          "log": "/tmp/apollo-final-targeted-ea70e52d-theme-compact.log"
+        },
+        {
+          "name": "theme-dark-compact",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "tests/visual/apollo.mjs",
+            "--no-build",
+            "--component",
+            "timeline",
+            "--variant",
+            "theme-dark-compact",
+            "--report-file",
+            "/tmp/apollo-final-targeted-ea70e52d-theme-dark-compact.json"
+          ],
+          "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 10027,
+          "log": "/tmp/apollo-final-targeted-ea70e52d-theme-dark-compact.log"
+        }
+      ]
+    },
+    "docs": {
+      "checks": [
+        {
+          "name": "docs-types",
+          "command": "/tmp/apollo-audit-toolchain/pnpm",
+          "args": [
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "typecheck"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 89616,
+          "log": "/tmp/apollo-final-quality-1adf76dc-docs-types.log",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "name": "docs-tests",
+          "command": "/tmp/apollo-audit-toolchain/pnpm",
+          "args": [
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "test"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 39187,
+          "log": "/tmp/apollo-final-quality-1adf76dc-docs-tests.log",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "file": "packages/docs/tests/smoke-browser.mjs",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 19960,
+          "scope": "Same prebuilt Docs preview",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "file": "docs/audit/visual-v3/verify.mjs",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 23359,
+          "scope": "Same prebuilt Docs preview",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "file": "packages/docs/tests/notification-motion-browser.mjs",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 26498,
+          "scope": "Same prebuilt Docs preview",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "file": "packages/docs/tests/motion-review-browser.mjs",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 44139,
+          "scope": "Frozen source motion fixture and published CSS",
+          "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+        },
+        {
+          "name": "stage2-demo-probe",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "/Users/nanren/Code/apollo-design-ui/docs/audit/tools/stage2-demo-probe.mjs"
+          ],
+          "sourceCommit": "ea70e52d882048b64ce61c9ceddfda68730edd1d",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 10883,
+          "log": "/tmp/apollo-final-targeted-ea70e52d-stage2-demo-probe.log"
+        },
+        {
+          "sourceCommit": "9f9f16773e78a1bdcc843c882cd105cf1154e583",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/menu-browser.mjs"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 11201,
+          "log": "/tmp/apollo-final-menu-9f9f1677.log",
+          "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+          "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+          "outputRoot": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-menu-9f9f-fIusaK",
+          "frozenSource": true,
+          "name": "menu-browser",
+          "checksPassed": 28
+        }
+      ],
+      "placementFinding": {
+        "classification": "TEST_PRECONDITION",
+        "evidence": "/tmp/apollo-menu-sticky-flip-ea70e52d/summary.json",
+        "firstTitleY": 819.578,
+        "firstPopupY": 679,
+        "centerTitleY": 430.578,
+        "centerPopupY": 290,
+        "movedTogether": 389,
+        "stableFrames": 92,
+        "sameDom": true,
+        "afterRealReopen": "Preferred top alignment within original 3px",
+        "productChanges": false
+      }
+    },
+    "beforeBudgetCalibration": {
+      "checks": [
+        {
+          "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "tests/build/run.mjs",
+            "--package",
+            "ui",
+            "--strict"
+          ],
+          "exitCode": 1,
+          "signal": null,
+          "durationMs": 86303,
+          "log": "/tmp/apollo-visual-ui-build-26e5ddd0.log"
+        }
+      ],
+      "budget": {
+        "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+        "command": [
+          "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "tests/build/run.mjs",
+          "--package",
+          "ui",
+          "--strict"
+        ],
+        "exitCode": 1,
+        "signal": null,
+        "durationMs": 86303,
+        "log": "/tmp/apollo-visual-ui-build-26e5ddd0.log",
+        "failedCheck": "B6",
+        "overBudgetEntries": 13,
+        "totalEntries": 73,
+        "totalKB": 2236.7,
+        "checks": 11,
+        "failed": 1,
+        "pending": 0
+      }
+    }
+  }
+}

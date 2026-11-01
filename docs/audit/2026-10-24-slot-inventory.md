@@ -1,6 +1,8 @@
+> 历史报告：下文统计与阶段结论保留原日期，不能视为当前任务或缺陷数。链接的 JSON 是 2026-11-01 清理前的旧文件快照（已含后续增量，不是 2026-10-24 的精确快照）；当前静态来源索引见 [content-slot-inventory.json](evidence/content-slot-inventory.json)，扫描边界见[当前清单](../KNOWN-ISSUES.md#支持限制)。
+
 # F11：当前内容扩展清单 · 2026-10-24
 
-新增 `pnpm run audit:content-slots` 与只读 `audit:content-slots:check`，产物为 [content-slot-inventory.json](evidence/content-slot-inventory.json)。不再将 2026-10-08 的 190/36/154 当作当前统计。
+新增 `pnpm run audit:content-slots` 与只读 `audit:content-slots:check`，产物为 [content-slot-inventory.json](../history/content-slot-inventory-before-2026-11-01.json)。不再将 2026-10-08 的 190/36/154 当作当前统计。
 
 ## 范围与结果
 

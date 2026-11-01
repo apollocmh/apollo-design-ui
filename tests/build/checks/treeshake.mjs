@@ -127,9 +127,9 @@ export async function checkBudgetEntry(repoRoot, entry, fullKb) {
     ratio,
     ok: !overBudget && !overRatio,
     detail:
-      `${entry.imports.join('+') || '*'}: ${actualKb.toFixed(1)} KB` +
-      ` / 全量 ${full.toFixed(1)} KB (${(ratio * 100).toFixed(1)}%)` +
-      ` / 预算 ${entry.budgetKb > 0 ? `${entry.budgetKb} KB` : '未设定'}` +
+      `${entry.imports.join('+') || '*'}: ${actualKb.toFixed(1)} KiB` +
+      ` / 全量 ${full.toFixed(1)} KiB (${(ratio * 100).toFixed(1)}%)` +
+      ` / 预算 ${entry.budgetKb > 0 ? `${entry.budgetKb} KiB` : '未设定'}` +
       (overRatio ? ` [超占比上限 ${(maxRatio * 100).toFixed(0)}%]` : ''),
   };
 }

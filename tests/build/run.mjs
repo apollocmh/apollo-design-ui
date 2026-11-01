@@ -941,14 +941,14 @@ async function checkTreeShaking(name) {
       .slice(0, 5)
       .map(
         (f) =>
-          `${f.id} ${f.actualKb.toFixed(1)}KB ${f.ratio > (budget.maxRatioOfFull ?? 0.3) ? '(超占比)' : '>预算'} ${f.budgetKb}KB`,
+          `${f.id} ${f.actualKb.toFixed(1)}KiB ${f.ratio > (budget.maxRatioOfFull ?? 0.3) ? '(超占比)' : '>预算'} ${f.budgetKb}KiB`,
       )
       .join(', ');
     add(
       name,
       'B6',
       'FAIL',
-      `tree-shaking 超预算（${out.failures.length}/${out.results.length}，全量 ${out.fullKb.toFixed(1)} KB）: ${detail}`,
+      `tree-shaking 超预算（${out.failures.length}/${out.results.length}，全量 ${out.fullKb.toFixed(1)} KiB）: ${detail}`,
     );
     return false;
   }
@@ -958,8 +958,8 @@ async function checkTreeShaking(name) {
     name,
     'B6',
     'PASS',
-    `${out.results.length} 个组件全部在预算内（全量 ${out.fullKb.toFixed(1)} KB；` +
-      `最重 ${heaviest.id} ${heaviest.actualKb.toFixed(1)} KB = ${(heaviest.ratio * 100).toFixed(1)}%）`,
+    `${out.results.length} 个组件全部在预算内（全量 ${out.fullKb.toFixed(1)} KiB；` +
+      `最重 ${heaviest.id} ${heaviest.actualKb.toFixed(1)} KiB = ${(heaviest.ratio * 100).toFixed(1)}%）`,
   );
   return true;
 }
