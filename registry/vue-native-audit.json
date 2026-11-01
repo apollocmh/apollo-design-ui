@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 242,
+  "revision": 243,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12613,7 +12613,7 @@
         "dimension": "visual",
         "status": "in_progress",
         "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
-        "note": "User authorized the missing-baseline closeout: inspect actual screenshots in bounded batches and key interactions; fix demonstrated problems before review/acceptance; run the full unchanged visual matrix afterwards. Architecture tasks and existing approvals remain intact.",
+        "note": "First reviewed independent batch accepted. Known cropped or overconstrained scenarios remain unapproved pending corrected recapture; complete unchanged visual comparison still required.",
         "checks": [
           {
             "kind": "visual",
@@ -12625,8 +12625,8 @@
         ],
         "selection": {
           "selected": 1875,
-          "approved": 1215,
-          "missingApprovedBaselines": 660
+          "approved": 1683,
+          "missingApprovedBaselines": 192
         },
         "supplement": {
           "kind": "approved-visual-subset",
@@ -12702,7 +12702,91 @@
           "expected": 1875,
           "ownership": "Root owns shared runner/matrix, build, baseline manifest, acceptance and progress. Five independent private-fixture/review groups; no parallel package builds.",
           "notIncluded": "Architecture re-audit, size optimization, threshold changes, unreviewed candidate acceptance"
-        }
+        },
+        "reviewBatches": [
+          {
+            "captureCommit": "20e62f8503004e410196069cd18f7c0470ca4a55",
+            "acceptedAt": "2026-11-01T02:18:33.200Z",
+            "newImages": 468,
+            "components": [
+              "time-picker",
+              "color-picker",
+              "calendar",
+              "input-number",
+              "cascader",
+              "auto-complete",
+              "tree",
+              "tree-select",
+              "select",
+              "transfer",
+              "form",
+              "upload",
+              "mentions",
+              "tooltip",
+              "popconfirm",
+              "modal",
+              "drawer",
+              "message",
+              "app",
+              "dropdown",
+              "tabs",
+              "checkbox",
+              "radio",
+              "switch",
+              "rate",
+              "segmented",
+              "steps",
+              "progress",
+              "affix",
+              "back-top",
+              "border-beam",
+              "card",
+              "float-button",
+              "masonry",
+              "watermark"
+            ],
+            "groups": [
+              {
+                "group": "A",
+                "reviewer": "native_picker",
+                "count": 99,
+                "report": "/tmp/apollo-visual-closeout-A-20e62f85/review-decisions.json"
+              },
+              {
+                "group": "B",
+                "reviewer": "native_select",
+                "count": 90,
+                "report": "/tmp/apollo-visual-closeout-B-20e62f85/review.json"
+              },
+              {
+                "group": "C",
+                "reviewer": "native_color_picker/root",
+                "count": 57,
+                "report": "/tmp/apollo-visual-closeout-C-20e62f85/review-summary.json"
+              },
+              {
+                "group": "D",
+                "reviewer": "native_portal",
+                "count": 123,
+                "report": "/tmp/apollo-visual-closeout-D-20e62f85/review-initial.json"
+              },
+              {
+                "group": "E",
+                "reviewer": "native_form_core/root",
+                "count": 99,
+                "report": "/tmp/apollo-visual-closeout-E-20e62f85/review.json"
+              }
+            ],
+            "existingEntriesUnchanged": 1215,
+            "selection": {
+              "selected": 1875,
+              "approved": 1683,
+              "missingApprovedBaselines": 192
+            },
+            "fullVisualComparison": "not_started",
+            "note": "Actual image review and applicable key interactions, not capture success alone. Date/Table/Tour/Notification/Popover/Slider/Pagination/Splitter/Listy/Carousel/Menu/Anchor remain pending corrected recapture."
+          }
+        ]
       },
       {
         "dimension": "docs",
