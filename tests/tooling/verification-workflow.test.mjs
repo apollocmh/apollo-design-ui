@@ -350,6 +350,9 @@ test('the final plan builds once, runs runtime through coverage once and preserv
   const build = plan.checks.filter((step) => step.kind === 'build');
   assert.equal(build.length, 1);
   assert.ok(build[0].args.includes('--strict'));
+  const layering = plan.checks.find((step) => step.kind === 'consumer-browser');
+  assert.deepEqual(layering.args, ['packages/ui/src/tooltip/__tests__/z-index-browser.mjs']);
+  assert.ok(plan.checks.indexOf(layering) > plan.checks.indexOf(build[0]));
   assert.equal(plan.checks.filter((step) => step.kind === 'coverage').length, 1);
   assert.equal(
     plan.checks.some(

@@ -37,6 +37,8 @@ subtitle: Popover
 
 Popover applies native class/style to the popup root. Style accepts strings, objects and mixed arrays, overriding matching styles.root values until removed. Other native attrs and listeners keep Tooltip's trigger-element target. PopoverPurePanel applies attrs and native class/style to its own root, without duplicating styles on the container. Use styles.container/arrow and matching classNames for individual sections.
 
+The final numeric root layer, including `0` and numeric strings, also supplies descendant Tooltip/Popover/Popconfirm layers and takes precedence over the dedicated `zIndex` prop. Conditional `undefined` or empty-string layers and native `false/null/undefined` release the override. Automatic descendant layering from `calc/var` remains deferred; see Tooltip's native style contract.
+
 ### Events
 
 | Event | Payload | Meaning |

@@ -60,6 +60,8 @@ These are Vue emits and support modifiers such as `@open-change.once`. In `h()`,
 
 `Tooltip` applies native class/style to the popup root; `TooltipPurePanel` applies them to the panel root. Styles accept strings, objects and mixed arrays and override Provider and semantic root styles. Removing them restores the current source. Use `styles.container` for the content container; root styles are never copied there. Other native Tooltip attrs and listeners apply to the trigger. Set the trigger's own class/style directly on the default slot element.
 
+A numeric final root `zIndex`, including `0` and numeric strings, also supplies the descendant layer and overrides the dedicated `zIndex` prop. Provider styles, `styles.root`, `overlayStyle` and native style retain their existing merge order. Conditional `undefined` or empty-string layers and native `false/null/undefined` release the override and restore the remaining source or automatic layer. `calc(...)` / `var(...)` remain valid CSS expressions; deriving descendant numeric layers from them remains deferred.
+
 ### Current theme
 
 `ConfigProvider.theme.components.Tooltip` supports numeric `maxWidth` (default 250px) and `zIndexPopup` (default `zIndexPopupBase + 70`). Theme replacement, removal and nesting update the existing popup. Arrow shape, offsets and placement read the same current Alias Token source. Semantic styles and native CSS variables take priority. PurePanel uses the current colors and arrow values while retaining its natural panel width.

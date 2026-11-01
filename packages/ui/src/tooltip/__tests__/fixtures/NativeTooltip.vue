@@ -3,6 +3,7 @@ import { ref, useTemplateRef } from 'vue';
 import { Tooltip, type TooltipRef } from '../../index';
 
 const open = ref(false);
+const applyStyle = ref(true);
 const tooltip = useTemplateRef<TooltipRef>('tooltip');
 const changed = (_open: boolean) => {};
 const finished = (_open: boolean) => {};
@@ -23,7 +24,7 @@ function align() {
     v-model:open="open"
     title="Hint"
     class="popup"
-    style="padding: 8px"
+    :style="applyStyle && ['padding: 8px', { zIndex: 2500 }]"
     @open-change.once="changed"
     @after-open-change="finished"
     @popup-click="clicked"

@@ -116,6 +116,6 @@ Native class/style apply only to the popup root; other native attributes and eve
 | --- | --- | --- |
 | zIndexPopup | z-index of the popup | zIndexPopupBase + 60 |
 
-`theme.components.Popconfirm.zIndexPopup` and existing global visual tokens consume the current theme, including nested themes, replacement and removal; `0` is valid. Popconfirm and its static panel consume their own component configuration. Independent Popover / Tooltip instances in the content keep their own configuration. The wrapper shares a single z-index calculation, with explicit `zIndex` taking precedence.
+`theme.components.Popconfirm.zIndexPopup` and existing global visual tokens consume the current theme, including nested themes, replacement and removal; `0` is valid. Popconfirm and its static panel consume their own component configuration. Independent Popover / Tooltip instances in the content keep their own configuration. The wrapper shares one layer calculation. The final numeric root `zIndex`, including `0` and numeric strings, takes precedence and supplies descendant layers; removing it restores the dedicated `zIndex` prop or automatic layer. Conditional `undefined` or empty-string layers and native `false/null/undefined` release the override. Automatic descendant layering from `calc/var` remains deferred.
 
 [Native panel style migration](../../../../docs/migrations/overlay-native-styles.md).

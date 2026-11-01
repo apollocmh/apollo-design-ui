@@ -6,7 +6,7 @@
  */
 
 import { expectTypeOf, it } from 'vitest';
-import { type CSSProperties, h } from 'vue';
+import { type CSSProperties, h, type StyleValue } from 'vue';
 import { Popconfirm, PopconfirmPurePanel } from '../index';
 import type {
   PopconfirmButtonProps,
@@ -14,6 +14,14 @@ import type {
   PopconfirmProps,
   PopconfirmSemanticType,
 } from '../interface';
+
+it('accepts complete Vue root StyleValue inputs', () => {
+  const style: StyleValue = ['z-index: 2500', { padding: '8px' }, false, null];
+  const props: PopconfirmProps = { title: 'Confirm', style };
+  h(Popconfirm, props);
+  h(Popconfirm, { style: false });
+  expectTypeOf<PopconfirmProps['style']>().toEqualTypeOf<StyleValue>();
+});
 
 it('accepts Vue CSSProperties in all semantic, legacy and PurePanel styles', () => {
   const css: CSSProperties = {

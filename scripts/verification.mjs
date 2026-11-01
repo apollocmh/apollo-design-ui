@@ -310,6 +310,7 @@ export function fullPlan() {
       packageRun('format', 'lint:format'),
       // The single build also generates Docs content; all checks below reuse it.
       node('build', ['tests/build/run.mjs', '--strict']),
+      node('consumer-browser', ['packages/ui/src/tooltip/__tests__/z-index-browser.mjs']),
       node('types', ['node_modules/vue-tsc/bin/vue-tsc.js', '--noEmit', '-p', 'tsconfig.json'], {
         env: { NODE_OPTIONS: '--max-old-space-size=4096' },
       }),

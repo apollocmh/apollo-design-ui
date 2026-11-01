@@ -2,12 +2,19 @@
  * L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。
  */
 import { describe, expectTypeOf } from 'vitest';
-import { type CSSProperties, h } from 'vue';
+import { type CSSProperties, h, type StyleValue } from 'vue';
 import type { PopoverEmits, PopoverProps, PopoverSemanticType } from '../interface';
 import Popover from '../Popover';
 import PurePanel from '../PurePanel';
 
 describe('Popover · 类型', () => {
+  it('inherits the complete native Vue StyleValue input', () => {
+    const style: StyleValue = ['z-index: 2500', { padding: '8px' }, false, null];
+    const props: PopoverProps = { title: 'Title', style };
+    h(Popover, props);
+    h(Popover, { style: false });
+    expectTypeOf<PopoverProps['style']>().toEqualTypeOf<StyleValue>();
+  });
   it('accepts Vue CSSProperties through semantic, legacy and PurePanel props', () => {
     const css: CSSProperties = {
       display: 'flex',

@@ -94,6 +94,8 @@ jobs:
             tests/visual/report-apollo.json
             tests/visual/diff/apollo/
             /tmp/apollo-docs-browser-*/docs/audit/evidence/
+            /tmp/apollo-overlay-z-index-*/result.json
+            /tmp/apollo-overlay-z-index-*/*.png
           if-no-files-found: warn
           retention-days: 14
 

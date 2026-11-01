@@ -2,7 +2,7 @@
  * L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。
  */
 import { describe, expectTypeOf } from 'vitest';
-import { type CSSProperties, h } from 'vue';
+import { type CSSProperties, h, type StyleValue } from 'vue';
 import type {
   TooltipEmits,
   TooltipPlacement,
@@ -13,6 +13,13 @@ import PurePanel from '../PurePanel';
 import Tooltip from '../Tooltip';
 
 describe('Tooltip · 类型', () => {
+  it('keeps the complete native Vue StyleValue input reactive', () => {
+    const style: StyleValue = ['z-index: 2500', { padding: '8px' }, false, null];
+    const props: TooltipProps = { title: 'Hint', style };
+    h(Tooltip, props);
+    h(Tooltip, { style: false });
+    expectTypeOf<TooltipProps['style']>().toEqualTypeOf<StyleValue>();
+  });
   it('accepts Vue CSSProperties in every semantic and legacy style channel', () => {
     const css: CSSProperties = {
       display: 'flex',

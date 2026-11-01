@@ -6,7 +6,7 @@
  * TooltipProps（H2 重新定义，禁止复制搬运）。禁 any / as any / @ts-expect-error（H10）。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties, StyleValue, VNodeChild } from 'vue';
 import type { TriggerAlign } from '../_internal/trigger';
 
 /** antd 的 `TooltipPlacement`（_util 的 12 个 placement）。 */
@@ -117,6 +117,8 @@ export interface TooltipProps {
   motion?: { motionName?: string };
   /** 浮层 z-index（未传走 useZIndex 的层叠体系）。 */
   zIndex?: number;
+  /** Vue 原生根样式，作用于浮层；数值 z-index 同步到后代层级。 */
+  style?: StyleValue;
   /** 浮层 role=tooltip 元素的 id（aria-describedby 用）。 */
   id?: string;
   /** `popupClick` 事件，载荷为浮层内容的原始 MouseEvent。 */

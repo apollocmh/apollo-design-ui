@@ -43,6 +43,8 @@ subtitle: 气泡卡片
 
 Popover 的原生 `class/style` 作用于浮层根，不传到触发元素。style 接受字符串、对象和混合数组，优先于 `styles.root`，移除后恢复语义值。其他原生 attrs 和监听器沿用 Tooltip 的触发元素落点。PopoverPurePanel 的 attrs、class/style 作用于面板根；不把原生 style 重复应用到 container。分区样式使用 `styles.container/arrow` 与对应 classNames。
 
+根样式的数值层级（含 `0`、数字字符串）与后代 Tooltip/Popover/Popconfirm 的数值上下文同步，按最终样式优先级覆盖专用 `zIndex`。`undefined`、空字符串或原生 style 的 `false/null/undefined` 撤除当前覆盖；`calc/var` 的自动后代层级仍是延期边界，见 Tooltip 的原生样式说明。
+
 ### 事件
 
 | 事件 | 载荷 | 说明 |

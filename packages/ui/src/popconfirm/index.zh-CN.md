@@ -125,6 +125,6 @@ import { Popconfirm } from '@apollo-design/ui';
 | --- | --- | --- |
 | zIndexPopup | 浮层 z-index | zIndexPopupBase + 60 |
 
-`theme.components.Popconfirm.zIndexPopup` 与现有全局视觉 Token 读取当前主题，支持嵌套、替换和移除，`0` 是有效层级。Popconfirm 与静态面板只消费自己的组件配置；正文中的独立 Popover / Tooltip 仍消费各自配置。内部共享一次层级计算，显式 `zIndex` 优先。
+`theme.components.Popconfirm.zIndexPopup` 与现有全局视觉 Token 读取当前主题，支持嵌套、替换和移除，`0` 是有效层级。Popconfirm 与静态面板只消费自己的组件配置；正文中的独立 Popover / Tooltip 仍消费各自配置。内部共享一次层级计算；最终根样式的数值 `zIndex`（含 `0`、数字字符串）优先并同步后代层级，撤除后恢复专用 `zIndex` 或自动层级。条件根样式中的 `undefined`、空字符串及原生 style 的 `false/null/undefined` 释放当前覆盖；`calc/var` 的自动后代层级仍延期。
 
 [静态面板原生 style 迁移](../../../../docs/migrations/overlay-native-styles.md)。

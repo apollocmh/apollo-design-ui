@@ -65,6 +65,8 @@ subtitle: 文字提示
 
 `Tooltip` 的原生 `class/style` 作用于浮层根；`TooltipPurePanel` 作用于面板根。style 支持字符串、对象及混合数组，优先于 Provider 和语义根样式；移除后恢复当前来源。容器样式使用 `styles.container`，不会从根复制。Tooltip 的其他原生 attrs 和监听器作用于触发元素，触发元素自己的 class/style 写在默认槽子节点上。
 
+最终根样式中的数值 `zIndex`（含 `0` 和数字字符串）同时用于后代浮层层级，覆盖专用 `zIndex` 属性；Provider、`styles.root`、`overlayStyle` 和原生 style 按既有样式顺序合并。条件样式中的 `undefined`、空字符串，以及原生 style 的 `false/null/undefined` 会释放当前覆盖，恢复剩余来源或自动层级。`calc(...)` / `var(...)` 保留 CSS 表达式，但不推导其后代数值层级；该集成边界仍延期。
+
 ### 当前主题
 
 `ConfigProvider.theme.components.Tooltip` 支持 `maxWidth`（数字，默认 250px）和 `zIndexPopup`（数字，默认 `zIndexPopupBase + 70`）。替换、撤回和嵌套主题即时更新现有浮层。箭头形状、偏移与定位读取同一份当前 Alias Token；语义样式和原生 CSS 变量覆盖优先。PurePanel 使用当前主题的颜色和箭头，其静态面板保留自然宽度。

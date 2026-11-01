@@ -10,7 +10,7 @@
  *   - `open` 支持 `v-model:open`（emits `update:open`）。
  */
 
-import type { ClassValue, CSSProperties, VNode, VNodeChild } from 'vue';
+import type { ClassValue, CSSProperties, StyleValue, VNode, VNodeChild } from 'vue';
 import type { LegacyButtonType } from '../_internal/action-button';
 import type { TriggerAlign } from '../_internal/trigger';
 import type {
@@ -141,6 +141,8 @@ export interface PopconfirmProps {
   builtinPlacements?: Record<string, TriggerAlign>;
   /** 浮层层级。 */
   zIndex?: number;
+  /** Vue 原生浮层根样式；false/null/undefined 撤除当前原生覆盖。 */
+  style?: StyleValue;
   /** 关闭后销毁浮层。 */
   destroyOnHidden?: boolean;
   /** 每次打开都重新渲染内容。 */

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // 对齐 antd demo/style-class.tsx（semantic styles 的对象与函数两种形态）
-import { Button, Popover } from '@apollo-design/ui';
+import { Button, Popover, Tooltip } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+const highLayer = ref(true);
 
 const styles = {
   container: {
@@ -36,6 +39,14 @@ const stylesFn = (info: { props: { arrow?: unknown } }) => {
     </Popover>
     <Popover content="Function text" :styles="stylesFn" :arrow="false">
       <Button type="primary">Function Style</Button>
+    </Popover>
+    <Popover class="demo-layer-popover" :style="highLayer && { zIndex: 2500 }">
+      <Button>Nested layers</Button>
+      <template #content>
+        <Tooltip class="demo-layer-tooltip" title="The nested hint follows the current popup layer.">
+          <Button @click="highLayer = !highLayer">Popup layer: {{ highLayer ? '2500' : 'default' }}</Button>
+        </Tooltip>
+      </template>
     </Popover>
   </div>
 </template>

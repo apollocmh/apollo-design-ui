@@ -30,6 +30,7 @@ import {
   type PropType,
   provide,
   type SlotsType,
+  type StyleValue,
   shallowRef,
   Text,
   useId,
@@ -134,6 +135,10 @@ const Tooltip = defineComponent({
     mouseLeaveDelay: { type: Number, default: undefined },
     motion: { type: Object as PropType<{ motionName?: string }>, default: undefined },
     zIndex: { type: Number, default: undefined },
+    style: {
+      type: [String, Object, Array, Boolean] as PropType<StyleValue>,
+      default: undefined,
+    },
     id: { type: String, default: undefined },
     fresh: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
@@ -269,15 +274,6 @@ const Tooltip = defineComponent({
       );
     });
 
-    // ============================ zIndex =============================
-    const zIndex = useZIndex('Tooltip', () => props.zIndex, {
-      get zIndexPopupBase() {
-        return injectFromPopover
-          ? injectFromPopover.zIndexPopupBase()
-          : tooltipTheme.componentToken.value.zIndexPopup;
-      },
-    });
-
     // ======================== Merged Semantic ========================
     const colorInfo = computed(() => parseTooltipColor(prefixCls.value, props.color));
 
@@ -327,6 +323,49 @@ const Tooltip = defineComponent({
       ...colorInfo.value.overlayStyle,
     }));
 
+    // Resolve the same Vue style object for presentation and descendant layering.
+    // Native CSS text can contain `z-index`; its final property write wins just
+    // as it does on the actual element. Empty conditional overrides release the
+    // style layer instead of erasing the generated numeric fallback in Trigger.
+    const popupRoot = computed(() => {
+      const normalized = normalizeStyle([
+        tooltipTheme.style.value,
+        colorInfo.value.arrowStyle,
+        mergedStyles.value.root,
+        props.style,
+      ]);
+      if (!normalized || typeof normalized === 'string') {
+        return { style: normalized, zIndex: undefined };
+      }
+      let layer: string | number | undefined;
+      let hasLayer = false;
+      for (const [key, value] of Object.entries(normalized)) {
+        if (key === 'zIndex' || key === 'z-index') {
+          layer = value;
+          hasLayer = true;
+        }
+      }
+      const cleared = layer === undefined || (typeof layer === 'string' && !layer.trim());
+      let style = normalized;
+      if (hasLayer && cleared) {
+        style = { ...normalized };
+        delete style.zIndex;
+        delete style['z-index'];
+      }
+      const numeric = cleared ? undefined : Number(layer);
+      return {
+        style,
+        zIndex: numeric !== undefined && Number.isFinite(numeric) ? numeric : undefined,
+      };
+    });
+    const zIndex = useZIndex('Tooltip', () => popupRoot.value.zIndex ?? props.zIndex, {
+      get zIndexPopupBase() {
+        return injectFromPopover
+          ? injectFromPopover.zIndexPopupBase()
+          : tooltipTheme.componentToken.value.zIndexPopup;
+      },
+    });
+
     // ========================= tempOpen ==============================
     // antd（es/tooltip/index.js 逐字）：`let tempOpen = open;
     //   if (!('open' in props) && noTitle || inTableMeasureRow) tempOpen = false;`
@@ -346,13 +385,8 @@ const Tooltip = defineComponent({
     });
 
     return () => {
-      const { class: nativeClass, style: nativeStyle, ...triggerAttrs } = attrs;
-      const popupStyle = normalizeStyle([
-        tooltipTheme.style.value,
-        colorInfo.value.arrowStyle,
-        mergedStyles.value.root,
-        nativeStyle,
-      ]);
+      const { class: nativeClass, ...triggerAttrs } = attrs;
+      const popupStyle = popupRoot.value.style;
       const content = slots.title ? slots.title() : props.title;
       noTitle = content === '' || isEmptyVNode(content);
       const tempOpen = props.open ?? (mergedOpen.value && !noTitle);
