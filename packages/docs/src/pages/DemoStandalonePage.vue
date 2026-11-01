@@ -20,9 +20,15 @@ import {
 import { useRoute } from 'vue-router';
 import DemoProvider from '../components/demo/DemoProvider.vue';
 import DemoRenderer from '../components/demo/DemoRenderer.vue';
-import { initSiteLocale, useSiteLocale } from '../composables/locale';
+import { isDemoContextMessage } from '../composables/demo-context';
+import { initSiteLocale, setLocaleOverride, useSiteLocale } from '../composables/locale';
 import { loadComponentPage } from '../composables/manifest';
-import { setThemeOverride } from '../composables/theme';
+import {
+  isSitePreset,
+  isThemeMode,
+  setPresetOverride,
+  setThemeOverride,
+} from '../composables/theme';
 import type { ComponentPageData, DemoMeta } from '../types/manifest';
 
 const route = useRoute();
@@ -41,16 +47,31 @@ if (typeof window !== 'undefined') {
 }
 
 watch(
-  () => route.query.theme,
-  (theme) => {
-    if (typeof window !== 'undefined')
-      setThemeOverride(theme === 'dark' || theme === 'light' ? theme : null);
+  () => [route.query.theme, route.query.preset, route.query.lang],
+  ([theme, preset, lang]) => {
+    if (typeof window === 'undefined') return;
+    setThemeOverride(isThemeMode(theme) ? theme : null);
+    setPresetOverride(isSitePreset(preset) ? preset : null);
+    setLocaleOverride(lang === 'zh-CN' || lang === 'en-US' ? lang : null);
   },
   { immediate: true },
 );
 onBeforeUnmount(() => {
-  if (typeof window !== 'undefined') setThemeOverride(null);
+  if (typeof window !== 'undefined') {
+    setThemeOverride(null);
+    setPresetOverride(null);
+    setLocaleOverride(null);
+  }
 });
+
+function onContextMessage(event: MessageEvent<unknown>): void {
+  if (!embed.value || event.origin !== location.origin || event.source !== window.parent) return;
+  const data = event.data;
+  if (!isDemoContextMessage(data) || data.frameId !== route.query.frameId) return;
+  setThemeOverride(data.mode);
+  setPresetOverride(data.preset);
+  setLocaleOverride(data.lang);
+}
 
 const demo = computed<DemoMeta | null>(
   () => page.value?.demos.find((d) => d.name === route.params.demo) ?? null,
@@ -58,7 +79,7 @@ const demo = computed<DemoMeta | null>(
 
 watch(
   () => [String(route.params.name ?? ''), String(route.params.demo ?? '')],
-  async ([name, demoName]) => {
+  async ([name]) => {
     state.value = 'loading';
     try {
       page.value = await loadComponentPage(name ?? '');
@@ -97,6 +118,13 @@ function reportHeight(): void {
 }
 
 onMounted(() => {
+  window.addEventListener('message', onContextMessage);
+  if (embed.value && typeof route.query.frameId === 'string') {
+    window.parent.postMessage(
+      { type: 'apollo-demo:ready', frameId: route.query.frameId },
+      location.origin,
+    );
+  }
   if (typeof ResizeObserver === 'function' && rootEl.value) {
     observer = new ResizeObserver(() => reportHeight());
     observer.observe(rootEl.value);
@@ -104,7 +132,10 @@ onMounted(() => {
   reportHeight();
 });
 
-onBeforeUnmount(() => observer?.disconnect());
+onBeforeUnmount(() => {
+  observer?.disconnect();
+  window.removeEventListener('message', onContextMessage);
+});
 </script>
 
 <template>

@@ -7,63 +7,99 @@ order: 2
 
 ## zh-CN
 
-Apollo Design 采用**静态 CSS + CSS 变量**，没有 CSS-in-JS 运行时。样式分两层，职责不同：
+Apollo Design 使用静态 CSS 与 CSS 变量。JS 导入不会自动安装样式；构建期 resolver、手工子路径和全量导入使用同一主题 API，主题选择与组件按需引入互不依赖。
 
-| 层 | 包 | 内容 |
-|---|---|---|
-| 设计令牌 | `@apollo-design/theme/tokens.css` | 全部 `--apollo-*` CSS 变量（色彩梯度、间距、圆角、字体、动效曲线、阴影……），含亮色 / 暗色 / 紧凑三套作用域 |
-| 组件样式 | `@apollo-design/ui/style.css` | 全量组件规则及默认组件变量（类名前缀 `apollo-*`），使用共享主题变量 |
-
-```ts
-// 入口文件（顺序：先令牌、后组件样式）
-import '@apollo-design/theme/tokens.css';
-import '@apollo-design/ui/style.css';
-```
-
-### 为什么必须先引 tokens.css
-
-组件 CSS 消费共享主题变量，同时声明各组件的默认变量。缺少令牌层时，共享 `var(--apollo-*)` 无法解析，相关样式会失效。
-
-### 按组件引入
-
-JS 导入不会自动挂载 CSS。可以用公开样式入口代替全量样式：
-
-```ts
-import { Timeline, Space, Input } from '@apollo-design/ui';
-import '@apollo-design/theme/tokens.css';
-import '@apollo-design/ui/timeline/style.css';
-import '@apollo-design/ui/space/style.css';
-import '@apollo-design/ui/input/style.css';
-```
-
-单个入口包含组件实现内部所需的样式。例如 Timeline 包含内部 Steps 的基础规则，无需额外了解内部组件。插槽中由你提供的组件需引入各自样式；上例的 Input 用在 Space 插槽中，因此仍单独引入 Input CSS。组件样式与依赖在构建时组合，运行时通过 Vue 原生 CSS 变量更新当前主题。
-
-| 用法 | 已有样式入口 |
+| 资源 | 职责 |
 | --- | --- |
-| AutoComplete | `@apollo-design/ui/select/style.css` |
-| TimePicker / TimeRangePicker | `@apollo-design/ui/date-picker/style.css` |
-| Layout.Sider / Sider | `@apollo-design/ui/layout-sider/style.css`，与 `layout/style.css` 分开引入 |
-| ConfigProvider / Watermark | 自身不需要组件样式；内容组件仍需各自样式 |
+| `@apollo-design/theme/presets/mono.css`（或 default/material3） | 可选的独立公共变量表，包含该风格的 light/dark/system 作用域；由公开派生 API 生成 |
+| `@apollo-design/ui/base.css` | 不选择主题的共享基础结构规则 |
+| `@apollo-design/ui/<component>/structure.css` | 单一组件结构规则；依赖资源按公开 style-manifest 顺序加载 |
+| `@apollo-design/ui/<component>/style.css` | 保留的自包含组件样式，包含内部实现依赖；不要与同组 structure.css 重复引入 |
+| `@apollo-design/ui/style.css` | 保留的全量组件样式 |
+| `@apollo-design/theme/tokens.css` | 保留的默认亮/暗/紧凑变量表；选择独立预设时不需要同时加载它 |
 
-发布的静态样式使用默认 `apollo` 前缀。自定义前缀需自行提供对应的静态 CSS。
+### 自动按需
 
-### 暗色与紧凑模式
+以下结构资源与官方 resolver 要求 UI 0.1.8 或更高版本。
 
-令牌层用属性选择器切换作用域，切到 `<html>` 上即可：
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import Components from 'unplugin-vue-components/vite';
+import { ApolloResolver } from '@apollo-design/ui-resolver';
+
+export default defineConfig({
+  plugins: [vue(), Components({ resolvers: [ApolloResolver()] })],
+});
+```
+
+```vue
+<!-- App.vue -->
+<script setup lang="ts">
+import { monoPreset } from '@apollo-design/theme/presets/mono';
+import '@apollo-design/theme/presets/mono.css';
+const theme = { preset: monoPreset, mode: 'system' as const };
+</script>
+
+<template>
+  <AConfigProvider :theme="theme">
+    <AButton type="primary">Mono</AButton>
+  </AConfigProvider>
+</template>
+```
+
+resolver 只从公开子路径导入组件 JS 与结构 CSS，不选择主题，也不引入全量 CSS。它按 `@apollo-design/ui/style-manifest.json` 导入共享基础、依赖与组件结构，重复路径由打包器去重；生成的组件声明需纳入项目 TypeScript 配置。保留已有全量/自包含 CSS 的应用应设 `ApolloResolver({ importStyle: false })`，避免同时引入重叠规则。
+
+### 手工子路径
+
+同一个配置可以手工引入，无需 resolver：
+
+```vue
+<script setup lang="ts">
+import { ConfigProvider } from '@apollo-design/ui/config-provider';
+import { Button } from '@apollo-design/ui/button';
+import { monoPreset } from '@apollo-design/theme/presets/mono';
+import '@apollo-design/theme/presets/mono.css';
+import '@apollo-design/ui/base.css';
+import '@apollo-design/ui/button/structure.css';
+const theme = { preset: monoPreset, mode: 'system' as const };
+</script>
+
+<template>
+  <ConfigProvider :theme="theme"><Button type="primary">Mono</Button></ConfigProvider>
+</template>
+```
+
+Button 的最小结构依赖如上；复杂组件按公开 style-manifest 的完整 styles 列表加载，或使用原有 `ui/<component>/style.css` 自包含入口。用户插槽中的自选组件仍需自己的 CSS。AutoComplete 使用 Select 结构；TimePicker/TimeRangePicker 使用 DatePicker；Layout.Sider 具有独立的 layout-sider 样式入口。ConfigProvider 本身不需要组件样式。
+
+### 全量引入
+
+```vue
+<script setup lang="ts">
+import { ConfigProvider, Button } from '@apollo-design/ui';
+import { monoPreset } from '@apollo-design/theme/presets/mono';
+import '@apollo-design/ui/style.css';
+import '@apollo-design/theme/presets/mono.css';
+const theme = { preset: monoPreset, mode: 'system' as const };
+</script>
+
+<template>
+  <ConfigProvider :theme="theme"><Button type="primary">Mono</Button></ConfigProvider>
+</template>
+```
+
+结构入口的推荐顺序是公共变量 → 基础/组件结构 → 用户覆盖；旧聚合或自包含样式先加载，独立预设放在其后，避免旧默认规则覆盖选择。不要在已加载整套 CSS 后再补同组结构资源。应用只需加载自己使用的一个预设；文档站为了切换预览，显式加载全部三份，不作为普通应用的隐式兜底。
+
+### 作用域与动态配置
+
+静态主题通过 `data-apollo-preset="default|mono|material3"` 与 `data-apollo-theme="light|dark|system"` 选择，system 在 CSS 中响应系统明暗。Provider 使用同一预设对象与 `mode` 派生当前作用域，用户全局 Token、组件 Token 与嵌套覆盖见[主题](/guide/theming)。运行时更新 CSS 变量不重挂组件，也不意味着懒加载组件。
 
 ```html
-<html data-apollo-theme="dark">
+<html data-apollo-preset="mono" data-apollo-theme="system">
 ```
 
-| 值 | 效果 |
-|---|---|
-| （缺省） | 亮色 |
-| `dark` | 暗色 |
-| `dark-compact` | 暗色 + 紧凑密度 |
-
-### 与组件库 Token 的关系
-
-站点（本文档站）自己另有一套 `--site-*` 令牌用于官网视觉，**不复用、也不污染** `--apollo-*`。组件示例永远渲染在组件库自己的令牌作用域内。
+保留默认主题的旧用法仍可使用 `theme/tokens.css` → `ui/style.css`；compact/dark-compact 是该旧资源的密度作用域，不是新的风格预设。发布的组件 CSS 使用 `apollo` 前缀，自定义前缀需匹配的静态样式。站点的 `--site-*` 只引用公共主题 Token，没有独立配色表。
 
 ### 默认链接样式
 
@@ -75,27 +111,19 @@ import '@apollo-design/ui/input/style.css';
 
 ## en-US
 
-Apollo Design uses **static CSS + CSS variables** — there is no CSS-in-JS runtime. Styles ship in two layers:
+JavaScript, static component CSS and theme selection are independent. All three import strategies use the same public `ThemeConfig` and independent preset imports; resolver registration is not needed to choose or customize a theme.
 
-| Layer | Package | Content |
-|---|---|---|
-| Design tokens | `@apollo-design/theme/tokens.css` | All `--apollo-*` CSS variables, with light / dark / compact scopes |
-| Component styles | `@apollo-design/ui/style.css` | Component rules and default component variables (`apollo-*` class prefix), using shared theme variables |
+The structural resources and official resolver below require UI 0.1.8 or newer.
 
-```ts
-import '@apollo-design/theme/tokens.css';
-import '@apollo-design/ui/style.css';
-```
+- **Automatic:** configure `Components({ resolvers: [ApolloResolver()] })` from `unplugin-vue-components/vite` and `@apollo-design/ui-resolver`. In App.vue import `monoPreset` from `@apollo-design/theme/presets/mono` and its optional `mono.css`, then use `<AConfigProvider :theme="{ preset: monoPreset, mode: 'system' }"><AButton>Mono</AButton></AConfigProvider>`. The resolver imports public component JavaScript and the ordered structural CSS resources in `ui/style-manifest.json`; it never imports a preset or aggregate CSS. Include generated component declarations in TypeScript.
+- **Manual subpaths:** import `ConfigProvider` from `@apollo-design/ui/config-provider` and `Button` from `@apollo-design/ui/button`, plus the same preset, `ui/base.css` and `ui/button/structure.css`. Complex components need their complete public manifest styles list, or their existing self-contained `ui/<component>/style.css` entry. Slot-provided components need their own styles.
+- **Aggregate:** import `{ ConfigProvider, Button }` from `@apollo-design/ui`, then `ui/style.css` and the chosen preset stylesheet. The theme object and template are identical to the manual example.
 
-### Individual stylesheets
+For neutral structural entries, load public variables, base/component structure, then user overrides. Load legacy aggregate/self-contained styles before an optional preset so their default rules cannot replace the selection. Do not combine overlapping legacy and structural entries. Existing aggregate-style applications can set `ApolloResolver({ importStyle: false })` while retaining JavaScript resolution.
 
-JS imports do not install CSS. Import `theme/tokens.css` first, then the public `ui/<component>/style.css` entries you use. Each entry includes styles required by implementation-owned descendants: Timeline supplies its internal Steps rules. Components you provide through slots still need their own styles, such as Input inside Space. Composition happens at build time; current themes use Vue's native CSS variables.
+Each optional `theme/presets/default.css`, `/mono.css` or `/material3.css` contains only that preset's public derived variables for light/dark/system. Set `data-apollo-preset` and `data-apollo-theme` on the desired static scope. A single-preset application loads only that preset; Docs deliberately loads all three for its Header preview. The legacy `theme/tokens.css` still supplies default light/dark/compact scopes and is unnecessary alongside a chosen independent preset.
 
-AutoComplete uses `select/style.css`; TimePicker and TimeRangePicker use `date-picker/style.css`. Layout.Sider has its separate `layout-sider/style.css` entry. ConfigProvider and Watermark need no component stylesheet themselves. Published CSS targets the default `apollo` prefix; custom prefixes require matching static CSS.
-
-### Dark & compact mode
-
-Toggle the scope via an attribute on `<html>`: `<html data-apollo-theme="dark">`.
+AutoComplete uses Select structure, TimePicker/TimeRangePicker use DatePicker, and Layout.Sider has a separate layout-sider entry. ConfigProvider needs no stylesheet of its own. Published CSS uses the default `apollo` prefix; custom prefixes require matching styles. See [Theming](/guide/theming) for user overrides, nesting and system/SSR behavior.
 
 ### Default link styles
 

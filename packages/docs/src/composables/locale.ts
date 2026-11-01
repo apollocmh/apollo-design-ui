@@ -4,13 +4,15 @@
  * 与组件库 LocaleProvider 是两回事：这里管的是**官网 chrome**（导航、工具栏、提示）
  * 和组件文档内容的选择；组件示例内部文案由示例自己（或用户示例里的 LocaleProvider）决定。
  */
-import { type App, computed, type InjectionKey, inject, ref } from 'vue';
+import { type App, computed, getCurrentInstance, type InjectionKey, inject, ref } from 'vue';
 import type { Bilingual } from '../types/manifest';
 
 export type SiteLocale = 'zh-CN' | 'en-US';
 
 const STORAGE_KEY = 'apollo-site-locale';
-const locale = ref<SiteLocale>('zh-CN');
+const savedLocale = ref<SiteLocale>('zh-CN');
+const localeOverride = ref<SiteLocale | null>(null);
+const locale = computed(() => localeOverride.value ?? savedLocale.value);
 let initialized = false;
 
 const DICT = {
@@ -60,6 +62,11 @@ const DICT = {
     themeLight: '亮色',
     themeDark: '暗色',
     themeSystem: '跟随系统',
+    themePreset: '风格',
+    themeDefault: '默认',
+    themeMono: 'Mono',
+    themeMaterial: 'Material',
+    themeAppearance: '明暗',
     switchToEnglish: '切换到英文',
     switchToChinese: '切换到中文',
     searchError: '搜索索引加载失败',
@@ -113,6 +120,11 @@ const DICT = {
     themeLight: 'Light',
     themeDark: 'Dark',
     themeSystem: 'System',
+    themePreset: 'Style',
+    themeDefault: 'Default',
+    themeMono: 'Mono',
+    themeMaterial: 'Material',
+    themeAppearance: 'Appearance',
     switchToEnglish: 'Switch to English',
     switchToChinese: 'Switch to Chinese',
     searchError: 'Failed to load search index',
@@ -147,12 +159,11 @@ export function initSiteLocale(): void {
   if (initialized) return;
   initialized = true;
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === 'zh-CN' || saved === 'en-US') locale.value = saved;
+  if (saved === 'zh-CN' || saved === 'en-US') savedLocale.value = saved;
   // URL 带 ?lang=en-US 时优先生效（分享链接场景）
   const q = new URLSearchParams(location.search).get('lang');
   if (q === 'zh-CN' || q === 'en-US') {
-    locale.value = q;
-    localStorage.setItem(STORAGE_KEY, q);
+    setLocaleOverride(q);
   }
 }
 
@@ -162,9 +173,10 @@ function createLocaleState() {
   return {
     locale,
     setLocale(next: SiteLocale): void {
-      locale.value = next;
+      localeOverride.value = null;
+      savedLocale.value = next;
       if (typeof localStorage === 'object') localStorage.setItem(STORAGE_KEY, next);
-      document.documentElement.lang = next;
+      if (typeof document !== 'undefined') document.documentElement.lang = locale.value;
     },
     /** UI 词典。 */
     t(key: SiteTextKey): string {
@@ -188,11 +200,19 @@ export function provideSiteLocale(app: App): void {
 
 export function useSiteLocale() {
   // 测试/独立渲染兜底：无 provider 时创建临时状态
-  return inject(SITE_LOCALE_KEY) ?? createLocaleState();
+  return (
+    (getCurrentInstance() ? inject(SITE_LOCALE_KEY, undefined) : undefined) ?? createLocaleState()
+  );
 }
 
 /** 当前语言的 computed 便捷读取。 */
 export function useLocaleValue() {
   const state = useSiteLocale();
   return computed(() => state.locale.value);
+}
+
+/** Frame/query control is local to this document and never overwrites the saved preference. */
+export function setLocaleOverride(next: SiteLocale | null): void {
+  localeOverride.value = next;
+  if (typeof document !== 'undefined') document.documentElement.lang = locale.value;
 }

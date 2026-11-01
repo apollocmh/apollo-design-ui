@@ -13,7 +13,12 @@ import { useRouter } from 'vue-router';
 import { type SiteTextKey, useSiteLocale } from '../../composables/locale';
 import { siteManifest } from '../../composables/manifest';
 import { useSearch } from '../../composables/search';
-import { type ThemeMode, useThemeMode } from '../../composables/theme';
+import {
+  type SitePreset,
+  type ThemeMode,
+  useThemeMode,
+  useThemePreset,
+} from '../../composables/theme';
 import SearchModal from './SearchModal.vue';
 
 defineProps<{ menuOpen?: boolean }>();
@@ -22,6 +27,18 @@ defineEmits<{ toggleMenu: [] }>();
 const router = useRouter();
 const { t, locale, setLocale } = useSiteLocale();
 const { mode, setMode } = useThemeMode();
+const { preset, setPreset } = useThemePreset();
+const themeReady = ref(false);
+const themePicker = ref<HTMLDetailsElement | null>(null);
+const themeTrigger = ref<HTMLElement | null>(null);
+const modeValue = computed<ThemeMode>({
+  get: () => (themeReady.value ? mode.value : 'system'),
+  set: setMode,
+});
+const presetValue = computed<SitePreset>({
+  get: () => (themeReady.value ? preset.value : 'default'),
+  set: setPreset,
+});
 
 const searchOpen = ref(false);
 const logoSrc = `${import.meta.env.BASE_URL}logo.svg`;
@@ -49,6 +66,7 @@ async function useSearchOnce(): Promise<void> {
 }
 
 onMounted(() => {
+  themeReady.value = true;
   // 快捷键：/ 或 Cmd/Ctrl+K 呼出搜索
   window.addEventListener('keydown', onKeydown);
 });
@@ -82,13 +100,12 @@ const themeOptions = [
 }>;
 
 const currentTheme = computed(
-  () => themeOptions.find((o) => o.value === mode.value) ?? themeOptions[0],
+  () => themeOptions.find((o) => o.value === modeValue.value) ?? themeOptions[0],
 );
 
-function cycleTheme(): void {
-  const i = themeOptions.findIndex((o) => o.value === mode.value);
-  const next = themeOptions[(i + 1) % themeOptions.length] ?? themeOptions[0];
-  setMode(next.value);
+function closeThemePicker(): void {
+  if (themePicker.value) themePicker.value.open = false;
+  themeTrigger.value?.focus();
 }
 
 function toggleLocale(): void {
@@ -146,18 +163,34 @@ function toggleLocale(): void {
         <span class="site-lang-text">{{ locale === 'zh-CN' ? 'En' : '中' }}</span>
       </Button>
 
-      <Button
-        class="site-icon-btn site-theme-toggle"
-        type="text"
-        shape="circle"
-        :aria-label="`${t('theme')}: ${t(currentTheme.labelKey)}`"
-        :title="t(currentTheme.labelKey)"
-        @click="cycleTheme"
-      >
-        <template #icon>
+      <details ref="themePicker" class="site-theme-picker" @keydown.esc.stop.prevent="closeThemePicker">
+        <summary
+          ref="themeTrigger"
+          class="site-icon-btn site-theme-toggle"
+          :aria-label="`${t('theme')}: ${presetValue}, ${t(currentTheme.labelKey)}`"
+          :title="t('theme')"
+        >
           <component :is="currentTheme.icon" />
-        </template>
-      </Button>
+        </summary>
+        <div class="site-theme-options">
+          <label>
+            {{ t('themePreset') }}
+            <select v-model="presetValue" class="site-preset-select">
+              <option value="default">{{ t('themeDefault') }}</option>
+              <option value="mono">{{ t('themeMono') }}</option>
+              <option value="material3">{{ t('themeMaterial') }}</option>
+            </select>
+          </label>
+          <label>
+            {{ t('themeAppearance') }}
+            <select v-model="modeValue" class="site-mode-select">
+              <option v-for="option in themeOptions" :key="option.value" :value="option.value">
+                {{ t(option.labelKey) }}
+              </option>
+            </select>
+          </label>
+        </div>
+      </details>
 
       <Button
         class="site-icon-btn site-github-link"

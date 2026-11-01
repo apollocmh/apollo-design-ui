@@ -29,8 +29,8 @@ try {
   await page.screenshot({ path: `${SHOT_DIR}/home.png` });
 
   // ── 2. 组件页：SSR 正文 + demo 真实渲染 ─────────────────────────────
-  // SSR 断言取自 HTTP 响应体（服务端产出的原始 HTML），避免与水合竞态混淆
-  const btnRes = await page.goto(`${BASE}/components/button`, { waitUntil: 'domcontentloaded' });
+  // SSR 断言仍取自 HTTP 原响应；后续 DOM 操作等客户端首次接管完成。
+  const btnRes = await page.goto(`${BASE}/components/button`, { waitUntil: 'networkidle' });
   const ssrHtml = await btnRes.text();
   check('组件标题 SSR', /<h1[^>]*>[\s\S]{0,80}Button/.test(ssrHtml));
   check('正文 SSR（何时使用锚点）', ssrHtml.includes('id="何时使用"'));
@@ -72,7 +72,7 @@ try {
   check('本页目录', (await page.locator('.site-toc-link').count()) > 3);
 
   // ── 2b. Input.Search / InputOTP demo 真实渲染 ────────────────────────
-  await page.goto(`${BASE}/components/input`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/input`, { waitUntil: 'networkidle' });
   // 示例在靠近视口时才挂载；先滚动实际卡片，不能等待尚未激活的远处内容。
   const searchDemo = page.locator('#demo-search');
   await searchDemo.scrollIntoViewIfNeeded();
@@ -122,7 +122,7 @@ try {
   // ── 3. 语言切换 ─────────────────────────────────────────────────────
   // 回到 Button 页：语言断言依赖「When To Use / 何时使用」这组标题，
   // Input 文档没有该小节（上面的 2b 会改当前路由）。
-  await page.goto(`${BASE}/components/button`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/button`, { waitUntil: 'networkidle' });
   await page.waitForSelector('h1.component-title', { state: 'visible', timeout: 10000 });
   await page.locator('.site-lang-toggle').click();
   // 文档正文由异步 chunk + 响应式 langKey 驱动，固定 sleep 在慢机器上会假失败。
@@ -143,25 +143,18 @@ try {
   check('切回中文文档', (await page.content()).includes('何时使用'));
 
   // ── 4. 主题切换 ─────────────────────────────────────────────────────
-  // 按钮是「亮 → 暗 → 跟随系统」三态循环，初始态由 localStorage / 系统决定，
-  // 所以不能直接假设点一次就是暗色 —— 循环点到暗色为止（最多 3 次）。
+  // 主题面板提供独立风格与明暗选择，使用真实原生 select。
   const themeBtn = page.locator('.site-theme-toggle');
   const themeAttr = () => page.evaluate(() => document.documentElement.dataset.apolloTheme);
-  let reachedDark = false;
-  for (let i = 0; i < 3 && !reachedDark; i += 1) {
-    await themeBtn.click();
-    await page.waitForTimeout(200);
-    reachedDark = (await themeAttr()) === 'dark';
-  }
+  await themeBtn.click();
+  await page.locator('.site-mode-select').selectOption('dark');
+  const reachedDark = (await themeAttr()) === 'dark';
   check('可切到暗色', reachedDark, String(await themeAttr()));
   await page.screenshot({ path: `${SHOT_DIR}/button-dark.png` });
-  let reachedLight = false;
-  for (let i = 0; i < 3 && !reachedLight; i += 1) {
-    await themeBtn.click();
-    await page.waitForTimeout(200);
-    reachedLight = (await themeAttr()) === undefined;
-  }
+  await page.locator('.site-mode-select').selectOption('light');
+  const reachedLight = (await themeAttr()) === 'light';
   check('可切回亮色', reachedLight, String(await themeAttr()));
+  await page.locator('.site-mode-select').press('Escape');
 
   // ── 5. 搜索 ─────────────────────────────────────────────────────────
   await page.keyboard.press('/');
@@ -181,7 +174,7 @@ try {
   check('table 页 demo 渲染', (await page.locator('.demo-canvas > *').count()) > 0);
 
   // ── 6. 指南 & 总览 & 404 ────────────────────────────────────────────
-  await page.goto(`${BASE}/components`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components`, { waitUntil: 'networkidle' });
   check(
     '组件总览卡片（72 组件 + 图标资源）',
     (await page.locator('.overview-card').count()) === 73,
@@ -191,28 +184,28 @@ try {
     '总览含图标入口',
     await page.locator('a.overview-card[href*="/components/icon"]').first().isVisible(),
   );
-  await page.goto(`${BASE}/guide/compatibility`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/guide/compatibility`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   check(
     '兼容性指南（真源注入）',
     (await page.content()).includes('COMPATIBILITY') ||
       (await page.locator('.doc-markdown').innerText()).length > 500,
   );
-  await page.goto(`${BASE}/no-such-page`, { waitUntil: 'domcontentloaded' });
-  // 静态 404.html 在客户端水合后才出现，domcontentloaded 时可能还没挂载。
+  await page.goto(`${BASE}/no-such-page`, { waitUntil: 'networkidle' });
+  // 静态 404.html 回退后的客户端路由仍需给出可见的 404 页面。
   await page
     .waitForSelector('.notfound-code', { state: 'visible', timeout: 10000 })
     .catch(() => {});
   check('404 页', await page.locator('.notfound-code:has-text("404")').isVisible());
 
   // ── 7. 独立示例页（新窗口打开的目标） ────────────────────────────────
-  await page.goto(`${BASE}/components/button/demo/basic`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/button/demo/basic`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.apollo-btn', { timeout: 15000 });
   check('独立示例页渲染', (await page.locator('.apollo-btn').count()) > 0);
   await page.screenshot({ path: `${SHOT_DIR}/standalone-demo.png` });
 
   // ── 7b. 独立图标目录（资源页，不是第 73 个组件） ─────────────────────
-  await page.goto(`${BASE}/components/icon`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/icon`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.icon-tile', { timeout: 15000 });
   const iconCount = await page.locator('.icon-tile').count();
   const grid = page.locator('.virtual-icon-grid');
@@ -261,7 +254,7 @@ try {
 
   // ── 8. 移动端 ────────────────────────────────────────────────────────
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(`${BASE}/components/button`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/button`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
   check('移动端抽屉按钮', await page.locator('.site-mobile-toggle').isVisible());
   await page.locator('.site-mobile-toggle').click();

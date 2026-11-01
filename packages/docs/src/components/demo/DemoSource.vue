@@ -98,8 +98,8 @@ const active = computed(
 }
 
 /* shiki 双主题（与 markdown.css 同规则，作用到源码面板） */
-:global([data-apollo-theme='dark']) .demo-source-code :deep(.shiki),
-:global([data-apollo-theme='dark']) .demo-source-code :deep(.shiki span) {
+:global([data-apollo-appearance='dark']) .demo-source-code :deep(.shiki),
+:global([data-apollo-appearance='dark']) .demo-source-code :deep(.shiki span) {
   color: var(--shiki-dark) !important;
   background-color: transparent !important;
 }

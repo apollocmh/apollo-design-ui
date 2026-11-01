@@ -13,11 +13,10 @@
  */
 
 import { en_US, zh_CN } from '@apollo-design/locale';
-import { darkAlgorithm } from '@apollo-design/theme';
 import { ConfigProvider } from '@apollo-design/ui';
 import { computed, onMounted, provide, ref } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
-import { useResolvedTheme } from '../../composables/theme';
+import { useSiteTheme } from '../../composables/theme';
 import { DEMO_CONTEXT_KEY } from './context';
 
 const props = defineProps<{ instanceId: string }>();
@@ -26,10 +25,8 @@ const { locale } = useSiteLocale();
 const resetToken = ref(0);
 const direction = ref<'ltr' | 'rtl'>('ltr');
 const themeReady = ref(false);
-const resolvedTheme = useResolvedTheme();
-const theme = computed(() =>
-  themeReady.value && resolvedTheme.value === 'dark' ? { algorithm: darkAlgorithm } : undefined,
-);
+const siteTheme = useSiteTheme();
+const theme = computed(() => (themeReady.value ? siteTheme.theme.value : undefined));
 
 const apolloLocale = computed(() => (locale.value === 'zh-CN' ? zh_CN : en_US));
 

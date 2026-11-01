@@ -276,6 +276,65 @@ a:hover {
   font-weight: 600;
 }
 
+.site-theme-picker {
+  position: relative;
+}
+
+.site-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  list-style: none;
+  border-radius: var(--apollo-border-radius-circle);
+  color: var(--site-text);
+  cursor: pointer;
+}
+
+.site-theme-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.site-theme-toggle:hover {
+  background: var(--site-bg-soft);
+}
+
+.site-theme-toggle:focus-visible {
+  outline: var(--apollo-line-width-focus) solid var(--apollo-color-link);
+  outline-offset: 2px;
+}
+
+.site-theme-options {
+  position: absolute;
+  inset: calc(100% + 10px) 0 auto auto;
+  width: 224px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  background: var(--site-bg-elevated);
+  box-shadow: var(--site-shadow);
+}
+
+.site-theme-options label {
+  display: grid;
+  gap: 4px;
+  color: var(--site-text-secondary);
+}
+
+.site-theme-options select {
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 1px solid var(--site-border-strong);
+  border-radius: var(--apollo-border-radius);
+  font: inherit;
+  color: var(--site-text);
+  background: var(--site-bg);
+}
+
 /* 顶栏行动区全部使用 Apollo Button（text / circle）；这里只保留尺寸与响应式。 */
 @media (max-width: 1199px) {
   .site-topbar-nav {

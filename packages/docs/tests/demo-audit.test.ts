@@ -13,6 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import manifest from '../.generated/manifest.json';
 import DemoFrame from '../src/components/demo/DemoFrame.vue';
@@ -212,9 +213,10 @@ describe('路由契约（深链接）', () => {
 });
 
 describe('iframe 隔离预览', () => {
-  it('src 带 base 前缀（子路径部署下不会 404）', () => {
+  it('src 带 base 前缀（子路径部署下不会 404）', async () => {
     const { component, demo } = allDemos[0]!;
     const wrapper = mount(DemoFrame, { props: { demo }, attachTo: document.body });
+    await nextTick();
     const src = wrapper.find('iframe').attributes('src')!;
     expect(src).toContain(`/components/${component}/demo/${demo.name}`);
     expect(src).toContain('embed=1');
@@ -229,6 +231,7 @@ describe('iframe 隔离预览', () => {
       props: { demo: allDemos[0]!.demo },
       attachTo: document.body,
     });
+    await nextTick();
     const el = wrapper.find('iframe').element as HTMLIFrameElement;
     const before = el.style.height;
     window.dispatchEvent(

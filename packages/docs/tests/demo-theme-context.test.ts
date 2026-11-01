@@ -1,4 +1,7 @@
-import { useTheme } from '@apollo-design/theme';
+import { getDesignToken, useTheme } from '@apollo-design/theme';
+import { material3Preset } from '@apollo-design/theme/presets/material3';
+import { monoPreset } from '@apollo-design/theme/presets/mono';
+import { ConfigProvider } from '@apollo-design/ui';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { createSSRApp, defineComponent, h, nextTick } from 'vue';
@@ -7,10 +10,12 @@ import DemoFrame from '../src/components/demo/DemoFrame.vue';
 import DemoProvider from '../src/components/demo/DemoProvider.vue';
 import { provideSiteLocale } from '../src/composables/locale';
 import {
+  setPresetOverride,
   setThemeOverride,
   setupTheme,
   useResolvedTheme,
   useThemeMode,
+  useThemePreset,
 } from '../src/composables/theme';
 import type { DemoMeta } from '../src/types/manifest';
 
@@ -25,6 +30,8 @@ beforeAll(() => {
 afterEach(() => {
   for (const w of mounted.splice(0)) w.unmount();
   setThemeOverride(null);
+  setPresetOverride(null);
+  useThemePreset().setPreset('default');
   useThemeMode().setMode('light');
   dark = false;
   media.dispatchEvent(new Event('change'));
@@ -72,7 +79,8 @@ describe('Docs source theme context', () => {
     dark = true;
     media.dispatchEvent(new Event('change'));
     await nextTick();
-    expect(document.documentElement.dataset.apolloTheme).toBe('dark');
+    expect(document.documentElement.dataset.apolloTheme).toBe('system');
+    expect(document.documentElement.dataset.apolloAppearance).toBe('dark');
     expect(resolved.value).toBe('dark');
     dark = false;
     media.dispatchEvent(new Event('change'));
@@ -82,7 +90,7 @@ describe('Docs source theme context', () => {
   });
 });
 
-it('hydrates the server frame before applying the stored dark theme', async () => {
+it('hydrates the reserved frame space, then creates one document with current preferences', async () => {
   const text = { zh: 'Example', en: 'Example', enFallback: false };
   const demo: DemoMeta = {
     id: 'button-demo-basic',
@@ -104,8 +112,10 @@ it('hydrates the server frame before applying the stored dark theme', async () =
   const host = document.createElement('div');
   host.innerHTML = html;
   document.body.appendChild(host);
-  const original = host.querySelector('iframe');
+  expect(host.querySelector('iframe')).toBeNull();
+  expect(host.querySelector('.demo-frame-placeholder')).not.toBeNull();
   useThemeMode().setMode('dark');
+  useThemePreset().setPreset('mono');
   const app = createSSRApp(DemoFrame, { demo }),
     warnings: string[] = [];
   provideSiteLocale(app);
@@ -116,8 +126,14 @@ it('hydrates the server frame before applying the stored dark theme', async () =
     mounted.push({ unmount: () => app.unmount() });
     await nextTick();
     expect(warnings).toEqual([]);
-    expect(host.querySelector('iframe')).toBe(original);
-    expect(original?.getAttribute('src')).toContain('theme=dark');
+    const frame = host.querySelector('iframe');
+    expect(frame?.getAttribute('src')).toContain('theme=dark');
+    expect(frame?.getAttribute('src')).toContain('preset=mono');
+    const initialSrc = frame?.getAttribute('src');
+    useThemePreset().setPreset('material3');
+    await nextTick();
+    expect(host.querySelector('iframe')).toBe(frame);
+    expect(frame?.getAttribute('src')).toBe(initialSrc);
   } finally {
     error.mockRestore();
   }
@@ -140,4 +156,80 @@ it('keeps temporary query overrides separate from the saved mode and restores it
   await nextTick();
   expect(useResolvedTheme().value).toBe('dark');
   expect(useThemeMode().mode.value).toBe('system');
+});
+
+it('keeps the frame document when the parent changes appearance', async () => {
+  const text = { zh: 'Example', en: 'Example', enFallback: false };
+  const demo: DemoMeta = {
+    id: 'input-demo-basic',
+    component: 'input',
+    name: 'basic',
+    order: 0,
+    title: text,
+    desc: text,
+    descHtml: text,
+    iframe: true,
+    preview: { mode: 'isolated' },
+    sources: [],
+    githubPath: 'packages/ui/src/input/demo/basic.vue',
+  };
+  useThemeMode().setMode('light');
+  const wrapper = mount(DemoFrame, { props: { demo }, attachTo: document.body });
+  mounted.push(wrapper);
+  await nextTick();
+  const frame = wrapper.get('iframe').element;
+  const src = frame.getAttribute('src');
+  useThemeMode().setMode('dark');
+  await nextTick();
+  expect(wrapper.get('iframe').element).toBe(frame);
+  expect(frame.getAttribute('src')).toBe(src);
+});
+
+it('applies public presets while a local Demo override retains its own intent', async () => {
+  const Probe = defineComponent({
+    setup() {
+      const theme = useTheme();
+      return () =>
+        h('output', {
+          'data-primary': theme.token.value.colorPrimary,
+          'data-radius': theme.token.value.borderRadius,
+        });
+    },
+  });
+  const wrapper = mount(DemoProvider, {
+    props: { instanceId: 'nested-preset' },
+    slots: {
+      default: () => [
+        h(Probe),
+        h(
+          ConfigProvider,
+          { theme: { token: { colorPrimary: '#a12345' } } },
+          { default: () => h(Probe) },
+        ),
+      ],
+    },
+  });
+  mounted.push(wrapper);
+  for (const [id, preset] of [
+    ['mono', monoPreset],
+    ['material3', material3Preset],
+  ] as const) {
+    useThemePreset().setPreset(id);
+    useThemeMode().setMode('dark');
+    await nextTick();
+    const [inherited, local] = wrapper.findAll('output');
+    expect(inherited?.attributes('data-primary')).toBe(
+      getDesignToken({ preset, mode: 'dark' }).colorPrimary,
+    );
+    expect(local?.attributes('data-primary')).toBe(
+      getDesignToken({ preset, mode: 'dark', token: { colorPrimary: '#a12345' } }).colorPrimary,
+    );
+    expect(local?.attributes('data-radius')).toBe(
+      String(getDesignToken({ preset, mode: 'dark' }).borderRadius),
+    );
+    expect(document.documentElement.dataset.apolloPreset).toBe(id);
+  }
+  setPresetOverride('default');
+  expect(useThemePreset().preset.value).toBe('material3');
+  expect(localStorage.getItem('apollo-site-preset')).toBe('material3');
 });

@@ -1,8 +1,30 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-apollo-preset="default" data-apollo-theme="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Apply public preset selectors before CSS/SSR content paints; no palette is duplicated.
+      (() => {
+        const saved = (key) => {
+          try { return localStorage.getItem(key); } catch { return null; }
+        };
+        const query = /\/components\/[^/]+\/demo\/[^/]+/.test(location.pathname)
+          ? new URLSearchParams(location.search) : new URLSearchParams();
+        const isMode = (value) => ['light', 'dark', 'system'].includes(value);
+        const isPreset = (value) => ['default', 'mono', 'material3'].includes(value);
+        const mode = isMode(query.get('theme')) ? query.get('theme') : saved('apollo-site-theme');
+        const preset = isPreset(query.get('preset')) ? query.get('preset') : saved('apollo-site-preset');
+        const root = document.documentElement;
+        root.dataset.apolloPreset = isPreset(preset) ? preset : 'default';
+        root.dataset.apolloTheme = isMode(mode) ? mode : 'system';
+        root.dataset.apolloAppearance = root.dataset.apolloTheme === 'system'
+          ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : root.dataset.apolloTheme;
+        const lang = query.get('lang') ?? saved('apollo-site-locale');
+        if (lang === 'zh-CN' || lang === 'en-US') root.lang = lang;
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/apollo-design-ui/logo.svg" />
     <title>Apollo Design - 独立发展的 Vue 3 原生组件库</title>
     <meta

@@ -27,7 +27,7 @@ page.on('console', (msg) => {
 
 async function standalone(component, demo) {
   await page.goto(`${BASE}/components/${component}/demo/${demo}`, {
-    waitUntil: 'domcontentloaded',
+    waitUntil: 'networkidle',
   });
   await page.waitForSelector('.standalone-body .demo-renderer');
   await page.waitForTimeout(400);
@@ -107,7 +107,7 @@ try {
   await page.screenshot({ path: 'docs/audit/evidence/stage2-form.png' });
 
   // ── Stage 3：viewport 画布 + 新窗口 BASE_URL ────────────────────────────
-  await page.goto(`${BASE}/components/float-button`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/float-button`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.demo-viewport iframe', { timeout: 15000 });
   const viewportFrame = page.locator('.demo-viewport iframe').first();
   // iframe 是 loading="lazy"：先滚进视口，再等内部示例真正渲染。
@@ -136,7 +136,7 @@ try {
   );
 
   // ── Stage 3：站点语言 → Demo 组件 locale（I18N-01）────────────────────
-  await page.goto(`${BASE}/components/date-picker?lang=en-US`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/date-picker?lang=en-US`, { waitUntil: 'networkidle' });
   const localeDemo = page.locator('.demo-renderer[data-demo="date-picker-basic"]');
   await localeDemo.scrollIntoViewIfNeeded();
   const localeInput = localeDemo.locator('.apollo-picker input').first();

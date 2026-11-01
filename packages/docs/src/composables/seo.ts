@@ -6,6 +6,7 @@
 import { useHead } from '@unhead/vue';
 import type { Ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useSiteLocale } from './locale';
 
 const SITE_NAME = 'Apollo Design';
 const ORIGIN = 'https://apollocmh.github.io';
@@ -13,6 +14,7 @@ const BASE = '/apollo-design-ui';
 
 export function useSeo(title: Ref<string>, description: Ref<string>): void {
   const route = useRoute();
+  const { locale } = useSiteLocale();
   useHead(() => {
     const path = route.path === '/' ? '' : route.path;
     const full = `${ORIGIN}${BASE}${path}`;
@@ -24,7 +26,7 @@ export function useSeo(title: Ref<string>, description: Ref<string>): void {
         { rel: 'alternate', hreflang: 'zh-CN', href: `${full}?lang=zh-CN` },
         { rel: 'alternate', hreflang: 'en-US', href: `${full}?lang=en-US` },
       ],
-      htmlAttrs: { lang: route.query.lang === 'en-US' ? 'en-US' : 'zh-CN' },
+      htmlAttrs: { lang: locale.value },
     };
   });
 }

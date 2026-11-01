@@ -10,11 +10,14 @@ import { initSiteLocale, provideSiteLocale } from './composables/locale';
 import { setupTheme } from './composables/theme';
 import { routes, stripHtmlGuard } from './router';
 
-import '@apollo-design/theme/tokens.css';
 // ⚠️ 组件样式必须显式引入：文档站的示例走的是**发布产物同源**的静态 CSS
 //    （R7：零 @ant-design 运行时依赖，也就没有 cssinjs 运行时注入）。
 //    漏掉这条的症状非常隐蔽 —— demo 能渲染、交互正常，只是「长得像裸 HTML」。
 import '@apollo-design/ui/style.css';
+// Docs deliberately offers all three choices. Applications can load only their chosen preset.
+import '@apollo-design/theme/presets/default.css';
+import '@apollo-design/theme/presets/mono.css';
+import '@apollo-design/theme/presets/material3.css';
 import './styles/site.css';
 import './styles/markdown.css';
 

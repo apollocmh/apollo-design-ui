@@ -1,9 +1,8 @@
 /**
  * 站点外壳：主题三态、语言切换、示例与站点的样式隔离、无障碍与移动端。
  *
- * 隔离是这里最容易被悄悄破坏的一条：站点一旦用 ConfigProvider / LocaleProvider
- * 把自己的偏好「下发」给整棵树，示例里自己的 Provider 就失效了 —— 用户看到的
- * 示例行为和他们复制回去跑出来的不一样。所以这里用静态源码约束把它钉住。
+ * 站点通过公开 Provider 下发当前预设，示例仍可用自己的 Provider 覆盖。
+ * 局部主题优先级由 demo-theme-context 的真实嵌套行为回归验证。
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -28,7 +27,7 @@ describe('主题：三态切换与持久化', () => {
 
     setMode('light');
     await nextTick();
-    expect(document.documentElement.dataset.apolloTheme).toBeUndefined();
+    expect(document.documentElement.dataset.apolloTheme).toBe('light');
 
     setMode('dark');
     await nextTick();
@@ -37,7 +36,8 @@ describe('主题：三态切换与持久化', () => {
     setMode('system');
     await nextTick();
     // jsdom 的 matchMedia 恒为 false ⇒ system 解析为亮色
-    expect(document.documentElement.dataset.apolloTheme).toBeUndefined();
+    expect(document.documentElement.dataset.apolloTheme).toBe('system');
+    expect(document.documentElement.dataset.apolloAppearance).toBe('light');
   });
 
   it('选择被持久化（刷新后不回弹）', () => {
@@ -111,10 +111,11 @@ describe('样式隔离：站点令牌不得污染示例', () => {
     expect(preview).toMatch(/demo-canvas[\s\S]{0,400}--apollo-/);
   });
 
-  it('站点入口不引入 ConfigProvider / LocaleProvider（不向示例下发偏好）', () => {
-    for (const rel of ['App.vue', 'main.ts']) {
-      const src = readSrc(rel);
-      expect(src, rel).not.toMatch(/ConfigProvider|LocaleProvider/);
+  it('站点使用公开 Provider 和独立预设资源，不定义另一套配色', () => {
+    expect(readSrc('App.vue')).toContain('<ConfigProvider :theme="theme">');
+    const main = readSrc('main.ts');
+    for (const preset of ['default', 'mono', 'material3']) {
+      expect(main).toContain(`@apollo-design/theme/presets/${preset}.css`);
     }
   });
 

@@ -29,7 +29,7 @@ page.on('console', (message) => {
 });
 
 async function gotoMenu() {
-  await page.goto(`${BASE}/components/menu`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/menu`, { waitUntil: 'networkidle' });
   await page.locator(demo('horizontal')).scrollIntoViewIfNeeded();
   await page.waitForSelector(`${demo('horizontal')} .apollo-menu`, { timeout: 30000 });
   await page.waitForTimeout(800);
@@ -218,27 +218,48 @@ try {
       : 'null',
   );
 
-  // 滚动时指针留在弹层内，避免标题移开后触发正常的 hover 离场。
-  await verticalPopup.hover({ position: { x: 10, y: 10 } });
-  // 重开时会把示例滚回视口，必须在重开后测量滚动起点。
+  // 末尾示例可能已在页面下边界，按真实余量选择可发生位移的方向。
+  const scrollPlan = await page.evaluate(() => {
+    const max = Math.max(0, document.scrollingElement.scrollHeight - innerHeight);
+    const down = Math.min(120, max - scrollY);
+    const up = Math.min(120, scrollY);
+    return { y: scrollY, max, delta: down >= up ? down : -up };
+  });
+  // mouse.move 不会像 locator.hover 那样自动滚动页面；指针保留在前后弹层的交集内。
+  await page.mouse.move(
+    vPopupBox.x + 10,
+    vPopupBox.y + (scrollPlan.delta > 0 ? 10 : vPopupBox.height - 10),
+  );
   const beforeScroll = await popupGeometry(reopenedHover.title, verticalPopup);
-  await page.evaluate(() => window.scrollBy({ top: 120, behavior: 'instant' }));
+  await page.evaluate((top) => window.scrollBy({ top, behavior: 'instant' }), scrollPlan.delta);
   await page.waitForTimeout(200);
   const afterScroll = await popupGeometry(reopenedHover.title, verticalPopup);
+  const afterScrollY = await page.evaluate(() => scrollY);
+  const stillOpen = (await reopenedHover.title.getAttribute('aria-expanded')) === 'true';
   check(
     'M-06 滚动后弹层跟随标题',
-    beforeScroll.title &&
+    Math.abs(afterScrollY - scrollPlan.y) > 5 &&
+      stillOpen &&
+      beforeScroll.title &&
       beforeScroll.popup &&
       afterScroll.title &&
       afterScroll.popup &&
-      afterScroll.title.y < beforeScroll.title.y - 5 &&
+      (scrollPlan.delta > 0
+        ? afterScroll.title.y < beforeScroll.title.y - 5
+        : afterScroll.title.y > beforeScroll.title.y + 5) &&
       // 邻近 Demo 挂载会触发滚动锚定；跟随量应等于标题的实际位移。
       near(
         afterScroll.popup.y - beforeScroll.popup.y,
         afterScroll.title.y - beforeScroll.title.y,
         5,
       ),
-    JSON.stringify({ before: beforeScroll, after: afterScroll }),
+    JSON.stringify({
+      scrollPlan,
+      afterScrollY,
+      stillOpen,
+      before: beforeScroll,
+      after: afterScroll,
+    }),
   );
   await page.evaluate(() => window.scrollTo(0, 0));
 

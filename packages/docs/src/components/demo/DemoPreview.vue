@@ -10,6 +10,7 @@
 import { computed, ref } from 'vue';
 import { resolveDemoLayout } from '../../composables/demo-layout';
 import { useSiteLocale } from '../../composables/locale';
+import { useSiteTheme } from '../../composables/theme';
 import type { DemoMeta } from '../../types/manifest';
 import DemoErrorBoundary from './DemoErrorBoundary.vue';
 import DemoFrame from './DemoFrame.vue';
@@ -22,6 +23,7 @@ import DemoViewport from './DemoViewport.vue';
 const props = defineProps<{ demo: DemoMeta; fullWidth?: boolean }>();
 
 const { t, pick, locale } = useSiteLocale();
+const { preset, mode } = useSiteTheme();
 
 const expanded = ref(false);
 const resetToken = ref(0);
@@ -36,7 +38,12 @@ const instanceId = `${props.demo.component}-${props.demo.name}`;
  */
 const standaloneHref = computed(() => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  return `${base}/components/${props.demo.component}/demo/${props.demo.name}`;
+  const query = new URLSearchParams({
+    preset: preset.value,
+    theme: mode.value,
+    lang: locale.value,
+  });
+  return `${base}/components/${props.demo.component}/demo/${props.demo.name}?${query}`;
 });
 
 const title = computed(() => pick(props.demo.title));

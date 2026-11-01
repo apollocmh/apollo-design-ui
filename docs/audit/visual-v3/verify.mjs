@@ -5,7 +5,7 @@
  * 1. shell 利用率：1920 组件内容 ≥1300、2560 ≥1900；正文实际行长 ≤960。
  * 2. 稳定顺序：Button 页展开首个源码后，所有卡片 x 坐标不变。
  * 3. 宽内容：Form/Table 首卡宽度 ≥ 内容栏 90%（full 档）。
- * 4. 自举：顶栏 / Demo 工具栏是 Apollo Button；模式切换是 Segmented。
+ * 4. 自举：顶栏操作 / Demo 工具栏是 Apollo Button；主题为原生 summary/select，布局模式为 Segmented。
  * 5. Token：:root 的 --site-brand 是 --apollo-color-primary 的别名，不是硬编码色。
  * 6. 响应式：390 无横向溢出；顶栏 GitHub 入口隐藏。
  * 7. 暗色：页面背景不是白色，卡片表面来自暗色 token。
@@ -76,6 +76,20 @@ const measure = (page) =>
       toolbarNative: document.querySelectorAll('.demo-toolbar button:not(.apollo-btn)').length,
       segmented: document.querySelectorAll('.demos-toolbar .apollo-segmented').length,
       headerApollo: document.querySelectorAll('.site-topbar .apollo-btn').length,
+      themeSummary: Boolean(
+        document
+          .querySelector('.site-theme-picker > summary.site-theme-toggle')
+          ?.getAttribute('aria-label'),
+      ),
+      themePresetOptions: [...document.querySelectorAll('.site-preset-select option')].map(
+        (option) => option.value,
+      ),
+      themeModeOptions: [...document.querySelectorAll('.site-mode-select option')].map(
+        (option) => option.value,
+      ),
+      themeSelectLabels: [...document.querySelectorAll('.site-theme-options select')].filter(
+        (select) => select.labels?.length > 0,
+      ).length,
       githubDisplay: (() => {
         const el = document.querySelector('.site-github-link');
         return el ? getComputedStyle(el).display : 'missing';
@@ -121,7 +135,21 @@ const main = async () => {
         `apollo=${before.toolbarApollo}, native=${before.toolbarNative}`,
       );
       check('模式切换为 Segmented', before.segmented === 1, `count=${before.segmented}`);
-      check('顶栏控件为 Apollo Button', before.headerApollo >= 4, `count=${before.headerApollo}`);
+      check(
+        '顶栏操作按钮为 Apollo Button',
+        before.headerApollo >= 4,
+        `count=${before.headerApollo}`,
+      );
+      check(
+        '主题使用有可访问名的原生 summary 与两个有标签的 select',
+        before.themeSummary && before.themeSelectLabels === 2,
+      );
+      check(
+        '风格与明暗各有三个独立选项',
+        JSON.stringify(before.themePresetOptions) ===
+          JSON.stringify(['default', 'mono', 'material3']) &&
+          JSON.stringify(before.themeModeOptions) === JSON.stringify(['light', 'dark', 'system']),
+      );
       check(
         'Token：--site-brand 指向 --apollo-color-primary',
         before.siteBrand?.includes('var(--apollo-color-primary)') === true,
