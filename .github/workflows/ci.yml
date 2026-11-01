@@ -64,7 +64,9 @@ jobs:
     # Approved Apollo images use Darwin/x64 system fonts; keep release visuals
     # in that platform family and let the unchanged comparator judge pixels.
     runs-on: macos-15-intel
-    timeout-minutes: 120
+    # The complete native visual matrix follows ~44 minutes of build/runtime work.
+    # The first tag run hit 120 minutes mid-matrix; test-level limits stay unchanged.
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
         with:
