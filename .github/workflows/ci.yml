@@ -64,7 +64,8 @@ jobs:
     # Approved Apollo images use Darwin/x64 system fonts; keep release visuals
     # in that platform family and let the unchanged comparator judge pixels.
     runs-on: macos-15-intel
-    timeout-minutes: 120
+    # Full visual acceptance exceeded the first tag job budget; assertions stay unchanged.
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
         with:
