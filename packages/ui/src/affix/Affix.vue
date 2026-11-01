@@ -1,5 +1,6 @@
 <script setup lang="ts">
 /** Affix keeps the existing geometry and frame-coalesced fast path. */
+import { collectScroller } from '@apollo-design/position';
 import { useTheme } from '@apollo-design/theme';
 import { isWindow, throttleByAnimationFrame, useResizeObserver } from '@apollo-design/utils';
 import {
@@ -102,12 +103,16 @@ const measure = () => {
 
 let attachedTarget: HTMLElement | Window | null = null;
 let attachedWindow: Window | null = null;
+let attachedScrollers: HTMLElement[] = [];
 const resizeTarget = shallowRef<HTMLElement | null>(null);
 const detach = () => {
   for (const event of TRIGGER_EVENTS) attachedTarget?.removeEventListener(event, listener);
+  for (const scroller of attachedScrollers) scroller.removeEventListener('scroll', listener);
   attachedWindow?.removeEventListener('resize', listener);
+  attachedWindow?.removeEventListener('scroll', listener);
   attachedTarget = null;
   attachedWindow = null;
+  attachedScrollers = [];
   resizeTarget.value = null;
 };
 const syncListeners = () => {
@@ -116,10 +121,21 @@ const syncListeners = () => {
   detach();
   attachedTarget = target;
   for (const event of TRIGGER_EVENTS) target?.addEventListener(event, listener);
-  if (target && !isWindow(target)) {
+  if (!target) return;
+  // Both rectangles can move without resizing: the target may be inside an
+  // outer scroller, while consumers such as Anchor place the placeholder outside it.
+  const scrollers = new Set([
+    ...(!isWindow(target) ? collectScroller(target) : []),
+    ...(placeholderNode.value ? collectScroller(placeholderNode.value) : []),
+  ]);
+  if (!isWindow(target)) scrollers.delete(target);
+  attachedScrollers = [...scrollers];
+  for (const scroller of attachedScrollers) scroller.addEventListener('scroll', listener);
+  if (!isWindow(target)) {
     resizeTarget.value = target;
     attachedWindow = target.ownerDocument.defaultView;
     attachedWindow?.addEventListener('resize', listener);
+    attachedWindow?.addEventListener('scroll', listener);
   }
 };
 const prepareMeasure = () => {

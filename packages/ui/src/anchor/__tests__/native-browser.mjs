@@ -272,11 +272,18 @@ const fixture=shallowRef(null);const app=createApp({render:()=>h(Fixture,{ref:fi
   );
   await patch('target-b');
   await page.waitForFunction(() => !!document.querySelector('#native-affix > .orbit-affix'));
-  assert.equal(
-    await page.evaluate(
-      () => window.nativeListeners.filter((item) => item.target.id === 'scroll-a').length,
-    ),
-    0,
+  assert.deepEqual(
+    await page.evaluate(() => ({
+      placeholderInsideOldTarget: document
+        .querySelector('#scroll-a')
+        .contains(document.querySelector('#native-affix')),
+      listeners: window.nativeListeners
+        .filter((item) => item.target.id === 'scroll-a')
+        .map((item) => item.type),
+    })),
+    // The old target's own listeners are released. One ancestor scroll listener
+    // remains because this Affix's placeholder still lives in that container.
+    { placeholderInsideOldTarget: true, listeners: ['scroll'] },
   );
   await patch('target-a');
   await patch('cancel');

@@ -40,6 +40,41 @@ afterEach(() => {
 });
 
 describe('Anchor native contracts', () => {
+  it('its default Affix follows an outer ancestor moving the custom container', async () => {
+    const ancestor = document.createElement('div');
+    ancestor.style.overflow = 'auto';
+    const container = document.createElement('div');
+    ancestor.append(container);
+    document.body.append(ancestor);
+    let top = 300;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return new DOMRect(0, top, 240, this === container ? 260 : 40);
+    });
+    const wrapper = mount(Anchor, {
+      props: { items: [item()], getContainer: () => container, offsetTop: 16 },
+      attachTo: document.body,
+    });
+    try {
+      await settle();
+      await vi.advanceTimersByTimeAsync(50);
+      await settle();
+      const link = wrapper.get('a').element;
+      link.focus();
+      expect(wrapper.get<HTMLElement>('.apollo-affix').element.style.top).toBe('316px');
+      top = 180;
+      ancestor.dispatchEvent(new Event('scroll'));
+      await vi.advanceTimersByTimeAsync(50);
+      await settle();
+      expect(wrapper.get<HTMLElement>('.apollo-affix').element.style.top).toBe('196px');
+      expect(wrapper.get('a').element).toBe(link);
+      expect(document.activeElement).toBe(link);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
   it('owns click exactly once and cancellation prevents selection, scrolling and history', async () => {
     section('native-a', 200);
     const scroll = document.createElement('div');

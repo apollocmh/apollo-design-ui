@@ -58,7 +58,7 @@ The prefix, component configuration and theme follow current Provider values. Th
 
 Existing rounded comparisons and the outer layout reference are preserved. Top has branch priority; setting it does not remove the bottom condition. Fixed width follows the outer available width. Content keeps its natural height, and its existing ResizeObserver updates the spacer on growth and shrinkage without replacing inputs.
 
-Measurement and listeners start after mounting. Scrolling retains frame coalescing and the unchanged-position fast path; size notifications perform full measurement. Target replacement, a pending target and unmount release listeners, observations and pending frames. SSR schedules none of these effects. Arbitrary position rearrangement without a size, scroll or explicit update signal does not add a new observer or polling loop.
+Measurement and listeners start after mounting. Scroll listeners cover the current target, ancestors that move the target or placeholder, and the target's owner window. Top and bottom affixing follow the current target position when the outer page or a nested ancestor scrolls. Scrolling retains frame coalescing and the unchanged-position fast path; size notifications perform full measurement. Target replacement, a pending target and unmount release these listeners, observations and pending frames. SSR schedules none of these effects. Arbitrary position rearrangement without a size, scroll or explicit update signal does not add a new observer or polling loop.
 
 ## Demos
 
