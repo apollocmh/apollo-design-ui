@@ -45,20 +45,24 @@ import {
 let holderEl = null;
 
 /** 用例盒子：`position: relative` 来自 `DATE_PICKER_BOX_STYLE`（浮层的包含块）。 */
-const box = (children, minHeight) =>
+const box = (children, minHeight, mobileMinHeight = minHeight) =>
   h(
     'div',
     {
       ref: (el) => {
         holderEl = el;
       },
-      style: { ...DATE_PICKER_BOX_STYLE, minHeight: `${minHeight}px` },
+      // Popups are out of flow: reserve stacked rows on mobile and retain the wide canvas.
+      style: {
+        ...DATE_PICKER_BOX_STYLE,
+        minHeight: `${window.matchMedia('(max-width:575px)').matches ? mobileMinHeight : minHeight}px`,
+      },
     },
     [children],
   );
 
 /** 触发元素 + **内联的**浮层（`open` 受控静态帧 + `getPopupContainer`）。 */
-const picker = (props, minHeight) =>
+const picker = (props, minHeight, mobileMinHeight) =>
   box(
     h(DatePicker, {
       ...props,
@@ -66,6 +70,7 @@ const picker = (props, minHeight) =>
       getPopupContainer: () => holderEl,
     }),
     minHeight,
+    mobileMinHeight,
   );
 
 /** 面板锚定（`defaultPickerValue`）—— 否则空值面板显示的是「今天」，截图会 flaky。 */
@@ -85,6 +90,7 @@ export default {
         format: DATE_PICKER_DATETIME_FORMAT,
       },
       560,
+      720,
     ),
 
   month: () => picker({ picker: 'month', defaultPickerValue: ANCHOR }, 380),
@@ -127,6 +133,7 @@ export default {
         getPopupContainer: () => holderEl,
       }),
       520,
+      760,
     ),
 
   /** 范围有值：两端字段文本 + 两个面板各自的「选中 / 区间内 / 端点」格子态。 */
@@ -139,5 +146,6 @@ export default {
         getPopupContainer: () => holderEl,
       }),
       520,
+      760,
     ),
 };

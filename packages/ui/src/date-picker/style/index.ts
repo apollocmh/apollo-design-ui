@@ -430,8 +430,13 @@ const RULES_AFTER_PANEL = `
   .apollo-picker-compact-item:not(.apollo-picker-compact-first-item).apollo-picker-compact-last-item,.apollo-picker-compact-item:not(.apollo-picker-compact-first-item).apollo-picker-compact-last-item.apollo-picker-sm,.apollo-picker-compact-item:not(.apollo-picker-compact-first-item).apollo-picker-compact-last-item.apollo-picker-lg{border-start-start-radius:0;border-end-start-radius:0;}
 `;
 
-/** 触发区 + 浮层外壳（174 条 = 42 + 132）。`Calendar` 不用这一块。 */
-export const TRIGGER_RULES = `${RULES_BEFORE_PANEL}${RULES_AFTER_PANEL}`;
+/** Popup-only responsive flow; Calendar's shared panel rules remain independent. */
+const MOBILE_POPUP_RULES = `
+  @media(max-width:575px){.apollo-picker-dropdown{max-width:calc(100vw - var(--apollo-margin) * 2);}.apollo-picker-dropdown .apollo-picker-panel-container{max-width:100%;}.apollo-picker-dropdown .apollo-picker-panel-container .apollo-picker-panel-layout{flex-wrap:wrap;max-width:100%;}.apollo-picker-dropdown .apollo-picker-panel-layout>div{min-width:0;max-width:100%;}.apollo-picker-dropdown .apollo-picker-panel-container .apollo-picker-panels,.apollo-picker-dropdown .apollo-picker-datetime-panel{flex-wrap:wrap;max-width:min(100%,calc(var(--apollo-date-picker-cell-width) * 7 + (var(--apollo-padding) + var(--apollo-padding-xxs) / 2) * 2));}.apollo-picker-dropdown .apollo-picker-datetime-panel .apollo-picker-time-panel{border-inline-start:0;border-block-start:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-split);}.apollo-picker-dropdown .apollo-picker-presets ul{height:auto;}}
+`;
+
+/** 174 existing trigger/shell rules plus one mobile media block. Calendar does not use these. */
+export const TRIGGER_RULES = `${RULES_BEFORE_PANEL}${RULES_AFTER_PANEL}${MOBILE_POPUP_RULES}`;
 
 /**
  * 把面板规则换到别的作用域 —— `calendar` 用。
@@ -460,8 +465,8 @@ export function genPanelRules(scopeCls: string, tokenNs = '--apollo-date-picker'
   );
 }
 
-/** 257 条规则（由 `--emit-static` 产出，逐字搬运、只改前缀）。**顺序与产物一致**。 */
-export const DATE_PICKER_RULES = `${RULES_BEFORE_PANEL}${PANEL_RULES}${RULES_AFTER_PANEL}`;
+/** Preserve the existing 261-rule cascade and append the popup's mobile flow. */
+export const DATE_PICKER_RULES = `${RULES_BEFORE_PANEL}${PANEL_RULES}${RULES_AFTER_PANEL}${MOBILE_POPUP_RULES}`;
 
 /**
  * 按前缀生成规则体。

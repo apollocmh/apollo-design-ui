@@ -11,6 +11,8 @@ description: To select or input a date.
 
 To select or input a date.
 
+At viewport widths of 575px or less, date-time content and range panels wrap within the viewport. All date cells, time columns and confirmation controls remain available, including native keyboard selection of both range endpoints. Wider viewports retain the side-by-side layout.
+
 ## When To Use
 
 - When the user needs to input a date, they can click the standard input box and pick

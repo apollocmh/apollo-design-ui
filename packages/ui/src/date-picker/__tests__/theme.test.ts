@@ -349,8 +349,8 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
     expect(decls).toHaveLength(45);
   });
 
-  it('方向 C：规则恰好 261 条（含原生范围预览与焦点的四条新增规则）', () => {
-    expect(DATE_PICKER_RULES.split('\n').filter((l) => l.trim())).toHaveLength(261);
+  it('方向 C：保留原 261 条规则并追加一个完整移动 media 块', () => {
+    expect(DATE_PICKER_RULES.split('\n').filter((l) => l.trim())).toHaveLength(262);
   });
 
   it('方向 B：规则引用的自有变量**全部**在声明清单里（拼错会在这里红）', () => {
@@ -429,7 +429,7 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
  * `.ant-picker-calendar <X>`」⇒ 当时的 83 条规则 / 119 个选择器。
  * 8b262e5a 新增三条范围预览规则和一条原生焦点规则，当前面板共 87 条。
  */
-describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 87 == 261）', () => {
+describe('DatePicker · 规则拆分不变量（原 261 条 + popup 移动断点）', () => {
   const lines = (s: string) => s.split('\n').filter((l) => l.trim());
   const all = lines(DATE_PICKER_RULES);
   const trigger = lines(TRIGGER_RULES);
@@ -441,15 +441,15 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 87 == 261）
     }),
   );
 
-  it('两侧计数：TRIGGER 174 · PANEL 87', () => {
-    expect(trigger).toHaveLength(174);
+  it('两侧计数：TRIGGER 174 条加一个 media 块 · PANEL 87', () => {
+    expect(trigger).toHaveLength(175);
     expect(panel).toHaveLength(87);
   });
 
-  it('恰好划分：并集 == 当前 261 条，且**不重**（没有一条同时属于两侧）', () => {
-    // 新增的四条只属于面板，当前 261 条仍不重不漏。
+  it('恰好划分：并集含原 261 条与一个 media 块，且两侧不重', () => {
+    // 移动断点只属于 popup 外壳，不能经 genPanelRules 泄漏给 Calendar。
     const union = new Set([...trigger, ...panel]);
-    expect(union.size).toBe(261);
+    expect(union.size).toBe(262);
     expect([...union].sort()).toEqual([...new Set(all)].sort());
     // 两侧不相交
     const overlap = trigger.filter((l) => panel.includes(l));
@@ -489,11 +489,13 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 87 == 261）
     expect(all.slice(42, 42 + panel.length)).toEqual(panel);
   });
 
-  it('`DATE_PICKER_RULES` 的**顺序与条数**都不变（层叠顺序不能动）', () => {
-    expect(all).toHaveLength(261);
+  it('原 261 条层叠顺序保留，仅在尾部追加移动 popup media 块', () => {
+    expect(all).toHaveLength(262);
     // 首尾各取一条钉住顺序没被重排
     expect(all[0]).toContain('.apollo-picker-footer{border-top');
     expect(all[260]).toContain('.apollo-picker-compact-last-item');
+    expect(all[261]).toMatch(/^\s*@media\(max-width:575px\)\{/);
+    expect(genPanelRules('.apollo-picker-calendar')).not.toContain('@media');
   });
 
   it('`PANEL_RULES` 的每个逗号段都以 `.apollo-picker-dropdown ` 开头（换作用域安全的判据）', () => {
@@ -614,7 +616,7 @@ describe('DatePicker · 前缀参数化（`gen(p)` 对每个前缀都要产出�
       genDatePickerRules('ant')
         .split('\n')
         .filter((l) => l.trim()),
-    ).toHaveLength(261);
+    ).toHaveLength(262);
   });
 
   it('🚨 **全局别名变量不动**（`tokens.css` 只声明 `--apollo-*`）', () => {
