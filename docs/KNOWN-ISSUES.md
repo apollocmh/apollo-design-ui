@@ -30,7 +30,7 @@
 
 | 线索 | 当前证据与尚缺验证 |
 | --- | --- |
-| ResizeObserver 历史诊断 | 历史 `consumer-z-index-browser.mjs` 功能断言通过，但因 7 条 RO 诊断整体 exit 1；该失败保留。后续 Utils、VirtualList 和 Docs 场景通过不证明原场景已无诊断，本轮未重跑同一严格 `window.error` 场景。[原探针](../packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs#L61)、[证据](audit/evidence/known-issues-review-2026-11-01.json)。需按原场景定位实际 observer / target / 循环，再决定是否为当前问题；不先加节流或吞错。 |
+| ResizeObserver 历史诊断 | 历史 `consumer-z-index-browser.mjs` 功能断言通过，但因 7 条 RO 诊断整体 exit 1；Cascader 的另一个严格浏览器场景也曾因 1 条同类通知 exit 1，这些原失败均保留。后续 Utils、VirtualList 和 Docs 场景通过不证明原场景已无诊断，本轮未重跑同一严格 `window.error` 场景。[原探针](../packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs#L61)、[证据](audit/evidence/known-issues-review-2026-11-01.json)。需按原场景定位实际 observer / target / 循环，再决定是否为当前问题；不先加节流或吞错。 |
 | 代码高亮跨初始化差异 | [旧实验](audit/2026-10-24-demo-order-remediation.md)只有跨初始化状态的 token 分段线索；同初始化输出已相等。[当前高亮器](../packages/docs/tooling/content/markdown.mjs#L39)与构建/冒烟通过，均不等于已验证跨进程确定性。尚无当前用户可见错误复现，不先更换高亮器或归为功能缺陷。 |
 | List 拖拽示例能力覆盖 | [当前文档](../packages/ui/src/list/index.zh-CN.md#L32)仍明确该示例待审；未承诺 List 内建拖拽排序能力。本轮未做完整示例能力矩阵，不能把历史文件差额或示例待审等同于缺少组件功能。 |
 

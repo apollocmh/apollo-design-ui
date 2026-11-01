@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 249,
+  "revision": 250,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12135,27 +12135,14 @@
   ],
   "finalAcceptance": {
     "status": "failed",
-    "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+    "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
     "gates": [
       {
         "dimension": "api",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "Public API/type/behavior regressions and published consumers passed. Architecture evidence remains dated; historical acceptance is not promoted.",
         "checks": [
-          {
-            "name": "tooling",
-            "command": "/tmp/apollo-audit-toolchain/pnpm",
-            "args": [
-              "run",
-              "test:tooling"
-            ],
-            "exitCode": 0,
-            "signal": null,
-            "durationMs": 42082,
-            "log": "/tmp/apollo-final-quality-1adf76dc-tooling.log",
-            "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
-          },
           {
             "name": "consumer",
             "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
@@ -12184,26 +12171,47 @@
             "durationMs": 361190,
             "log": "/tmp/apollo-final-quality-1adf76dc-public-types.log",
             "sourceCommit": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4"
+          },
+          {
+            "kind": "tooling",
+            "lane": "tooling",
+            "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+            "command": [
+              "/tmp/apollo-audit-toolchain/pnpm",
+              "run",
+              "test:tooling"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 41699,
+            "stdout": "/tmp/apollo-issues-budget-tooling-62b4242e.stdout",
+            "stderr": "/tmp/apollo-issues-budget-tooling-62b4242e.log",
+            "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+            "frozenSource": true,
+            "passed": true
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "candidateCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "ROADMAP.md",
             "docs/KNOWN-ISSUES.md",
-            "docs/audit/tools/stage2-demo-probe.mjs",
-            "packages/docs/tests/menu-browser.mjs",
+            "docs/audit/2026-10-24-slot-inventory.md",
+            "docs/audit/2026-11-01-issues-budget-calibration.md",
+            "docs/audit/evidence/budget-calibration-2026-11-01.json",
+            "docs/audit/evidence/content-slot-inventory.json",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json",
+            "docs/history/content-slot-inventory-before-2026-11-01.json",
+            "docs/history/known-issues-2026-11-01.md",
             "registry/vue-native-audit.json",
-            "tests/visual/baselines/apollo/manifest.json",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
+            "tests/build/README.md",
+            "tests/build/budget.json",
+            "tests/build/checks/treeshake.mjs",
+            "tests/build/run.mjs"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged.",
+          "reuse": "No production source, dependency, public type, default runtime/type/visual configuration or published-artifact change. Reuse retains original 41ec765e runtime, 1adf76dc strict/type/consumer and named visual/Docs execution versions. This round changes docs/static inventory and B6 thresholds/measurement reporting only; relevant CLI/L7/inventory/tooling checks ran at62b4242e. Docs browser claims remain scoped to the same26e5ddd0 artifact and original six scenarios, not a new site build/deploy.",
           "validationCommits": {
             "coverage": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
             "strictAndPublicTypes": "1adf76dcf5ec30dc984a4ec7807a99f8a9b7cdb4",
@@ -12221,13 +12229,24 @@
             "concurrentCoverageMs": 2188674,
             "dedicatedCoverageMs": 1507822
           },
-          "timingLimit": "Analysis, implementation and integration-wait phases were not separately measured; command timings do not represent those phases."
+          "timingLimit": "Analysis, implementation and integration-wait phases were not separately measured; command timings do not represent those phases.",
+          "latestVerification": {
+            "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+            "checks": [
+              "L7/B6 after calibration",
+              "read-only measurement CLI",
+              "F11 inventory",
+              "53 tooling checks",
+              "two deliberate invalid threshold rejections"
+            ],
+            "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b"
+          }
         }
       },
       {
         "dimension": "tokens",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "checks": [
           {
@@ -12251,9 +12270,9 @@
       },
       {
         "dimension": "styles",
-        "status": "in_progress",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
-        "note": "13 old absolute budgets calibrated after matching root/deep retained-module evidence; no production output changes, 60 budgets and30% cap unchanged. Actual after-calibration B6/L7 checks pending; prior failure retained in preCalibrationValidation.",
+        "status": "passed",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+        "note": "B6 baseline calibration passed all73 entries after retained-module/dependency review. The13 individual caps changed with modest per-entry headroom; 60 caps, historical measuredKb and30% ratio unchanged. Actual product bytes unchanged: this is not optimization. Full151-check L7 artifact verification exited0 with0FAIL/0PENDING and15 explicit B1 SKIP. Original failed budget retained in preCalibrationValidation.",
         "remediationChecks": [
           {
             "kind": "format",
@@ -12314,18 +12333,25 @@
         },
         "checks": [
           {
-            "sourceCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
+            "kind": "build-verification",
+            "lane": "l7",
+            "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
             "command": [
               "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
               "tests/build/run.mjs",
-              "--package",
-              "ui",
-              "--strict"
+              "--no-build",
+              "--strict",
+              "--json"
             ],
-            "exitCode": 1,
+            "exitCode": 0,
             "signal": null,
-            "durationMs": 86303,
-            "log": "/tmp/apollo-visual-ui-build-26e5ddd0.log"
+            "durationMs": 35724,
+            "stdout": "/tmp/apollo-issues-budget-l7-62b4242e.stdout",
+            "stderr": "/tmp/apollo-issues-budget-l7-62b4242e.log",
+            "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+            "frozenSource": true,
+            "passed": true,
+            "report": "/tmp/apollo-issues-budget-l7-62b4242e.stdout"
           }
         ],
         "previousValidatedBudget": {
@@ -12360,23 +12386,26 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "candidateCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "ROADMAP.md",
             "docs/KNOWN-ISSUES.md",
-            "docs/audit/tools/stage2-demo-probe.mjs",
-            "packages/docs/tests/menu-browser.mjs",
+            "docs/audit/2026-10-24-slot-inventory.md",
+            "docs/audit/2026-11-01-issues-budget-calibration.md",
+            "docs/audit/evidence/budget-calibration-2026-11-01.json",
+            "docs/audit/evidence/content-slot-inventory.json",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json",
+            "docs/history/content-slot-inventory-before-2026-11-01.json",
+            "docs/history/known-issues-2026-11-01.md",
             "registry/vue-native-audit.json",
-            "tests/visual/baselines/apollo/manifest.json",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
+            "tests/build/README.md",
+            "tests/build/budget.json",
+            "tests/build/checks/treeshake.mjs",
+            "tests/build/run.mjs"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
+          "reuse": "No production source, dependency, public type, default runtime/type/visual configuration or published-artifact change. Reuse retains original 41ec765e runtime, 1adf76dc strict/type/consumer and named visual/Docs execution versions. This round changes docs/static inventory and B6 thresholds/measurement reporting only; relevant CLI/L7/inventory/tooling checks ran at62b4242e. Docs browser claims remain scoped to the same26e5ddd0 artifact and original six scenarios, not a new site build/deploy."
         },
         "foundationBuildReuse": {
           "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
@@ -12406,7 +12435,8 @@
             "tests/build/run.mjs"
           ],
           "changedRelevantInputs": [],
-          "scope": "Only unchanged foundation build inputs; current UI was independently rebuilt and its B6 failure retained."
+          "scope": "Foundation sources/build scripts/dependencies unchanged; tests/build B6 output labels/reporting changed and the current full artifact verification was rerun.",
+          "currentArtifactVerification": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9"
         },
         "preCalibrationValidation": {
           "status": "failed",
@@ -12450,18 +12480,30 @@
           }
         },
         "baselineCalibration": {
-          "status": "pending verification",
           "kind": "baseline-calibration-not-optimization",
+          "status": "passed",
+          "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
           "report": "docs/audit/evidence/budget-calibration-2026-11-01.json",
-          "updated": 13,
-          "unchanged": 60,
-          "fullRatioLimit": 0.3
+          "updatedEntries": 13,
+          "unchangedEntries": 60,
+          "maxRatioOfFull": 0.3,
+          "measuredFullKiB": 2236.6875,
+          "failuresAfterCalibration": 0,
+          "productBytesUnchanged": true
+        },
+        "latestL7": {
+          "total": 151,
+          "failed": 0,
+          "pending": 0,
+          "skipped": 15,
+          "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+          "note": "--no-build: B1 SKIP is artifact reuse, not a fresh build. Original package build provenance and all scans remain explicit."
         }
       },
       {
         "dimension": "unit",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
@@ -12715,7 +12757,7 @@
       {
         "dimension": "interaction",
         "status": "failed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "Existing complete runtime/DOM regression passed with unchanged inputs; a new targeted real-browser check confirms KI01 outside those passing scenarios. Diagnostic exit0 means investigation completed, not product success. Known numeric-root-style mismatch remains uncorrected; acceptance is failed.",
         "remediationChecks": [
           {
@@ -12837,13 +12879,14 @@
           },
           "productVerdict": "failed",
           "issue": "KI01",
-          "scope": "Tooltip/Popover numeric semantic root zIndex and nested Tooltip; not a whole-library regression claim"
+          "scope": "Tooltip/Popover numeric semantic root zIndex and nested Tooltip; not a whole-library regression claim",
+          "candidateCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9"
         }
       },
       {
         "dimension": "types",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "Strict noEmit and all 2389 public type cases passed after the common build; only the two Docs probes and reviewed baseline/state files changed afterward. Production, dependency and type-check inputs unchanged.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
@@ -13009,23 +13052,26 @@
           "failed": 0
         },
         "frozenInputs": {
-          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "candidateCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "ROADMAP.md",
             "docs/KNOWN-ISSUES.md",
-            "docs/audit/tools/stage2-demo-probe.mjs",
-            "packages/docs/tests/menu-browser.mjs",
+            "docs/audit/2026-10-24-slot-inventory.md",
+            "docs/audit/2026-11-01-issues-budget-calibration.md",
+            "docs/audit/evidence/budget-calibration-2026-11-01.json",
+            "docs/audit/evidence/content-slot-inventory.json",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json",
+            "docs/history/content-slot-inventory-before-2026-11-01.json",
+            "docs/history/known-issues-2026-11-01.md",
             "registry/vue-native-audit.json",
-            "tests/visual/baselines/apollo/manifest.json",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
+            "tests/build/README.md",
+            "tests/build/budget.json",
+            "tests/build/checks/treeshake.mjs",
+            "tests/build/run.mjs"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
+          "reuse": "No production source, dependency, public type, default runtime/type/visual configuration or published-artifact change. Reuse retains original 41ec765e runtime, 1adf76dc strict/type/consumer and named visual/Docs execution versions. This round changes docs/static inventory and B6 thresholds/measurement reporting only; relevant CLI/L7/inventory/tooling checks ran at62b4242e. Docs browser claims remain scoped to the same26e5ddd0 artifact and original six scenarios, not a new site build/deploy."
         },
         "additionalSourceTemplateCheck": {
           "sourceCommit": "31a1eecec989b2c75c2e8a40a8879f992414a3e5",
@@ -13044,7 +13090,7 @@
       {
         "dimension": "a11y",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "The complete unchanged four-project coverage command passed all 786 files / 17335 cases, with the original coverage thresholds and 5000ms timeouts, on one frozen source and immutable artifacts. First concurrent run failed five theme timeouts; the 161-case recovery and that failure remain dated evidence under unit. Dedicated rerun used the original two workers without concurrent heavy builds/types/visual shards. Resource contention is an inference from the differing runs, not a proven product fault.",
         "checks": [
           {
@@ -13069,7 +13115,7 @@
       {
         "dimension": "visual",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "Complete 1875-case comparison executed on frozen 1adf76dc; 1869 passed and six intended compact Timeline baselines were individually reviewed and updated. Both three-case official comparisons passed on ea70e52d. Exact ID union, no missing or duplicate cases; unchanged input/baseline checks support reuse. Original nonzero full comparison remains in firstCompleteComparison. No threshold or scenario removed.",
         "checks": [
           {
@@ -13833,29 +13879,32 @@
           "antialiasNoise": 0
         },
         "frozenInputs": {
-          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "candidateCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "ROADMAP.md",
             "docs/KNOWN-ISSUES.md",
-            "docs/audit/tools/stage2-demo-probe.mjs",
-            "packages/docs/tests/menu-browser.mjs",
+            "docs/audit/2026-10-24-slot-inventory.md",
+            "docs/audit/2026-11-01-issues-budget-calibration.md",
+            "docs/audit/evidence/budget-calibration-2026-11-01.json",
+            "docs/audit/evidence/content-slot-inventory.json",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json",
+            "docs/history/content-slot-inventory-before-2026-11-01.json",
+            "docs/history/known-issues-2026-11-01.md",
             "registry/vue-native-audit.json",
-            "tests/visual/baselines/apollo/manifest.json",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
+            "tests/build/README.md",
+            "tests/build/budget.json",
+            "tests/build/checks/treeshake.mjs",
+            "tests/build/run.mjs"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
+          "reuse": "No production source, dependency, public type, default runtime/type/visual configuration or published-artifact change. Reuse retains original 41ec765e runtime, 1adf76dc strict/type/consumer and named visual/Docs execution versions. This round changes docs/static inventory and B6 thresholds/measurement reporting only; relevant CLI/L7/inventory/tooling checks ran at62b4242e. Docs browser claims remain scoped to the same26e5ddd0 artifact and original six scenarios, not a new site build/deploy."
         }
       },
       {
         "dimension": "docs",
         "status": "passed",
-        "sourceCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
         "note": "All six existing Docs browser scopes now pass against the same prebuilt Docs/UI artifacts, plus Docs types/tests. The default-open vertical Menu can legitimately retain an overflow flip. The original preferred rightTop geometry assertion now runs after the existing real close/reopen, with all 28 assertions, timings, 3px/5px tolerances and console/error checks preserved. No Menu/Trigger/position product change. Original failed runs retained.",
         "remediation": {
           "scope": [
@@ -14309,23 +14358,26 @@
           }
         ],
         "frozenInputs": {
-          "candidateCommit": "41ec765e9e7e348dddc765ec9e3c18baaae015f3",
+          "candidateCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
           "artifactBuildCommit": "26e5ddd0622c3faeb1075cafd849042fc0938fb8",
           "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
           "changedFiles": [
+            "ROADMAP.md",
             "docs/KNOWN-ISSUES.md",
-            "docs/audit/tools/stage2-demo-probe.mjs",
-            "packages/docs/tests/menu-browser.mjs",
+            "docs/audit/2026-10-24-slot-inventory.md",
+            "docs/audit/2026-11-01-issues-budget-calibration.md",
+            "docs/audit/evidence/budget-calibration-2026-11-01.json",
+            "docs/audit/evidence/content-slot-inventory.json",
+            "docs/audit/evidence/known-issues-review-2026-11-01.json",
+            "docs/history/content-slot-inventory-before-2026-11-01.json",
+            "docs/history/known-issues-2026-11-01.md",
             "registry/vue-native-audit.json",
-            "tests/visual/baselines/apollo/manifest.json",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-compact__light__tablet.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__desktop.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__mobile.png",
-            "tests/visual/baselines/apollo/timeline/theme-dark-compact__light__tablet.png"
+            "tests/build/README.md",
+            "tests/build/budget.json",
+            "tests/build/checks/treeshake.mjs",
+            "tests/build/run.mjs"
           ],
-          "reuse": "Production source, dependencies, configuration, renderers and shared inputs are unchanged after the complete first run. Reused strict/public types, consumers and unchanged Docs checks retain their actual source commits. Changed Docs probes and six reviewed baselines were separately retested. The final full coverage run used this candidate commit; package/Docs artifacts and the visual bundle were hash-verified unchanged."
+          "reuse": "No production source, dependency, public type, default runtime/type/visual configuration or published-artifact change. Reuse retains original 41ec765e runtime, 1adf76dc strict/type/consumer and named visual/Docs execution versions. This round changes docs/static inventory and B6 thresholds/measurement reporting only; relevant CLI/L7/inventory/tooling checks ran at62b4242e. Docs browser claims remain scoped to the same26e5ddd0 artifact and original six scenarios, not a new site build/deploy."
         },
         "previousTargetedAttempt": [
           {

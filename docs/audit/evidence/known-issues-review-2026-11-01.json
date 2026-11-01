@@ -1442,5 +1442,102 @@
         "pending": 0
       }
     }
+  },
+  "currentValidation": {
+    "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+    "checks": {
+      "l7": {
+        "lane": "l7",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+        "command": [
+          "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "tests/build/run.mjs",
+          "--no-build",
+          "--strict",
+          "--json"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 35724,
+        "stdout": "/tmp/apollo-issues-budget-l7-62b4242e.stdout",
+        "stderr": "/tmp/apollo-issues-budget-l7-62b4242e.log",
+        "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+        "frozenSource": true,
+        "passed": true
+      },
+      "tooling": {
+        "lane": "tooling",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+        "command": [
+          "/tmp/apollo-audit-toolchain/pnpm",
+          "run",
+          "test:tooling"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 41699,
+        "stdout": "/tmp/apollo-issues-budget-tooling-62b4242e.stdout",
+        "stderr": "/tmp/apollo-issues-budget-tooling-62b4242e.log",
+        "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+        "frozenSource": true,
+        "passed": true
+      },
+      "inventory": {
+        "lane": "inventory",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+        "command": [
+          "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "docs/audit/tools/content-slot-inventory.mjs",
+          "--check"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 5906,
+        "stdout": "/tmp/apollo-issues-budget-inventory-62b4242e.stdout",
+        "stderr": "/tmp/apollo-issues-budget-inventory-62b4242e.log",
+        "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+        "frozenSource": true,
+        "passed": true
+      },
+      "measurement": {
+        "lane": "measurement",
+        "sourceCommit": "62b4242ee32dfa2d3f38c32220431cabd31cb9f9",
+        "command": [
+          "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+          "tests/build/checks/treeshake.mjs",
+          "--measure-all"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 17231,
+        "stdout": "/tmp/apollo-issues-budget-measurement-62b4242e.stdout",
+        "stderr": "/tmp/apollo-issues-budget-measurement-62b4242e.log",
+        "artifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+        "frozenSource": true,
+        "passed": true
+      }
+    },
+    "inventorySummary": {
+      "interfaceFiles": 76,
+      "rows": 624,
+      "byCategory": {
+        "data": 141,
+        "internal": 249,
+        "component-content-candidate": 160,
+        "deprecated": 34,
+        "render-function-candidate": 30,
+        "configuration": 10
+      },
+      "byDecision": {
+        "keep-data": 151,
+        "skip": 283,
+        "review": 168,
+        "implemented-verified": 22
+      }
+    },
+    "defaultAndPublishedEvidenceReused": true,
+    "productionArtifactDigest": "1e81414723c788a2753b9588ad6bbc8cd05f99d2b7ccf23be7163fbd3eabdd3b",
+    "productionChanges": [],
+    "scope": "Current findings and metadata only; same production/runtime/type/visual sources and dependencies. Extra strictTemplates remains exit2 with documented scope. Numeric root layering product verdict remains failed."
   }
 }
