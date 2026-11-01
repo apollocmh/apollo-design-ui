@@ -1,0 +1,764 @@
+{
+  "scope": "KI01 numeric style z-index repair and final nine-dimension acceptance; accepted support limits remain explicit",
+  "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+  "implementationCommit": "4f5944c2",
+  "version": "0.1.7",
+  "frozenRun": {
+    "command": [
+      "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+      "scripts/verify-full.mjs",
+      "--report",
+      "/tmp/apollo-v017-full-9ea05180.json"
+    ],
+    "startedAt": "2026-11-01T06:40:41.265Z",
+    "endedAt": "2026-11-01T08:22:11.515Z",
+    "durationMs": 6090329,
+    "exitCode": 0,
+    "signal": null,
+    "frozenSource": true,
+    "artifactDigest": "c1ba25212290b661d3e932c55e5dec899b52f143d018883c60600d0b5da86c2d",
+    "passed": true
+  },
+  "acceptance": {
+    "stage": "acceptance",
+    "scope": [
+      "packages"
+    ],
+    "checks": [
+      {
+        "kind": "registry",
+        "command": "pnpm run registry:check",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "format",
+        "command": "pnpm run lint:format",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "build",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node tests/build/run.mjs --strict",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "consumer-browser",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node packages/ui/src/tooltip/__tests__/z-index-browser.mjs",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "types",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tsconfig.json",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "types",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project types",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "core",
+        "command": "pnpm run test:tooling",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "coverage",
+        "command": "pnpm run test:coverage",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "consumer",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node tests/consumer/run.mjs",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "visual",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node tests/visual/apollo.mjs",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "docs-types",
+        "command": "pnpm --filter @apollo-design/docs run typecheck",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "docs-tests",
+        "command": "pnpm --filter @apollo-design/docs run test",
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "kind": "docs-browser",
+        "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node scripts/verify-docs-browser.mjs",
+        "exitCode": 0,
+        "signal": null
+      }
+    ],
+    "passed": true,
+    "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2"
+  },
+  "log": {
+    "path": "/tmp/apollo-v017-full-9ea05180.log",
+    "sha256": "e016ff9065574512555c4c28bf5090536bbd24737ae5987eebd63832f314f745"
+  },
+  "build": {
+    "packages": 15,
+    "checks": 151,
+    "failed": 0,
+    "pending": 0,
+    "budgetEntrypointsPassed": 73,
+    "budgetChangeInThisRepair": false
+  },
+  "runtime": {
+    "files": 787,
+    "tests": 17354,
+    "passed": true,
+    "coverage": {
+      "lines": {
+        "total": 38381,
+        "covered": 35708,
+        "skipped": 0,
+        "pct": 93.03
+      },
+      "statements": {
+        "total": 42493,
+        "covered": 39123,
+        "skipped": 0,
+        "pct": 92.06
+      },
+      "functions": {
+        "total": 11587,
+        "covered": 10640,
+        "skipped": 0,
+        "pct": 91.82
+      },
+      "branches": {
+        "total": 30770,
+        "covered": 25799,
+        "skipped": 0,
+        "pct": 83.84
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "thresholdsChanged": false
+  },
+  "types": {
+    "numTotalTestSuites": 742,
+    "numPassedTestSuites": 742,
+    "numTotalTests": 2395,
+    "numPassedTests": 2395,
+    "numFailedTests": 0,
+    "success": true
+  },
+  "consumer": {
+    "packageTarballs": 13,
+    "bundlers": [
+      "Vite",
+      "Webpack"
+    ],
+    "passed": true,
+    "readsSameArtifacts": true
+  },
+  "visual": {
+    "expected": 1875,
+    "pending": 0,
+    "verdicts": {
+      "PASS": 1875
+    },
+    "reasons": {
+      "exact": 1875
+    },
+    "byComponent": {
+      "affix": 15,
+      "alert": 60,
+      "anchor": 24,
+      "app": 3,
+      "auto-complete": 9,
+      "avatar": 48,
+      "back-top": 3,
+      "badge": 42,
+      "border-beam": 6,
+      "breadcrumb": 51,
+      "button": 39,
+      "calendar": 30,
+      "card": 33,
+      "carousel": 12,
+      "cascader": 9,
+      "checkbox": 15,
+      "collapse": 54,
+      "color-picker": 27,
+      "config-provider": 42,
+      "date-picker": 27,
+      "descriptions": 51,
+      "divider": 48,
+      "drawer": 9,
+      "dropdown": 9,
+      "empty": 45,
+      "flex": 42,
+      "float-button": 9,
+      "form": 21,
+      "grid": 42,
+      "image": 24,
+      "input": 84,
+      "input-number": 9,
+      "layout": 51,
+      "list": 57,
+      "listy": 9,
+      "masonry": 21,
+      "mentions": 24,
+      "menu": 9,
+      "message": 9,
+      "modal": 9,
+      "notification": 9,
+      "pagination": 30,
+      "popconfirm": 9,
+      "popover": 6,
+      "progress": 9,
+      "qr-code": 36,
+      "radio": 15,
+      "rate": 9,
+      "result": 39,
+      "segmented": 12,
+      "select": 9,
+      "skeleton": 39,
+      "slider": 24,
+      "space": 75,
+      "spin": 45,
+      "splitter": 9,
+      "statistic": 36,
+      "steps": 9,
+      "switch": 15,
+      "table": 24,
+      "tabs": 39,
+      "tag": 45,
+      "time-picker": 15,
+      "timeline": 78,
+      "tooltip": 9,
+      "tour": 9,
+      "transfer": 9,
+      "tree": 9,
+      "tree-select": 9,
+      "typography": 42,
+      "upload": 9,
+      "watermark": 12
+    },
+    "reportSha256": "785491faaefcb2b8e736a1f7a5c07e2cfc6838ef37294dce12b35379ffac3adf",
+    "sortedIdsSha256": "1b30b6daf79d4911fda71bdbe97afe99e2ad452fadd02e408a03000794cee0f8",
+    "baselineChanges": [],
+    "thresholdsChanged": false,
+    "environment": "darwin/x64/150.0.7871.125/系统 Chrome"
+  },
+  "publishedBrowser": {
+    "mode": "published dist and CSS",
+    "clock": "normal real browser clock; no STABILIZE_INIT",
+    "browser": {
+      "version": "150.0.7871.125",
+      "channel": "系统 Chrome"
+    },
+    "supportedCases": 15,
+    "deferredExpressionCases": [
+      {
+        "parent": "Tooltip",
+        "mode": "semantic-calc",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "semantic-var",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "native-var",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "mode": "semantic-calc",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "mode": "semantic-var",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popover",
+        "mode": "native-var",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "semantic-calc",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "semantic-var",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "native-var",
+        "childActuallyOnTop": false,
+        "measurementSucceeded": true
+      }
+    ],
+    "cases": [
+      {
+        "parent": "Tooltip",
+        "mode": "prop-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "native-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "theme-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2600",
+        "childZIndex": "2700",
+        "childContext": "2700"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "semantic-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "semantic-calc",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1170",
+        "childZIndex": "1270",
+        "childContext": "1270"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "semantic-var",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1170",
+        "childZIndex": "1270",
+        "childContext": "1270"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "native-var",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1170",
+        "childZIndex": "1270",
+        "childContext": "1270"
+      },
+      {
+        "parent": "Tooltip",
+        "mode": "semantic-calc-child-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "1170",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popover",
+        "mode": "prop-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popover",
+        "mode": "native-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popover",
+        "mode": "theme-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2600",
+        "childZIndex": "2700",
+        "childContext": "2700"
+      },
+      {
+        "parent": "Popover",
+        "mode": "semantic-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popover",
+        "mode": "semantic-calc",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1130",
+        "childZIndex": "1230",
+        "childContext": "1230"
+      },
+      {
+        "parent": "Popover",
+        "mode": "semantic-var",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1130",
+        "childZIndex": "1230",
+        "childContext": "1230"
+      },
+      {
+        "parent": "Popover",
+        "mode": "native-var",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1130",
+        "childZIndex": "1230",
+        "childContext": "1230"
+      },
+      {
+        "parent": "Popover",
+        "mode": "semantic-calc-child-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "1130",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "prop-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "native-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "theme-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2600",
+        "childZIndex": "2700",
+        "childContext": "2700"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "semantic-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "2500",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "semantic-calc",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1160",
+        "childZIndex": "1260",
+        "childContext": "1260"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "semantic-var",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1160",
+        "childZIndex": "1260",
+        "childContext": "1260"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "native-var",
+        "childActuallyOnTop": false,
+        "deferredExpressionBoundary": true,
+        "parentZIndex": "2500",
+        "parentContext": "1160",
+        "childZIndex": "1260",
+        "childContext": "1260"
+      },
+      {
+        "parent": "Popconfirm",
+        "mode": "semantic-calc-child-number",
+        "childActuallyOnTop": true,
+        "deferredExpressionBoundary": false,
+        "parentZIndex": "2500",
+        "parentContext": "1160",
+        "childZIndex": "2600",
+        "childContext": "2600"
+      }
+    ],
+    "demo": {
+      "parent": "Popover Demo",
+      "mode": "native-style-false",
+      "passed": true,
+      "windowErrors": []
+    },
+    "diagnostics": [],
+    "before": {
+      "head": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+      "status": "",
+      "artifactDigest": "c1ba25212290b661d3e932c55e5dec899b52f143d018883c60600d0b5da86c2d",
+      "sourceHashes": {
+        "packages/ui/src/tooltip/Tooltip.ts": "b7eddc309f497e449dd496dc167532717cffc0b47d9e92500610825beb57ad0a",
+        "packages/ui/src/tooltip/interface.ts": "a77718ac6dd5b3404fb6f825f2dcb3437f461d51cf4bfca7d85133252176c676",
+        "packages/ui/src/popover/Popover.ts": "c2f4dd290fbd6e527639292d601989c17d2a1989d0dc2d3d7633a63f94054c28",
+        "packages/ui/src/popover/interface.ts": "53c68643a8ef2b87af0130ae656dba0bc7fc5a1763418fa0a5120f0d72f969e2",
+        "packages/ui/src/_internal/trigger.ts": "7a6f171340be31aebb966213935b7ce1858306bb065583a03357161230b68bba",
+        "packages/ui/src/_internal/use-consumer-z-index.ts": "fff32c95313c61c7af6d3ea78e5659703b9505709cc49b3ba7a2e0301af6a0a0",
+        "packages/portal/src/use-portal.ts": "c2f82116dfd43ad5355df9d9cca859e3565058aeb8c7ac955edb9479708385f8",
+        "packages/portal/src/container.ts": "abf16ff00dc06ebb6082f226c5e5c8ff5893822e0b898e4c595914529d5d7648"
+      }
+    },
+    "after": {
+      "head": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+      "status": "",
+      "artifactDigest": "c1ba25212290b661d3e932c55e5dec899b52f143d018883c60600d0b5da86c2d",
+      "sourceHashes": {
+        "packages/ui/src/tooltip/Tooltip.ts": "b7eddc309f497e449dd496dc167532717cffc0b47d9e92500610825beb57ad0a",
+        "packages/ui/src/tooltip/interface.ts": "a77718ac6dd5b3404fb6f825f2dcb3437f461d51cf4bfca7d85133252176c676",
+        "packages/ui/src/popover/Popover.ts": "c2f4dd290fbd6e527639292d601989c17d2a1989d0dc2d3d7633a63f94054c28",
+        "packages/ui/src/popover/interface.ts": "53c68643a8ef2b87af0130ae656dba0bc7fc5a1763418fa0a5120f0d72f969e2",
+        "packages/ui/src/_internal/trigger.ts": "7a6f171340be31aebb966213935b7ce1858306bb065583a03357161230b68bba",
+        "packages/ui/src/_internal/use-consumer-z-index.ts": "fff32c95313c61c7af6d3ea78e5659703b9505709cc49b3ba7a2e0301af6a0a0",
+        "packages/portal/src/use-portal.ts": "c2f82116dfd43ad5355df9d9cca859e3565058aeb8c7ac955edb9479708385f8",
+        "packages/portal/src/container.ts": "abf16ff00dc06ebb6082f226c5e5c8ff5893822e0b898e4c595914529d5d7648"
+      }
+    },
+    "unchanged": true,
+    "durationMs": 108979.5,
+    "reportSha256": "7f0eef282782c95114cc93c5e10523108adf5ea6f8fcd3bbbcccc196bcc29164",
+    "screenshotsReviewed": [
+      {
+        "path": "docs/audit/evidence/z-index-closeout-2026-11-01/Tooltip-semantic-number.png",
+        "sha256": "ff9309225334718a2cb466e2d709a68b3ee5f94c23ce0b1fe18f23e722f3662e",
+        "review": "Child Tooltip visibly above the parent popup; actual geometry/hit assertion independently passed"
+      },
+      {
+        "path": "docs/audit/evidence/z-index-closeout-2026-11-01/Popover-semantic-number.png",
+        "sha256": "d03d4c682f23d898669eb37859202c97ba8a212c289f65c6c4c9d60999f5aec5",
+        "review": "Child Tooltip visibly above the parent popup; actual geometry/hit assertion independently passed"
+      },
+      {
+        "path": "docs/audit/evidence/z-index-closeout-2026-11-01/Popconfirm-semantic-number.png",
+        "sha256": "db07c72fbaea9ede22bd77e92a96fa29f574fb85f3271dc8cf2e7490fdd5c238",
+        "review": "Child Tooltip visibly above the parent popup; actual geometry/hit assertion independently passed"
+      }
+    ]
+  },
+  "docsBrowser": {
+    "scripts": [
+      "packages/docs/tests/smoke-browser.mjs",
+      "docs/audit/tools/stage2-demo-probe.mjs",
+      "docs/audit/visual-v3/verify.mjs",
+      "packages/docs/tests/menu-browser.mjs",
+      "packages/docs/tests/notification-motion-browser.mjs",
+      "packages/docs/tests/motion-review-browser.mjs"
+    ],
+    "outputRoot": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-browser-352eE2/docs/audit/evidence",
+    "evidence": [
+      {
+        "path": "review-002-motion.json",
+        "bytes": 590878,
+        "sha256": "e083a64f02bef6349c289275c2e7fec91ee4285ccb93ce9ac046005779960349"
+      },
+      {
+        "path": "stage2-demo.json",
+        "bytes": 821,
+        "sha256": "825fab1f6a44024211ec1a249aec3f76b196b298c8215864d0331cbb25f9dbc7"
+      }
+    ],
+    "passed": true,
+    "historicalEvidenceOverwritten": false
+  },
+  "resizeObserverFollowup": {
+    "sourceCommit": "a16259cdf64fa5557ed9b03ef02c70a06ebbb2e8",
+    "sourceOnly": true,
+    "inputsUnchanged": true,
+    "checks": [
+      {
+        "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 8053
+      },
+      {
+        "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/cascader/__tests__/native-browser.mjs",
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 7367
+      }
+    ],
+    "findings": {
+      "consumer-z-index": {
+        "functionalResult": "passed",
+        "diagnosticGate": "passed",
+        "diagnostics": [],
+        "windowErrors": [],
+        "resizeObserverDiagnostics": [],
+        "coverage": [
+          "Dropdown",
+          "DatePicker",
+          "RangePicker",
+          "TreeSelect",
+          "Mentions",
+          "ImagePreview",
+          "actual nested Tooltip geometry and hit testing",
+          "explicit zero and removal",
+          "Mentions/Image current token replacement and removal",
+          "CSS expression style preservation only"
+        ]
+      },
+      "cascader": {
+        "functionalResult": "passed",
+        "diagnosticGate": "passed",
+        "evidence": "All original functional assertions and final errors/nativeErrors empty assertions completed before passed message."
+      },
+      "historicalComparison": {
+        "log": "/tmp/apollo-consumer-z-index-browser-final.log",
+        "previousFunctionalResult": "passed",
+        "previousExitCode": 1,
+        "previousNativeResizeObserverNotifications": 7,
+        "currentObservation": "Not reproduced in this one unmodified normal-clock run; no retries or diagnostic filtering."
+      },
+      "boundary": "Both original scripts alias @apollo-design packages to src and generate actual source CSS. Artifact hashes are freeze guards only; these results are not published-dist execution evidence. CSS-expression automatic numeric descendant hierarchy remains deferred. No source, artifacts, shared configuration, registry or baselines were changed."
+    },
+    "reuseBasis": "a16259cd→9ea05180 only changes the regression test StyleValue container. Later CI delta leaves published runtime and original source browser scripts unchanged; no claim of a permanent causal RO fix."
+  },
+  "ciDelta": {
+    "commit": "5cfaf8d1668d6963db9412e2fef6f5b241bda488",
+    "tooling": {
+      "passed": 58,
+      "failed": 0,
+      "durationMs": 23580.775925,
+      "log": "/tmp/apollo-v017-final-tooling-isolated.log"
+    },
+    "pinnedVisual": {
+      "expected": 123,
+      "pending": 0,
+      "passed": 123,
+      "exact": 123,
+      "reportSha256": "26691b15e012a2354fac70beb9678e66acac7358a135048b3df0b1231e79d488"
+    },
+    "reuseBasis": "Only workflow/browser-launch/CLI-loading/test changes after the frozen library run. Production code, package manifests, lockfile, compiler/Vitest configuration, CSS, approved PNGs, matrix and comparison thresholds unchanged. Changed launch/CLI paths covered by 58 tooling tests and 123 unchanged visual cases on actual official Chrome 150.0.7871.125. Final tag CI will recheck the complete final commit.",
+    "preflightRuns": [
+      {
+        "id": 41281791748,
+        "result": "failure",
+        "cause": "runner.temp used outside its allowed step context"
+      },
+      {
+        "id": 41282495559,
+        "result": "failure",
+        "cause": "CLI help eagerly imported missing fresh-checkout theme artifacts"
+      },
+      {
+        "id": 41283436016,
+        "result": "success",
+        "scope": "architecture preflight"
+      },
+      {
+        "id": 41283781841,
+        "result": "cancelled",
+        "scope": "manual acceptance preflight before exact Chrome pin; never counted passed"
+      }
+    ]
+  },
+  "remainingBoundaries": [
+    "CSS calc()/var() automatic numeric descendant context remains deferred",
+    "Extra source strictTemplates still has the two separately documented Badge/Tag diagnostics",
+    "Other supported limits and unverified highlighter/List clues remain in docs/KNOWN-ISSUES.md",
+    "GitHub issue queue is separate from this completed audit round"
+  ],
+  "release": {
+    "tag": "v0.1.7",
+    "status": "not_created",
+    "npmPublish": false
+  },
+  "docsTests": {
+    "files": 15,
+    "tests": 161,
+    "passed": true
+  }
+}

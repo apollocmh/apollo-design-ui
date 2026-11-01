@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 251,
+  "revision": 252,
   "dispatch": {
-    "status": "running",
+    "status": "paused",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -23,7 +23,7 @@
       "ref": "affix",
       "title": "Affix",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/affix"
@@ -219,7 +219,7 @@
       "ref": "alert",
       "title": "Alert",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/alert"
@@ -245,7 +245,7 @@
       "ref": "anchor",
       "title": "Anchor",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/anchor"
@@ -441,7 +441,7 @@
       "ref": "app",
       "title": "App",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/app"
@@ -666,7 +666,7 @@
       "ref": "auto-complete",
       "title": "AutoComplete",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/auto-complete",
@@ -757,7 +757,7 @@
       "ref": "avatar",
       "title": "Avatar",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/avatar"
@@ -781,7 +781,7 @@
       "ref": "back-top",
       "title": "BackTop",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/back-top"
@@ -852,7 +852,7 @@
       "ref": "badge",
       "title": "Badge",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/badge"
@@ -876,7 +876,7 @@
       "ref": "border-beam",
       "title": "BorderBeam",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/border-beam"
@@ -1085,7 +1085,7 @@
       "ref": "breadcrumb",
       "title": "Breadcrumb",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/breadcrumb"
@@ -1109,7 +1109,7 @@
       "ref": "button",
       "title": "Button",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/button"
@@ -1137,7 +1137,7 @@
       "ref": "calendar",
       "title": "Calendar",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -1423,7 +1423,7 @@
       "ref": "card",
       "title": "Card",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/card"
@@ -1721,7 +1721,7 @@
       "ref": "carousel",
       "title": "Carousel",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/carousel"
@@ -1962,7 +1962,7 @@
       "ref": "cascader",
       "title": "Cascader",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/cascader"
@@ -1981,8 +1981,12 @@
           "id": "CASCADER-TRIGGER-RESIZE-NOTIFICATION",
           "status": "deferred",
           "blocking": false,
-          "impact": "真实浏览器全部功能断言通过；共享Trigger产生1条原生ResizeObserver延迟通知，browser整体exit1，未出现持续循环或焦点/DOM丢失。",
-          "reason": "沿用已登记的共享非阻塞问题TRIGGER-RESIZE-NOTIFICATION，保留失败命令与诊断；最终冻结时统一核对，不扩大本次Cascader整改范围。"
+          "impact": "历史严格源码浏览器曾捕获ResizeObserver延迟通知并exit1；原失败记录保留。本轮两个原场景均首次复测exit0且原生错误/RO为空，未重试或过滤。没有当前持续循环、焦点或DOM丢失的复现。",
+          "reason": "保留历史非阻塞诊断，当前原场景未复现；因果归结仍未知，不声称新增了永久修复。复测限源码消费者，产物数值层级另有独立验证。后续真实再现时再定位observer/target，不添加假想节流或吞错。",
+          "evidence": [
+            "docs/audit/2026-11-01-z-index-closeout.md",
+            "docs/audit/evidence/z-index-closeout-2026-11-01.json"
+          ]
         }
       ],
       "plan": {
@@ -2094,7 +2098,7 @@
       "ref": "checkbox",
       "title": "Checkbox",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/checkbox",
@@ -2236,7 +2240,7 @@
       "ref": "collapse",
       "title": "Collapse",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/collapse"
@@ -2262,7 +2266,7 @@
       "ref": "color-picker",
       "title": "ColorPicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/color-picker"
@@ -2394,7 +2398,7 @@
       "ref": "config-provider",
       "title": "ConfigProvider",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/config-provider"
@@ -2429,7 +2433,7 @@
       "ref": "date-picker",
       "title": "DatePicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -2669,7 +2673,7 @@
       "ref": "descriptions",
       "title": "Descriptions",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/descriptions"
@@ -2693,7 +2697,7 @@
       "ref": "divider",
       "title": "Divider",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/divider"
@@ -2719,7 +2723,7 @@
       "ref": "drawer",
       "title": "Drawer",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/drawer"
@@ -2791,7 +2795,7 @@
       "ref": "dropdown",
       "title": "Dropdown",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/dropdown",
@@ -2901,7 +2905,7 @@
       "ref": "empty",
       "title": "Empty",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/empty"
@@ -2925,7 +2929,7 @@
       "ref": "flex",
       "title": "Flex",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/flex"
@@ -2951,7 +2955,7 @@
       "ref": "float-button",
       "title": "FloatButton",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/float-button"
@@ -3028,7 +3032,7 @@
       "ref": "form",
       "title": "Form",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:form-core"
       ],
@@ -3288,7 +3292,7 @@
       "ref": "grid",
       "title": "Grid",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/grid"
@@ -3312,7 +3316,7 @@
       "ref": "image",
       "title": "Image",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/image"
@@ -3336,7 +3340,7 @@
       "ref": "input",
       "title": "Input",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input"
@@ -3364,7 +3368,7 @@
       "ref": "input-number",
       "title": "InputNumber",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input-number"
@@ -3438,7 +3442,7 @@
       "ref": "layout",
       "title": "Layout",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/layout"
@@ -3464,7 +3468,7 @@
       "ref": "list",
       "title": "List",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/list"
@@ -3488,7 +3492,7 @@
       "ref": "listy",
       "title": "Listy",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/listy"
@@ -3751,7 +3755,7 @@
       "ref": "masonry",
       "title": "Masonry",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/masonry"
@@ -3823,7 +3827,7 @@
       "ref": "mentions",
       "title": "Mentions",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/mentions"
@@ -3910,7 +3914,7 @@
       "ref": "menu",
       "title": "Menu",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/menu",
@@ -4014,7 +4018,7 @@
       "ref": "message",
       "title": "Message",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/message"
@@ -4417,7 +4421,7 @@
       "ref": "modal",
       "title": "Modal",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/modal"
@@ -4872,7 +4876,7 @@
       "ref": "notification",
       "title": "Notification",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/notification"
@@ -5275,7 +5279,7 @@
       "ref": "pagination",
       "title": "Pagination",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/pagination"
@@ -5347,7 +5351,7 @@
       "ref": "popconfirm",
       "title": "Popconfirm",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popconfirm"
@@ -5445,7 +5449,7 @@
       "ref": "popover",
       "title": "Popover",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popover"
@@ -5556,7 +5560,7 @@
       "ref": "progress",
       "title": "Progress",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/progress"
@@ -5639,7 +5643,7 @@
       "ref": "qr-code",
       "title": "QRCode",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/qr-code"
@@ -5663,7 +5667,7 @@
       "ref": "radio",
       "title": "Radio",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/radio"
@@ -5936,7 +5940,7 @@
       "ref": "rate",
       "title": "Rate",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
@@ -6041,7 +6045,7 @@
       "ref": "result",
       "title": "Result",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/result"
@@ -6065,7 +6069,7 @@
       "ref": "segmented",
       "title": "Segmented",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/segmented"
@@ -6244,7 +6248,7 @@
       "ref": "select",
       "title": "Select",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/select"
@@ -6363,7 +6367,7 @@
       "ref": "skeleton",
       "title": "Skeleton",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/skeleton"
@@ -6387,7 +6391,7 @@
       "ref": "slider",
       "title": "Slider",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/slider"
@@ -6809,7 +6813,7 @@
       "ref": "space",
       "title": "Space",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/space"
@@ -6835,7 +6839,7 @@
       "ref": "spin",
       "title": "Spin",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/spin"
@@ -6859,7 +6863,7 @@
       "ref": "splitter",
       "title": "Splitter",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/splitter"
@@ -7203,7 +7207,7 @@
       "ref": "statistic",
       "title": "Statistic",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/statistic"
@@ -7227,7 +7231,7 @@
       "ref": "steps",
       "title": "Steps",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/steps"
@@ -7319,7 +7323,7 @@
       "ref": "switch",
       "title": "Switch",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
@@ -7405,7 +7409,7 @@
       "ref": "table",
       "title": "Table",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/table",
@@ -7648,7 +7652,7 @@
       "ref": "tabs",
       "title": "Tabs",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tabs"
@@ -7725,7 +7729,7 @@
       "ref": "tag",
       "title": "Tag",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tag"
@@ -7778,7 +7782,7 @@
       "ref": "time-picker",
       "title": "TimePicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -7916,7 +7920,7 @@
       "ref": "timeline",
       "title": "Timeline",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/timeline"
@@ -7940,7 +7944,7 @@
       "ref": "tooltip",
       "title": "Tooltip",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tooltip"
@@ -7961,8 +7965,8 @@
           "id": "TRIGGER-RESIZE-NOTIFICATION",
           "status": "deferred",
           "blocking": false,
-          "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。 Portal六消费者真实浏览器功能断言通过，但原生error门禁完整捕获7条同类RO，整体exit1；该失败未转换为browser通过。 Cascader 真实 raw 浮层功能/焦点/身份断言通过，但原生 error 门禁捕获1条同类RO，整体exit1。",
-          "reason": "历史非阻塞诊断待核实；本次未重跑同一严格window.error消费者，保留原exit1和7条RO通知。其他场景零诊断不能关闭本项，也不据历史warning宣布当前必有循环。",
+          "impact": "历史严格源码浏览器曾捕获ResizeObserver延迟通知并exit1；原失败记录保留。本轮两个原场景均首次复测exit0且原生错误/RO为空，未重试或过滤。没有当前持续循环、焦点或DOM丢失的复现。",
+          "reason": "保留历史非阻塞诊断，当前原场景未复现；因果归结仍未知，不声称新增了永久修复。复测限源码消费者，产物数值层级另有独立验证。后续真实再现时再定位observer/target，不添加假想节流或吞错。",
           "relatedChecks": [
             {
               "kind": "browser",
@@ -7987,18 +7991,23 @@
               "log": "/tmp/apollo-cascader-native-browser.log",
               "relatedIssue": "TRIGGER-RESIZE-NOTIFICATION"
             }
+          ],
+          "evidence": [
+            "docs/audit/2026-11-01-z-index-closeout.md",
+            "docs/audit/evidence/z-index-closeout-2026-11-01.json"
           ]
         },
         {
           "id": "KI01",
-          "status": "open",
+          "status": "fixed",
           "blocking": false,
           "impact": "Tooltip/Popover纯数字styles.root.zIndex覆盖实际父层级后，后代数值context未同步，嵌套Tooltip可被父内容遮挡。",
-          "reason": "源码已修复并通过19项关键回归、三个组件406项unit/DOM/theme及源码浏览器；统一新产物、严格/公开类型与完整九维仍待最终冻结验证。历史失败记录见604df23b及原复核证据。",
+          "reason": "修复于4f5944c2。干净冻结9ea05180统一构建后，19项回归、三组件406项定向测试、24组产物浏览器（15支持场景及9明确延期表达式边界）、完整严格/公开类型、17354运行时/覆盖率、1875视觉及六组文档浏览器均实际exit0；最终13项编排检查全部通过。未扩大CSS表达式自动继承支持范围。",
           "evidence": [
             "docs/KNOWN-ISSUES.md",
             "docs/audit/evidence/known-issues-review-2026-11-01.json",
-            "docs/audit/2026-11-01-z-index-closeout.md"
+            "docs/audit/2026-11-01-z-index-closeout.md",
+            "docs/audit/evidence/z-index-closeout-2026-11-01.json"
           ]
         }
       ],
@@ -8071,7 +8080,7 @@
       "ref": "tour",
       "title": "Tour",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tour"
@@ -8388,7 +8397,7 @@
       "ref": "transfer",
       "title": "Transfer",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/transfer"
@@ -8550,7 +8559,7 @@
       "ref": "tree",
       "title": "Tree",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree",
@@ -8670,7 +8679,7 @@
       "ref": "tree-select",
       "title": "TreeSelect",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree-select",
@@ -8832,7 +8841,7 @@
       "ref": "typography",
       "title": "Typography",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/typography"
@@ -8901,7 +8910,7 @@
       "ref": "upload",
       "title": "Upload",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/upload"
@@ -8978,7 +8987,7 @@
       "ref": "watermark",
       "title": "Watermark",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/watermark"
@@ -9171,7 +9180,7 @@
       "ref": "a11y",
       "title": "@apollo-design/a11y",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/a11y",
@@ -9277,7 +9286,7 @@
       "ref": "form-core",
       "title": "@apollo-design/form-core",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/form-core",
@@ -9420,7 +9429,7 @@
       "ref": "icons",
       "title": "@apollo-design/icons",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/icons",
@@ -9531,7 +9540,7 @@
       "ref": "locale",
       "title": "@apollo-design/locale",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/locale",
@@ -9623,7 +9632,7 @@
       "ref": "motion",
       "title": "@apollo-design/motion",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/motion",
@@ -9856,7 +9865,7 @@
       "ref": "overlay",
       "title": "@apollo-design/overlay",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/overlay",
@@ -9935,7 +9944,7 @@
       "ref": "picker",
       "title": "@apollo-design/picker",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/picker",
@@ -10086,7 +10095,7 @@
       "ref": "portal",
       "title": "@apollo-design/portal",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/portal",
@@ -10249,7 +10258,7 @@
       "ref": "position",
       "title": "@apollo-design/position",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/position/src"
@@ -10824,7 +10833,7 @@
       "ref": "test-utils",
       "title": "@apollo-design/test-utils",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/test-utils",
@@ -11080,7 +11089,7 @@
       "ref": "theme",
       "title": "@apollo-design/theme",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/theme/src"
@@ -11104,7 +11113,7 @@
       "ref": "utils",
       "title": "@apollo-design/utils",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
@@ -11544,7 +11553,7 @@
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
@@ -12135,8 +12144,132 @@
     }
   ],
   "finalAcceptance": {
-    "status": "in_progress",
-    "sourceCommit": null,
-    "gates": []
+    "status": "passed",
+    "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+    "gates": [
+      {
+        "dimension": "api",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "types",
+          "coverage",
+          "build",
+          "consumer"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "tokens",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "coverage",
+          "visual",
+          "consumer-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "styles",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "build",
+          "visual",
+          "consumer",
+          "consumer-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "unit",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "coverage"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "interaction",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "coverage",
+          "consumer-browser",
+          "docs-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "types",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "types",
+          "docs-types"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "a11y",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "coverage",
+          "docs-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "visual",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "visual"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      },
+      {
+        "dimension": "docs",
+        "status": "passed",
+        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "checks": [
+          "build",
+          "docs-types",
+          "docs-tests",
+          "docs-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
+          "docs/audit/2026-11-01-z-index-closeout.md"
+        ]
+      }
+    ]
   }
 }
