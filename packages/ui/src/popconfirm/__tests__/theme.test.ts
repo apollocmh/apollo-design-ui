@@ -51,7 +51,10 @@ describe('Popconfirm · 主题无关性', () => {
     expect(css).toContain('font-size:var(--apollo-font-size);');
   });
 
-  it('consumes its own current token and aliases in popup, static panel and nested z-index context', async () => {
+  // This complete nested popup lifecycle takes 7s with CI coverage, including all theme changes.
+  it('consumes its own current token and aliases in popup, static panel and nested z-index context', {
+    timeout: 10_000,
+  }, async () => {
     const theme = ref<ThemeConfig | undefined>({
       token: { colorWarning: '#123456', marginXS: 18 },
       components: {

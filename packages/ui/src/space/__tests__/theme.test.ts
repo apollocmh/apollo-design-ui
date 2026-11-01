@@ -38,9 +38,14 @@ const PA = 'apollo-space-addon';
 const demos = import.meta.glob('../demo/*.vue', { eager: true });
 it('covers all fifteen real demos in every theme', () =>
   expect(Object.keys(demos)).toHaveLength(15));
-// Each real demo owns four bounded tests; keep the existing 5s limit and all warning assertions.
+// CI coverage needs 6.4–6.8s for the full compact-debug fixture in each theme.
+// Give only those four lifecycles 10s; other demos retain Vitest's default deadline.
 for (const [path, demo] of Object.entries(demos)) {
-  themeTest(`Space/${path}`, { demos: { [path]: demo }, expectCount: 1 });
+  themeTest(`Space/${path}`, {
+    demos: { [path]: demo },
+    expectCount: 1,
+    ...(path === '../demo/compact-debug.vue' ? { timeout: 10_000 } : {}),
+  });
 }
 
 /**
