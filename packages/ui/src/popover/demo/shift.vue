@@ -5,8 +5,11 @@ import { Button, Popover } from '@apollo-design/ui';
 import { onMounted } from 'vue';
 
 onMounted(() => {
-  document.documentElement.scrollTop = document.documentElement.clientHeight;
-  document.documentElement.scrollLeft = document.documentElement.clientWidth;
+  window.scrollTo({
+    top: document.documentElement.clientHeight,
+    left: document.documentElement.clientWidth,
+    behavior: 'instant',
+  });
 });
 
 const style = {

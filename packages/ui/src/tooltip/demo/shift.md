@@ -1,13 +1,17 @@
 ---
 order: 111
+preview:
+  mode: viewport
+  viewportHeight: 320
+  scrollable: true
 ---
 ## zh-CN
 
-超出滚动容器时自动移入视口（shift）。
+超出滚动容器时自动移入视口（shift）。示例在独立视口内滚动，不会带动外层文档。
 
 ## en-US
 
-Shift into viewport when overflowing the scroll container.
+Shift into viewport when overflowing the scroll container. The demo scrolls within its own viewport without moving the surrounding document.
 
 ```vue
 <script setup lang="ts">
@@ -17,8 +21,11 @@ import { onMounted } from 'vue';
 import { Button, Tooltip } from '@apollo-design/ui';
 
 onMounted(() => {
-  document.documentElement.scrollTop = document.documentElement.clientHeight;
-  document.documentElement.scrollLeft = document.documentElement.clientWidth;
+  window.scrollTo({
+    top: document.documentElement.clientHeight,
+    left: document.documentElement.clientWidth,
+    behavior: 'instant',
+  });
 });
 
 const style = {
