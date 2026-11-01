@@ -3,6 +3,7 @@ import { mount, type VueWrapper } from '@vue/test-utils';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, effectScope, Fragment, h, nextTick, ref, shallowRef } from 'vue';
+import AutoComplete from '../../auto-complete/AutoComplete';
 import { ConfigProvider } from '../../config-provider';
 import { Input } from '../../input';
 import ErrorList from '../ErrorList';
@@ -331,6 +332,73 @@ describe('current ownership and content', () => {
     disabled.value = false;
     await nextTick();
     expect(wrapper.get('input').element.disabled).toBe(false);
+  });
+
+  it('cascades Form disabled through FormItem to AutoComplete with child and Provider overrides (#77)', async () => {
+    const providerDisabled = ref(false);
+    const formDisabled = ref<boolean | undefined>(true);
+    const item = (name: string, disabled?: boolean) =>
+      h(
+        FormItem,
+        { name, label: name },
+        {
+          default: () =>
+            h(AutoComplete, { id: `ac-${name}`, options: [{ value: 'Apple' }], disabled }),
+        },
+      );
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(
+            ConfigProvider,
+            { componentDisabled: providerDisabled.value },
+            {
+              default: () =>
+                h(
+                  Form,
+                  { disabled: formDisabled.value },
+                  {
+                    default: () => [
+                      item('inherited'),
+                      item('enabled', false),
+                      item('disabled', true),
+                    ],
+                  },
+                ),
+            },
+          ),
+      }),
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
+    );
+    mounted.push(wrapper);
+    const expectDisabled = (inherited: boolean) => {
+      for (const { name, disabled } of [
+        { name: 'inherited', disabled: inherited },
+        { name: 'enabled', disabled: false },
+        { name: 'disabled', disabled: true },
+      ]) {
+        const input = wrapper.get<HTMLInputElement>(`#ac-${name}`);
+        expect(input.element.disabled).toBe(disabled);
+        expect(
+          input.element.closest('.apollo-select')?.classList.contains('apollo-select-disabled'),
+        ).toBe(disabled);
+      }
+    };
+    expectDisabled(true);
+    for (const disabled of [false, true, false]) {
+      formDisabled.value = disabled;
+      await nextTick();
+      expectDisabled(disabled);
+    }
+    providerDisabled.value = true;
+    await nextTick();
+    expectDisabled(false);
+    formDisabled.value = undefined;
+    await nextTick();
+    expectDisabled(true);
+    providerDisabled.value = false;
+    await nextTick();
+    expectDisabled(false);
   });
 
   it('routes a named Item native attrs and label/help/extra slots to their owners', async () => {
