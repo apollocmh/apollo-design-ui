@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/portal",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "基于 Vue Teleport 的挂载与层级管理。替代 @rc-component/portal 及 rc-dialog 的挂载部分。",
   "license": "MIT",
   "type": "module",

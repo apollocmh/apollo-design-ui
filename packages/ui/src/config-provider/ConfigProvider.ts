@@ -4,8 +4,8 @@ import { IconProvider, useIconContext } from '@apollo-design/icons';
 import type { Locale, LocaleContextValue } from '@apollo-design/locale';
 import { defaultLocale, localeContextKey, useConfirmLocale } from '@apollo-design/locale';
 import {
+  createThemeContext,
   DEFAULT_CSS_VAR_PREFIX,
-  getDesignToken,
   type ThemeContext,
   ThemeContextKey,
   useTheme as useThemeContext,
@@ -20,7 +20,6 @@ import {
   type PropType,
   provide,
   reactive,
-  ref,
   type SlotsType,
   toValue,
   watch,
@@ -165,7 +164,8 @@ export const ConfigProvider = defineComponent({
           : parentContext.theme;
       return useTheme(props.theme, parentTheme);
     });
-    const effectiveTheme = ref<ConfigProviderThemeConfig>({});
+    const currentTheme = createThemeContext({});
+    const effectiveTheme = currentTheme.config;
     // External sources remain authoritative when they change. Runtime edits use
     // a separate deep ref and never mutate props or another provider's context.
     watch(
@@ -179,9 +179,8 @@ export const ConfigProvider = defineComponent({
       () => mergedTheme.value !== undefined || Object.keys(effectiveTheme.value).length > 0,
     );
     const themeContext: ThemeContext = {
-      config: effectiveTheme,
+      ...currentTheme,
       sourceActive,
-      token: computed(() => getDesignToken(effectiveTheme.value)),
     };
     provide(ThemeContextKey, themeContext);
 

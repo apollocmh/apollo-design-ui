@@ -13,11 +13,13 @@
  *   D29：完全不声明 `tooltip` / `popover` / `popconfirm`（`UniqueProvider` 未实现）
  */
 
+import { monoPreset } from '@apollo-design/theme/presets/mono';
 import { describe, expectTypeOf, it } from 'vitest';
 import { type ComputedRef, h, type VNodeChild } from 'vue';
 import type { DividerConfig } from '../../divider/interface';
 import type { EmptyConfig } from '../../empty/interface';
 import type { SpinConfig } from '../../spin/interface';
+import ConfigProvider from '../ConfigProvider';
 import type { ConfigContextValue } from '../context';
 import { defaultRenderEmpty } from '../default-render-empty';
 import type {
@@ -38,6 +40,24 @@ import type {
 } from '../index';
 
 describe('ConfigProvider · 枚举', () => {
+  it('uses the public preset configuration in actual Vue h calls', () => {
+    const theme: ConfigProviderThemeConfig = {
+      preset: monoPreset,
+      mode: 'system',
+      token: { colorPrimary: '#445566', colorPrimaryBg: '#112233' },
+      components: { Button: { borderRadius: 0 } },
+    };
+    h(ConfigProvider, { theme }, { default: () => h('input') });
+    const invalid = () => {
+      // @ts-expect-error Actual component props require an imported preset object.
+      h(ConfigProvider, { theme: { preset: 'mono' } });
+      // @ts-expect-error Actual component props preserve the known numeric Seed type.
+      h(ConfigProvider, { theme: { preset: monoPreset, token: { fontSize: '16px' } } });
+      // @ts-expect-error Appearance is independent from the preset name.
+      h(ConfigProvider, { theme: { preset: monoPreset, mode: 'mono' } });
+    };
+    expectTypeOf(invalid).toBeFunction();
+  });
   it('renderEmpty returns actual Vue content, including intentional empty values', () => {
     expectTypeOf<ReturnType<RenderEmptyHandler>>().toEqualTypeOf<VNodeChild>();
     expectTypeOf(defaultRenderEmpty).toMatchTypeOf<RenderEmptyHandler>();

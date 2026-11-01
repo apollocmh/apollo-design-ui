@@ -1,3 +1,6 @@
+import { ICON_RESET, ICON_SPIN, ICON_SPIN_EARLY } from '../../style/icons';
+import { genSlideUpSource, genZoomMotionSource } from '../../style/motion';
+import { mapStyleSource, type StyleSource, styleSource } from '../../style/source';
 /**
  * Menu 的静态样式（G4 产物）。
  *
@@ -37,7 +40,8 @@ const KEYFRAMES = `@keyframes apollo-icon-loading-circle{100%{transform:rotate(3
 `;
 
 /** antd 产物机械转换段（239 条，原序）。 */
-const RULES = `.apollo-menu-css-var{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
+function genRulesSource(): StyleSource {
+  return styleSource`.apollo-menu-css-var{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-menu-css-var::before,.apollo-menu-css-var::after{box-sizing:border-box;}
 .apollo-menu-css-var [class^="ant-menu"],.apollo-menu-css-var [class*=" ant-menu"]{box-sizing:border-box;}
 .apollo-menu-css-var [class^="ant-menu"]::before,.apollo-menu-css-var [class*=" ant-menu"]::before,.apollo-menu-css-var [class^="ant-menu"]::after,.apollo-menu-css-var [class*=" ant-menu"]::after{box-sizing:border-box;}
@@ -241,46 +245,23 @@ const RULES = `.apollo-menu-css-var{font-family:var(--apollo-font-family);font-s
 .apollo-menu .apollo-motion-collapse-legacy{overflow:hidden;}
 .apollo-menu .apollo-motion-collapse-legacy-active{transition:height var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out),opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out)!important;}
 .apollo-menu .apollo-motion-collapse{overflow:hidden;transition:height var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out),opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out)!important;}
-.apollo-slide-up-enter,.apollo-slide-up-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-enter.apollo-slide-up-enter-active,.apollo-slide-up-appear.apollo-slide-up-appear-active{animation-name:apollo-menu-slide-up-in;animation-play-state:running;}
-.apollo-slide-up-leave.apollo-slide-up-leave-active{animation-name:apollo-menu-slide-up-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-up-enter,.apollo-slide-up-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-up-enter-prepare,.apollo-slide-up-appear-prepare{transform:scale(1);}
-.apollo-slide-up-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
-.apollo-zoom-big-enter,.apollo-zoom-big-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-enter.apollo-zoom-big-enter-active,.apollo-zoom-big-appear.apollo-zoom-big-appear-active{animation-name:apollo-menu-zoom-big-in;animation-play-state:running;}
-.apollo-zoom-big-leave.apollo-zoom-big-leave-active{animation-name:apollo-menu-zoom-big-out;animation-play-state:running;pointer-events:none;}
-.apollo-zoom-big-enter,.apollo-zoom-big-appear{transform:scale(0);opacity:0;animation-timing-function:var(--apollo-motion-ease-out-circ);}
-.apollo-zoom-big-enter-prepare,.apollo-zoom-big-appear-prepare{transform:none;}
-.apollo-zoom-big-leave{animation-timing-function:var(--apollo-motion-ease-in-out-circ);}
-.apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-.apollo-icon >*{line-height:1;}
-.apollo-icon svg{display:inline-block;vertical-align:inherit;}
-.apollo-icon::before{display:none;}
-.apollo-icon[tabindex]{cursor:pointer;}
-.apollo-icon .apollo-icon-icon{display:block;}
-.apollo-icon-spin{animation-name:apollo-icon-loading-circle;animation-duration:1s;animation-iteration-count:infinite;animation-timing-function:linear;}
-.apollo-zoom-big-fast-enter,.apollo-zoom-big-fast-appear{animation-duration:var(--apollo-motion-duration-fast);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-fast-leave{animation-duration:var(--apollo-motion-duration-fast);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-fast-enter.apollo-zoom-big-fast-enter-active,.apollo-zoom-big-fast-appear.apollo-zoom-big-fast-appear-active{animation-name:apollo-menu-zoom-big-in;animation-play-state:running;}
-.apollo-zoom-big-fast-leave.apollo-zoom-big-fast-leave-active{animation-name:apollo-menu-zoom-big-out;animation-play-state:running;pointer-events:none;}
-.apollo-zoom-big-fast-enter,.apollo-zoom-big-fast-appear{transform:scale(0);opacity:0;animation-timing-function:var(--apollo-motion-ease-out-circ);}
-.apollo-zoom-big-fast-enter-prepare,.apollo-zoom-big-fast-appear-prepare{transform:none;}
-.apollo-zoom-big-fast-leave{animation-timing-function:var(--apollo-motion-ease-in-out-circ);}
-.apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-.apollo-icon >*{line-height:1;}
-.apollo-icon svg{display:inline-block;vertical-align:inherit;}
-.apollo-icon::before{display:none;}
-.apollo-icon[tabindex]{cursor:pointer;}
-.apollo-icon .apollo-icon-icon{display:block;}
-.apollo-icon-spin{animation-name:loadingCircle;animation-duration:1s;animation-iteration-count:infinite;animation-timing-function:linear;}
+${genSlideUpSource('apollo-menu')}
+${genZoomMotionSource('big', 'apollo-menu')}
+${ICON_RESET}
+${ICON_SPIN_EARLY}
+${genZoomMotionSource('big-fast', 'apollo-menu')}
+${ICON_RESET}
+${ICON_SPIN}
 `;
+}
 /** 生成单个前缀下的完整样式（upload 同一约定：ant 前缀在出口替换类名段）。 */
-export function genMenuStyle(prefixCls: string = 'apollo'): string {
+export function genMenuStyleSource(prefixCls: string = 'apollo'): StyleSource {
   const rename = (cssText: string): string =>
     prefixCls === 'apollo' ? cssText : cssText.split('.apollo-menu').join(`.${prefixCls}-menu`);
   const decls = `.apollo-menu{${rename(`{${DECLS}}`).slice(1, -1)}}`;
-  return `${KEYFRAMES}\n${decls}\n${rename(RULES)}`;
+  return styleSource`${KEYFRAMES}\n${decls}\n${mapStyleSource(genRulesSource(), rename)}`;
+}
+
+export function genMenuStyle(prefixCls: string = 'apollo'): string {
+  return genMenuStyleSource(prefixCls).css;
 }

@@ -29,7 +29,7 @@ Eight paired examples cover prefixes, language, component defaults, size/disable
 | virtual | Default virtualization flag for supporting consumers | `boolean` | `true` |
 | variant | Default appearance for input, selection and form controls | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | Inherited |
 | popupMatchSelectWidth | Popup-width default for Select / TreeSelect / Cascader; local props win | `boolean` | Consumer default |
-| theme | Tokens, component tokens, algorithm(s) and CSS-variable prefix | `ConfigProviderThemeConfig` | Inherited |
+| theme | Preset, appearance, user/component tokens, algorithm(s) and CSS-variable prefix | `ConfigProviderThemeConfig` | Inherited |
 | warning | Development warning behavior; strict=false aggregates deprecated usage | `{ strict?: boolean }` | `{}` |
 | components | Defaults supported by each component contract, keyed by its consumer name; arbitrary props are not applied automatically | `Record<string, ComponentConfigLike>` | — |
 | divider | Precise Divider configuration alias | `DividerConfig` | — |
@@ -42,6 +42,8 @@ Eight paired examples cover prefixes, language, component defaults, size/disable
 Undefined local values inherit, including after withdrawing a previous override. Component names merge across providers; the same component configuration is replaced as a whole. Precise aliases override the corresponding map entry, and explicit component props take precedence.
 
 Theme tokens merge by key; component tokens merge by component name and token key. inherit=false resets inherited tokens and component tokens while retaining the CSS-variable prefix. Validation messages combine defaults, the parent FormProvider, local language and effective form configuration. Map and direct form aliases share the same channel.
+
+`theme.preset` accepts a public `ThemePreset` object. Built-ins have separate `@apollo-design/theme/presets/default`, `mono`, and `material3` imports. Appearance (`mode: light|dark|system`) is independent of the preset. Preset and appearance seeds are merged before user seeds enter derivation; user Alias and component tokens retain final precedence. A local explicit algorithm keeps its complete original chain and replaces inherited mode; local mode replaces an inherited algorithm. ConfigProvider inherits raw configuration by default. The foundation ThemeProvider keeps its existing empty-theme reset and only inherits with `inherit:true`. Live providers observe system appearance after mounting and release subscriptions; server system rendering defaults to light. The active provider projects complete variables, so Mono does not require the default `tokens.css`; UI structural styles are still required.
 
 The default slot accepts complete Vue content, multiple roots and conditional children. There are no business emits, model or exposed methods. Without scopeTag, provider attrs are ignored. With an explicit scopeTag, attrs land on that native host and native styles win. Choosing another host tag follows Vue's structural root-replacement behavior; theme and language updates preserve the logical content tree.
 

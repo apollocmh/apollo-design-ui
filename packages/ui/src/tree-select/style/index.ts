@@ -1,3 +1,4 @@
+import { mapStyleSource, type StyleSource, styleSource } from '../../style/source';
 /**
  * TreeSelect 样式（antd `es/tree-select/style/index.js` 62 行的 Vue 等价物）。
  *
@@ -15,8 +16,8 @@
  */
 
 import { token2CSSVar } from '@apollo-design/theme';
-import { genSelectStyle } from '../../select/style';
-import { genTreeStyle } from '../../tree/style';
+import { genSelectStyleSource } from '../../select/style';
+import { genTreeStyleSource } from '../../tree/style';
 
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 
@@ -39,19 +40,25 @@ function genDropdownStyle(p: string): string {
   ].join('\n');
 }
 
-export function genTreeSelectStyle(rootPrefixCls: string): string {
+export function genTreeSelectStyleSource(rootPrefixCls: string): StyleSource {
   const p = `${rootPrefixCls}-tree-select`;
   // 树全套：以默认前缀产物为基准整体替换。⚠️ 不能直接 genTreeStyle(p) —— 它的
   // 非 'apollo' 分支生成 `.${p}-tree`（多一段），而 Tree 根类 = prefixCls 本身
   // （Tree.ts rootClass = prefixCls.value），会声明/选择器双双落空。
   const tree =
     p === 'apollo-tree'
-      ? genTreeStyle('apollo')
-      : genTreeStyle('apollo').split('.apollo-tree').join(`.${p}`);
+      ? genTreeStyleSource('apollo')
+      : mapStyleSource(genTreeStyleSource('apollo'), (css) =>
+          css.split('.apollo-tree').join(`.${p}`),
+        );
   // 外壳全套（select 规则按目标前缀重生成 —— Cascader 同判）。
   // ⚠️ 必须拼在**树规则之后**：tree 的 reset（`.${p}{padding:0}`）与 shell 的根块
   //    （padding-block/inline）同特异性，shell 在后才能保住选择器的 padding ——
   //    顺序反了触发器塌成内容高度（视觉 size-mismatch 96 vs 88 实测根因）。
-  const shell = genSelectStyle('apollo', p);
-  return `${tree}\n${shell}\n${genDropdownStyle(p)}`;
+  const shell = genSelectStyleSource('apollo', p);
+  return styleSource`${tree}\n${shell}\n${genDropdownStyle(p)}`;
+}
+
+export function genTreeSelectStyle(rootPrefixCls: string): string {
+  return genTreeSelectStyleSource(rootPrefixCls).css;
 }

@@ -3,6 +3,7 @@ import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path';
 import vue from '@vitejs/plugin-vue';
 import { defineBuildConfig } from 'unbuild';
+import uiPackage from './package.json';
 
 /**
  * `@apollo-design/ui` 的构建配置。
@@ -38,6 +39,8 @@ import { defineBuildConfig } from 'unbuild';
  * 从**刚产出的** `dist/index.mjs` 里 import 样式清单，落成：
  *   - `dist/<component>/style.css` —— 按需引入
  *   - `dist/index.css`            —— 汇总
+ *   - `dist/base.css` + `<component>/structure.css` + 必要共享片段 —— 可去重的资源
+ *   - `dist/style-manifest.json`  —— 同一清单派生的有序闭包，供构建期 resolver 只读
  *
  * 从产物 import 而不是从 src：与 `packages/theme/build.config.ts` 同一套路，
  * 顺带验证了「产物能被真实 import」—— 产物坏了这里会直接炸。
@@ -54,6 +57,16 @@ const pkgDir = import.meta.dirname ?? '.';
 const vueTscEntry = resolve(pkgDir, '../../node_modules/vue-tsc/bin/vue-tsc.js');
 
 export default defineBuildConfig({
+  // CSS exports are generated below, so only the actual JS exports are Rollup inputs.
+  // Letting unbuild infer from base.css also matches color-picker/demo/base.vue/md.
+  entries: [
+    ...Object.values(uiPackage.exports).flatMap((entry) =>
+      typeof entry === 'string'
+        ? []
+        : [{ input: entry.import.replace(/^\.\/dist\//, 'src/').replace(/\.mjs$/, '') }],
+    ),
+    { input: 'src/style/assets', name: 'style/assets' },
+  ],
   // 见上「2. 类型产物」。这不是省事，是**避开一个会静默产出错误产物的默认行为**。
   declaration: false,
 
@@ -212,9 +225,28 @@ export default defineBuildConfig({
 
       writeFileSync(resolve(pkgDir, 'dist/index.css'), genAllStyles(), 'utf8');
 
+      // The build-only entry is deliberately separate from the public UI runtime.
+      // As above, it is this build's output with the exact source module shape.
+      const assetEntry = './dist/style/assets.mjs';
+      const { genStyleAssets } = (await import(assetEntry)) as typeof import('./src/style/assets');
+      const assets = genStyleAssets();
+      for (const [name, css] of Object.entries(assets.files)) {
+        const file = resolve(pkgDir, 'dist', name);
+        mkdirSync(resolve(file, '..'), { recursive: true });
+        writeFileSync(file, css, 'utf8');
+      }
+      writeFileSync(
+        resolve(pkgDir, 'dist/style-manifest.json'),
+        `${JSON.stringify(assets.manifest, null, 2)}\n`,
+        'utf8',
+      );
+
       process.stdout.write(
         `  ✔ 已生成 ${Object.keys(map).length} 份组件 CSS + dist/index.css` +
           `（前缀 ${STATIC_PREFIX_CLS.join(' / ')}）\n`,
+      );
+      process.stdout.write(
+        `  ✔ 已生成 ${Object.keys(assets.files).length} 份去重样式资源 + style-manifest.json\n`,
       );
     },
   },

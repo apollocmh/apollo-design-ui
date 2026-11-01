@@ -1,3 +1,5 @@
+import { genZoomMotionSource } from '../../style/motion';
+import { mapStyleSource, type StyleSource, styleSource } from '../../style/source';
 /**
  * Popover 的静态样式（G4 产物）。
  *
@@ -52,7 +54,8 @@ const KEYFRAMES = `@keyframes apollo-popover-zoom-big-in{0%{transform:scale(0.8)
 @keyframes apollo-popover-zoom-big-out{0%{transform:scale(1);}100%{transform:scale(0.8);opacity:0;}}`;
 
 /** antd 产物机械转换段（77 条，原序）。 */
-const RULES = `
+function genRulesSource(): StyleSource {
+  return styleSource`
 .apollo-popover{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);position:absolute;top:0;left:0;z-index:var(--apollo-popover-z-index-popup);font-weight:normal;white-space:normal;text-align:start;cursor:auto;user-select:text;filter:var(--apollo-drop-shadow-popover);--apollo-tooltip-valid-offset-x:var(--apollo-tooltip-arrow-offset-x, var(--arrow-x));transform-origin:var(--apollo-tooltip-valid-offset-x, 50%) var(--arrow-y, 50%);--apollo-tooltip-arrow-background-color:var(--apollo-color-bg-elevated);width:max-content;max-width:100vw;}
 .apollo-popover-rtl{direction:rtl;}
 .apollo-popover-hidden{display:none;}
@@ -123,22 +126,25 @@ const RULES = `
 .apollo-popover.apollo-popover-gold{--apollo-tooltip-arrow-background-color:var(--apollo-gold-6);}
 .apollo-popover.apollo-popover-gold .apollo-popover-container{background-color:var(--apollo-gold-6);}
 .apollo-popover.apollo-popover-gold .apollo-popover-arrow{background:transparent;}
-.apollo-zoom-big-enter,.apollo-zoom-big-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-enter.apollo-zoom-big-enter-active,.apollo-zoom-big-appear.apollo-zoom-big-appear-active{animation-name:apollo-popover-zoom-big-in;animation-play-state:running;}
-.apollo-zoom-big-leave.apollo-zoom-big-leave-active{animation-name:apollo-popover-zoom-big-out;animation-play-state:running;pointer-events:none;}
-.apollo-zoom-big-enter,.apollo-zoom-big-appear{transform:scale(0);opacity:0;animation-timing-function:var(--apollo-motion-ease-out-circ);}
-.apollo-zoom-big-enter-prepare,.apollo-zoom-big-appear-prepare{transform:none;}
-.apollo-zoom-big-leave{animation-timing-function:var(--apollo-motion-ease-in-out-circ);}
+${genZoomMotionSource('big', 'apollo-popover')}
 `;
+}
 // 规则以默认前缀 `apollo` 落盘；其余静态前缀（ant）在出口处整体替换
 // 类名段（keyframes 名不含点号，不受影响）—— upload 同一约定。
-export function genPopoverStyle(prefixCls: string = 'apollo'): string {
+export function genPopoverStyleSource(prefixCls: string = 'apollo'): StyleSource {
   const rules =
-    prefixCls === 'apollo' ? RULES : RULES.split('.apollo-popover').join(`.${prefixCls}-popover`);
+    prefixCls === 'apollo'
+      ? genRulesSource()
+      : mapStyleSource(genRulesSource(), (css) =>
+          css.split('.apollo-popover').join(`.${prefixCls}-popover`),
+        );
   const decls =
     prefixCls === 'apollo'
       ? `.apollo-popover{${genPopoverTokenDecls()}}`
       : `.${prefixCls}-popover{${genPopoverTokenDecls()}}`;
-  return `${KEYFRAMES}\n${decls}\n${rules}`;
+  return styleSource`${KEYFRAMES}\n${decls}\n${rules}`;
+}
+
+export function genPopoverStyle(prefixCls: string = 'apollo'): string {
+  return genPopoverStyleSource(prefixCls).css;
 }

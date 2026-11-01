@@ -1,3 +1,5 @@
+import { TREE_KEYFRAMES as KEYFRAMES } from '../../style/motion';
+import { type StyleSource, styleSource } from '../../style/source';
 /**
  * Tree 的静态样式（G4-4 产物）。
  *
@@ -143,16 +145,14 @@ const RULES = `
  * `css-dev-only-do-not-override-…-apollo-tree-node-fx-do-not-use`，
  * `@keyframes` 从未定义 ⇒ 拖拽高亮动画不跑（U-KEYFRAMES 家族）。
  */
-const KEYFRAMES = `
-@keyframes apollo-tree-node-fx{0%{opacity:0;}100%{opacity:1;}}`;
 
 /**
  * 生成 Tree 全量静态 CSS（组件变量声明块 + 组件规则）。
  * 自定义前缀走 popover/tour 同款字符串替换（R9：只预生成 apollo / ant 两份）。
  */
-export function genTreeStyle(prefixCls: string = 'apollo'): string {
+export function genTreeStyleSource(prefixCls: string = 'apollo'): StyleSource {
   if (prefixCls === 'apollo') {
-    return `${KEYFRAMES}\n.${prefixCls}-tree{${genTreeTokenDecls()}}
+    return styleSource`${KEYFRAMES}\n.${prefixCls}-tree{${genTreeTokenDecls()}}
 ${RULES}`;
   }
   const rules = RULES.split('.apollo-tree')
@@ -161,6 +161,10 @@ ${RULES}`;
     .join(`.${prefixCls}-motion-collapse`)
     .split('.apollo-row')
     .join(`.${prefixCls}-row`);
-  return `${KEYFRAMES}\n.${prefixCls}-tree{${genTreeTokenDecls()}}
+  return styleSource`${KEYFRAMES}\n.${prefixCls}-tree{${genTreeTokenDecls()}}
 ${rules}`;
+}
+
+export function genTreeStyle(prefixCls: string = 'apollo'): string {
+  return genTreeStyleSource(prefixCls).css;
 }

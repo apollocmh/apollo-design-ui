@@ -30,6 +30,7 @@ export {
   defaultAlgorithm,
   getDesignToken,
 } from './get-design-token';
+export { mergeThemeConfig } from './merge-theme';
 export { defaultPresetColors, defaultSeedToken, PresetColors } from './seed';
 export { default as genColorMapToken } from './shared/color-map-token';
 export { genCommonMapToken } from './shared/common-map-token';
@@ -57,7 +58,12 @@ export type {
   SeedToken,
   SizeMapToken,
   StyleMapToken,
+  ThemeAppearance,
   ThemeConfig,
+  ThemeMode,
+  ThemePreset,
+  ThemePresetScheme,
+  ThemeTokenOverrides,
 } from './types';
 export type { ThemeContext } from './vue';
 export {

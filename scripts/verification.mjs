@@ -322,6 +322,7 @@ export function fullPlan() {
       packageRun('coverage', 'test:coverage'),
       // These consumers build only their isolated fixture, never packages/*/dist.
       node('consumer', ['tests/consumer/run.mjs']),
+      node('consumer', ['packages/ui-resolver/tests/consumer.mjs', '--themes']),
       node('visual', ['tests/visual/apollo.mjs']),
       docsRun('docs-types', 'typecheck'),
       docsRun('docs-tests', 'test'),

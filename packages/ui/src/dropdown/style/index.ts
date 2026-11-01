@@ -1,3 +1,5 @@
+import { genSlideDownSource, genSlideUpSource } from '../../style/motion';
+import { mapStyleSource, type StyleSource, styleSource } from '../../style/source';
 /**
  * Dropdown 的静态样式（G4 产物）。
  *
@@ -37,7 +39,8 @@ const KEYFRAMES = `
 @keyframes apollo-dropdown-zoom-big-out{0%{transform:scale(1);}100%{transform:scale(0.8);opacity:0;}}`;
 
 /** antd 产物机械转换段（103 条，原序）。 */
-const RULES = `
+function genRulesSource(): StyleSource {
+  return styleSource`
 .apollo-dropdown{position:absolute;top:-9999px;left:-9999px;z-index:var(--apollo-dropdown-z-index-popup);display:block;}
 .apollo-dropdown::before{position:absolute;inset-block:calc(var(--apollo-size-popup-arrow) / 2 - calc(var(--apollo-size-popup-arrow) / 2 + var(--apollo-margin-xxs)));z-index:-9999;opacity:0.0001;content:"";}
 .apollo-dropdown-menu-vertical{max-height:calc(100vh - calc(var(--apollo-control-height-lg) * 2.5));overflow-y:auto;}
@@ -111,20 +114,8 @@ const RULES = `
 .apollo-dropdown .apollo-dropdown-menu .apollo-dropdown-menu-submenu-vertical,.apollo-dropdown-menu-submenu .apollo-dropdown-menu .apollo-dropdown-menu-submenu-vertical{position:relative;}
 .apollo-dropdown .apollo-dropdown-menu .apollo-dropdown-menu-submenu.apollo-dropdown-menu-submenu-disabled .apollo-dropdown-menu-submenu-title,.apollo-dropdown-menu-submenu .apollo-dropdown-menu .apollo-dropdown-menu-submenu.apollo-dropdown-menu-submenu-disabled .apollo-dropdown-menu-submenu-title,.apollo-dropdown .apollo-dropdown-menu .apollo-dropdown-menu-submenu.apollo-dropdown-menu-submenu-disabled .apollo-dropdown-menu-submenu-title .apollo-dropdown-menu-submenu-arrow-icon,.apollo-dropdown-menu-submenu .apollo-dropdown-menu .apollo-dropdown-menu-submenu.apollo-dropdown-menu-submenu-disabled .apollo-dropdown-menu-submenu-title .apollo-dropdown-menu-submenu-arrow-icon{color:var(--apollo-color-text-disabled);background-color:var(--apollo-color-bg-elevated);cursor:not-allowed;}
 .apollo-dropdown .apollo-dropdown-menu .apollo-dropdown-menu-submenu-selected .apollo-dropdown-menu-submenu-title,.apollo-dropdown-menu-submenu .apollo-dropdown-menu .apollo-dropdown-menu-submenu-selected .apollo-dropdown-menu-submenu-title{color:var(--apollo-color-primary);}
-.apollo-slide-up-enter,.apollo-slide-up-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-enter.apollo-slide-up-enter-active,.apollo-slide-up-appear.apollo-slide-up-appear-active{animation-name:apollo-dropdown-slide-up-in;animation-play-state:running;}
-.apollo-slide-up-leave.apollo-slide-up-leave-active{animation-name:apollo-dropdown-slide-up-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-up-enter,.apollo-slide-up-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-up-enter-prepare,.apollo-slide-up-appear-prepare{transform:scale(1);}
-.apollo-slide-up-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
-.apollo-slide-down-enter,.apollo-slide-down-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-down-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-down-enter.apollo-slide-down-enter-active,.apollo-slide-down-appear.apollo-slide-down-appear-active{animation-name:apollo-dropdown-slide-down-in;animation-play-state:running;}
-.apollo-slide-down-leave.apollo-slide-down-leave-active{animation-name:apollo-dropdown-slide-down-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-down-enter,.apollo-slide-down-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-down-enter-prepare,.apollo-slide-down-appear-prepare{transform:scale(1);}
-.apollo-slide-down-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
+${genSlideUpSource('apollo-dropdown')}
+${genSlideDownSource('apollo-dropdown')}
 .apollo-slide-left-enter,.apollo-slide-left-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
 .apollo-slide-left-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
 .apollo-slide-left-enter.apollo-slide-left-enter-active,.apollo-slide-left-appear.apollo-slide-left-appear-active{animation-name:apollo-dropdown-slide-left-in;animation-play-state:running;}
@@ -142,15 +133,20 @@ const RULES = `
 .apollo-dropdown .apollo-dropdown-menu .apollo-dropdown-menu-item.apollo-dropdown-menu-item-danger:not(.apollo-dropdown-menu-item-disabled),.apollo-dropdown-menu-submenu .apollo-dropdown-menu .apollo-dropdown-menu-item.apollo-dropdown-menu-item-danger:not(.apollo-dropdown-menu-item-disabled){color:var(--apollo-color-error);}
 .apollo-dropdown .apollo-dropdown-menu .apollo-dropdown-menu-item.apollo-dropdown-menu-item-danger:not(.apollo-dropdown-menu-item-disabled):hover,.apollo-dropdown-menu-submenu .apollo-dropdown-menu .apollo-dropdown-menu-item.apollo-dropdown-menu-item-danger:not(.apollo-dropdown-menu-item-disabled):hover{color:var(--apollo-color-text-light-solid);background-color:var(--apollo-color-error);}
 `;
+}
 /** 生成单个前缀下的完整样式（upload 同一约定：ant 前缀在出口替换类名段）。 */
-export function genDropdownStyle(prefixCls: string = 'apollo'): string {
+export function genDropdownStyleSource(prefixCls: string = 'apollo'): StyleSource {
   const rename = (cssText: string): string =>
     prefixCls === 'apollo'
       ? cssText
       : cssText.split('.apollo-dropdown').join(`.${prefixCls}-dropdown`);
   const decls =
     prefixCls === 'apollo' ? `.apollo-dropdown{${DECLS}}` : `.${prefixCls}-dropdown{${DECLS}}`;
-  return `${KEYFRAMES}
+  return styleSource`${KEYFRAMES}
 ${decls}
-${rename(RULES)}`;
+${mapStyleSource(genRulesSource(), rename)}`;
+}
+
+export function genDropdownStyle(prefixCls: string = 'apollo'): string {
+  return genDropdownStyleSource(prefixCls).css;
 }

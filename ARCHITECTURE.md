@@ -12,7 +12,7 @@
 | L1 | motion、portal、position、a11y、virtual-list | 动效、传送与容器、定位、焦点与键盘、虚拟化 |
 | L2 | overlay、locale、form-core、picker | 浮层编排、本地化、表单状态、日期时间引擎 |
 | L3 | ui | 有视觉语义的公共组件与内部组合 |
-| 开发工具 | test-utils、docs | 测试辅助、文档站，不进入发布运行时依赖图 |
+| 开发工具 | test-utils、docs、ui-resolver | 测试辅助、文档站及独立发布的构建期自动引入工具，不进入应用运行时依赖图 |
 
 运行时依赖只能指向更低层；同层如有必要依赖必须说明职责并验证无环。具体依赖以 package.json、源码导入和 Registry 的实际图为准。类型引用与运行时引用应区分。禁止基础包反向引用 UI。
 

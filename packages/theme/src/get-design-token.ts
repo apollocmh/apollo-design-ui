@@ -3,7 +3,15 @@ import darkAlgorithm from './algorithms/dark';
 import defaultAlgorithm from './algorithms/default';
 import formatToken from './alias';
 import { defaultSeedToken } from './seed';
-import type { AliasToken, MappingAlgorithm, MapToken, SeedToken, ThemeConfig } from './types';
+import type {
+  AliasToken,
+  MappingAlgorithm,
+  MapToken,
+  SeedToken,
+  ThemeAppearance,
+  ThemeConfig,
+  ThemeTokenOverrides,
+} from './types';
 
 export { compactAlgorithm, darkAlgorithm, defaultAlgorithm };
 
@@ -26,15 +34,42 @@ export const algorithms = {
  * undefined 覆盖等同省略，避免合法 Partial 输入破坏完整 AliasToken 返回值。
  * 历史算法对照仍由 baseline.test.ts 保留，不定义 Apollo 的输入契约。
  */
-export function getDesignToken(config: ThemeConfig = {}): AliasToken {
-  const list: MappingAlgorithm[] = Array.isArray(config.algorithm)
+export function resolveThemeAppearance(
+  config: ThemeConfig,
+  system: ThemeAppearance = 'light',
+): ThemeAppearance {
+  const explicit = Array.isArray(config.algorithm)
     ? config.algorithm
-    : [config.algorithm ?? defaultAlgorithm];
+    : config.algorithm
+      ? [config.algorithm]
+      : undefined;
+  if (explicit) {
+    for (const algorithm of [...explicit].reverse()) {
+      if (algorithm === darkAlgorithm) return 'dark';
+      if (algorithm === defaultAlgorithm) return 'light';
+    }
+    if (explicit.length === 0 || explicit.includes(compactAlgorithm)) return 'light';
+  }
+  return config.mode === 'system' ? system : (config.mode ?? 'light');
+}
+
+export function getDesignToken(
+  config: ThemeConfig = {},
+  systemAppearance: ThemeAppearance = 'light',
+): AliasToken {
+  const appearance = resolveThemeAppearance(config, systemAppearance);
+  const scheme = config.preset?.[appearance];
+  const algorithm =
+    config.algorithm ??
+    scheme?.algorithm ??
+    (appearance === 'dark' ? darkAlgorithm : defaultAlgorithm);
+  const list: MappingAlgorithm[] = Array.isArray(algorithm) ? algorithm : [algorithm];
   const [first = defaultAlgorithm, ...following] = list;
 
-  const overrides = Object.fromEntries(
-    Object.entries(config.token ?? {}).filter(([, value]) => value !== undefined),
-  );
+  const overrides: ThemeTokenOverrides = {};
+  for (const layer of [config.preset?.token, scheme?.token, config.token])
+    for (const [name, value] of Object.entries(layer ?? {}))
+      if (value !== undefined) overrides[name] = value;
   const seed: SeedToken = { ...defaultSeedToken, ...overrides };
 
   const derivativeToken = following.reduce<MapToken>(
@@ -42,5 +77,5 @@ export function getDesignToken(config: ThemeConfig = {}): AliasToken {
     first(seed, undefined),
   );
 
-  return formatToken({ ...derivativeToken, override: config.token });
+  return formatToken({ ...derivativeToken, override: overrides });
 }

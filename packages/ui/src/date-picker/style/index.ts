@@ -1,3 +1,5 @@
+import { SLIDE_KEYFRAMES as KEYFRAMES } from '../../style/motion';
+import { type StyleSource, styleSource } from '../../style/source';
 /**
  * DatePicker 的静态样式（antd 6.6.4 的 date-picker 样式产物的**机械移植**）。
  *
@@ -508,14 +510,9 @@ export function genDatePickerRules(rootPrefixCls: string): string {
  * `css-dev-only-do-not-override-…-antSlideUpIn` 等，`@keyframes` 从未定义
  * ⇒ 面板开合动画不跑（`animationend` 永不触发）。
  */
-const KEYFRAMES = `
-@keyframes apollo-slide-up-in{0%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}100%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}}
-@keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
-@keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
-@keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
 
 /** 生成完整样式：token 声明块 + 规则体。 */
-export function genDatePickerStyle(rootPrefixCls: string): string {
+export function genDatePickerStyleSource(rootPrefixCls: string): StyleSource {
   const decls = genTokenDecls(rootPrefixCls).join('');
   // ⚠️ 根类是 `{rootPrefixCls}-picker`（**不是** `-date-picker`），见文件头第 1 条。
   //
@@ -525,7 +522,7 @@ export function genDatePickerStyle(rootPrefixCls: string): string {
   //    症状：面板宽度 `width: calc(var(--apollo-date-picker-cell-width) * 7 + …)`
   //    的 calc 非法 ⇒ `width` 整条被丢弃 ⇒ **面板铺满容器**（L6 的 21 组里 18 组红）。
   //    与 `select` 的 `.apollo-select,.apollo-select-css-var{…}` 同判。
-  return `${KEYFRAMES}\n.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${genDatePickerRules(rootPrefixCls)}`;
+  return styleSource`${KEYFRAMES}\n.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${genDatePickerRules(rootPrefixCls)}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -552,3 +549,7 @@ export {
   initPickerPanelToken,
   prepareComponentToken as prepareDatePickerComponentToken,
 } from './token';
+
+export function genDatePickerStyle(rootPrefixCls: string): string {
+  return genDatePickerStyleSource(rootPrefixCls).css;
+}

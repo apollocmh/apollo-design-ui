@@ -1,3 +1,6 @@
+import { ICON_RESET } from '../../style/icons';
+import { SLIDE_KEYFRAMES as KEYFRAMES, SLIDE_MOTION } from '../../style/motion';
+import { mapStyleSource, type StyleSource, styleSource } from '../../style/source';
 /**
  * Select 的静态样式（G4 产物）。
  *
@@ -19,7 +22,7 @@
  *   5. at-rule（`@media`）按**块体**判据保留（modal 期教训）。
  */
 
-import { genSlideMotionStyle } from '../../style/slide';
+import { genSlideMotionSource } from '../../style/slide';
 
 /** @internal Actual default shared by generated CSS and selection consumers. */
 export const DEFAULT_SELECT_POPUP_Z_INDEX = 1050;
@@ -32,20 +35,11 @@ export function genSelectTokenDecls(): string {
 const DECLS = `--apollo-select-line-width-focus:1px;--apollo-select-internal_fixed_item_margin:2px;--apollo-select-z-index-popup:${DEFAULT_SELECT_POPUP_Z_INDEX};--apollo-select-option-selected-color:rgba(0,0,0,0.88);--apollo-select-option-selected-font-weight:600;--apollo-select-option-selected-bg:#e6f4ff;--apollo-select-option-active-bg:rgba(0,0,0,0.04);--apollo-select-option-padding:5px 12px;--apollo-select-option-font-size:14px;--apollo-select-option-line-height:1.5714285714285714;--apollo-select-option-height:32px;--apollo-select-selector-bg:var(--apollo-color-bg-container);--apollo-select-clear-bg:#ffffff;--apollo-select-single-item-height-lg:40px;--apollo-select-multiple-item-bg:rgba(0,0,0,0.06);--apollo-select-multiple-item-border-color:transparent;--apollo-select-multiple-item-height:24px;--apollo-select-multiple-item-height-sm:16px;--apollo-select-multiple-item-height-lg:32px;--apollo-select-multiple-selector-bg-disabled:rgba(0,0,0,0.04);--apollo-select-multiple-item-color-disabled:rgba(0,0,0,0.25);--apollo-select-multiple-item-border-color-disabled:transparent;--apollo-select-show-arrow-padding-inline-end:18px;--apollo-select-hover-border-color:#4096ff;--apollo-select-active-border-color:#1677ff;--apollo-select-active-outline-color:rgba(5,145,255,0.1);--apollo-select-select-affix-padding:4px;`;
 
 /** antd motion 的 @keyframes（稳定命名，体逐字取自产物）。 */
-const KEYFRAMES = `
-@keyframes apollo-slide-up-in{0%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}100%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}}
-@keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
-@keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
-@keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
 
 /** antd 产物机械转换段（原序）。 */
-const RULES = `
-.apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-.apollo-icon >*{line-height:1;}
-.apollo-icon svg{display:inline-block;vertical-align:inherit;}
-.apollo-icon::before{display:none;}
-.apollo-icon[tabindex]{cursor:pointer;}
-.apollo-icon .apollo-icon-icon{display:block;}
+function genRulesSource(): StyleSource {
+  return styleSource`
+${ICON_RESET}
 .apollo-select-css-var{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-select-css-var::before,.apollo-select-css-var::after{box-sizing:border-box;}
 .apollo-select-css-var [class^="apollo-select"],.apollo-select-css-var [class*=" apollo-select"]{box-sizing:border-box;}
@@ -87,20 +81,7 @@ const RULES = `
 .apollo-select-dropdown .apollo-select-item-option-selected:has(+ .apollo-select-item-option-selected){border-end-start-radius:0;border-end-end-radius:0;}
 .apollo-select-dropdown .apollo-select-item-option-selected:has(+ .apollo-select-item-option-selected)+.apollo-select-item-option-selected{border-start-start-radius:0;border-start-end-radius:0;}
 .apollo-select-dropdown-rtl{direction:rtl;}
-.apollo-slide-up-enter,.apollo-slide-up-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-enter.apollo-slide-up-enter-active,.apollo-slide-up-appear.apollo-slide-up-appear-active{animation-name:apollo-slide-up-in;animation-play-state:running;}
-.apollo-slide-up-leave.apollo-slide-up-leave-active{animation-name:apollo-slide-up-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-up-enter,.apollo-slide-up-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-up-enter-prepare,.apollo-slide-up-appear-prepare{transform:scale(1);}
-.apollo-slide-up-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
-.apollo-slide-down-enter,.apollo-slide-down-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-down-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-down-enter.apollo-slide-down-enter-active,.apollo-slide-down-appear.apollo-slide-down-appear-active{animation-name:apollo-slide-down-in;animation-play-state:running;}
-.apollo-slide-down-leave.apollo-slide-down-leave-active{animation-name:apollo-slide-down-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-down-enter,.apollo-slide-down-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-down-enter-prepare,.apollo-slide-down-appear-prepare{transform:scale(1);}
-.apollo-slide-down-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
+${SLIDE_MOTION}
 .apollo-select-rtl{direction:rtl;}
 .apollo-select-compact-item:not(.apollo-select-compact-last-item){margin-inline-end:calc(var(--apollo-line-width) * -1);}
 .apollo-select-compact-item:not(.apollo-select-status-success){z-index:2;}
@@ -219,16 +200,15 @@ const RULES = `
 .apollo-select.apollo-select-customize.apollo-select-filled .apollo-select-content .apollo-input-filled{background:transparent;}
 .apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >input[disabled],.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >textarea[disabled],.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >.apollo-select-input,.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >.apollo-input-affix-wrapper-disabled,.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >.apollo-input-search{background:transparent;}
 .apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content input[disabled],.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content textarea[disabled]{background:transparent;}
-.apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-.apollo-icon >*{line-height:1;}
-.apollo-icon svg{display:inline-block;vertical-align:inherit;}
-.apollo-icon::before{display:none;}
-.apollo-icon[tabindex]{cursor:pointer;}
-.apollo-icon .apollo-icon-icon{display:block;}
+${ICON_RESET}
 `;
+}
 
 /** 生成单个前缀下的完整样式。 */
-export function genSelectStyle(prefixCls: string = 'apollo', targetPrefixCls?: string): string {
+export function genSelectStyleSource(
+  prefixCls: string = 'apollo',
+  targetPrefixCls?: string,
+): StyleSource {
   // targetPrefixCls：**完整目标前缀**（如 'apollo-cascader'）—— 本仓的复用方式：
   // BaseSelect 的所有类名都由传入的 prefixCls 派生（select 传 `apollo-select`，
   // cascader 传 `apollo-cascader`），所以复用时要按目标前缀重生成一份。
@@ -250,9 +230,13 @@ export function genSelectStyle(prefixCls: string = 'apollo', targetPrefixCls?: s
     prefixCls === target
       ? `.apollo-select,.apollo-select-css-var{${DECLS}}`
       : `.${target},.${target}-css-var{${DECLS}}`;
-  return `${KEYFRAMES}
-${genSlideMotionStyle()}
+  return styleSource`${KEYFRAMES}
+${genSlideMotionSource()}
 ${decls}
-${rename(RULES)}
+${mapStyleSource(genRulesSource(), rename)}
 ${rename('.apollo-select-single.apollo-select-lg{--apollo-select-height:var(--apollo-select-single-item-height-lg)}.apollo-select-multiple.apollo-select-disabled{background:var(--apollo-select-multiple-selector-bg-disabled)}.apollo-select-multiple.apollo-select-disabled .apollo-select-selection-item,.apollo-select-multiple .apollo-select-selection-item-disabled{color:var(--apollo-select-multiple-item-color-disabled);border-color:var(--apollo-select-multiple-item-border-color-disabled)}')}`;
+}
+
+export function genSelectStyle(prefixCls: string = 'apollo', targetPrefixCls?: string): string {
+  return genSelectStyleSource(prefixCls, targetPrefixCls).css;
 }

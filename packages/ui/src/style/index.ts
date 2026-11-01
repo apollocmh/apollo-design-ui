@@ -53,15 +53,15 @@ import { genButtonStyle } from '../button/style';
 import { genCalendarStyle } from '../calendar/style';
 import { genCardStyle } from '../card/style';
 import { genCarouselStyle } from '../carousel/style';
-import { genCascaderStyle } from '../cascader/style';
+import { genCascaderStyle, genCascaderStyleSource } from '../cascader/style';
 import { genCheckboxStyle } from '../checkbox/style';
 import { genCollapseStyle } from '../collapse/style';
 import { genColorPickerStyle } from '../color-picker/style';
-import { genDatePickerStyle } from '../date-picker/style';
+import { genDatePickerStyle, genDatePickerStyleSource } from '../date-picker/style';
 import { genDescriptionsStyle } from '../descriptions/style';
 import { genDividerStyle } from '../divider/style';
 import { genDrawerStyle } from '../drawer/style';
-import { genDropdownStyle } from '../dropdown/style';
+import { genDropdownStyle, genDropdownStyleSource } from '../dropdown/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genFloatButtonStyle } from '../float-button/style';
@@ -75,20 +75,20 @@ import { genListStyle } from '../list/style';
 import { genListyStyle } from '../listy/style';
 import { genMasonryStyle } from '../masonry/style';
 import { genMentionsStyle } from '../mentions/style';
-import { genMenuStyle } from '../menu/style';
+import { genMenuStyle, genMenuStyleSource } from '../menu/style';
 import { genMessageStyle } from '../message/style';
 import { genModalStyle } from '../modal/style';
 import { genNotificationStyle } from '../notification/style';
 import { genPaginationStyle } from '../pagination/style';
 import { genPopconfirmStyle } from '../popconfirm/style';
-import { genPopoverStyle } from '../popover/style';
+import { genPopoverStyle, genPopoverStyleSource } from '../popover/style';
 import { genProgressStyle } from '../progress/style';
 import { genQrCodeStyle } from '../qr-code/style';
 import { genRadioStyle } from '../radio/style';
 import { genRateStyle } from '../rate/style';
 import { genResultStyle } from '../result/style';
 import { genSegmentedStyle } from '../segmented/style';
-import { genSelectStyle } from '../select/style';
+import { genSelectStyle, genSelectStyleSource } from '../select/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSliderStyle } from '../slider/style';
 import { genSpaceStyle } from '../space/style';
@@ -98,18 +98,18 @@ import { genStatisticStyle } from '../statistic/style';
 import { genStepsStyle } from '../steps/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTableStyle } from '../table/style';
-import { genTabsStyle } from '../tabs/style';
+import { genTabsStyle, genTabsStyleSource } from '../tabs/style';
 import { genTagStyle } from '../tag/style';
 import { genTimelineStyle } from '../timeline/style';
-import { genTooltipStyle } from '../tooltip/style';
+import { genTooltipStyle, genTooltipStyleSource } from '../tooltip/style';
 import { genTourStyle } from '../tour/style';
 import { genTransferStyle } from '../transfer/style';
-import { genTreeStyle } from '../tree/style';
-import { genTreeSelectStyle } from '../tree-select/style';
+import { genTreeStyle, genTreeStyleSource } from '../tree/style';
+import { genTreeSelectStyle, genTreeSelectStyleSource } from '../tree-select/style';
 import { genTypographyStyle } from '../typography/style';
 import { genUploadStyle } from '../upload/style';
 import { genLinkReset } from './links';
-import { genSlideMotionStyle } from './slide';
+import type { StyleSource } from './source';
 
 /**
  * 静态 CSS 覆盖的前缀。
@@ -143,6 +143,8 @@ export interface ComponentStyleEntry {
   name: string;
   /** 纯函数：类名前缀 → CSS 文本。 */
   gen: (prefixCls: string) => string;
+  /** Explicit own/shared source pieces; complete manual generators retain their exact text. */
+  source?: (prefixCls: string) => StyleSource;
   /** CSS required by implementation-owned descendants; caller-provided slots are excluded. */
   dependencies?: readonly string[];
 }
@@ -162,7 +164,12 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },
   { name: 'collapse', gen: genCollapseStyle },
-  { name: 'date-picker', dependencies: ['button'], gen: genDatePickerStyle },
+  {
+    name: 'date-picker',
+    dependencies: ['button'],
+    gen: genDatePickerStyle,
+    source: genDatePickerStyleSource,
+  },
   { name: 'calendar', dependencies: ['select', 'radio'], gen: genCalendarStyle },
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
@@ -198,7 +205,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'badge', gen: genBadgeStyle },
   { name: 'back-top', gen: genBackTopStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },
-  { name: 'tabs', gen: genTabsStyle },
+  { name: 'tabs', gen: genTabsStyle, source: genTabsStyleSource },
   { name: 'tag', gen: genTagStyle },
   { name: 'result', gen: genResultStyle },
   { name: 'statistic', dependencies: ['skeleton'], gen: genStatisticStyle },
@@ -211,18 +218,23 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'input-number', dependencies: ['space'], gen: genInputNumberStyle },
   { name: 'input', dependencies: ['button', 'space'], gen: genInputStyle },
   { name: 'upload', dependencies: ['button', 'progress'], gen: genUploadStyle },
-  { name: 'tooltip', gen: genTooltipStyle },
-  { name: 'popover', gen: genPopoverStyle },
-  { name: 'menu', dependencies: ['tooltip'], gen: genMenuStyle },
+  { name: 'tooltip', gen: genTooltipStyle, source: genTooltipStyleSource },
+  { name: 'popover', gen: genPopoverStyle, source: genPopoverStyleSource },
+  { name: 'menu', dependencies: ['tooltip'], gen: genMenuStyle, source: genMenuStyleSource },
   { name: 'mentions', dependencies: ['spin', 'empty'], gen: genMentionsStyle },
-  { name: 'dropdown', dependencies: ['button', 'tooltip'], gen: genDropdownStyle },
+  {
+    name: 'dropdown',
+    dependencies: ['button', 'tooltip'],
+    gen: genDropdownStyle,
+    source: genDropdownStyleSource,
+  },
   { name: 'drawer', dependencies: ['skeleton'], gen: genDrawerStyle },
   { name: 'app', dependencies: ['message', 'notification', 'modal'], gen: genAppStyle },
   { name: 'image', gen: genImageStyle },
   { name: 'message', gen: genMessageStyle },
   { name: 'notification', gen: genNotificationStyle },
   { name: 'modal', dependencies: ['button', 'skeleton'], gen: genModalStyle },
-  { name: 'select', dependencies: ['empty'], gen: genSelectStyle },
+  { name: 'select', dependencies: ['empty'], gen: genSelectStyle, source: genSelectStyleSource },
   { name: 'steps', dependencies: ['tooltip'], gen: genStepsStyle },
   // 🚨 **必须排在 `steps` 之后** —— Timeline 是 Steps 的薄壳，它的样式大量**覆盖**
   //    Steps 的声明（如 `-horizontal` 的 `align-items:stretch` 要压过
@@ -232,10 +244,10 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'timeline', dependencies: ['steps'], gen: genTimelineStyle },
   { name: 'segmented', dependencies: ['tooltip'], gen: genSegmentedStyle },
   { name: 'popconfirm', dependencies: ['popover', 'button'], gen: genPopconfirmStyle },
-  { name: 'cascader', gen: genCascaderStyle },
+  { name: 'cascader', gen: genCascaderStyle, source: genCascaderStyleSource },
   { name: 'tour', dependencies: ['button'], gen: genTourStyle },
-  { name: 'tree', gen: genTreeStyle },
-  { name: 'tree-select', gen: genTreeSelectStyle },
+  { name: 'tree', gen: genTreeStyle, source: genTreeStyleSource },
+  { name: 'tree-select', gen: genTreeSelectStyle, source: genTreeSelectStyleSource },
   { name: 'form', dependencies: ['grid', 'tooltip'], gen: genFormStyle },
   { name: 'pagination', dependencies: ['select'], gen: genPaginationStyle },
   {
@@ -270,7 +282,10 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
 ];
 
 /** Resolve the owned style closure in the same cascade order as aggregate CSS. */
-function componentStyleEntries(name: string): ComponentStyleEntry[] {
+export function componentStyleEntries(
+  name: string,
+  definitions: readonly ComponentStyleEntry[] = COMPONENT_STYLES,
+): ComponentStyleEntry[] {
   const included = new Set<string>();
   const visiting = new Set<string>();
   const visit = (current: string): void => {
@@ -278,10 +293,10 @@ function componentStyleEntries(name: string): ComponentStyleEntry[] {
     if (visiting.has(current)) {
       throw new Error(`[apollo: style] 循环样式依赖: ${[...visiting, current].join(' → ')}`);
     }
-    const entry = COMPONENT_STYLES.find((item) => item.name === current);
+    const entry = definitions.find((item) => item.name === current);
     if (!entry) {
       throw new Error(
-        `[apollo: style] 未知组件 "${current}"。已知：${COMPONENT_STYLES.map((i) => i.name).join(', ')}`,
+        `[apollo: style] 未知组件 "${current}"。已知：${definitions.map((i) => i.name).join(', ')}`,
       );
     }
     visiting.add(current);
@@ -290,25 +305,22 @@ function componentStyleEntries(name: string): ComponentStyleEntry[] {
     included.add(current);
   };
   visit(name);
-  return COMPONENT_STYLES.filter((entry) => included.has(entry.name));
+  return definitions.filter((entry) => included.has(entry.name));
 }
 
-// Tabs owns its popup/menu paint and keyframes. It also needs the shared phase
-// rules already emitted by Select, rather than an unrelated Dropdown stylesheet.
-const SHARED_STYLE_PARTS = [{ consumer: 'tabs', includedBy: 'select', gen: genSlideMotionStyle }];
-
 function componentCss(entries: readonly ComponentStyleEntry[], prefixCls: string): string {
-  const included = new Set(entries.map((entry) => entry.name));
-  const emitted = new Set<() => string>();
+  const sources = entries.map((entry) => entry.source?.(prefixCls));
+  const provided = new Set(sources.flatMap((source) => source?.embedded ?? []));
+  const emitted = new Set<string>();
   return entries
-    .flatMap((entry) => {
-      const parts = SHARED_STYLE_PARTS.filter(
-        (part) =>
-          part.consumer === entry.name && !included.has(part.includedBy) && !emitted.has(part.gen),
-      ).map((part) => {
-        emitted.add(part.gen);
-        return part.gen();
-      });
+    .flatMap((entry, index) => {
+      const parts: string[] = [];
+      for (const requirement of sources[index]?.required ?? []) {
+        if (!requirement.parts.every((part) => provided.has(part.name) || emitted.has(part.name))) {
+          parts.push(requirement.css);
+          for (const part of requirement.parts) emitted.add(part.name);
+        }
+      }
       return [...parts, entry.gen(prefixCls)];
     })
     .join('\n');

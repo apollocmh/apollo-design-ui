@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/theme",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Token Runtime：Seed → Map → Alias → Component 的完整派生链，以及 Token → CSS 变量的注入。",
   "license": "MIT",
   "type": "module",
@@ -16,6 +16,21 @@
       "import": "./dist/index.mjs"
     },
     "./tokens.css": "./dist/tokens.css",
+    "./presets/default": {
+      "types": "./dist/presets/default.d.ts",
+      "import": "./dist/presets/default.mjs"
+    },
+    "./presets/mono": {
+      "types": "./dist/presets/mono.d.ts",
+      "import": "./dist/presets/mono.mjs"
+    },
+    "./presets/material3": {
+      "types": "./dist/presets/material3.d.ts",
+      "import": "./dist/presets/material3.mjs"
+    },
+    "./presets/default.css": "./dist/presets/default.css",
+    "./presets/mono.css": "./dist/presets/mono.css",
+    "./presets/material3.css": "./dist/presets/material3.css",
     "./package.json": "./package.json"
   },
   "files": [

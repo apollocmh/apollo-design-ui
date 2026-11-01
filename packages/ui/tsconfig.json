@@ -9,6 +9,7 @@
     "paths": {
       "@apollo-design/utils": ["../utils/src"],
       "@apollo-design/theme": ["../theme/src"],
+      "@apollo-design/theme/presets/*": ["../theme/src/presets/*"],
       "@apollo-design/icons": ["../icons/src"],
       "@apollo-design/motion": ["../motion/src"],
       "@apollo-design/portal": ["../portal/src"],

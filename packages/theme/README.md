@@ -2,7 +2,44 @@
 
 Apollo 的 L0 设计令牌包：Seed → Map → Alias 派生、CSS 变量转换与 Vue 主题上下文。规范来源见 [AGENTS.md](../../AGENTS.md) 和 [ARCHITECTURE.md](../../ARCHITECTURE.md)；历史 Ant Design 对照保留为回归证据。
 
-运行依赖为 `@apollo-design/utils`，Vue 是 peer dependency。`@ant-design/colors` / `@ant-design/fast-color` 仅作为开发对照工具，不进入发布运行图。发布入口是根 JS/类型、`tokens.css` 和 `package.json`。
+运行依赖为 `@apollo-design/utils`，Vue 是 peer dependency。`@ant-design/colors` / `@ant-design/fast-color` 仅作为开发对照工具，不进入发布运行图。基础包不依赖 UI。
+
+## 预设与明暗
+
+```vue
+<script setup lang="ts">
+import { ConfigProvider } from '@apollo-design/ui';
+import { monoPreset } from '@apollo-design/theme/presets/mono';
+</script>
+
+<template>
+  <ConfigProvider :theme="{ preset: monoPreset, mode: 'system' }">
+    <App />
+  </ConfigProvider>
+</template>
+```
+
+预设是 `ThemePreset` 数据对象，与 `mode: 'light' | 'dark' | 'system'` 独立。三个内置入口分别是 `presets/default`（`defaultPreset`）、`presets/mono`（`monoPreset`）和 `presets/material3`（`material3Preset`）；每个入口也有 default 导出。根入口不汇总预设，因此单独使用 Mono 不引入另外两套预设。Material 3 是色彩、排版、形状、表面与阴影的启发式预设，保留 Apollo 的组件结构、交互和无障碍契约。
+
+用户预设使用同一公开 API，无需注册名称或主题 resolver：
+
+```ts
+import { getDesignToken, type ThemePreset } from '@apollo-design/theme';
+
+const brand: ThemePreset = {
+  name: 'brand',
+  token: { fontSize: 16, borderRadius: 6 },
+  light: { token: { colorPrimary: '#006b60', colorBgBase: '#f8fffc' } },
+  dark: { token: { colorPrimary: '#1a786d', colorBgBase: '#0b1715' } },
+};
+const token = getDesignToken({ preset: brand, mode: 'dark', token: { fontSize: 18 } });
+```
+
+派生顺序为默认 Seed → preset.token → preset 当前 light/dark.token → 用户 token 中的 Seed → 算法 → 用户 Alias 覆盖；`components` 留给 UI 按最终组件覆盖消费。修改主色同时改变 hover/active 等色板，修改字号同时改变派生排版。`ThemePresetScheme.algorithm` 可定义该预设的真实派生规则，显式 `ThemeConfig.algorithm` 仍是完整算法链并优先于预设算法。已知 default/dark/compact 算法也决定选用预设的亮暗分支；局部显式 algorithm 不被外层 mode 覆盖，局部显式 mode 则替代继承的 algorithm。
+
+`getDesignToken({mode:'system'})` 是确定性的服务端亮色；已知请求偏好时可传第二参数 `'dark'` 或 `'light'`。Vue 中的活跃 Provider 在 mounted 后读取并监听系统偏好，切换 mode 或卸载时释放监听。组件外的 `createThemeContext()` 不持有浏览器生命周期；应传入实际 light/dark 或自行更新 config。
+
+`ConfigProvider` 在有显式主题来源时向业务根和浮层投影完整变量，使用 Mono 或自定义预设无需同时引入默认 `tokens.css`。仍需按所选导入方式引入 UI 结构 CSS。
 
 ## 静态样式
 
@@ -12,6 +49,8 @@ import '@apollo-design/ui/style.css';
 ```
 
 `tokens.css` 提供默认、`[data-apollo-theme="dark"]`、`[data-apollo-theme="compact"]`、`[data-apollo-theme="dark-compact"]` 四套变量。组件规则使用默认 `--apollo-*` 名称。自定义变量前缀需要对应样式消费；DOM 类名前缀由 UI 的 `ConfigProvider.prefixCls` 配置。
+
+每个预设另有独立的可选静态资源 `@apollo-design/theme/presets/default.css`、`mono.css`、`material3.css`，均由相同的 `getDesignToken` / `getCSSVarDeclarations` 生成，不导入其它预设或旧变量表。给全局或局部变量根显式设置 `data-apollo-preset="mono"` 与 `data-apollo-theme="light|dark|system"`；后代继承这些变量。system 的静态资源通过 prefers-color-scheme 媒体查询选择暗色，可在 JS 启动前配置 HTML 属性。自定义预设的 SSR/CSS 也用 `getCSSVarDeclarations(getDesignToken(...))` 输出，无需另一张手写色表。静态变量表服务于 CSS/首屏；需要组件级覆盖及 JS Token 消费时，Provider 使用同一 preset/mode。
 
 ## 纯函数派生
 
@@ -52,6 +91,8 @@ import { ThemeProvider } from '@apollo-design/theme';
 
 Provider 保持 renderless，只有默认槽，无自定义 Emits、v-model 或 Expose。DOM attrs/listeners 放在业务元素上；Provider 不隐式转发给多根槽或变量 target。条件槽正常更新，主题切换不重挂业务子树。SSR 只提供数据，DOM 注入在 mounted 后执行；卸载释放自己的 scope。
 
+`ThemeProvider` 保留既有默认：`theme={}` 是显式重置，不继承父主题，CSS 变量前缀也沿用本地默认；设置 `theme.inherit: true` 才合并最近的原始配置。UI `ConfigProvider` 保留默认继承，`theme.inherit: false` 才重置，并保留父 CSS 变量前缀。这两个边界都调用 `mergeThemeConfig(parent, own)`，不把已派生的父 Alias 当作子预设输入；token 按键合并，components 按组件与键合并。重置后预设、明暗、用户 token 与组件覆盖从本地开始。
+
 在组件 setup 中调用 `useTheme()` 或 `useToken()`。`useTheme().config` 是可写深层 Ref，`token` 是随有效配置更新的 ComputedRef：
 
 ```ts
@@ -80,16 +121,16 @@ theme.config.value.token = { ...theme.config.value.token, fontSize: 20 };
 
 | 分类 | 导出 |
 | --- | --- |
-| 派生/算法 | getDesignToken, formatToken, algorithms, defaultAlgorithm, darkAlgorithm, compactAlgorithm |
+| 派生/算法 | getDesignToken, formatToken, algorithms, defaultAlgorithm, darkAlgorithm, compactAlgorithm, mergeThemeConfig |
 | 默认值/预设色 | defaultSeedToken, defaultPresetColors, PresetColors |
 | 共享派生函数 | genColorMapToken, genCommonMapToken, genControlHeight, genFontMapToken, genFontSizes, getLineHeight, getAlphaColor, genRadius, genCompactSizeMapToken, genSizeMapToken |
 | CSS | DEFAULT_CSS_VAR_PREFIX, UNITLESS, IGNORE, PRESERVE, token2CSSVar, transformToken, getCSSVarDeclarations, createCSSVarScope, applyCSSVar |
 | Vue | ThemeContextKey, createThemeContext, ThemeProvider, useTheme, useToken, injectTokenCssVar |
-| 输入/主题类型 | SeedToken, MappingAlgorithm, ThemeConfig, ThemeContext, DerivativeTokenWithOverride |
+| 输入/主题类型 | SeedToken, MappingAlgorithm, ThemeConfig, ThemeContext, DerivativeTokenWithOverride, ThemePreset, ThemePresetScheme, ThemeMode, ThemeAppearance, ThemeTokenOverrides |
 | Map 类型 | ColorMapToken, ColorNeutralMapToken, ColorPalette, FontMapToken, SizeMapToken, HeightMapToken, StyleMapToken, CommonMapToken, MapToken |
 | 其他类型 | AliasToken, GlobalToken, ComponentTokenMap, PresetColorKey, PresetColorType, PresetColorPalettes, TransformResult, CSSVarScope |
 
-共 34 个运行导出、22 个类型导出。`ThemeConfig` 只含 token、algorithm、cssVarPrefix、components。无消费的 `theme.prefixCls` 已移除；迁移与既有错误输入修正见 [Theme 契约迁移](../../docs/migrations/theme-foundation-contracts.md)。
+`ThemeConfig` 包含 token、algorithm、cssVarPrefix、components、preset、mode 与 inherit。预设值从上述独立子入口导入。无消费的 `theme.prefixCls` 已移除；迁移与既有错误输入修正见 [Theme 契约迁移](../../docs/migrations/theme-foundation-contracts.md)。
 
 ## 验证
 

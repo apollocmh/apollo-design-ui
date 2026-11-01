@@ -22,6 +22,8 @@ order: 0
 
 全库最终验收：**passed**。未知、未测或延期均不计为通过。
 
+冻结验收源码：[9ea05180](https://github.com/apollocmh/apollo-design-ui/commit/9ea0518035acc46d7036d5f7ae9a3391fcee8ba2)。以上结果对应此提交；后续 issue 的定向验证不代表新版本已经重新通过整库验收。
+
 | 任务 | 架构状态 | 当前负责人 | 保留证据 |
 | --- | --- | --- | --- |
 | Affix | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
@@ -126,6 +128,8 @@ Current stage: **Frozen-version acceptance**. Dispatch: **paused**; active tasks
 Existing code, tests and valid evidence are retained. Historical deliveries do not claim a fresh frozen-version pass. Focused types, core behavior and necessary demo/consumer checks allow architecture work to progress. Record non-blocking issues and defer full nine-dimension acceptance to stage two. Imports describe impact; only explicit work dependencies block task completion.
 
 Final library acceptance: **passed**. Unknown, untested and deferred checks are not passes.
+
+Frozen acceptance source: [9ea05180](https://github.com/apollocmh/apollo-design-ui/commit/9ea0518035acc46d7036d5f7ae9a3391fcee8ba2). These results apply to that commit; focused issue checks do not establish full acceptance of later versions.
 
 | Task | Architecture status | Current owner | Retained evidence |
 | --- | --- | --- | --- |

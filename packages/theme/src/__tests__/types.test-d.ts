@@ -1,6 +1,14 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import { h } from 'vue';
-import type { AliasToken, MappingAlgorithm, MapToken, SeedToken, ThemeConfig } from '../index';
+import type {
+  AliasToken,
+  MappingAlgorithm,
+  MapToken,
+  SeedToken,
+  ThemeConfig,
+  ThemeMode,
+  ThemePreset,
+} from '../index';
 import {
   compactAlgorithm,
   createCSSVarScope,
@@ -13,6 +21,7 @@ import {
   token2CSSVar,
   transformToken,
 } from '../index';
+import { monoPreset } from '../presets/mono';
 
 /**
  * L3 类型测试。
@@ -22,6 +31,29 @@ import {
  * "这里应当报错"；若 TS 不再报错，@ts-expect-error 本身会变成错误。
  */
 describe('theme 类型契约', () => {
+  it('presets and appearance are independent public data with the original typed overrides', () => {
+    const custom: ThemePreset = {
+      name: 'Customer brand',
+      token: { fontSize: 16, borderRadius: 4 },
+      light: { token: { colorPrimary: '#445588' } },
+      dark: { token: { colorPrimary: '#7788aa' }, algorithm: darkAlgorithm },
+    };
+    const config: ThemeConfig = { preset: custom, mode: 'system', inherit: true };
+    expectTypeOf(getDesignToken(config, 'dark')).toEqualTypeOf<AliasToken>();
+    expectTypeOf<ThemeConfig['mode']>().toEqualTypeOf<ThemeMode | undefined>();
+    expectTypeOf(monoPreset).toEqualTypeOf<ThemePreset>();
+    // @ts-expect-error Preset objects are explicit imports, not names resolved by a runtime registry.
+    const name: ThemeConfig = { preset: 'mono' };
+    // @ts-expect-error compact remains an algorithm, not a light/dark/system appearance.
+    const mode: ThemeConfig = { mode: 'compact' };
+    // @ts-expect-error Known preset seed values retain their numeric contract.
+    const seed: ThemePreset = { name: 'Invalid', token: { fontSize: 'large' } };
+    // @ts-expect-error A scheme must be typed data, not a render/resolver callback.
+    const scheme: ThemePreset = { name: 'Invalid', dark: () => ({}) };
+    // @ts-expect-error The server environment argument is a resolved light/dark appearance.
+    getDesignToken(config, 'system');
+    void [name, mode, seed, scheme];
+  });
   it('组件配置接受已有布尔 Token，但不接受对象和回调', () => {
     const config: ThemeConfig = { components: { InputNumber: { handleVisible: false } } };
     expectTypeOf(config).toMatchTypeOf<ThemeConfig>();

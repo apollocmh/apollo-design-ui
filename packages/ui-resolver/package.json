@@ -1,0 +1,37 @@
+{
+  "name": "@apollo-design/ui-resolver",
+  "version": "0.1.8",
+  "description": "Build-time Vue component and structural CSS imports for Apollo Design.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "unbuild --config ../../scripts/unbuild-preserve-modules.mjs",
+    "test": "vitest run --root ../.. --project unit packages/ui-resolver/src",
+    "lint": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@apollo-design/ui": ">=0.1.8 <0.2.0",
+    "unplugin-vue-components": "^32.1.0"
+  },
+  "devDependencies": {
+    "@apollo-design/ui": "workspace:*",
+    "unplugin-vue-components": "^32.1.0"
+  }
+}

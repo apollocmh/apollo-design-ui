@@ -31,6 +31,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import ts from 'typescript';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -39,30 +40,9 @@ const forcePkg = force || process.argv.includes('--force-pkg');
 const forceReadme = force || process.argv.includes('--force-readme');
 
 /**
- * ui 的**额外子路径导出**（`exports` 里除 `'.'` 与 `'./package.json'` 之外的全部）。
- *
- * 两类，各有各的单一真源：
- *
- * ── ① `./<component>/style.css` —— 每组件一份 CSS（裁决 `ui-style-output` = A）────────
- *   真源 = `packages/ui/src/style/index.ts` 的 `ComponentStyleEntry[]`
- *   （它同时决定 `build.config.ts` 写哪些 `dist/<name>/style.css`）。
- *
- *   ⚠️ 旧实现读 `components.json` 的 `styleStatus`，那是**进度**字段，与「真的产出了
- *   CSS」不是一回事 ⇒ 必然漂移。实测漂移三处（B2 抓到 2 处）：`qr-code` 在清单里写成
- *   `qrcode`（产物在 `dist/qrcode/`）、`auto-complete` 无 CSS 却被声明、
- *   **`layout-sider` 产出了 11 KB CSS 却没被声明**（反方向，B2 当时抓不到）。
- *   判据改成读清单后三处同时消失。详见 `docs/KNOWN-ISSUES.md` §3 的 2026-10-07 条目。
- *
- * ── ② `./<component>` —— 每组件一份 JS 入口（裁决 `ui-tree-shaking` 的 B 项）──────────
- *   真源 = `registry/components.json` 的组件名（**结构**字段，不是进度字段）。
- *   指向模块结构产物（A 项打开 `preserveModules` 后的 `dist/<c>/index.mjs`）。
- *
- *   ⚠️ **只暴露入口名，不暴露内部文件路径** —— 于是内部布局（`dist/` 里怎么摆）仍是
- *   实现细节，将来重构不会变成破坏性变更。这是「不留技术债」的关键：`exports` 是契约，
- *   `dist/**` 不是。
- *
- * ⚠️ 必须在模块顶层声明：PACKAGES 在模块求值时就调用它，函数声明虽提升，
- *    但声明在 `if (isMain)` 块里就出不了那个块。
+ * UI 子路径从现有源码元数据派生，不执行 UI 运行时。
+ * COMPONENT_STYLES 决定独立/闭包 CSS，SharedStylePart.resource 决定共享资源；
+ * 组件 Registry 的结构字段决定 JS 深入口。构建后的 B2 再核对所有实际产物。
  */
 function uiExtraExports() {
   const out = {};
@@ -70,8 +50,35 @@ function uiExtraExports() {
   // ① 每组件 CSS
   const styleFile = path.join(ROOT, 'packages/ui/src/style/index.ts');
   if (fs.existsSync(styleFile)) {
-    const src = fs.readFileSync(styleFile, 'utf8');
-    const names = [...src.matchAll(/\{\s*name:\s*'([^']+)',\s*gen:/g)].map((m) => m[1]);
+    const source = ts.createSourceFile(
+      styleFile,
+      fs.readFileSync(styleFile, 'utf8'),
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    const names = [];
+    const collectComponents = (node) => {
+      if (
+        ts.isVariableDeclaration(node) &&
+        ts.isIdentifier(node.name) &&
+        node.name.text === 'COMPONENT_STYLES' &&
+        node.initializer &&
+        ts.isArrayLiteralExpression(node.initializer)
+      ) {
+        for (const entry of node.initializer.elements) {
+          if (!ts.isObjectLiteralExpression(entry))
+            throw new Error('[scaffold] Component style entries must be explicit objects');
+          const property = entry.properties.find(
+            (item) => ts.isPropertyAssignment(item) && item.name.getText(source) === 'name',
+          );
+          if (!property || !ts.isStringLiteral(property.initializer))
+            throw new Error('[scaffold] Component styles require a literal name');
+          names.push(property.initializer.text);
+        }
+      }
+      ts.forEachChild(node, collectComponents);
+    };
+    collectComponents(source);
     // 解析失败必须**响亮地**失败：静默产出「只有汇总」的 exports 会让按需引入悄悄消失。
     if (names.length === 0) {
       throw new Error(
@@ -80,9 +87,31 @@ function uiExtraExports() {
       );
     }
     out['./style.css'] = './dist/index.css';
+    out['./base.css'] = './dist/base.css';
+    out['./style-manifest.json'] = './dist/style-manifest.json';
     for (const name of names) {
       out[`./${name}/style.css`] = `./dist/${name}/style.css`;
+      out[`./${name}/structure.css`] = `./dist/${name}/structure.css`;
     }
+    const motionFile = path.join(ROOT, 'packages/ui/src/style/motion.ts');
+    const motion = ts.createSourceFile(
+      motionFile,
+      fs.readFileSync(motionFile, 'utf8'),
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    const collectResources = (node) => {
+      if (
+        ts.isPropertyAssignment(node) &&
+        node.name.getText(motion) === 'resource' &&
+        ts.isStringLiteral(node.initializer)
+      ) {
+        const name = node.initializer.text;
+        out[`./shared/${name}.css`] = `./dist/shared/${name}.css`;
+      }
+      ts.forEachChild(node, collectResources);
+    };
+    collectResources(motion);
   }
 
   // ② 每组件 JS 入口
@@ -97,6 +126,43 @@ function uiExtraExports() {
     }
   }
 
+  return out;
+}
+
+/** Keep preset public entries aligned with the build's explicit preset list. */
+function themeExtraExports() {
+  const file = path.join(ROOT, 'packages/theme/build.config.ts');
+  const source = ts.createSourceFile(
+    file,
+    fs.readFileSync(file, 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+  );
+  const out = { './tokens.css': './dist/tokens.css' };
+  const visit = (node) => {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === 'PRESETS'
+    ) {
+      const value =
+        node.initializer && ts.isAsExpression(node.initializer)
+          ? node.initializer.expression
+          : node.initializer;
+      if (!value || !ts.isArrayLiteralExpression(value))
+        throw new Error('[scaffold] PRESETS must be a literal array');
+      for (const name of value.elements) {
+        if (!ts.isStringLiteral(name)) throw new Error('[scaffold] Presets require literal names');
+        out[`./presets/${name.text}`] = {
+          types: `./dist/presets/${name.text}.d.ts`,
+          import: `./dist/presets/${name.text}.mjs`,
+        };
+        out[`./presets/${name.text}.css`] = `./dist/presets/${name.text}.css`;
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
   return out;
 }
 
@@ -196,9 +262,7 @@ const PACKAGES = [
     // ⚠️ 声明必须指向构建后真实存在的路径（见 packageJson() 里的契约注释）。
     //    tokens.css 由 `packages/theme/build.config.ts` 的 hook 产出，非 unbuild 默认产物，
     //    所以这里不能只靠「unbuild 会生成 dist/」来推断。
-    extraExports: {
-      './tokens.css': './dist/tokens.css',
-    },
+    extraExports: themeExtraExports(),
     publicApi: [
       '类型：SeedToken / MapToken / AliasToken / ComponentTokenMap / MappingAlgorithm / ThemeConfig',
       '算法：defaultAlgorithm / darkAlgorithm / compactAlgorithm',

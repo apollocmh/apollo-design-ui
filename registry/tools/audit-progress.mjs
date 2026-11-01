@@ -87,6 +87,13 @@ export function renderProgress(doc) {
       chinese
         ? `全库最终验收：**${doc.finalAcceptance.status}**。未知、未测或延期均不计为通过。`
         : `Final library acceptance: **${doc.finalAcceptance.status}**. Unknown, untested and deferred checks are not passes.`,
+      ...(doc.finalAcceptance.sourceCommit
+        ? [
+            chinese
+              ? `冻结验收源码：[${doc.finalAcceptance.sourceCommit.slice(0, 8)}](https://github.com/apollocmh/apollo-design-ui/commit/${doc.finalAcceptance.sourceCommit})。以上结果对应此提交；后续 issue 的定向验证不代表新版本已经重新通过整库验收。`
+              : `Frozen acceptance source: [${doc.finalAcceptance.sourceCommit.slice(0, 8)}](https://github.com/apollocmh/apollo-design-ui/commit/${doc.finalAcceptance.sourceCommit}). These results apply to that commit; focused issue checks do not establish full acceptance of later versions.`,
+          ]
+        : []),
       `| ${text.task} | ${text.state} | ${text.owner} | ${text.evidence} |\n| --- | --- | --- | --- |\n${rows.join('\n')}`,
       `[${chinese ? '历史进度与交付记录' : 'Historical progress and deliveries'}](${sourceURL}docs/history/audit-progress-2026-10-29.md)`,
     ].join('\n\n');

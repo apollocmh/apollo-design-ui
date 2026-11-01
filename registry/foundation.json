@@ -130,9 +130,9 @@
           "@apollo-design/test-utils",
           "@apollo-design/ui"
         ],
-        "srcFiles": 19,
-        "srcLines": 2084,
-        "exportDeclarations": 69
+        "srcFiles": 23,
+        "srcLines": 2331,
+        "exportDeclarations": 79
       }
     },
     {
@@ -553,7 +553,7 @@
         "componentConsumersByPriority": {},
         "packageConsumers": [],
         "srcFiles": 14,
-        "srcLines": 2965,
+        "srcLines": 2967,
         "exportDeclarations": 73
       }
     }

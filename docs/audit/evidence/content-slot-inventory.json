@@ -4146,6 +4146,7 @@
           "packages/ui/src/config-provider/__tests__/index.test.ts",
           "packages/ui/src/config-provider/__tests__/notice-layers.test.ts",
           "packages/ui/src/config-provider/__tests__/notices.test.ts",
+          "packages/ui/src/config-provider/__tests__/presets.test.ts",
           "packages/ui/src/config-provider/__tests__/s39-issue39.test.ts",
           "packages/ui/src/config-provider/__tests__/s48-issue48.test.ts",
           "packages/ui/src/config-provider/__tests__/semantic.test.ts",
@@ -5771,7 +5772,9 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/drawer/demo/component-token.vue",
-          "packages/ui/src/drawer/demo/config-provider.vue"
+          "packages/ui/src/drawer/demo/config-provider.vue",
+          "packages/ui/src/drawer/demo/form-in-drawer.vue",
+          "packages/ui/src/drawer/demo/user-profile.vue"
         ]
       },
       "slotTest": {
@@ -6006,7 +6009,9 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/drawer/demo/component-token.vue",
-          "packages/ui/src/drawer/demo/config-provider.vue"
+          "packages/ui/src/drawer/demo/config-provider.vue",
+          "packages/ui/src/drawer/demo/form-in-drawer.vue",
+          "packages/ui/src/drawer/demo/user-profile.vue"
         ]
       },
       "slotTest": {

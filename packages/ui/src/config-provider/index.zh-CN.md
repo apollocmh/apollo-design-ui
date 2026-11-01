@@ -29,7 +29,7 @@ subtitle: 全局配置
 | virtual | 支持虚拟滚动的消费者的默认开关 | `boolean` | `true` |
 | variant | 输入、选择和表单控件的默认形态 | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | 继承 |
 | popupMatchSelectWidth | Select / TreeSelect / Cascader 等的浮层宽度默认值；局部配置优先 | `boolean` | 消费者默认值 |
-| theme | 主题令牌、组件令牌、算法及 CSS 变量前缀；算法可为数组 | `ConfigProviderThemeConfig` | 继承 |
+| theme | 主题预设、明暗模式、用户/组件令牌、算法及 CSS 变量前缀 | `ConfigProviderThemeConfig` | 继承 |
 | warning | 开发告警行为；`strict: false` 聚合弃用告警 | `{ strict?: boolean }` | `{}` |
 | components | 按各组件契约声明的默认配置，以消费者名称为键；不会自动应用任意组件 prop | `Record<string, ComponentConfigLike>` | — |
 | divider | Divider 的精确配置别名 | `DividerConfig` | — |
@@ -42,6 +42,8 @@ subtitle: 全局配置
 本层 `undefined` 回落到父级；撤回先前设置的值也会回落。`components` 按组件名合并，同名组件配置整体替换；`divider` / `empty` / `spin` / `form` 精确别名覆盖同名 map 项，组件自己的显式 prop 最优先。
 
 `theme.token` 按键合并，`theme.components` 按组件名和令牌键合并；`inherit: false` 重置父级令牌和组件令牌，保留外层 CSS 变量前缀。表单校验消息按默认数据、父 FormProvider、本地语言和当前有效 form 配置合并；`components.form.validateMessages` 与 `form.validateMessages` 共用同一通道。
+
+`theme.preset` 接受公开 `ThemePreset` 对象；内置预设分别从 `@apollo-design/theme/presets/default`、`mono`、`material3` 导入。`mode` 为 light/dark/system，与预设独立。预设基础配置及当前明暗配置先合并，用户 Seed 再进入算法，用户 Alias 和组件令牌保持最终优先。局部显式 algorithm 保留其原有完整链并替代继承 mode；局部 mode 替代继承 algorithm。此组件默认继承原始配置；基础包的 `ThemeProvider` 保留显式空主题重置，需 `inherit:true` 才继承。活跃 Provider 在 mounted 后跟随系统偏好并释放监听，SSR 的 system 默认亮色。完整变量由当前 Provider 投影，不必为 Mono 加载默认 `tokens.css`；UI 结构样式仍需引入。
 
 默认插槽接收完整 Vue 内容，支持条件内容和多根。没有业务 emits、v-model 或 expose。默认无宿主时 Provider 的 `class` / `style` / `id` / 原生监听器等 attrs 不落到子节点；显式设置 `scopeTag` 时 attrs 落到该原生宿主，原生 style 优先于主题变量。`scopeTag` 是结构选择，改变标签遵循 Vue 原生根替换语义；切换 theme / locale 等配置不会改变内容的逻辑树。
 

@@ -33,17 +33,19 @@ import { defineBuildConfig } from 'unbuild';
  */
 const DIST_DIR = resolve(import.meta.dirname ?? '.', 'dist');
 const TOKENS_CSS = resolve(DIST_DIR, 'tokens.css');
-try {
-  if (!existsSync(TOKENS_CSS)) {
-    mkdirSync(DIST_DIR, { recursive: true });
+const PRESETS = ['default', 'mono', 'material3'] as const;
+for (const file of [
+  TOKENS_CSS,
+  ...PRESETS.map((name) => resolve(DIST_DIR, 'presets', `${name}.css`)),
+]) {
+  if (!existsSync(file)) {
+    mkdirSync(resolve(file, '..'), { recursive: true });
     writeFileSync(
-      TOKENS_CSS,
+      file,
       '/* 占位：真实内容由 build.config.ts 的 rollup writeBundle 写入 */\n',
       'utf8',
     );
   }
-} catch {
-  // 写不进去就让 unbuild 报它自己的错，这里不吞掉真正的问题
 }
 
 /** 防止 esm 与 dts 两次 rollup 构建各写一遍（写两次本身幂等，但没必要）。 */
@@ -182,6 +184,42 @@ export default defineBuildConfig({
           const file = resolve(import.meta.dirname ?? '.', 'dist/tokens.css');
           mkdirSync(resolve(file, '..'), { recursive: true });
           writeFileSync(file, out.join('\n'), 'utf8');
+          // Each optional resource uses the same public object/API as a user
+          // preset. None imports another preset or the legacy default stylesheet.
+          for (const name of PRESETS) {
+            const { default: preset } = await import(
+              /* @vite-ignore */ pathToFileURL(
+                resolve(import.meta.dirname ?? '.', `dist/presets/${name}.mjs`),
+              ).href
+            );
+            const scope = `[data-apollo-preset="${name}"]`;
+            const lightSelector =
+              name === 'default'
+                ? `:root:not([data-apollo-preset]),${scope}`
+                : `:root${scope},${scope}`;
+            const darkSelector =
+              name === 'default'
+                ? `:root[data-apollo-theme="dark"]:not([data-apollo-preset]),${scope}[data-apollo-theme="dark"]`
+                : `:root${scope}[data-apollo-theme="dark"],${scope}[data-apollo-theme="dark"]`;
+            const systemSelector =
+              name === 'default'
+                ? `:root[data-apollo-theme="system"]:not([data-apollo-preset]),${scope}[data-apollo-theme="system"]`
+                : `:root${scope}[data-apollo-theme="system"],${scope}[data-apollo-theme="system"]`;
+            const light = getDesignToken({ preset, mode: 'light' });
+            const dark = getDesignToken({ preset, mode: 'dark' });
+            const content = [
+              `/*! @apollo-design/theme ${name}: generated with getDesignToken + getCSSVarDeclarations. */`,
+              getCSSVarDeclarations(light, { selector: lightSelector }),
+              getCSSVarDeclarations(dark, { selector: darkSelector }),
+              '@media (prefers-color-scheme: dark){',
+              getCSSVarDeclarations(dark, { selector: systemSelector }),
+              '}',
+              '',
+            ].join('\n');
+            const output = resolve(DIST_DIR, 'presets', `${name}.css`);
+            mkdirSync(resolve(output, '..'), { recursive: true });
+            writeFileSync(output, content, 'utf8');
+          }
           process.stdout.write(`  ✔ 已生成 dist/tokens.css（4 套主题变量）\n`);
         },
       };

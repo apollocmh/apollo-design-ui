@@ -18,7 +18,8 @@ import {
 } from 'vue';
 import { applyCSSVar, createCSSVarScope, DEFAULT_CSS_VAR_PREFIX } from './css-var';
 import { getDesignToken } from './get-design-token';
-import type { AliasToken, ThemeConfig } from './types';
+import { mergeThemeConfig } from './merge-theme';
+import type { AliasToken, ThemeAppearance, ThemeConfig } from './types';
 
 /**
  * Vue 绑定层。
@@ -49,8 +50,31 @@ export const ThemeContextKey: InjectionKey<ThemeContext> = Symbol('apollo-theme'
  */
 function createContext(config: ThemeConfig, fallback = false): ThemeContext {
   const cfg = ref<ThemeConfig>(config);
-  const token = computed<AliasToken>(() => getDesignToken(cfg.value));
+  const systemAppearance = ref<ThemeAppearance>('light');
+  const token = computed<AliasToken>(() => getDesignToken(cfg.value, systemAppearance.value));
   const sourceActive = computed(() => !fallback || Object.keys(cfg.value).length > 0);
+  // Pure contexts and SSR stay deterministic. A live Vue provider owns its one
+  // media subscription and releases it when mode changes or the scope unmounts.
+  if (!fallback && getCurrentInstance()) {
+    let stopMode: WatchStopHandle | undefined;
+    onMounted(() => {
+      stopMode = watch(
+        () => cfg.value.mode,
+        (mode, _previous, cleanup) => {
+          if (mode !== 'system' || typeof window.matchMedia !== 'function') return;
+          const media = window.matchMedia('(prefers-color-scheme: dark)');
+          const update = () => {
+            systemAppearance.value = media.matches ? 'dark' : 'light';
+          };
+          update();
+          media.addEventListener('change', update);
+          cleanup(() => media.removeEventListener('change', update));
+        },
+        { immediate: true, flush: 'sync' },
+      );
+    });
+    onUnmounted(() => stopMode?.());
+  }
   return { config: cfg, token, sourceActive };
 }
 
@@ -123,7 +147,7 @@ function copyConfig(config: ThemeConfig): ThemeConfig {
  *
  * 卸载时移除写过的全部变量：不清理的话 HMR 与路由切换后会残留上一份主题的值。
  */
-export const ThemeProvider = defineComponent({
+export const ThemeProvider = /* @__PURE__ */ defineComponent({
   name: 'AThemeProvider',
   inheritAttrs: false,
   props: {
@@ -133,13 +157,18 @@ export const ThemeProvider = defineComponent({
   },
   slots: Object as SlotsType<{ default?: () => VNodeChild }>,
   setup(props, { slots }) {
-    const ctx = createThemeContext(copyConfig(props.theme));
+    const parent = useTheme();
+    const parentConfig = () =>
+      props.theme.inherit !== true || parent.sourceActive?.value === false
+        ? undefined
+        : parent.config.value;
+    const ctx = createThemeContext(copyConfig(mergeThemeConfig(parentConfig(), props.theme) ?? {}));
     provide(ThemeContextKey, ctx);
 
     watch(
-      () => props.theme,
-      (next) => {
-        ctx.config.value = copyConfig(next);
+      [() => props.theme, parentConfig],
+      ([next, inherited]) => {
+        ctx.config.value = copyConfig(mergeThemeConfig(inherited, next) ?? {});
       },
       { deep: true },
     );

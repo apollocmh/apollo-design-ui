@@ -1,3 +1,5 @@
+import { genZoomMotionSource } from '../../style/motion';
+import { type StyleSource, styleSource } from '../../style/source';
 /**
  * Tooltip 的静态样式（G4 产物）。
  *
@@ -51,7 +53,8 @@ const KEYFRAMES = `@keyframes apollo-tooltip-fade-in{0%{opacity:0;}100%{opacity:
 @keyframes apollo-tooltip-zoom-big-out{0%{transform:scale(1);}100%{transform:scale(0.8);opacity:0;}}`;
 
 /** antd 产物机械转换段（76 条，原序）。 */
-const RULES = `
+function genRulesSource(): StyleSource {
+  return styleSource`
 .apollo-tooltip{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);position:absolute;z-index:var(--apollo-tooltip-z-index-popup);display:block;width:max-content;max-width:var(--apollo-tooltip-max-width);visibility:visible;filter:var(--apollo-drop-shadow-popover);--apollo-tooltip-valid-offset-x:var(--apollo-tooltip-arrow-offset-x, var(--arrow-x));transform-origin:var(--apollo-tooltip-valid-offset-x, 50%) var(--arrow-y, 50%);--apollo-tooltip-arrow-background-color:var(--apollo-color-bg-spotlight);}
 .apollo-tooltip-hidden{display:none;}
 .apollo-tooltip .apollo-tooltip-container{min-width:calc(var(--apollo-border-radius) * 2 + var(--apollo-size-popup-arrow));min-height:var(--apollo-control-height);padding:calc(var(--apollo-padding-sm) / 2) var(--apollo-padding-xs);color:var(--apollo-tooltip-overlay-color, var(--apollo-color-text-light-solid));text-align:start;text-decoration:none;word-wrap:break-word;background-color:var(--apollo-color-bg-spotlight);border-radius:var(--apollo-border-radius);box-sizing:border-box;}
@@ -120,17 +123,16 @@ const RULES = `
 .apollo-tooltip-unique-container{min-width:calc(var(--apollo-border-radius) * 2 + var(--apollo-size-popup-arrow));min-height:var(--apollo-control-height);padding:calc(var(--apollo-padding-sm) / 2) var(--apollo-padding-xs);color:var(--apollo-tooltip-overlay-color, var(--apollo-color-text-light-solid));text-align:start;text-decoration:none;word-wrap:break-word;background-color:var(--apollo-color-bg-spotlight);border-radius:var(--apollo-border-radius);box-sizing:border-box;--apollo-tooltip-valid-offset-x:var(--apollo-tooltip-arrow-offset-x, var(--arrow-x));transform-origin:var(--apollo-tooltip-valid-offset-x, 50%) var(--arrow-y, 50%);position:absolute;z-index:calc(var(--apollo-tooltip-z-index-popup) - 1);filter:var(--apollo-drop-shadow-popover);}
 .apollo-tooltip-unique-container-hidden{display:none;}
 .apollo-tooltip-unique-container-visible{transition:all var(--apollo-motion-duration-slow);}
-.apollo-zoom-big-fast-enter,.apollo-zoom-big-fast-appear{animation-duration:var(--apollo-motion-duration-fast);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-fast-leave{animation-duration:var(--apollo-motion-duration-fast);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-zoom-big-fast-enter.apollo-zoom-big-fast-enter-active,.apollo-zoom-big-fast-appear.apollo-zoom-big-fast-appear-active{animation-name:apollo-tooltip-zoom-big-in;animation-play-state:running;}
-.apollo-zoom-big-fast-leave.apollo-zoom-big-fast-leave-active{animation-name:apollo-tooltip-zoom-big-out;animation-play-state:running;pointer-events:none;}
-.apollo-zoom-big-fast-enter,.apollo-zoom-big-fast-appear{transform:scale(0);opacity:0;animation-timing-function:var(--apollo-motion-ease-out-circ);}
-.apollo-zoom-big-fast-enter-prepare,.apollo-zoom-big-fast-appear-prepare{transform:none;}
-.apollo-zoom-big-fast-leave{animation-timing-function:var(--apollo-motion-ease-in-out-circ);}
+${genZoomMotionSource('big-fast', 'apollo-tooltip')}
 `;
+}
 
 /** 生成 Tooltip 全量静态 CSS（keyframes + 组件变量声明块 + 组件规则）。 */
-export function genTooltipStyle(): string {
+export function genTooltipStyleSource(): StyleSource {
   const decls = `.apollo-tooltip{${genTooltipTokenDecls()}}`;
-  return `${KEYFRAMES}\n${decls}\n${RULES}`;
+  return styleSource`${KEYFRAMES}\n${decls}\n${genRulesSource()}`;
+}
+
+export function genTooltipStyle(): string {
+  return genTooltipStyleSource().css;
 }

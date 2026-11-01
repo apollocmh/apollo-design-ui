@@ -38,6 +38,7 @@ const alias = {
   '@apollo-design/locale': r('packages/locale/src'),
   '@apollo-design/test-utils': r('packages/test-utils/src'),
   '@apollo-design/ui': r('packages/ui/src'),
+  '@apollo-design/ui-resolver': r('packages/ui-resolver/src'),
 };
 
 const shared = {

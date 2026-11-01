@@ -1,3 +1,6 @@
+import { SLIDE_KEYFRAMES as KEYFRAMES } from '../../style/motion';
+import { genSlideMotionSource } from '../../style/slide';
+import { requireStyleSource, type StyleSource, styleSource } from '../../style/source';
 /**
  * Tabs 的静态样式（antd 6.6.4 `es/tabs/style/index.js` 913 行的**机械移植**）。
  *
@@ -209,14 +212,13 @@ export const TABS_RULES = `
  * `css-dev-only-do-not-override-…-antSlideUpIn` 等，`@keyframes` 从未定义
  * ⇒ 溢出菜单开合动画不跑（U-KEYFRAMES 家族）。
  */
-const KEYFRAMES = `
-@keyframes apollo-slide-up-in{0%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}100%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}}
-@keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
-@keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
-@keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
 
 /** 生成完整样式：token 声明块 + 规则体。 */
-export function genTabsStyle(rootPrefixCls: string): string {
+export function genTabsStyleSource(rootPrefixCls: string): StyleSource {
   const decls = genTokenDecls(rootPrefixCls).join('');
-  return `${KEYFRAMES}\n.${rootPrefixCls}-tabs,.${rootPrefixCls}-tabs-dropdown{${decls}}\n\n${TABS_RULES}`;
+  return styleSource`${requireStyleSource(genSlideMotionSource())}${KEYFRAMES}\n.${rootPrefixCls}-tabs,.${rootPrefixCls}-tabs-dropdown{${decls}}\n\n${TABS_RULES}`;
+}
+
+export function genTabsStyle(rootPrefixCls: string): string {
+  return genTabsStyleSource(rootPrefixCls).css;
 }

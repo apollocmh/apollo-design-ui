@@ -419,9 +419,31 @@ export type ComponentTokenMap = Record<string, Record<string, string | number | 
  */
 export type MappingAlgorithm = (seed: SeedToken, mapToken?: MapToken) => MapToken;
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeAppearance = Exclude<ThemeMode, 'system'>;
+export type ThemeTokenOverrides = Partial<AliasToken & Record<string, string | number | boolean>>;
+
+/** A preset uses the same seeds, aliases and optional mapping algorithms as user configuration. */
+export interface ThemePresetScheme {
+  readonly token?: Readonly<ThemeTokenOverrides>;
+  readonly algorithm?: MappingAlgorithm | MappingAlgorithm[];
+}
+export interface ThemePreset {
+  readonly name: string;
+  readonly token?: Readonly<ThemeTokenOverrides>;
+  readonly light?: ThemePresetScheme;
+  readonly dark?: ThemePresetScheme;
+}
+
 export interface ThemeConfig {
+  /** Presets are ordinary public data, imported independently from component structure. */
+  preset?: ThemePreset;
+  /** Live providers resolve system preference; pure/SSR derivation defaults to light. */
+  mode?: ThemeMode;
+  /** ConfigProvider inherits by default; ThemeProvider only inherits when true. */
+  inherit?: boolean;
   /** Known Seed/Map/Alias keys retain their value types; undefined is an omission. */
-  token?: Partial<AliasToken & Record<string, string | number | boolean>>;
+  token?: ThemeTokenOverrides;
   /** Empty arrays use the default algorithm; nonempty arrays run in order. */
   algorithm?: MappingAlgorithm | MappingAlgorithm[];
   /** CSS 变量前缀。默认 `apollo`（已裁决：prefix-cls-default = A）。 */

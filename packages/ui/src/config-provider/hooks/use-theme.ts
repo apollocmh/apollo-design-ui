@@ -21,22 +21,12 @@
  *   3. `token` 浅合并；`components` **逐组件名**浅合并（不是整体替换）。
  */
 
-import type { ComponentTokenMap, ThemeConfig } from '@apollo-design/theme';
+import { mergeThemeConfig, type ThemeConfig } from '@apollo-design/theme';
 
 /**
- * 本组件接受的 `theme` 形态。
- *
- * `inherit` 是 antd 的字段；`@apollo-design/theme` 的 `ThemeConfig` 没有它
- * （那个包只管「一份配置怎么派生出 token」，不管「父子怎么合并」）—— 所以由本组件补上。
+ * 保留已有公开名称；ThemeProvider 与 ConfigProvider 共享基础包的同一 raw 配置契约。
  */
-export type ConfigProviderThemeConfig = ThemeConfig & {
-  /**
-   * @descCN 是否继承外层 `ConfigProvider` 的 theme。
-   * @descEN Whether to inherit the theme from the outer `ConfigProvider`.
-   * @default true
-   */
-  inherit?: boolean;
-};
+export type ConfigProviderThemeConfig = ThemeConfig;
 
 /**
  * 合并父子两层主题。
@@ -48,29 +38,5 @@ export function useTheme(
   theme: ConfigProviderThemeConfig | undefined,
   parentTheme: ConfigProviderThemeConfig | undefined,
 ): ConfigProviderThemeConfig | undefined {
-  // ① 本层没有 theme ⇒ 原样返回父层（引用相等，避免无谓的对象重建）
-  if (!theme) return parentTheme;
-
-  const inherit = theme.inherit !== false && !!parentTheme;
-
-  const base: ConfigProviderThemeConfig = inherit
-    ? (parentTheme ?? {})
-    : {
-        cssVarPrefix: parentTheme?.cssVarPrefix,
-      };
-
-  const components = new Map(Object.entries(base.components ?? {}));
-
-  for (const [name, componentToken] of Object.entries(theme.components ?? {})) {
-    components.set(name, { ...components.get(name), ...componentToken });
-  }
-
-  const mergedComponents: ComponentTokenMap = Object.fromEntries(components);
-
-  return {
-    ...base,
-    ...theme,
-    token: { ...base.token, ...theme.token },
-    components: mergedComponents,
-  };
+  return mergeThemeConfig(parentTheme, theme);
 }
