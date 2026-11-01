@@ -1877,6 +1877,8 @@ export {
   Summary,
   Table,
   TableSELECTION_COLUMN as SELECTION_COLUMN,
+  TableSummaryCell,
+  TableSummaryRow,
 } from './table';
 export { genTableStyle, genTableTokenDecls } from './table/style';
 // ---------------------------------------------------------------------------

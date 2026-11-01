@@ -83,6 +83,8 @@ Templates infer User from `User[]` and `ColumnsType<User>` without an index sign
 
 A custom components.body service receives `(data, { scrollbarSize, ref, onScroll })`. Bind ref to an actual HTMLElement and forward native scroll events to onScroll. This explicit service takes precedence over the built-in virtual body. Element components forward native attrs and their default slot. A virtual wrapper requires one HTMLElement root; fragment/text roots have no measurable container and expose null. Root replacements rebind observation and native scroll access.
 
+The summary slot accepts the named exports `Summary`, `TableSummaryRow` and `TableSummaryCell`. The latter two are the same components as `Summary.Row` and `Summary.Cell`, also available to template auto-import tools.
+
 ### Migration
 
 Full-table title/footer/summary/expandedRowRender/expandIcon/emptyText callbacks, including nested expandable content callbacks, move to the named slots above with named scope fields. locale.emptyText keeps static VNodeChild content; dynamic content uses #emptyText. Replace filterDropdownProps.dropdownRender with the column's filterDropdown data renderer. Row/cell services return Vue native attrs such as onKeydown. Subscribe to owned notifications with @change/@scroll.

@@ -7,7 +7,11 @@
 
 import { withInstall } from '../_internal/with-install';
 import { EXPAND_COLUMN } from './engine/constant';
-import { Summary } from './engine/Footer';
+import {
+  Summary,
+  SummaryCell as TableSummaryCell,
+  SummaryRow as TableSummaryRow,
+} from './engine/Footer';
 import {
   SELECTION_ALL,
   SELECTION_COLUMN,
@@ -95,4 +99,6 @@ export {
   Summary,
   safeColumnTitle,
   TableSELECTION_COLUMN,
+  TableSummaryCell,
+  TableSummaryRow,
 };

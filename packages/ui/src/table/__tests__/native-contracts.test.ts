@@ -2,6 +2,7 @@ import { mount, type VueWrapper } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, mergeProps, nextTick, ref } from 'vue';
 import ConfigProvider from '../../config-provider/ConfigProvider';
+import { Summary, TableSummaryCell, TableSummaryRow } from '../index';
 import type { ColumnsType, TableExpandedRowSlotProps } from '../interface';
 import Table from '../Table';
 
@@ -26,6 +27,39 @@ const settle = async () => {
   await nextTick();
 };
 describe('Table current Vue contracts', () => {
+  it('renders named summary components with reactive slots and native attrs', async () => {
+    expect(TableSummaryRow).toBe(Summary.Row);
+    expect(TableSummaryCell).toBe(Summary.Cell);
+    const label = ref('Total');
+    const w = mount(
+      defineComponent({
+        setup: () => () =>
+          h(
+            RecordTable,
+            { columns, dataSource: data, pagination: false },
+            {
+              summary: () =>
+                h(Summary, null, () =>
+                  h(TableSummaryRow, { class: 'named-summary' }, () =>
+                    h(
+                      TableSummaryCell,
+                      { index: 0, colSpan: 2, 'data-total': '' },
+                      () => label.value,
+                    ),
+                  ),
+                ),
+            },
+          ),
+      }),
+      options,
+    );
+    wrappers.push(w);
+    expect(w.get('tfoot .named-summary [data-total]').attributes('colspan')).toBe('2');
+    expect(w.get('[data-total]').text()).toBe('Total');
+    label.value = 'Updated total';
+    await settle();
+    expect(w.get('[data-total]').text()).toBe('Updated total');
+  });
   it('owns change with merged/once listeners while preserving its four-part payload', async () => {
     const first = vi.fn();
     const second = vi.fn();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumnsType } from '@apollo-design/ui';
-import { Table } from '@apollo-design/ui';
+import { Summary, Table, TableSummaryCell, TableSummaryRow } from '@apollo-design/ui';
 
 const columns: TableColumnsType = [
   { title: 'Name', dataIndex: 'name' },
@@ -19,6 +19,13 @@ const total = data.reduce((acc, d) => acc + d.age, 0);
 
 <template>
   <Table :columns="columns" :data-source="data" bordered>
-    <template #summary><Table.Summary><Table.Summary.Row><Table.Summary.Cell :index="0" :col-span="2">Total</Table.Summary.Cell><Table.Summary.Cell :index="2">{{total}}</Table.Summary.Cell></Table.Summary.Row></Table.Summary></template>
+    <template #summary>
+      <Summary>
+        <TableSummaryRow>
+          <TableSummaryCell :index="0" :col-span="2">Total</TableSummaryCell>
+          <TableSummaryCell :index="2">{{ total }}</TableSummaryCell>
+        </TableSummaryRow>
+      </Summary>
+    </template>
   </Table>
 </template>

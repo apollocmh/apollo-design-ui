@@ -78,6 +78,8 @@ import { Table } from '@apollo-design/ui';
 
 `columns.render/title/filterDropdown/filterIcon/sortIcon` 和选择列的 `renderCell/columnTitle` 属于每列/每项数据服务，继续保留。`shouldCellUpdate(record, previousRecord)` 控制数据 renderer 缓存；原生槽仍跟踪自己的 Vue 响应式依赖，替换列 renderer 或改变行索引会更新缓存。
 
+汇总插槽可使用命名导出的 `Summary`、`TableSummaryRow`、`TableSummaryCell`；后两者分别对应 `Summary.Row`、`Summary.Cell`，便于原生模板和自动引入使用。
+
 ### Emits 与控制状态
 
 | 事件 | 参数 |

@@ -1,6 +1,10 @@
 import { expectTypeOf, test } from 'vitest';
 import { h, type VNodeChild } from 'vue';
-import { Summary, Table } from '../index';
+import {
+  TableSummaryCell as RootSummaryCell,
+  TableSummaryRow as RootSummaryRow,
+} from '../../index';
+import { Summary, Table, TableSummaryCell, TableSummaryRow } from '../index';
 import type {
   ColumnsType,
   TableProps,
@@ -54,6 +58,11 @@ test('preserves native generic rows, slots, summary, expose and invalid inputs',
     h(Table.Summary.Row, {}, () => h(Table.Summary.Cell, { index: 0 }, () => 0)),
   );
   expectTypeOf(Table.Summary).toEqualTypeOf<typeof Summary>();
+  expectTypeOf(TableSummaryRow).toEqualTypeOf<typeof Summary.Row>();
+  expectTypeOf(TableSummaryCell).toEqualTypeOf<typeof Summary.Cell>();
+  expectTypeOf(RootSummaryRow).toEqualTypeOf<typeof TableSummaryRow>();
+  expectTypeOf(RootSummaryCell).toEqualTypeOf<typeof TableSummaryCell>();
+  h(TableSummaryRow, null, () => h(TableSummaryCell, { index: 0, colSpan: 2 }, () => 'Total'));
   type Props = Parameters<typeof Table<User>>[0];
   type Slots = NonNullable<Parameters<typeof Table<User>>[1]>['slots'];
   type Exposed = Parameters<NonNullable<Parameters<typeof Table<User>>[2]>>[0];
