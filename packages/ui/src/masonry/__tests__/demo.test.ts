@@ -9,8 +9,27 @@
  */
 
 import { demoTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
+import { expect, it, vi } from 'vitest';
+import StyleClassDemo from '../demo/style-class.vue';
 
 demoTest('Masonry', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
   expectCount: 6,
+});
+
+it('keeps both semantic style Demo roots and items at valid CSS lengths', async () => {
+  const wrapper = mount(StyleClassDemo);
+  try {
+    const roots = wrapper.findAll<HTMLElement>('.masonry-demo-root');
+    expect(roots.map((root) => root.element.style.height)).toEqual(['260px', '280px']);
+    expect(roots.map((root) => root.element.style.padding)).toEqual(['20px', '20px']);
+    expect(roots[0]?.element.style.borderRadius).toBe('12px');
+    await vi.waitFor(() => expect(wrapper.findAll('.masonry-demo-item')).toHaveLength(16));
+    const items = wrapper.findAll<HTMLElement>('.masonry-demo-item');
+    expect(items).toHaveLength(16);
+    for (const item of items) expect(item.element.style.borderRadius).toBe('12px');
+  } finally {
+    wrapper.unmount();
+  }
 });
