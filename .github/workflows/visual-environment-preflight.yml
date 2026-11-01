@@ -1,0 +1,52 @@
+name: Visual environment preflight
+
+on:
+  push:
+    branches: ['ci/v017-visual-environment']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# This diagnostic never cancels the separate release acceptance workflow.
+concurrency:
+  group: visual-environment-preflight-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-environment:
+    runs-on: macos-15-intel
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Install the exact approved visual Chrome
+        id: visual_chrome
+        env:
+          APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
+        run: |
+          set -eu
+          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
+          ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
+          apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
+          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
+      - name: Build the original SDK once
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-visual-environment"
+          node tests/build/run.mjs --strict 2>&1 | tee "$RUNNER_TEMP/apollo-visual-environment/build.log"
+      - name: Compare six unchanged cases across native environment settings
+        env:
+          APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
+        run: node tests/visual/environment-preflight.mjs --report-dir "$RUNNER_TEMP/apollo-visual-environment"
+      - name: Keep every phase, including the original failures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-environment-preflight-${{ github.run_id }}
+          path: ${{ runner.temp }}/apollo-visual-environment/
+          if-no-files-found: error
+          retention-days: 14
