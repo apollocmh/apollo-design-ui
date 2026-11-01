@@ -246,3 +246,55 @@ test('visual CLI accepts package-manager separators and rejects unknown options'
   assert.equal(spawnSync(process.execPath, [script, '--', '--help']).status, 0);
   assert.notEqual(spawnSync(process.execPath, [script, '--unknown-option']).status, 0);
 });
+
+test('visual CLI metadata commands work before workspace products exist', (context) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-visual-cli-source-'));
+  context.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.writeFileSync(
+    path.join(root, 'reject-workspace-products.mjs'),
+    `export async function resolve(specifier, context, nextResolve) {
+  if (specifier.startsWith('@apollo-design/'))
+    throw new Error('Unbuilt workspace product: ' + specifier);
+  return nextResolve(specifier, context);
+}
+`,
+  );
+  const register = path.join(root, 'register.mjs');
+  fs.writeFileSync(
+    register,
+    "import { register } from 'node:module';\nregister('./reject-workspace-products.mjs', import.meta.url);\n",
+  );
+  const options = { cwd: ROOT, encoding: 'utf8' };
+  const blocked = spawnSync(
+    process.execPath,
+    ['--import', register, '--input-type=module', '--eval', "await import('@apollo-design/theme')"],
+    options,
+  );
+  assert.equal(blocked.status, 1);
+  assert.match(blocked.stderr, /Unbuilt workspace product: @apollo-design\/theme/);
+
+  const script = path.join(ROOT, 'tests/visual/apollo.mjs');
+  const run = (...args) =>
+    spawnSync(process.execPath, ['--import', register, script, ...args], options);
+  const help = run('--', '--help');
+  assert.equal(help.status, 0, help.stderr);
+  assert.match(help.stdout, /Apollo visual regression/);
+
+  const unknown = run('--unknown-option');
+  assert.equal(unknown.status, 1);
+  assert.match(unknown.stderr, /ERR_PARSE_ARGS_UNKNOWN_OPTION/);
+  assert.match(unknown.stderr, /Unknown option '--unknown-option'/);
+  assert.doesNotMatch(unknown.stderr, /Unbuilt workspace product/);
+
+  const integrity = run(
+    '--check',
+    '--component',
+    'empty',
+    '--component',
+    'result',
+    '--component',
+    'skeleton',
+  );
+  assert.equal(integrity.status, 0, integrity.stderr);
+  assert.match(integrity.stdout, /Verified [1-9]\d* reviewed image hashes/);
+});

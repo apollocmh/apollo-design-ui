@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { compactAlgorithm, getDesignToken } from '@apollo-design/theme';
 
 export async function prepareSkeletonVisual(page, variant) {
   const frame = page.locator('[data-skeleton-visual-case]');
@@ -72,6 +71,7 @@ export async function prepareSkeletonVisual(page, variant) {
   assert.equal(state.busy, decorative ? 'true' : null);
   assert.equal(state.hidden, decorative ? 'true' : null);
   if (decorative) {
+    const { compactAlgorithm, getDesignToken } = await import('@apollo-design/theme');
     const base = getDesignToken({
       algorithm: variant.includes('compact') ? compactAlgorithm : undefined,
     });

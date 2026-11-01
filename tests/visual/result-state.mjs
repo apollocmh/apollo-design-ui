@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { compactAlgorithm, getDesignToken } from '@apollo-design/theme';
 export async function prepareResultVisual(page, variant) {
   const frame = page.locator('[data-result-visual-case]');
   assert.equal(await frame.getAttribute('data-result-visual-case'), variant);
@@ -67,6 +66,7 @@ export async function prepareResultVisual(page, variant) {
   } else assert.equal(state.imageWidth, null);
   if (empty) assert.equal(state.directContainers, 0);
   else {
+    const { compactAlgorithm, getDesignToken } = await import('@apollo-design/theme');
     const base = getDesignToken({
       algorithm: variant.includes('compact') ? compactAlgorithm : undefined,
     });
