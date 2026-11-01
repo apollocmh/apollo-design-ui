@@ -61,8 +61,12 @@ jobs:
   acceptance:
     if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
     name: Complete nine-dimension acceptance on one frozen commit
-    runs-on: ubuntu-latest
+    # Approved Apollo images use Darwin/x64 system fonts; keep release visuals
+    # in that platform family and let the unchanged comparator judge pixels.
+    runs-on: macos-15-intel
     timeout-minutes: 120
+    env:
+      TMPDIR: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -93,9 +97,9 @@ jobs:
             coverage/
             tests/visual/report-apollo.json
             tests/visual/diff/apollo/
-            /tmp/apollo-docs-browser-*/docs/audit/evidence/
-            /tmp/apollo-overlay-z-index-*/result.json
-            /tmp/apollo-overlay-z-index-*/*.png
+            ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
+            ${{ runner.temp }}/apollo-overlay-z-index-*/result.json
+            ${{ runner.temp }}/apollo-overlay-z-index-*/*.png
           if-no-files-found: warn
           retention-days: 14
 

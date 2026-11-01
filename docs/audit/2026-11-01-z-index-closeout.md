@@ -25,4 +25,8 @@ Tooltip 将既有原生 `style` 明确为响应式 Vue `StyleValue`，最终归�
 
 两处均有真实失败到通过的定向回归。原始 F11 归档保持字节不变，沿用历史 JSON 的格式器例外；当前源码仍执行完整格式检查。静态索引仅更新当前源码位置。
 
+完整视觉基线记录为 Darwin/x64，原最终 CI 却选择 Ubuntu。发布验收改用官方提供的 [`macos-15-intel`](https://github.com/actions/runner-images/blob/main/README.md) 平台架构家族，并统一临时输出目录供 artifact 保存；真实像素结果仍由原比较器判定，保留全部基线和阈值，PR 反馈及文档部署继续使用原 Linux 作业。远端结果尚未验证。
+
+首轮冻结 `a16259cd` 的构建及新产物浏览器通过，随后根严格类型因测试中的 `ref<StyleValue>` 递归解包而 exit 2；失败报告保留。仅把两个整值替换容器改为 `shallowRef`，保留独立 reactive 对象删键及全部 19 项断言；完整根严格类型已 exit 0。新冻结版本仍需完成剩余全量门禁。
+
 标签、远端 CI、文档站构建与部署结果待最终本地门禁通过后记录；已有标签不得覆盖。随后按核心功能、共享交互、样式与 Demo、新能力的顺序处理 GitHub issue，逐项验证后关闭。

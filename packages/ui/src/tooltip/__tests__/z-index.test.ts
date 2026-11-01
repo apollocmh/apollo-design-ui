@@ -10,6 +10,7 @@ import {
   reactive,
   ref,
   type StyleValue,
+  shallowRef,
   type VNode,
 } from 'vue';
 import ConfigProvider from '../../config-provider/ConfigProvider';
@@ -148,7 +149,7 @@ describe.each(consumers)('$name actual numeric root layer', (consumer) => {
     const explicit = ref<number | undefined>(1300);
     const semantic = ref<{ root?: CSSProperties }>({ root: { zIndex: 1700 } });
     const overlay = ref<CSSProperties | undefined>({ zIndex: 1800 });
-    const native = ref<StyleValue>(['padding: 2px; z-index: 1900', { color: 'red' }]);
+    const native = shallowRef<StyleValue>(['padding: 2px; z-index: 1900', { color: 'red' }]);
     const objectStyle = reactive<CSSProperties>({ zIndex: 2100, padding: '3px' });
     const wrapper = mount(
       defineComponent({
@@ -295,7 +296,7 @@ describe.each(consumers)('$name actual numeric root layer', (consumer) => {
   );
 
   it('follows the final native camel/hyphen property write order', async () => {
-    const native = ref<StyleValue>([{ zIndex: 2500 }, 'z-index: 2600']);
+    const native = shallowRef<StyleValue>([{ zIndex: 2500 }, 'z-index: 2600']);
     const wrapper = mount(
       () =>
         consumer.render(
