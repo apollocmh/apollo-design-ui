@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 240,
+  "revision": 241,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -12114,35 +12114,102 @@
     }
   ],
   "finalAcceptance": {
-    "status": "in_progress",
-    "sourceCommit": null,
+    "status": "failed",
+    "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
     "gates": [
       {
         "dimension": "api",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Public API/type/behavior regressions and published consumers passed. Architecture evidence remains dated; historical acceptance is not promoted.",
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm run test:tooling",
+            "exitCode": 0,
+            "signal": null,
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c"
+          },
+          {
+            "kind": "consumer",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node tests/consumer/run.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c"
+          },
+          {
+            "kind": "types",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "types",
+              "--reporter=json",
+              "--outputFile=/tmp/apollo-final-types-3b99ec0d-after-build.json"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 183256,
+            "log": "/tmp/apollo-final-types-3b99ec0d-after-build.log",
+            "report": "/tmp/apollo-final-types-3b99ec0d-after-build.json"
+          }
+        ],
+        "frozenInputs": {
+          "candidateCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+          "artifactBuildCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+          "artifactDigest": "f5587ad27504a6dfd4a64c81b14415762dabd81e8aa0cf77c372a38753b83934",
+          "changedFiles": [
+            "packages/docs/tests/menu-browser.mjs",
+            "packages/docs/tests/notification-motion-browser.mjs",
+            "packages/docs/tests/smoke-browser.mjs"
+          ],
+          "reuse": "Only three Docs browser harnesses changed after the common build/runtime/types/consumer checks. Published source, dependencies, configuration, Demos and production build inputs are unchanged; relevant browser checks ran with the corrected harnesses against these exact frozen artifacts.",
+          "timings": {
+            "buildMs": 373378,
+            "coverageMs": 1527419,
+            "publicTypesMs": 183256
+          },
+          "timingLimit": "Separate analysis/implementation/integration-wait durations were not measured."
+        }
       },
       {
         "dimension": "tokens",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "All theme projects executed within the full coverage run; existing thresholds and all supported theme scenarios retained.",
+        "checks": [
+          {
+            "kind": "coverage",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": "pnpm run test:coverage",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1527419,
+            "log": "/tmp/apollo-final-coverage-3b99ec0d.log",
+            "report": "/tmp/apollo-final-coverage-3b99ec0d.json"
+          }
+        ]
       },
       {
         "dimension": "styles",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "status": "failed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "CSS/package/SSR/Docs builds completed; the single remaining L7 failure is B6 size budget. No threshold changed and no byte-only optimization was added; this known non-blocking functional boundary does not reopen architecture tasks.",
         "remainingBudget": {
-          "sourceCommit": "fdb00828d968d9166f553bde99cbcf56fa6177e7",
+          "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
           "command": "node tests/build/run.mjs --strict",
           "exitCode": 1,
           "signal": null,
           "overBudgetEntries": 13,
           "totalEntries": 73,
-          "note": "All packages/Docs built; only B6 budget failed. Budget values unchanged; continue other acceptance checks as instructed.",
-          "log": "/tmp/apollo-final-acceptance-fdb00828.log"
+          "totalKB": 2235.7,
+          "failedCheck": "B6",
+          "checks": 151,
+          "failed": 1,
+          "pending": 0,
+          "log": "/tmp/apollo-final-acceptance-3b99ec0d.log"
         },
         "remediationChecks": [
           {
@@ -12191,13 +12258,40 @@
             "durationMs": 19,
             "log": "/tmp/apollo-date-picker-theme-remediation-diff.log"
           }
+        ],
+        "previousBudgetAttempt": {
+          "sourceCommit": "fdb00828d968d9166f553bde99cbcf56fa6177e7",
+          "command": "node tests/build/run.mjs --strict",
+          "exitCode": 1,
+          "signal": null,
+          "overBudgetEntries": 13,
+          "totalEntries": 73,
+          "note": "All packages/Docs built; only B6 budget failed. Budget values unchanged; continue other acceptance checks as instructed.",
+          "log": "/tmp/apollo-final-acceptance-fdb00828.log"
+        },
+        "checks": [
+          {
+            "kind": "build",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-full.mjs",
+              "--report",
+              "/tmp/apollo-final-acceptance-3b99ec0d.json"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 373378,
+            "log": "/tmp/apollo-final-acceptance-3b99ec0d.log",
+            "report": "/tmp/apollo-final-acceptance-3b99ec0d.json"
+          }
         ]
       },
       {
         "dimension": "unit",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Full combined unit/dom-contract/a11y/theme coverage run exited 0 on the unchanged implementation. Earlier failed attempt remains below.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
           "command": "pnpm run test:coverage",
@@ -12212,14 +12306,35 @@
         },
         "remediation": {
           "verificationTask": "FND:test-utils",
-          "note": "All original runtime scenarios and negative guards remain; only the observed grouping/contract-fixture problems were repaired. Full coverage not yet rerun."
+          "note": "Observed grouping and obsolete contract fixtures repaired; full coverage rerun passed without deleting original runtime scenarios or negative guards."
+        },
+        "checks": [
+          {
+            "kind": "coverage",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": "pnpm run test:coverage",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1527419,
+            "log": "/tmp/apollo-final-coverage-3b99ec0d.log",
+            "report": "/tmp/apollo-final-coverage-3b99ec0d.json"
+          }
+        ],
+        "result": {
+          "filesPassed": 786,
+          "testsPassed": 17334,
+          "statements": 92.06,
+          "branches": 83.81,
+          "functions": 91.82,
+          "lines": 93.03,
+          "thresholdsChanged": false
         }
       },
       {
         "dimension": "interaction",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Full DOM/core regressions passed; existing Date/Time/Range browser scenario additionally verified keyboard, draft/mask, current slots/theme, models/ref and teardown on the frozen source.",
         "remediationChecks": [
           {
             "kind": "semantic",
@@ -12280,13 +12395,34 @@
             "durationMs": 11449,
             "log": "/tmp/apollo-final-tooltip-callback-fixed-full.log"
           }
+        ],
+        "checks": [
+          {
+            "kind": "coverage",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": "pnpm run test:coverage",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1527419,
+            "log": "/tmp/apollo-final-coverage-3b99ec0d.log",
+            "report": "/tmp/apollo-final-coverage-3b99ec0d.json"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/date-picker/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11592,
+            "log": "/tmp/apollo-final-picker-browser-3b99ec0d.log"
+          }
         ]
       },
       {
         "dimension": "types",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Strict noEmit inputs match the integrated implementation; full public type project passed after the common build finished. The earlier build/read race is retained as a failed attempt.",
         "previousAttempt": {
           "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
           "passed": true,
@@ -12388,25 +12524,164 @@
           },
           "sameInputs": true,
           "postCheckNote": "One plain JSDoc sentence in the Picker semantic test corrected afterwards; executable code, types and assertions did not change."
+        },
+        "checks": [
+          {
+            "kind": "types",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vue-tsc/bin/vue-tsc.js",
+              "--noEmit",
+              "-p",
+              "tsconfig.json"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 119562,
+            "log": "/tmp/apollo-final-remediation-strict.log",
+            "reuse": "Same implementation/compiler inputs as the integrated candidate; only a plain JSDoc sentence changed after this check. Exact input hashes retained in remediationStrict."
+          },
+          {
+            "kind": "types",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "types",
+              "--reporter=json",
+              "--outputFile=/tmp/apollo-final-types-3b99ec0d-after-build.json"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 183256,
+            "log": "/tmp/apollo-final-types-3b99ec0d-after-build.log",
+            "report": "/tmp/apollo-final-types-3b99ec0d-after-build.json"
+          }
+        ],
+        "buildReadRace": {
+          "kind": "types",
+          "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "node_modules/vitest/vitest.mjs",
+            "run",
+            "--project",
+            "types",
+            "--reporter=json",
+            "--outputFile=/tmp/apollo-final-types-3b99ec0d.json"
+          ],
+          "exitCode": 1,
+          "signal": null,
+          "durationMs": 182997,
+          "log": "/tmp/apollo-final-types-3b99ec0d.log",
+          "report": "/tmp/apollo-final-types-3b99ec0d.json",
+          "cause": "Type project started while UI declarations were being cleaned/rebuilt; two TS7016 errors for avatar/tag public declarations. Same source passed when rerun after build, unchanged declaration/artifact hashes before and after.",
+          "diagnostics": "/tmp/apollo-final-types-3b99ec0d-source-diagnostics.json"
         }
       },
       {
         "dimension": "a11y",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Full a11y project ran in the passing coverage command; focused real-browser keyboard/focus evidence is also retained. This does not claim an unexecuted complete visual/browser matrix.",
+        "checks": [
+          {
+            "kind": "coverage",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": "pnpm run test:coverage",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1527419,
+            "log": "/tmp/apollo-final-coverage-3b99ec0d.log",
+            "report": "/tmp/apollo-final-coverage-3b99ec0d.json"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/date-picker/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11592,
+            "log": "/tmp/apollo-final-picker-browser-3b99ec0d.log"
+          }
+        ]
       },
       {
         "dimension": "visual",
-        "status": "not_started",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+        "status": "blocked",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Default full Apollo visual command exited 1 before rendering because 660 selected cases lack approved baselines. No baseline was generated, copied, accepted or excluded to turn the full gate green. The approved subset remains partial evidence only.",
+        "checks": [
+          {
+            "kind": "visual",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node tests/visual/apollo.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c"
+          }
+        ],
+        "selection": {
+          "selected": 1875,
+          "approved": 1215,
+          "missingApprovedBaselines": 660
+        },
+        "supplement": {
+          "kind": "approved-visual-subset",
+          "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+          "partialEvidenceOnly": true,
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 102737,
+          "selected": 69,
+          "approved": 42,
+          "uncovered": 27,
+          "components": [
+            {
+              "component": "date-picker",
+              "selected": 27,
+              "approved": 0,
+              "pending": 27
+            },
+            {
+              "component": "typography",
+              "selected": 42,
+              "approved": 42,
+              "pending": 0
+            }
+          ],
+          "actual": {
+            "count": 42,
+            "passed": 42,
+            "failed": 0,
+            "exact": 42,
+            "diffPixels": 0,
+            "maxDiffRatio": 0,
+            "sizeMismatches": 0
+          },
+          "boundaries": {
+            "headUnchanged": true,
+            "gitCleanBefore": true,
+            "gitCleanAfter": true,
+            "artifactDigestBefore": "f5587ad27504a6dfd4a64c81b14415762dabd81e8aa0cf77c372a38753b83934",
+            "artifactDigestAfter": "f5587ad27504a6dfd4a64c81b14415762dabd81e8aa0cf77c372a38753b83934",
+            "digestUnchanged": true
+          },
+          "report": "/tmp/apollo-final-approved-picker-typography-3b99ec0d.json",
+          "commandResult": "/tmp/apollo-final-approved-picker-typography-3b99ec0d-command-result.json",
+          "log": "/tmp/apollo-final-approved-picker-typography-3b99ec0d.log",
+          "fullVisual": "Still failed due to 660 missing approved baselines out of 1875; this subset does not replace the full result.",
+          "baselineWrites": false,
+          "packageDistBuilds": false
+        }
       },
       {
         "dimension": "docs",
-        "status": "in_progress",
-        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "status": "passed",
+        "sourceCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+        "note": "Docs types and 15 files/161 tests passed; all six existing browser projects have individual exit-0 evidence on the same frozen artifacts/source. Browser harness fixes activate lazy Demos, wait for client load, and compare actual title/popup displacement with the original 5px tolerance. Existing timing, motion, geometry and console-error assertions remain.",
         "remediation": {
           "scope": [
             "packages/docs/tests/demo-audit.test.ts",
@@ -12542,6 +12817,254 @@
             "First format check exit1 was only wrapping of the new exact-ID assertion; retained under failedAttempts, corrected without changing the assertion.",
             "No package/site build or published/browser validation performed; no stage/commit or main repository source/config/state writes."
           ]
+        },
+        "checks": [
+          {
+            "kind": "docs-types",
+            "command": "pnpm --filter @apollo-design/docs run typecheck",
+            "exitCode": 0,
+            "signal": null,
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c"
+          },
+          {
+            "kind": "docs-tests",
+            "command": "pnpm --filter @apollo-design/docs run test",
+            "exitCode": 0,
+            "signal": null,
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "/Users/nanren/Code/apollo-design-ui/scripts/verify-docs-browser.mjs",
+              "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/tests/smoke-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15006,
+            "log": "/tmp/apollo-docs-smoke-browser-remediation.log",
+            "script": "packages/docs/tests/smoke-browser.mjs",
+            "sourceHash": "d6ef562be4ff8f29957789b93c1b3f44f3f04da83434fd09c99a7a5b8ed4672c",
+            "harnessCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+            "harnessSha256": "d6ef562be4ff8f29957789b93c1b3f44f3f04da83434fd09c99a7a5b8ed4672c"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "/Users/nanren/Code/apollo-design-ui/docs/audit/tools/stage2-demo-probe.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10206,
+            "log": "/tmp/apollo-docs-followup-stage2-demo-probe.log",
+            "script": "docs/audit/tools/stage2-demo-probe.mjs",
+            "source": "Existing main Docs static preview"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "/Users/nanren/Code/apollo-design-ui/docs/audit/visual-v3/verify.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 17864,
+            "log": "/tmp/apollo-docs-followup-verify.log",
+            "script": "docs/audit/visual-v3/verify.mjs",
+            "source": "Existing main Docs static preview"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/motion-review-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 34149,
+            "log": "/tmp/apollo-docs-followup-motion-review-browser.log",
+            "script": "packages/docs/tests/motion-review-browser.mjs",
+            "source": "Frozen main source fixture + existing UI/theme CSS; own Vite server/cache in temporary cwd"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-docs-browser.mjs",
+              "packages/docs/tests/menu-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9493,
+            "log": "/tmp/apollo-final-docs-menu-scroll-fixed.log",
+            "script": "packages/docs/tests/menu-browser.mjs",
+            "harnessCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+            "harnessSha256": "fd7d782872e2c505b51421280fad6ce61f0505aab8b2e673ecee99e545f7762d"
+          },
+          {
+            "kind": "browser",
+            "sourceCommit": "3b99ec0df35b199edc80557ba13925dba654005c",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-docs-browser.mjs",
+              "packages/docs/tests/notification-motion-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 20473,
+            "log": "/tmp/apollo-final-docs-notification-lazy-fix-final.log",
+            "script": "packages/docs/tests/notification-motion-browser.mjs",
+            "harnessCommit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+            "harnessSha256": "e8807371adbc399da13a7ab90262f75ab39e9b29822204904141b2f6c7692c40"
+          }
+        ],
+        "previousBrowserFailures": {
+          "original": "/tmp/apollo-final-independent-3b99ec0d.log",
+          "followup": {
+            "smokeProof": "/tmp/apollo-docs-smoke-browser-remediation-result.json",
+            "scripts": [
+              "docs/audit/tools/stage2-demo-probe.mjs",
+              "docs/audit/visual-v3/verify.mjs",
+              "packages/docs/tests/menu-browser.mjs",
+              "packages/docs/tests/notification-motion-browser.mjs",
+              "packages/docs/tests/motion-review-browser.mjs"
+            ],
+            "before": {
+              "head": "3b99ec0df35b199edc80557ba13925dba654005c",
+              "status": "",
+              "artifactDigest": "f5587ad27504a6dfd4a64c81b14415762dabd81e8aa0cf77c372a38753b83934"
+            },
+            "outputRoot": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-followup-Av8Jhg",
+            "results": [
+              {
+                "file": "docs/audit/tools/stage2-demo-probe.mjs",
+                "command": [
+                  "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                  "/Users/nanren/Code/apollo-design-ui/docs/audit/tools/stage2-demo-probe.mjs"
+                ],
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-followup-Av8Jhg",
+                "DOCS_URL": "http://127.0.0.1:58526/apollo-design-ui",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 10206,
+                "log": "/tmp/apollo-docs-followup-stage2-demo-probe.log",
+                "source": "Existing main Docs static preview"
+              },
+              {
+                "file": "docs/audit/visual-v3/verify.mjs",
+                "command": [
+                  "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                  "/Users/nanren/Code/apollo-design-ui/docs/audit/visual-v3/verify.mjs"
+                ],
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-followup-Av8Jhg",
+                "DOCS_URL": "http://127.0.0.1:58526/apollo-design-ui",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 17864,
+                "log": "/tmp/apollo-docs-followup-verify.log",
+                "source": "Existing main Docs static preview"
+              },
+              {
+                "file": "packages/docs/tests/menu-browser.mjs",
+                "command": [
+                  "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                  "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/menu-browser.mjs"
+                ],
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-followup-Av8Jhg",
+                "DOCS_URL": "http://127.0.0.1:58526/apollo-design-ui",
+                "exitCode": 1,
+                "signal": null,
+                "durationMs": 31381,
+                "log": "/tmp/apollo-docs-followup-menu-browser.log",
+                "source": "Existing main Docs static preview"
+              },
+              {
+                "file": "packages/docs/tests/notification-motion-browser.mjs",
+                "command": [
+                  "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                  "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/notification-motion-browser.mjs"
+                ],
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-followup-Av8Jhg",
+                "DOCS_URL": "http://127.0.0.1:58526/apollo-design-ui",
+                "exitCode": 1,
+                "signal": null,
+                "durationMs": 31970,
+                "log": "/tmp/apollo-docs-followup-notification-motion-browser.log",
+                "source": "Existing main Docs static preview"
+              },
+              {
+                "file": "packages/docs/tests/motion-review-browser.mjs",
+                "command": [
+                  "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                  "/Users/nanren/Code/apollo-design-ui/packages/docs/tests/motion-review-browser.mjs"
+                ],
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-docs-followup-Av8Jhg",
+                "DOCS_URL": "http://127.0.0.1:58526/apollo-design-ui",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 34149,
+                "log": "/tmp/apollo-docs-followup-motion-review-browser.log",
+                "source": "Frozen main source fixture + existing UI/theme CSS; own Vite server/cache in temporary cwd"
+              }
+            ],
+            "after": {
+              "head": "3b99ec0df35b199edc80557ba13925dba654005c",
+              "status": "",
+              "artifactDigest": "f5587ad27504a6dfd4a64c81b14415762dabd81e8aa0cf77c372a38753b83934"
+            },
+            "unchanged": true,
+            "passed": false
+          },
+          "firstMenuScroll": {
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-docs-browser.mjs",
+              "packages/docs/tests/menu-browser.mjs"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 10621,
+            "log": "/tmp/apollo-final-docs-menu-lazy-fix.log"
+          },
+          "firstNoticeHydration": {
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-docs-browser.mjs",
+              "packages/docs/tests/notification-motion-browser.mjs"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5104,
+            "log": "/tmp/apollo-final-docs-notification-lazy-fix.log"
+          },
+          "menuMeasurement": {
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-docs-browser.mjs",
+              "packages/docs/tests/menu-browser.mjs"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 9297,
+            "log": "/tmp/apollo-final-docs-menu-scroll-diagnosis.log"
+          }
+        },
+        "browserHarnessFix": {
+          "commit": "7002592a3b83167015eed8cd492e16d2f256c2a5",
+          "files": [
+            "packages/docs/tests/menu-browser.mjs",
+            "packages/docs/tests/notification-motion-browser.mjs",
+            "packages/docs/tests/smoke-browser.mjs"
+          ],
+          "scope": "Test scripts only; no production source or build changes",
+          "menuEvidence": "Diagnostics showed title and popup both moved -89px while lazy loading/scroll anchoring changed the requested 120px movement. Keep the popup hovered, measure after reopening, require nonzero upward movement and equal observed displacement within the same 5px tolerance."
         }
       }
     ]
