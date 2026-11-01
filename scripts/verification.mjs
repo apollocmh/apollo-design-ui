@@ -89,7 +89,10 @@ export function changedPlan(root, files) {
     packages = new Set(),
     projects = new Set(),
     acceptanceLayers = new Set();
-  let workflow = false,
+  const resolverConsumerChanged = files.some((file) =>
+    /^packages\/ui-resolver\/tests\/[^/]+\.mjs$/.test(file),
+  );
+  let workflow = resolverConsumerChanged,
     docs = false,
     globalTypes = false;
   for (const file of files) {
@@ -206,7 +209,8 @@ export function changedPlan(root, files) {
     );
   for (const file of [...new Set(files)].filter(
     (file) =>
-      /^tests\/(build|consumer|visual|compat|browser)\//.test(file) &&
+      (/^tests\/(build|consumer|visual|compat|browser)\//.test(file) ||
+        /^packages\/ui-resolver\/tests\/[^/]+\.mjs$/.test(file)) &&
       fs.existsSync(path.join(root, file)),
   )) {
     if (/\.[cm]?js$/.test(file)) checks.push(node('syntax', ['--check', file]));
@@ -226,8 +230,11 @@ export function changedPlan(root, files) {
       file !== 'tests/consumer/run.mjs' &&
       fs.existsSync(path.join(root, file)),
   );
-  const build = consumerFixtures.length > 0 || acceptanceLayers.has('browser');
+  const build =
+    consumerFixtures.length > 0 || acceptanceLayers.has('browser') || resolverConsumerChanged;
   if (build) checks.push(node('build', ['tests/build/run.mjs', '--strict']));
+  if (resolverConsumerChanged)
+    checks.push(node('consumer', ['packages/ui-resolver/tests/consumer.mjs', '--themes']));
   for (const file of consumerFixtures) checks.push(node('consumer', [file]));
   const visualComponents = [
     ...new Set(

@@ -222,6 +222,12 @@ try {
     `import assert from 'node:assert/strict';Object.defineProperty(globalThis,'window',{get(){throw Error('window access')}});Object.defineProperty(globalThis,'document',{get(){throw Error('document access')}});const {ApolloResolver}=await import('@apollo-design/ui-resolver');assert.equal((await ApolloResolver().resolve('AButton')).from,'@apollo-design/ui/button');assert.equal(await ApolloResolver().resolve('AUnknown'),undefined);console.log('Published Node resolver: no DOM access');`,
   );
   metrics.node = run(process.execPath, ['node-pure.mjs'], consumer, 'node-pure');
+  metrics.publishedContract = run(
+    process.execPath,
+    [resolve(packageRoot, 'tests/published-contract.mjs'), consumer],
+    repository,
+    'published-contract',
+  );
   write(
     resolve(consumer, 'index.html'),
     '<!doctype html><html><head><title>Apollo Resolver consumer</title><link rel="icon" href="data:,"></head><body><main id="app"></main><script type="module" src="/src/main.ts"></script></body></html>',

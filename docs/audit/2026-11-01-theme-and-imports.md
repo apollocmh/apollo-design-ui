@@ -18,13 +18,15 @@
 | 实际 tarball 消费 | `packages/ui-resolver/tests/consumer.mjs --themes` 退出 0，81.830 秒；Node 无 DOM、Vite 自动/手工/复合组件、生成声明、SSR 与真实浏览器通过。14 包 dist 前后摘要一致。 |
 | 联合主题矩阵 | 同一安装目录执行三种引入方式 × 四种预设/自定义 × 亮暗，共 24 场景通过，64.991 秒；16 张桌面/窄屏代表截图已逐张查看。 |
 | 共享层消费者 | 13 个运行时包的 Vite / Webpack 消费通过；zIndex 发布浏览器复核通过，仍区分 15 个支持场景与 9 个已知表达式限制场景。 |
-| UI L7 / B6 | L7 无失败、无 pending；73 个入口全部在现有预算内。全量 JS 2230.2 KiB；未提高预算。删除无用 ThemeProvider 保留链的 PURE 标注是实际摇树修复。 |
+| UI L7 / B6 | L7 无失败、无 pending；73 个入口全部在现有预算内。全量 JS 2230.2 KiB；未提高预算。为未消费的 ThemeProvider 工厂标注 PURE，修复不必要的代码保留。 |
 | Docs 六组 | smoke 40/40、stage2、V3 22/22、menu 28/28、notification-motion、motion-review 60/60 通过。前三组沿用同一产物首次运行结果，菜单驱动修正后只重跑菜单；未重复整套检查。 |
 | SSG 保存偏好 | Mono dark、Mono system/系统暗、Mono system/系统亮及英文，共三组通过；实际首屏、客户端选择、语言及零页面错误核对通过。 |
 
 命令原始记录：`/tmp/apollo-v018-final-canonical-consumer.log`、消费输出目录 `apollo-ui-resolver-consumer-rck7Sa/result.json` 与 `theme-matrix/result.json`、`/tmp/apollo-v018-final-ui-l7.json`、`/tmp/apollo-v018-docs-browser-canonical.log`、`/tmp/apollo-v018-docs-feedback-browser.log`、`/tmp/apollo-v018-docs-menu-canonical.log`、`/tmp/apollo-v018-docs-ssg-preferences-5ae1a72a-result.json`。
 
 Docs 产物 SHA-256：`ccc12b9c05c84855ffca68e460557bc533e848ad51255d8139bb1814b9a058c9`。最后的菜单变更仅涉及测试驱动；源码与隔离生产者 `7f4196df` 相同，新增 SEO 测试也逐字一致，复用不跨越产物变化。
+
+测试分层补查发现，resolver 的三个发布路径断言在没有 UI dist 的源码阶段会失败，现完整迁入同一安装目录的消费检查；源码阶段 27 项通过，发布阶段三个检查组覆盖全部 174 个映射。变更计划对这些包内消费脚本选择一次既有构建和一次消费检查，18 项工作流回归通过。另将原裸写类型断言注册为 Vitest 类型用例，保留三个负例；原命令的“无测试套件”失败已修正，真实 `--project types` 静态/运行时共六项通过。无测试被跳过，也未重跑未改变的主题矩阵。
 
 ## 剩余边界
 

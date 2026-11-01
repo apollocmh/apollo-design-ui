@@ -176,6 +176,26 @@ test('acceptance infrastructure gets syntax/tooling feedback without defaulting 
   assert.deepEqual(changedPlan(f.root, ['assets/notes.svg']).checks, []);
 });
 
+test('resolver published checks select one existing build and consumer without entering source unit tests', (t) => {
+  const f = fixture(t);
+  const scripts = ['consumer', 'theme-matrix', 'published-contract'].map(
+    (name) => `packages/ui-resolver/tests/${name}.mjs`,
+  );
+  for (const file of scripts) f.write(file, 'export const value = 1;');
+  for (const files of [...scripts.map((file) => [file]), scripts]) {
+    const plan = changedPlan(f.root, files);
+    assert.deepEqual(plan.scope, []);
+    assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
+    const consumers = plan.checks.filter((step) => step.kind === 'consumer');
+    assert.equal(consumers.length, 1);
+    assert.deepEqual(consumers[0].args, ['packages/ui-resolver/tests/consumer.mjs', '--themes']);
+    assert.ok(plan.checks.some((step) => step.args.includes('--test')));
+    for (const file of files)
+      assert.ok(plan.checks.some((step) => step.kind === 'syntax' && step.args.includes(file)));
+  }
+  assert.deepEqual(changedPlan(f.root, ['packages/ui-resolver/tests/README.md']).checks, []);
+});
+
 test('infrastructure syntax failures are real failures and changed visual/baseline data checks stay scoped', (t) => {
   const f = fixture(t);
   const bad = 'tests/build/checks/bad.mjs';
