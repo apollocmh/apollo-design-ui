@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /** One preview lifecycle for existing Docs browser checks, using the already-built site. */
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -34,10 +36,10 @@ export async function withDocsPreview(run, start = startPreview) {
     );
   }
 }
-function runScript(file, base) {
+function runScript(file, base, outputRoot) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [file], {
-      cwd: root,
+    const child = spawn(process.execPath, [path.resolve(root, file)], {
+      cwd: outputRoot,
       stdio: 'inherit',
       env: { ...process.env, DOCS_URL: base },
     });
@@ -53,8 +55,17 @@ export function runDocsBrowser({
   run = runScript,
   start = startPreview,
 } = {}) {
+  let outputRoot;
+  if (run === runScript) {
+    outputRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-docs-browser-'));
+    for (const entry of ['node_modules', 'packages', 'tests'])
+      fs.symlinkSync(path.join(root, entry), path.join(outputRoot, entry), 'dir');
+    fs.mkdirSync(path.join(outputRoot, 'docs/audit/evidence'), { recursive: true });
+    console.log(`[docs-browser] Evidence: ${path.join(outputRoot, 'docs/audit/evidence')}`);
+  }
   return withDocsPreview(async (base) => {
-    for (const script of scripts) await run(script, base);
+    for (const script of scripts) await run(script, base, outputRoot);
+    return { outputRoot };
   }, start);
 }
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {

@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/ui",
-  "version": "0.0.0",
+  "version": "0.1.7",
   "description": "组件库本体：72 个组件 + locale + 全局样式 + ConfigProvider。",
   "license": "MIT",
   "type": "module",

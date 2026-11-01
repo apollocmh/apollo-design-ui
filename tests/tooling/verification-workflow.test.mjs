@@ -490,6 +490,93 @@ test('Docs browser checks reuse one preview and always close it when a check fai
   assert.equal(closes, 3);
 });
 
+test('the default Docs browser runner isolates real child evidence and retains it on failure', async (t) => {
+  const { runDocsBrowser } = await import('../../scripts/verify-docs-browser.mjs');
+  const f = fixture(t);
+  const root = path.resolve(import.meta.dirname, '../..');
+  const evidence = [
+    'docs/audit/evidence/stage2-demo.json',
+    'docs/audit/evidence/review-002-motion.json',
+  ];
+  const originalEvidence = evidence.map((file) =>
+    fs.existsSync(path.join(root, file)) ? fs.readFileSync(path.join(root, file)) : null,
+  );
+  const outputRoots = new Set();
+  let starts = 0,
+    closes = 0;
+  t.after(() => {
+    for (const outputRoot of outputRoots) fs.rmSync(outputRoot, { recursive: true, force: true });
+  });
+  const start = async () => {
+    starts++;
+    return {
+      resolvedUrls: { local: ['http://127.0.0.1:1234/apollo-design-ui/'] },
+      httpServer: {
+        close(done) {
+          closes++;
+          done();
+        },
+      },
+    };
+  };
+  const script = (name, exitCode) => {
+    const capture = path.join(f.root, `${name}.json`);
+    f.write(
+      `${name}.mjs`,
+      `import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+const root = ${JSON.stringify(root)};
+assert.notEqual(fs.realpathSync(process.cwd()), fs.realpathSync(root), 'Evidence must not be written into frozen source');
+for (const entry of ['node_modules', 'packages', 'tests'])
+  assert.equal(fs.realpathSync(entry), fs.realpathSync(path.join(root, entry)));
+const result = { outputRoot: process.cwd(), base: process.env.DOCS_URL };
+fs.writeFileSync(${JSON.stringify(capture)}, JSON.stringify(result));
+fs.mkdirSync('docs/audit/evidence', { recursive: true });
+for (const file of ${JSON.stringify(evidence)}) fs.writeFileSync(file, JSON.stringify(result));
+process.exitCode = ${exitCode};
+`,
+    );
+    return { file: path.join(f.root, `${name}.mjs`), capture };
+  };
+
+  const success = script('success', 0);
+  const result = await runDocsBrowser({
+    start,
+    scripts: [path.relative(root, success.file)],
+  });
+  const successOutput = JSON.parse(fs.readFileSync(success.capture, 'utf8'));
+  outputRoots.add(successOutput.outputRoot);
+  assert.equal(fs.realpathSync(result.outputRoot), successOutput.outputRoot);
+  assert.equal(successOutput.base, 'http://127.0.0.1:1234/apollo-design-ui');
+  for (const file of evidence)
+    assert.deepEqual(
+      JSON.parse(fs.readFileSync(path.join(result.outputRoot, file), 'utf8')),
+      successOutput,
+    );
+
+  const failure = script('failure', 23);
+  const skipped = script('must-not-run', 0);
+  await assert.rejects(runDocsBrowser({ start, scripts: [failure.file, skipped.file] }), /exit 23/);
+  const failedOutput = JSON.parse(fs.readFileSync(failure.capture, 'utf8'));
+  outputRoots.add(failedOutput.outputRoot);
+  assert.notEqual(failedOutput.outputRoot, successOutput.outputRoot);
+  assert.equal(fs.existsSync(skipped.capture), false);
+  for (const file of evidence)
+    assert.deepEqual(
+      JSON.parse(fs.readFileSync(path.join(failedOutput.outputRoot, file), 'utf8')),
+      failedOutput,
+    );
+  assert.deepEqual(
+    evidence.map((file) =>
+      fs.existsSync(path.join(root, file)) ? fs.readFileSync(path.join(root, file)) : null,
+    ),
+    originalEvidence,
+  );
+  assert.equal(starts, 2);
+  assert.equal(closes, 2);
+});
+
 test('the standalone runtime entry keeps all four projects in a single Vitest invocation', () => {
   const root = path.resolve(import.meta.dirname, '../..');
   const scripts = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).scripts;

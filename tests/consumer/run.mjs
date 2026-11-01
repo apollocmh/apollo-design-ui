@@ -2,7 +2,7 @@
  * 真实 Vite 消费端验证 —— **tarball 分发**（2026-10-21 审计 A11）。
  *
  * 背景：本仓暂不发布 npm，而是把构建产物打成 `.tgz` 分享。这个脚本模拟用户：
- *   1. 对 13 个 foundation 包 + ui 执行 `pnpm pack`；
+ *   1. 对 12 个 foundation 包 + ui 执行 `pnpm pack`；
  *   2. 在临时目录创建独立 Vite 工程，用 `file:` tarball + pnpm-workspace
  *      overrides 安装全部 @apollo-design/*（**不使用 workspace 链接**）；
  *   3. 分别用 `vite build` 与 `webpack build` 打包同一入口，检查：
@@ -66,21 +66,22 @@ fs.mkdirSync(consumer, { recursive: true });
 try {
   console.log(`[consumer] temp dir: ${tmp}`);
 
-  for (const name of PACKAGES) {
-    console.log(`[consumer] pack @apollo-design/${name}`);
-    run(PNPM, ['--filter', `@apollo-design/${name}`, 'pack', '--pack-destination', tarballs], ROOT);
+  const packageDependencies = {};
+  for (const directory of PACKAGES) {
+    const { name, version } = JSON.parse(
+      fs.readFileSync(path.join(ROOT, 'packages', directory, 'package.json'), 'utf8'),
+    );
+    const filename = `${name.replace(/^@/, '').replace('/', '-')}-${version}.tgz`;
+    console.log(`[consumer] pack ${name}`);
+    run(PNPM, ['--filter', name, 'pack', '--pack-destination', tarballs], ROOT);
+    fs.accessSync(path.join(tarballs, filename));
+    packageDependencies[name] = `file:../tarballs/${filename}`;
   }
 
   // 直接依赖全部 tarball：pnpm 12 不再读取 package.json 的 `pnpm.overrides`
-  // （迁移到 pnpm-workspace.yaml），而 tarball 内的依赖版本是 0.0.0。
-  // 把 13 个包都列为直接 file: 依赖，解析器就能就地满足这些 0.0.0 约束。
-  const dependencies = Object.fromEntries(
-    PACKAGES.map((name) => [
-      `@apollo-design/${name}`,
-      `file:../tarballs/apollo-design-${name}-0.0.0.tgz`,
-    ]),
-  );
-  dependencies.vue = '^3.5.42';
+  // （迁移到 pnpm-workspace.yaml）。直接依赖和 overrides 共用本轮 pack
+  // 生成的精确文件，每个包的文件名均来自它自己的 manifest 版本。
+  const dependencies = { ...packageDependencies, vue: '^3.5.42' };
 
   write(
     path.join(consumer, 'package.json'),
@@ -106,7 +107,7 @@ try {
   );
 
   // pnpm 12 的 overrides 只读 pnpm-workspace.yaml（package.json 的 pnpm 字段被忽略）。
-  // 必须把 tarball 内的 0.0.0 依赖重定向到本地 tgz，否则 pnpm 会去 registry 找
+  // 必须把 tarball 内的 workspace 版本依赖重定向到本轮本地 tgz，否则 pnpm 会去 registry 找
   // 一个尚未发布的包并 404。
   write(
     path.join(consumer, 'pnpm-workspace.yaml'),
@@ -114,9 +115,7 @@ try {
       'packages:',
       "  - '.'",
       'overrides:',
-      ...PACKAGES.map(
-        (name) => `  '@apollo-design/${name}': 'file:../tarballs/apollo-design-${name}-0.0.0.tgz'`,
-      ),
+      ...Object.entries(packageDependencies).map(([name, spec]) => `  '${name}': '${spec}'`),
       '',
     ].join('\n'),
   );

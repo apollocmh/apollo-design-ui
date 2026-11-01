@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/position",
-  "version": "0.0.0",
+  "version": "0.1.7",
   "description": "浮层定位几何。替代 @rc-component/trigger 与 rc-tooltip 的定位部分。**只做几何与尺寸测量**，触发时机与生命周期在 @apollo-design/overlay。",
   "license": "MIT",
   "type": "module",

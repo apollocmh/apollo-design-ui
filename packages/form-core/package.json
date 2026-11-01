@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/form-core",
-  "version": "0.0.0",
+  "version": "0.1.7",
   "description": "表单状态机 + 字段校验引擎。替代 @rc-component/form 与 @rc-component/async-validator。",
   "license": "MIT",
   "type": "module",

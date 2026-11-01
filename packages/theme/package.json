@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/theme",
-  "version": "0.0.0",
+  "version": "0.1.7",
   "description": "Token Runtime：Seed → Map → Alias → Component 的完整派生链，以及 Token → CSS 变量的注入。",
   "license": "MIT",
   "type": "module",
