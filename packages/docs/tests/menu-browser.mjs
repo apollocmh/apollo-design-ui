@@ -169,25 +169,16 @@ try {
   const verticalPopup = page.locator(
     `.apollo-menu-submenu-popup:has(ul[id="${verticalHover.controls}"])`,
   );
-  const {
-    title: vTitleBox,
-    popup: vPopupBox,
-    popupClass: vPopupClass,
-  } = await popupGeometry(verticalHover.title, verticalPopup);
-  check('M-06 垂直弹层存在', vPopupBox !== null);
-  check(
-    'M-06 垂直弹层 placement=rightTop 且贴标题右侧',
-    vPopupBox !== null &&
-      vPopupClass.includes('apollo-menu-submenu-placement-rightTop') &&
-      near(vPopupBox.x, vTitleBox.x + vTitleBox.width) &&
-      near(vPopupBox.y, vTitleBox.y),
-    vPopupBox
-      ? `popup=(${Math.round(vPopupBox.x)},${Math.round(vPopupBox.y)}) titleRight=${Math.round(vTitleBox.x + vTitleBox.width)} titleY=${Math.round(vTitleBox.y)}`
-      : 'null',
+  const { popup: initialPopupBox } = await popupGeometry(verticalHover.title, verticalPopup);
+  check('M-06 垂直弹层存在', initialPopupBox !== null);
+  // Demo 默认已打开，首次可能保留近视口边缘时的合法翻转；rightTop 在下方新会话验证。
+  await page.mouse.move(
+    initialPopupBox.x + initialPopupBox.width / 2,
+    initialPopupBox.y + initialPopupBox.height / 2,
+    {
+      steps: 8,
+    },
   );
-  await page.mouse.move(vPopupBox.x + vPopupBox.width / 2, vPopupBox.y + vPopupBox.height / 2, {
-    steps: 8,
-  });
   await page.waitForTimeout(250);
   check(
     'M-03/M-06 移入弹层后保持展开',
@@ -209,16 +200,31 @@ try {
       ((await verticalPopup.getAttribute('class')) ?? '').includes('apollo-menu-submenu-hidden'),
   );
   // 重开
-  await hoverTitle(`${demo('vertical')}`, 0);
+  const reopenedHover = await hoverTitle(`${demo('vertical')}`, 0);
   check('M-07 离场后可再次打开', (await verticalPopup.count()) === 1);
+  const {
+    title: vTitleBox,
+    popup: vPopupBox,
+    popupClass: vPopupClass,
+  } = await popupGeometry(reopenedHover.title, verticalPopup);
+  check(
+    'M-06 垂直弹层 placement=rightTop 且贴标题右侧',
+    vPopupBox !== null &&
+      vPopupClass.includes('apollo-menu-submenu-placement-rightTop') &&
+      near(vPopupBox.x, vTitleBox.x + vTitleBox.width) &&
+      near(vPopupBox.y, vTitleBox.y),
+    vPopupBox
+      ? `popup=(${Math.round(vPopupBox.x)},${Math.round(vPopupBox.y)}) titleRight=${Math.round(vTitleBox.x + vTitleBox.width)} titleY=${Math.round(vTitleBox.y)}`
+      : 'null',
+  );
 
   // 滚动时指针留在弹层内，避免标题移开后触发正常的 hover 离场。
   await verticalPopup.hover({ position: { x: 10, y: 10 } });
   // 重开时会把示例滚回视口，必须在重开后测量滚动起点。
-  const beforeScroll = await popupGeometry(verticalHover.title, verticalPopup);
+  const beforeScroll = await popupGeometry(reopenedHover.title, verticalPopup);
   await page.evaluate(() => window.scrollBy({ top: 120, behavior: 'instant' }));
   await page.waitForTimeout(200);
-  const afterScroll = await popupGeometry(verticalHover.title, verticalPopup);
+  const afterScroll = await popupGeometry(reopenedHover.title, verticalPopup);
   check(
     'M-06 滚动后弹层跟随标题',
     beforeScroll.title &&
