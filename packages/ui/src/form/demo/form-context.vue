@@ -40,7 +40,7 @@ const WatchDisplay = defineComponent({
 
 .demo-context-tip {
   margin: 8px 0 0;
-  color: rgb(0 0 0 / 45%);
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

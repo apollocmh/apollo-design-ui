@@ -11,7 +11,7 @@ const inputClassNames: InputProps['classNames'] = {
 
 const inputStyles: InputProps['styles'] = {
   input: { color: '#722ed1', fontWeight: 600 },
-  affixWrapper: { backgroundColor: '#f9f0ff' },
+  affixWrapper: { backgroundColor: '#f9f0ff', color: '#391085' },
 };
 
 const textAreaClassNames: TextAreaProps['classNames'] = {

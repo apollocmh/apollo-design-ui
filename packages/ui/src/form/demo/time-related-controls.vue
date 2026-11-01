@@ -60,8 +60,8 @@ const onFinish = (values: unknown) => {
   flex-direction: column;
   gap: 4px;
   padding: 8px 12px;
-  color: rgb(0 0 0 / 65%);
-  background: rgb(0 0 0 / 3%);
+  color: var(--apollo-color-text-secondary);
+  background: var(--apollo-color-fill-alter);
   border-radius: 6px;
   word-break: break-all;
 }

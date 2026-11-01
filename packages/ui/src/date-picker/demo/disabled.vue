@@ -24,7 +24,7 @@ import dayjs from 'dayjs';
 
 <style scoped>
 .demo-picker-hint {
-  color: rgb(0 0 0 / 45%);
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

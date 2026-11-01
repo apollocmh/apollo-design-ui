@@ -25,7 +25,7 @@ const items: AnchorLinkItemProps[] = [
         v-for="id in ['a', 'b', 'c']"
         :id="`anchor-demo-${id}`"
         :key="id"
-        style="height: 200px; margin-bottom: 16px; background: #f5f5f5; padding: 8px"
+        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
       >
         Section {{ id.toUpperCase() }}
       </div>
@@ -58,7 +58,7 @@ const items: AnchorLinkItemProps[] = [
         v-for="id in ['a', 'b', 'c']"
         :id="`anchor-demo-${id}`"
         :key="id"
-        style="height: 200px; margin-bottom: 16px; background: #f5f5f5; padding: 8px"
+        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
       >
         Section {{ id.toUpperCase() }}
       </div>

@@ -6,8 +6,9 @@ import { ref } from 'vue';
 
 const tileStyle = {
   padding: '8px',
-  background: '#fff',
-  border: '1px solid #f0f0f0',
+  background: 'var(--apollo-color-bg-container)',
+  color: 'var(--apollo-color-text)',
+  border: '1px solid var(--apollo-color-border-secondary)',
   borderRadius: '8px',
   boxSizing: 'border-box',
 } as const;

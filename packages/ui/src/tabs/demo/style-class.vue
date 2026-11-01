@@ -12,10 +12,20 @@ const classNames: TabsProps['classNames'] = {
 };
 
 const styles: TabsProps['styles'] = {
-  header: { backgroundColor: '#f9f0ff', paddingInline: '12px', borderRadius: '8px 8px 0 0' },
-  item: { letterSpacing: '0.4px' },
+  header: {
+    backgroundColor: '#f9f0ff',
+    color: '#391085',
+    paddingInline: '12px',
+    borderRadius: '8px 8px 0 0',
+  },
+  item: { letterSpacing: '0.4px', color: '#391085' },
   indicator: { backgroundColor: '#722ed1' },
-  content: { backgroundColor: '#fcfaff', padding: '16px', borderRadius: '0 0 8px 8px' },
+  content: {
+    backgroundColor: '#fcfaff',
+    color: '#391085',
+    padding: '16px',
+    borderRadius: '0 0 8px 8px',
+  },
 };
 
 const items = [

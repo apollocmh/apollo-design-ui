@@ -6,11 +6,16 @@ import { ConfigProvider, Flex, Switch, type SwitchConfig } from '@apollo-design/
 import { ref } from 'vue';
 
 /** 对象形态的 `styles`。 */
-const stylesObject = { root: { backgroundColor: '#F5D2D2' } };
+const stylesObject = {
+  root: { backgroundColor: '#F5D2D2' },
+  content: { color: '#4d2323' },
+};
 
 /** 函数形态的 `styles` —— 按合并后的 `size` 分支。 */
 const stylesFn = (info: { props: { size?: string } }) =>
-  info.props.size === 'medium' ? { root: { backgroundColor: '#BDE3C3' } } : {};
+  info.props.size === 'medium'
+    ? { root: { backgroundColor: '#BDE3C3' }, content: { color: '#1f3d24' } }
+    : {};
 
 const providerChecked = ref(false);
 const providerConfig: SwitchConfig = {

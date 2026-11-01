@@ -80,9 +80,9 @@ const reset = () => {
   margin: 0;
   padding: 8px 12px;
   overflow: auto;
-  color: rgb(0 0 0 / 65%);
+  color: var(--apollo-color-text-secondary);
   white-space: pre-wrap;
-  background: rgb(0 0 0 / 3%);
+  background: var(--apollo-color-fill-alter);
   border-radius: 6px;
   word-break: break-all;
 }

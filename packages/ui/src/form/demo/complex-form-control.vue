@@ -44,8 +44,8 @@ const priceInCents = useWatch('price', form);
 <style scoped>
 .demo-cents {
   padding: 8px 12px;
-  color: rgb(0 0 0 / 65%);
-  background: rgb(0 0 0 / 3%);
+  color: var(--apollo-color-text-secondary);
+  background: var(--apollo-color-fill-alter);
   border-radius: 6px;
 }
 </style>

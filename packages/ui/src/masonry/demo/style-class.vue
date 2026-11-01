@@ -17,7 +17,7 @@ const styles: MasonryProps<number>['styles'] = {
     borderRadius: '12px',
     padding: '20px',
     height: '260px',
-    backgroundColor: 'rgba(250,250,250,0.5)',
+    backgroundColor: 'var(--apollo-color-fill-alter)',
   },
   item: { border: '1px solid #ccc', borderRadius: '12px', overflow: 'hidden' },
 };
@@ -28,7 +28,7 @@ const stylesFn: MasonryProps<number>['styles'] = ({ props }) => ({
     border: `2px solid ${typeof props.columns === 'number' && props.columns > 2 ? '#1890ff' : '#52c41a'}`,
     padding: '20px',
     height: '280px',
-    backgroundColor: 'rgba(240,248,255,.6)',
+    backgroundColor: 'var(--apollo-color-primary-bg)',
   },
   item: { border: '1px solid #1890ff', borderRadius: '12px', overflow: 'hidden' },
 });
@@ -44,7 +44,7 @@ const base = { items, columns: 4, gutter: 16 } as const;
       <h4 style="margin: 0 0 8px">classNames + styles（对象）</h4>
       <Masonry v-bind="base" :class-names="classNames" :styles="styles">
         <template #item="{ data, index }">
-          <div :style="{ height: `${data}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }">
+          <div :style="{ height: `${data}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--apollo-color-bg-container)', color: 'var(--apollo-color-text)' }">
             {{ index + 1 }}
           </div>
         </template>
@@ -54,7 +54,7 @@ const base = { items, columns: 4, gutter: 16 } as const;
       <h4 style="margin: 0 0 8px">styles（函数式，按解析后的 columns 分支）</h4>
       <Masonry v-bind="base" :class-names="classNames" :styles="stylesFn">
         <template #item="{ data, index }">
-          <div :style="{ height: `${data}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }">
+          <div :style="{ height: `${data}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--apollo-color-bg-container)', color: 'var(--apollo-color-text)' }">
             {{ index + 1 }}
           </div>
         </template>

@@ -47,7 +47,7 @@ const styles: DatePickerSemanticStyles = {
 }
 
 .demo-picker-hint {
-  color: rgb(0 0 0 / 45%);
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>
@@ -71,6 +71,7 @@ const styles: DatePickerSemanticStyles = {
 }
 
 .demo-picker-popup-header {
-  background: #f9f0ff;
+  background: var(--apollo-color-primary-bg);
+  color: var(--apollo-color-text);
 }
 </style>
