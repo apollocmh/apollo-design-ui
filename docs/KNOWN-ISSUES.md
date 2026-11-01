@@ -24,6 +24,12 @@
 | 代码高亮跨初始化差异 | [旧实验](audit/2026-10-24-demo-order-remediation.md)只有跨初始化状态的 token 分段线索；同初始化输出已相等。[当前高亮器](../packages/docs/tooling/content/markdown.mjs#L39)与构建/冒烟通过，均不等于已验证跨进程确定性。尚无当前用户可见错误复现，不先更换高亮器或归为功能缺陷。 |
 | List 拖拽示例能力覆盖 | [当前文档](../packages/ui/src/list/index.zh-CN.md#L32)仍明确该示例待审；未承诺 List 内建拖拽排序能力。本轮未做完整示例能力矩阵，不能把历史文件差额或示例待审等同于缺少组件功能。 |
 
+## 远端验收阻塞
+
+| 项目 | 已确认事实与剩余检查 |
+| --- | --- |
+| CI 视觉环境一致性 | `v0.1.7` 本地完整视觉 1875 项通过，但标签 CI 超时，独立复验仍未通过。旧运行的实际 diff 确认存在约 15px 原生滚动槽差额和部分文字/Canvas 差异；根因尚未全部确定，不能把跨平台差异自动判为组件缺陷。[六例原生环境对照 41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353)已触发，使用原产物、浏览器、截图及阈值，尚待结果。完整失败和复验沿革见[收口记录](audit/2026-11-01-z-index-closeout.md)。 |
+
 ## 历史追溯与验收
 
 已修复、重复及过期的逐组件阶段记录、旧计数、旧执行顺序和验收等待均迁入[清理前归档](history/known-issues-2026-11-01.md)，原审计报告和验收证据继续保留。F11 的来源文件漂移已刷新；额外模板检查中 ColorHexInput / PanelPicker 的旧诊断已由当前检查证伪，不保留为开放问题。
@@ -32,4 +38,4 @@ KI01 数值根样式问题已修复于 `4f5944c2`，包括 Popconfirm 的同根�
 
 原两个 ResizeObserver 严格场景本轮各首次复测 exit 0，原生错误和 RO 诊断为空；结果限定于源码浏览器场景，未过滤或重试。历史通知的因果归结仍未知，原失败记录保留在[定向复核证据](audit/evidence/known-issues-review-2026-11-01.json)。
 
-本轮验收以 [Registry](../registry/vue-native-audit.json) 与[收口记录](audit/2026-11-01-z-index-closeout.md)为准；B6 的旧/新预算及调整依据见[基线校准](audit/2026-11-01-issues-budget-calibration.md)。GitHub issue 继续按独立队列验证和处理。
+本轮验收以 [Registry](../registry/vue-native-audit.json) 与[收口记录](audit/2026-11-01-z-index-closeout.md)为准；B6 的旧/新预算及调整依据见[基线校准](audit/2026-11-01-issues-budget-calibration.md)。本批 21 个 GitHub issue 已验证并关闭；后续主题与按需引入的相关验收见[独立交付记录](audit/2026-11-01-theme-and-imports.md)，不覆盖原冻结版本的九维结果。

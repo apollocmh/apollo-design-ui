@@ -755,7 +755,7 @@
     "tag": "v0.1.7",
     "sourceCommit": "35b1ff589cfa8b8fccc50cb653a316ba1cefb035",
     "tagObject": "e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8",
-    "status": "tag_pushed_ci_timed_out_retry_in_progress",
+    "status": "tag_pushed_ci_final_retry_in_progress",
     "previousTagRefsRetained": 14,
     "npmPublish": false,
     "ci": {
@@ -817,18 +817,149 @@
       "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41300894803",
       "branch": "ci/v0.1.7-time-budget-20261101",
       "sourceCommit": "9c1324370e26360a895245b3f6388843620d98c4",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "differenceFromTag": [
         ".github/workflows/ci.yml"
       ],
       "change": "Job budget 120 to 180 minutes; production source, dependencies, tests, assertions and approved baselines identical to v0.1.7",
+      "originalTagUnchanged": true,
+      "failedStage": "coverage/runtime",
+      "testsPassed": 17349,
+      "testsTimedOut": 5,
+      "timeoutMs": 5000,
+      "affected": [
+        "Popconfirm current-token theme case",
+        "Space compact-debug light/dark/compact/token-override"
+      ],
+      "observedDurationRangeMs": [
+        6395,
+        6958
+      ],
+      "notExecuted": [
+        "tarball consumers",
+        "complete visual matrix",
+        "remaining Docs checks"
+      ]
+    },
+    "ciFollowup": {
+      "runId": 41307766529,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41307766529",
+      "sourceCommit": "27e5053904e9750d7073ec2962e232b4eeba0ad2",
+      "status": "completed",
+      "conclusion": "failure",
+      "differenceFromTag": [
+        ".github/workflows/ci.yml",
+        "packages/test-utils/src/theme-test.ts",
+        "packages/ui/src/popconfirm/__tests__/theme.test.ts",
+        "packages/ui/src/space/__tests__/theme.test.ts"
+      ],
+      "change": "Only five measured coverage-heavy theme cases receive a 10000ms deadline; all oracles and remaining default 5000ms deadlines retained. Published runtime, package manifests/dependencies, CSS and PNG baselines unchanged. Job budget remains 180min.",
+      "supportingMeasurements": {
+        "cloudCaseDurationMs": [
+          6395,
+          6958
+        ],
+        "focusedCoverageCaseDurationMs": [
+          6414,
+          5649,
+          4439,
+          4692,
+          3854
+        ],
+        "focusedCoverageCommandExit": 1,
+        "focusedCoverageBoundary": "All five runtime cases passed; original global coverage thresholds correctly fail on a focused subset. Not a whole-coverage pass.",
+        "helperTestsPassed": 42
+      },
+      "originalTagUnchanged": true,
+      "failedStage": "registry",
+      "reason": "Static source-fact count for private test-utils was not refreshed after adding the timing option; source lines 2965 to 2967."
+    },
+    "ciFinalRetry": {
+      "runId": 41313575629,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41313575629",
+      "sourceCommit": "fb2eaa2b566e5e84d33f9216441d319155504395",
+      "status": "in_progress",
+      "conclusion": null,
+      "differenceFromTag": [
+        ".github/workflows/ci.yml",
+        "packages/test-utils/src/theme-test.ts",
+        "packages/ui/src/popconfirm/__tests__/theme.test.ts",
+        "packages/ui/src/space/__tests__/theme.test.ts",
+        "registry/foundation.json"
+      ],
+      "productionSourceDependenciesCssAndBaselinesUnchanged": true,
+      "localPreflight": {
+        "registryCheckExit": 0,
+        "formatCheckExit": 0,
+        "sourceFactDelta": "Private test utility source line count only: 2965 to 2967"
+      },
       "originalTagUnchanged": true
+    },
+    "visualEnvironmentPreflight": {
+      "runId": 41322884353,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353",
+      "sourceCommit": "1c2b726a01c239e91d93dfafb9bebb4b7908ba7b",
+      "branch": "ci/v017-visual-environment",
+      "status": "in_progress",
+      "conclusion": null,
+      "cases": [
+        "affix/basic-desktop",
+        "watermark/multi-line-desktop",
+        "watermark/image-mobile",
+        "config-provider/empty-reset-mobile",
+        "list/theme-dark-compact-mobile",
+        "checkbox/basic-desktop"
+      ],
+      "comparison": "Native runner; WhenScrolling scrollbars; additionally match measured approved-machine zh-Hans-CN/zh_CN preferences. Fresh Chrome for each phase.",
+      "unchanged": [
+        "production source",
+        "approved baselines",
+        "comparison thresholds",
+        "browser version"
+      ],
+      "scope": "Temporary runner preferences only; all phase results retained; no local-user preferences modified."
     }
   },
   "docsTests": {
     "files": 15,
     "tests": 161,
     "passed": true
+  },
+  "githubIssueFollowup": {
+    "sourcePolicy": "Verify latest relevant source first; reuse existing fixes without rewriting them.",
+    "closedIssues": [
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      77,
+      78,
+      79,
+      80
+    ],
+    "openIssueQuery": {
+      "query": "repo:apollocmh/apollo-design-ui is:issue is:open",
+      "results": 0
+    },
+    "latestDeliveredCommit": "9b0388180c619d63f2570e530e3d02db99ead9cd",
+    "featureEvidence": "docs/audit/2026-11-01-theme-and-imports.md",
+    "developmentVersion": "0.1.8",
+    "newVersionTagged": false,
+    "newVersionFullNineDimensionAcceptance": false,
+    "liveDocsVersion": "v0.1.7"
   }
 }
