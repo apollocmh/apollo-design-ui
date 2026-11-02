@@ -48,10 +48,12 @@ try {
       const report = executePlan(plan, {
         quiet: values.quiet,
         reportFile: values.report,
-        afterCheck(step) {
+        afterCheck(step, currentReport) {
           assertFrozenSource(ROOT, sourceCommit);
-          if (step.kind === 'build') artifacts = artifactDigest(ROOT);
-          else if (artifacts && artifactDigest(ROOT) !== artifacts)
+          if (step.kind === 'build') {
+            artifacts = artifactDigest(ROOT);
+            currentReport.artifactDigest = artifacts;
+          } else if (artifacts && artifactDigest(ROOT) !== artifacts)
             throw new Error('Published artifacts changed during read-only acceptance');
         },
       });
