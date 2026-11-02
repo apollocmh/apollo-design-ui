@@ -16,7 +16,7 @@ permissions:
 jobs:
   docs:
     name: 文档站（内容 / 类型 / 单测 / SSG）
-    runs-on: ubuntu-latest
+    runs-on: macos-15-intel
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -39,8 +39,7 @@ jobs:
 
       # L8：浏览器冒烟由 `packages/docs/tests/smoke-browser.mjs` 承担，
       # 覆盖 SSR / 水合 / demo 真实渲染 / 语言 / 主题 / 搜索 / 图标目录 / 移动端抽屉。
-      - name: 安装 Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
+      - uses: ./.github/actions/browser
 
       - name: Existing browser checks on the same built site
         run: node scripts/verify-docs-browser.mjs

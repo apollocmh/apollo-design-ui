@@ -244,6 +244,45 @@ test('browser checks select changed scripts and route the progress helper to its
   assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
 });
 
+test('Docs browser changes and their shared tools select the affected real browser checks', (t) => {
+  const f = fixture(t);
+  const menu = 'packages/docs/tests/menu-browser.mjs';
+  const motion = 'packages/docs/tests/motion-review-browser.mjs';
+  for (const file of [menu, motion]) f.write(file, '');
+  for (const [files, expected] of [
+    [[menu], [menu]],
+    [[motion], [motion]],
+    [['tests/compat/motion-review/main.mjs'], [motion]],
+    [['packages/docs/tests/motion-sampling.mjs'], [motion]],
+    [
+      [menu, motion, menu],
+      [menu, motion],
+    ],
+  ]) {
+    const plan = changedPlan(f.root, files);
+    assert.deepEqual(plan.checks.find((step) => step.kind === 'demo')?.args, [
+      'scripts/verify-docs-browser.mjs',
+      ...expected,
+    ]);
+    assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
+    assert.equal(
+      plan.checks.some((step) => ['coverage', 'visual', 'compat'].includes(step.kind)),
+      false,
+    );
+    assert.equal(
+      plan.checks.some((step) => step.kind.startsWith('docs')),
+      false,
+    );
+  }
+  for (const file of ['scripts/verify-docs-browser.mjs', 'tests/visual/stabilize.mjs']) {
+    const plan = changedPlan(f.root, [file]);
+    const browser = plan.checks.find((step) => step.kind === 'demo');
+    assert.equal(browser.args.length, 7);
+    assert.ok(browser.args.includes(menu));
+    assert.ok(browser.args.includes(motion));
+  }
+});
+
 test('compat DOM baseline and generator changes select their actual Vue semantic consumers', (t) => {
   const f = fixture(t);
   const baseline = 'tests/compat/baselines/shared-action.dom.json';
@@ -281,7 +320,7 @@ test('a changed standalone consumer fixture is executed, rather than only the ta
   const file = 'tests/consumer/button-ssr.mjs';
   f.write(file, 'throw new Error("changed consumer regression");');
   const plan = changedPlan(f.root, [file]);
-  const consumer = plan.checks.find((step) => step.args.includes(file));
+  const consumer = plan.checks.find((step) => step.kind === 'consumer' && step.args.includes(file));
   assert.ok(consumer);
   const result = executePlan({ ...plan, checks: [consumer] }, { root: f.root, quiet: true });
   assert.equal(result.passed, false);
@@ -541,6 +580,7 @@ test('the final plan builds once, runs runtime through coverage once and preserv
       'registry',
       'format',
       'build',
+      'docs-browser',
       'coverage',
       'consumer-browser',
       'types',
@@ -551,7 +591,6 @@ test('the final plan builds once, runs runtime through coverage once and preserv
       'visual',
       'docs-types',
       'docs-tests',
-      'docs-browser',
     ],
   );
   const build = plan.checks.filter((step) => step.kind === 'build');
@@ -568,7 +607,9 @@ test('the final plan builds once, runs runtime through coverage once and preserv
   assert.ok(plan.checks.indexOf(resolver) > plan.checks.indexOf(build[0]));
   assert.equal(plan.checks.filter((step) => step.kind === 'coverage').length, 1);
   const coverage = plan.checks.find((step) => step.kind === 'coverage');
-  assert.equal(plan.checks.indexOf(coverage), plan.checks.indexOf(build[0]) + 1);
+  const browser = plan.checks.find((step) => step.kind === 'docs-browser');
+  assert.equal(plan.checks.indexOf(browser), plan.checks.indexOf(build[0]) + 1);
+  assert.equal(plan.checks.indexOf(coverage), plan.checks.indexOf(browser) + 1);
   assert.deepEqual(coverage.args, ['run', 'test:coverage']);
   assert.equal(coverage.vitest, true);
   assert.equal(
@@ -621,7 +662,7 @@ test('source and published artifact drift are detected, without rewriting the fr
   assert.notEqual(artifactDigest(f.root), first);
 });
 
-test('CI keeps PR feedback scoped and Docs browser checks on the single explicit build', () => {
+test('CI keeps scoped native preflight and aggregates independent readers of the single frozen build', () => {
   const root = path.resolve(import.meta.dirname, '../..');
   const require = createRequire(path.join(root, 'packages/docs/package.json'));
   const { parse } = require('yaml');
@@ -632,48 +673,80 @@ test('CI keeps PR feedback scoped and Docs browser checks on the single explicit
   const scoped = ci.jobs.architecture.steps.flatMap((step) => step.run ?? '').join('\n');
   assert.match(scoped, /verify-changed\.mjs/);
   assert.doesNotMatch(scoped, /verify-full\.mjs|test:coverage/);
-  assert.equal(ci.jobs.acceptance.env?.TMPDIR, undefined);
-  const acceptance = ci.jobs.acceptance.steps.find((step) => step.run?.includes('verify-full.mjs'));
-  assert.equal(acceptance.env.TMPDIR, '$' + '{{ runner.temp }}');
-  const chrome = ci.jobs.acceptance.steps.find((step) => step.id === 'visual_chrome');
+  assert.equal(ci.jobs.architecture['runs-on'], 'macos-15-intel');
+  assert.ok(ci.jobs.architecture.steps.some((step) => step.uses === './.github/actions/browser'));
+  const build = ci.jobs.acceptance_build.steps.filter((step) =>
+    step.run?.includes('verify-full.mjs'),
+  );
+  assert.equal(build.length, 1);
+  assert.match(build[0].run, /--layer build/);
+  const readers = ci.jobs.acceptance_checks;
+  assert.equal(readers.needs, 'acceptance_build');
+  assert.equal(readers['runs-on'], 'macos-15-intel');
+  assert.deepEqual(readers.strategy.matrix.layer, [
+    'docs',
+    'runtime',
+    'types',
+    'consumers',
+    'visual',
+  ]);
+  assert.equal(readers.strategy['fail-fast'], false);
+  assert.equal(readers.strategy['max-parallel'], 5);
+  const layer = readers.steps.find((step) => step.run?.includes('verify-full.mjs'));
+  assert.equal(layer.env.TMPDIR, '$' + '{{ runner.temp }}');
+  assert.match(layer.run, /--layer/);
+  assert.match(layer.run, /--inputs/);
+  assert.doesNotMatch(
+    readers.steps.flatMap((step) => step.run ?? '').join('\n'),
+    /pnpm.*build|tests\/build\/run/,
+  );
+  const browser = parse(
+    fs.readFileSync(path.join(root, '.github/actions/browser/action.yml'), 'utf8'),
+  );
+  const chrome = browser.runs.steps.find((step) => step.id === 'chrome');
   const baseline = JSON.parse(
     fs.readFileSync(path.join(root, 'tests/visual/baselines/apollo/manifest.json'), 'utf8'),
   );
-  const versions = new Set(
-    Object.values(baseline.entries).map((entry) => entry.environment.split('/')[2]),
+  assert.deepEqual(
+    [...new Set(Object.values(baseline.entries).map((entry) => entry.environment.split('/')[2]))],
+    [chrome.env.APOLLO_BASELINE_CHROME_VERSION],
   );
-  assert.deepEqual([...versions], [chrome.env.APOLLO_BASELINE_CHROME_VERSION]);
-  assert.equal(
-    acceptance.env.APOLLO_CHROME_EXECUTABLE,
-    '$' + '{{ steps.visual_chrome.outputs.executable }}',
-  );
+  assert.match(chrome.run, /APOLLO_CHROME_EXECUTABLE/);
+  assert.deepEqual(ci.jobs.acceptance.needs, [
+    'acceptance_source',
+    'acceptance_build',
+    'acceptance_checks',
+  ]);
+  assert.match(ci.jobs.acceptance.if, /always\(\)/);
+  const aggregate = ci.jobs.acceptance.steps.find((step) => step.run?.includes('verify-full.mjs'));
+  assert.match(aggregate.run, /--aggregate/);
+  assert.ok(aggregate.env.ACCEPTANCE_JOB_RESULTS);
   const resultUpload = ci.jobs.acceptance.steps.find((step) => step.id === 'acceptance_artifacts');
   assert.equal(resultUpload['continue-on-error'], true);
-  const resultRecovery = ci.jobs.acceptance.steps.find(
+  assert.ok(resultUpload.with.path.includes('/tmp/final-acceptance.json'));
+  const recovery = ci.jobs.acceptance.steps.find(
     (step) => step.with?.name === 'final-acceptance-upload-retry-1',
   );
   assert.equal(
-    resultRecovery.if,
+    recovery.if,
     '$' + "{{ always() && steps.acceptance_artifacts.outcome == 'failure' }}",
   );
-  assert.equal(resultRecovery['continue-on-error'], undefined);
-  assert.equal(resultRecovery.with['if-no-files-found'], 'error');
+  assert.equal(recovery['continue-on-error'], undefined);
+  assert.equal(recovery.with['if-no-files-found'], 'error');
+  const layerUpload = readers.steps.find((step) => step.id === 'layer_report');
+  assert.ok(layerUpload.with.path.includes('.json.evidence/'));
   const focusedUpload = ci.jobs.architecture.steps.find(
     (step) => step.with?.name === 'architecture-checks',
   );
-  for (const [upload, file] of [
-    [focusedUpload, '/tmp/architecture-checks.json'],
-    [resultUpload, '/tmp/final-acceptance.json'],
-    [resultRecovery, '/tmp/final-acceptance.json'],
-  ]) {
-    assert.ok(upload.with.path.split('\n').includes(file));
-    assert.ok(upload.with.path.split('\n').includes(`${file}.evidence/`));
-  }
+  assert.ok(focusedUpload.with.path.includes('/tmp/architecture-checks.json.evidence/'));
+  assert.ok(focusedUpload.with.path.includes('apollo-docs-browser-'));
   const docs = read('docs-ci.yml');
   assert.deepEqual(Object.keys(docs.on), ['workflow_dispatch']);
   const docsCommands = docs.jobs.docs.steps.flatMap((step) => step.run ?? '').join('\n');
   assert.equal((docsCommands.match(/verify-docs\.mjs --build/g) ?? []).length, 1);
   assert.doesNotMatch(docsCommands, /build:docs|content:build/);
+  assert.equal(docs.jobs.docs['runs-on'], 'macos-15-intel');
+  assert.ok(docs.jobs.docs.steps.some((step) => step.uses === './.github/actions/browser'));
   for (const check of [
     'smoke-browser.mjs',
     'stage2-demo-probe.mjs',
@@ -684,7 +757,6 @@ test('CI keeps PR feedback scoped and Docs browser checks on the single explicit
   ])
     assert.ok(
       fs.readFileSync(path.join(root, 'scripts/verify-docs-browser.mjs'), 'utf8').includes(check),
-      `missing existing Docs browser check ${check}`,
     );
   assert.ok(docsCommands.includes('scripts/verify-docs-browser.mjs'));
   assert.ok(
@@ -734,15 +806,30 @@ test('Docs browser checks reuse one preview and always close it when a check fai
     },
   });
   assert.deepEqual(executed, ['tests/browser/button-docs.mjs']);
+  executed.length = 0;
   await assert.rejects(
     runDocsBrowser({
       start,
-      async run() {
-        throw new Error('actual browser failure');
+      async run(script) {
+        executed.push(script);
+        if (script === DOCS_BROWSER_SCRIPTS[0] || script === DOCS_BROWSER_SCRIPTS.at(-1))
+          throw new Error(`actual browser failure: ${script}`);
       },
     }),
-    /actual browser failure/,
+    (error) => {
+      assert.ok(error instanceof AggregateError);
+      assert.equal(error.errors.length, 2);
+      assert.equal(error.report.passed, false);
+      assert.equal(error.report.checks.filter((check) => check.status === 'failed').length, 2);
+      assert.equal(
+        error.report.checks.some((check) => ['running', 'not_run'].includes(check.status)),
+        false,
+      );
+      assert.match(error.message, /actual browser failure/);
+      return true;
+    },
   );
+  assert.deepEqual(executed, DOCS_BROWSER_SCRIPTS);
   assert.equal(starts, 3);
   assert.equal(closes, 3);
 });
@@ -813,12 +900,28 @@ process.exitCode = ${exitCode};
     );
 
   const failure = script('failure', 23);
-  const skipped = script('must-not-run', 0);
-  await assert.rejects(runDocsBrowser({ start, scripts: [failure.file, skipped.file] }), /exit 23/);
+  const following = script('runs-after-failure', 0);
+  await assert.rejects(
+    runDocsBrowser({ start, scripts: [failure.file, following.file] }),
+    /exit 23/,
+  );
   const failedOutput = JSON.parse(fs.readFileSync(failure.capture, 'utf8'));
   outputRoots.add(failedOutput.outputRoot);
   assert.notEqual(failedOutput.outputRoot, successOutput.outputRoot);
-  assert.equal(fs.existsSync(skipped.capture), false);
+  assert.equal(fs.existsSync(following.capture), true);
+  const failedReport = JSON.parse(
+    fs.readFileSync(
+      path.join(failedOutput.outputRoot, 'docs/audit/evidence/browser-checks.json'),
+      'utf8',
+    ),
+  );
+  assert.equal(failedReport.passed, false);
+  assert.deepEqual(
+    failedReport.checks.map((check) => check.status),
+    ['failed', 'passed'],
+  );
+  assert.equal(failedReport.checks[0].exitCode, 23);
+  assert.ok(failedReport.checks.every((check) => check.durationMs >= 0));
   for (const file of evidence)
     assert.deepEqual(
       JSON.parse(fs.readFileSync(path.join(failedOutput.outputRoot, file), 'utf8')),

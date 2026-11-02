@@ -15,6 +15,10 @@ on:
         type: choice
         options: [architecture, acceptance]
         default: architecture
+      base_sha:
+        description: Base SHA for scoped preflight (default HEAD^)
+        type: string
+        default: ''
       reference_visual:
         description: Also run optional upstream visual diagnostics after final acceptance
         type: boolean
@@ -32,18 +36,21 @@ jobs:
   architecture:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.stage != 'acceptance') }}
     name: Architecture feedback for changed scopes
-    runs-on: ubuntu-latest
+    runs-on: macos-15-intel
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/browser
       - name: State, metadata and generated progress consistency
         run: pnpm run registry:check
       - name: Scoped behavior, types and necessary Docs checks
+        # The same native browser is used by preflight and final acceptance.
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          TMPDIR: ${{ runner.temp }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || inputs.base_sha }}
         run: |
           if [ -n "$BASE_SHA" ]; then
             node scripts/verify-changed.mjs --base "$BASE_SHA" --report /tmp/architecture-checks.json
@@ -58,85 +65,199 @@ jobs:
           path: |
             /tmp/architecture-checks.json
             /tmp/architecture-checks.json.evidence/
+            ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
           if-no-files-found: warn
           retention-days: 7
 
-  acceptance:
+
+  acceptance_source:
     if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
-    name: Complete nine-dimension acceptance on one frozen commit
-    # Pixel captures use the canonical macOS/browser/native font environment
-    # checked by tests/visual/environment.mjs; historical PNG origins stay intact.
-    runs-on: macos-15-intel
-    # The complete native visual matrix follows ~44 minutes of build/runtime work.
-    # The first tag run hit 120 minutes mid-matrix; case limits remain test-owned.
-    timeout-minutes: 180
+    name: Resolve frozen acceptance source
+    runs-on: ubuntu-latest
+    outputs:
+      reused: ${{ steps.prior_acceptance.outputs.reused }}
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - name: Reuse completed acceptance for the exact version-tag commit
         if: github.ref_type == 'tag'
         id: prior_acceptance
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/reuse-tag-acceptance.mjs
+      - uses: actions/upload-artifact@v7
+        if: steps.prior_acceptance.outputs.reused == 'true'
+        with:
+          name: acceptance-reference
+          path: /tmp/acceptance-reference.json
+          if-no-files-found: error
+
+  acceptance_build:
+    needs: acceptance_source
+    if: needs.acceptance_source.outputs.reused != 'true'
+    name: Build one frozen SDK and Docs
+    runs-on: macos-15-intel
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-        if: steps.prior_acceptance.outputs.reused != 'true'
-      - name: Match the canonical native font and scrollbar settings
-        if: steps.prior_acceptance.outputs.reused != 'true'
+      - name: Build and check the frozen source once
+        run: node scripts/verify-full.mjs --layer build --inputs "$RUNNER_TEMP/frozen-input.json" --report "$RUNNER_TEMP/acceptance-build.json"
+      - name: Archive the exact SDK and generated Docs inputs
         run: |
-          defaults write -g AppleShowScrollBars -string WhenScrolling
-          defaults write -g AppleLanguages -array zh-Hans-CN
-          defaults write -g AppleLocale -string zh_CN
-      - name: Install visual browser
-        if: steps.prior_acceptance.outputs.reused != 'true'
-        run: pnpm exec playwright install --with-deps chromium
-      - name: Install the exact approved visual Chrome
-        if: steps.prior_acceptance.outputs.reused != 'true'
-        id: visual_chrome
-        env:
-          APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
+          set -euo pipefail
+          tar czf "$RUNNER_TEMP/frozen.tar.gz" packages/*/dist packages/docs/.generated
+          cd "$RUNNER_TEMP"
+          shasum -a 256 frozen.tar.gz > frozen.tar.gz.sha256
+      - uses: actions/upload-artifact@v7
+        with:
+          name: frozen-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/frozen.tar.gz
+            ${{ runner.temp }}/frozen.tar.gz.sha256
+            ${{ runner.temp }}/frozen-input.json
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v7
+        if: always()
+        id: build_report
+        continue-on-error: true
+        with:
+          name: acceptance-layer-build
+          path: ${{ runner.temp }}/acceptance-build.json
+          if-no-files-found: warn
+          retention-days: 14
+      - uses: actions/upload-artifact@v7
+        if: ${{ always() && steps.build_report.outcome == 'failure' }}
+        with:
+          name: acceptance-layer-build-upload-retry-1
+          path: ${{ runner.temp }}/acceptance-build.json
+          if-no-files-found: error
+          retention-days: 14
+
+  acceptance_checks:
+    needs: acceptance_build
+    name: Frozen acceptance / ${{ matrix.layer }}
+    runs-on: macos-15-intel
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        layer: [docs, runtime, types, consumers, visual]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/browser
+        if: ${{ contains(fromJSON('["docs","consumers","visual"]'), matrix.layer) }}
+      - uses: actions/download-artifact@v8
+        with:
+          name: frozen-${{ github.sha }}
+          path: ${{ runner.temp }}/frozen
+      - name: Restore the original build without rebuilding packages
         run: |
-          set -eu
-          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
-          ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
-          apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
-          "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
-          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
-      - name: One build, coverage/runtime once, immutable consumers and full native visuals
-        if: steps.prior_acceptance.outputs.reused != 'true'
+          set -euo pipefail
+          cd "$RUNNER_TEMP/frozen"
+          shasum -a 256 -c frozen.tar.gz.sha256
+          tar xzf frozen.tar.gz -C "$GITHUB_WORKSPACE"
+          cd "$GITHUB_WORKSPACE"
+          chmod -R a-w packages/*/dist packages/docs/.generated
+      - name: Run this layer against the same frozen inputs
         env:
           TMPDIR: ${{ runner.temp }}
-          APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
-        run: node scripts/verify-full.mjs --report /tmp/final-acceptance.json
-      - name: Package the same artifacts for optional reference diagnostics
-        if: ${{ inputs.reference_visual }}
-        run: tar czf build-dist.tar.gz packages/*/dist tests/visual/.artifacts/vue
-      - name: Keep build artifacts
-        if: ${{ inputs.reference_visual }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: build-dist
-          path: build-dist.tar.gz
-          if-no-files-found: error
-          retention-days: 1
-      - name: Keep final results and coverage
-        id: acceptance_artifacts
+          ACCEPTANCE_LAYER: ${{ matrix.layer }}
+        run: node scripts/verify-full.mjs --layer "$ACCEPTANCE_LAYER" --inputs "$RUNNER_TEMP/frozen/frozen-input.json" --report "$RUNNER_TEMP/acceptance-$ACCEPTANCE_LAYER.json"
+      - name: Keep layer results and original test reports
         if: always()
+        id: layer_report
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: final-acceptance
+          name: acceptance-layer-${{ matrix.layer }}
           path: |
-            /tmp/final-acceptance.json
-            /tmp/final-acceptance.json.evidence/
-            /tmp/acceptance-reference.json
+            ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json
+            ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json.evidence/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Recover only the result upload once
+        if: ${{ always() && steps.layer_report.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: acceptance-layer-${{ matrix.layer }}-upload-retry-1
+          path: |
+            ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json
+            ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json.evidence/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Keep coverage, pixel differences and real browser diagnostics
+        if: ${{ always() && matrix.layer != 'types' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: acceptance-diagnostics-${{ matrix.layer }}
+          path: |
             coverage/
             tests/visual/report-apollo.json
             tests/visual/diff/apollo/
             ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
             ${{ runner.temp }}/apollo-overlay-z-index-*/result.json
             ${{ runner.temp }}/apollo-overlay-z-index-*/*.png
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Package the same SDK and fixture for optional reference diagnostics
+        if: ${{ inputs.reference_visual && matrix.layer == 'visual' }}
+        run: tar czf build-dist.tar.gz packages/*/dist tests/visual/.artifacts/vue
+      - uses: actions/upload-artifact@v7
+        if: ${{ inputs.reference_visual && matrix.layer == 'visual' }}
+        with:
+          name: build-dist
+          path: build-dist.tar.gz
+          if-no-files-found: error
+          retention-days: 1
+
+  acceptance:
+    if: ${{ always() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance')) }}
+    needs: [acceptance_source, acceptance_build, acceptance_checks]
+    name: Complete nine-dimension acceptance on one frozen commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        if: needs.acceptance_source.outputs.reused != 'true'
+      - uses: actions/download-artifact@v8
+        if: needs.acceptance_source.outputs.reused == 'true'
+        with:
+          name: acceptance-reference
+          path: /tmp
+      - uses: actions/download-artifact@v8
+        if: needs.acceptance_source.outputs.reused != 'true' && needs.acceptance_build.result == 'success'
+        with:
+          name: frozen-${{ github.sha }}
+          path: ${{ runner.temp }}/frozen
+      - uses: actions/download-artifact@v8
+        if: needs.acceptance_source.outputs.reused != 'true' && needs.acceptance_build.result == 'success'
+        with:
+          pattern: acceptance-layer-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/reports
+      - name: Require all layers, the exact SHA, immutable inputs and the complete visual matrix
+        if: needs.acceptance_source.outputs.reused != 'true'
+        env:
+          ACCEPTANCE_JOB_RESULTS: ${{ toJSON(needs) }}
+        run: node scripts/verify-full.mjs --aggregate "$RUNNER_TEMP/reports" --inputs "$RUNNER_TEMP/frozen/frozen-input.json" --report /tmp/final-acceptance.json
+      - name: Keep the complete acceptance result
+        if: always()
+        id: acceptance_artifacts
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: final-acceptance
+          path: |
+            /tmp/final-acceptance.json
+            /tmp/acceptance-reference.json
           if-no-files-found: warn
           retention-days: 14
       - name: Recover the result upload once without rerunning acceptance
@@ -146,14 +267,7 @@ jobs:
           name: final-acceptance-upload-retry-1
           path: |
             /tmp/final-acceptance.json
-            /tmp/final-acceptance.json.evidence/
             /tmp/acceptance-reference.json
-            coverage/
-            tests/visual/report-apollo.json
-            tests/visual/diff/apollo/
-            ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
-            ${{ runner.temp }}/apollo-overlay-z-index-*/result.json
-            ${{ runner.temp }}/apollo-overlay-z-index-*/*.png
           if-no-files-found: error
           retention-days: 14
 

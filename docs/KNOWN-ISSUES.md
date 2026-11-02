@@ -1,6 +1,6 @@
 # Apollo Design · 已知问题与支持限制
 
-核对日期：2026-11-02。数值层级修复沿用冻结源码 `9ea05180`；未受后续改动影响的支持边界沿用 `31a1eece` 定向证据。`d6db136a` 已通过17449条运行时测试及1875项正式视觉比较；最新同一提交的完整验收仍待收口，不能据局部通过标记整库完成。
+核对日期：2026-11-02。数值层级修复沿用冻结源码 `9ea05180`；未受后续改动影响的支持边界沿用 `31a1eece` 定向证据。`62de0b71` 已通过17449条运行时测试、2409条类型及1875项正式视觉比较；Motion浏览器门禁仍未通过，不能据局部通过标记整库完成。
 
 [v0.1.8 当前收口](audit/2026-11-02-v0.1.8-release.md) · [原冻结收口](audit/2026-11-01-z-index-closeout.md) · [预算校准](audit/2026-11-01-issues-budget-calibration.md) · [唯一状态来源](../registry/vue-native-audit.json) · [原定向复核证据](audit/evidence/known-issues-review-2026-11-01.json) · [清理前全文归档](history/known-issues-2026-11-01.md)
 
@@ -26,7 +26,7 @@
 
 ## 历史追溯与验收
 
-macOS15固定原生环境的1875项正式比较已在[运行41401368824](https://github.com/apollocmh/apollo-design-ui/actions/runs/41401368824)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。该运行最后在Docs Menu两项浏览器交互失败；测试路径修正与Header可读性修复的定向验证见最新收口记录，最终完整验收仍须以其实际结果为准。
+macOS15固定原生环境的1875项正式比较已在[运行41401368824](https://github.com/apollocmh/apollo-design-ui/actions/runs/41401368824)及[后续运行41415627881](https://github.com/apollocmh/apollo-design-ui/actions/runs/41415627881)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。后续Menu28项通过，最新阻塞为Motion54/60；浏览器入口、漏采分类与快速验证整改见[#81](https://github.com/apollocmh/apollo-design-ui/issues/81)、[#82](https://github.com/apollocmh/apollo-design-ui/issues/82)和最新收口记录。定向通过不代替最终同SHA完整验收。
 
 已修复、重复及过期的逐组件阶段记录、旧计数、旧执行顺序和验收等待均迁入[清理前归档](history/known-issues-2026-11-01.md)，原审计报告和验收证据继续保留。F11 的来源文件漂移已刷新；额外模板检查中 ColorHexInput / PanelPicker 的旧诊断已由当前检查证伪，不保留为开放问题。
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execFileSync } from 'node:child_process';
 /** Stage-one impact feedback. Documentation does not requeue its component for a new audit. */
 import { parseArgs } from 'node:util';
 import { changedFiles, changedPlan, executePlan, ROOT } from './verification.mjs';
@@ -18,7 +19,19 @@ try {
       'verify-changed.mjs [--base git-ref] [--dry-run] [--report file] [--quiet]\nChecks changed production scopes and their consumers. Dedicated tests add their project. Build/consumer/visual/compat/browser changes run the corresponding layer; workflow and Docs changes use their checks.',
     );
   else {
-    const plan = changedPlan(ROOT, changedFiles(ROOT, values.base));
+    const files = changedFiles(ROOT, values.base);
+    const plan = changedPlan(ROOT, files);
+    plan.sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+    }).trim();
+    plan.changes = {
+      base: values.base ?? 'HEAD',
+      files,
+      workingTreeDirty:
+        execFileSync('git', ['status', '--porcelain'], { cwd: ROOT, encoding: 'utf8' }).trim()
+          .length > 0,
+    };
     if (!plan.checks.length)
       console.log('[verification] No executable changes; no checks were marked passed.');
     else {

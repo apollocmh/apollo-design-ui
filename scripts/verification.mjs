@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import ts from 'typescript';
+import { docsBrowserScriptsForFiles } from './verify-docs-browser.mjs';
 
 export const ROOT = path.resolve(import.meta.dirname, '..');
 const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
@@ -97,12 +98,13 @@ export function changedPlan(root, files) {
   const resolverConsumerChanged = files.some((file) =>
     /^packages\/ui-resolver\/tests\/[^/]+\.mjs$/.test(file),
   );
-  let workflow = resolverConsumerChanged,
+  const docsBrowserScripts = docsBrowserScriptsForFiles(files);
+  let workflow = resolverConsumerChanged || docsBrowserScripts.length > 0,
     docs = false,
     globalTypes = false;
   for (const file of files) {
     const layer = file.match(/^tests\/(build|consumer|visual|compat|browser)\//)?.[1];
-    if (layer && !/\.(?:md|txt)$/.test(file)) {
+    if (layer && !/\.(?:md|txt)$/.test(file) && !file.startsWith('tests/compat/motion-review/')) {
       acceptanceLayers.add(layer);
       workflow = true;
     }
@@ -111,7 +113,9 @@ export function changedPlan(root, files) {
     if (
       /^packages\/docs\/|^packages\/ui\/src\/[^/]+\/(?:index\.[^/]+\.md|demo\/.*\.(?:md|vue))$/.test(
         file,
-      )
+      ) &&
+      !docsBrowserScripts.includes(file) &&
+      file !== 'packages/docs/tests/motion-sampling.mjs'
     )
       docs = true;
     if (/^tsconfig.*\.json$/.test(file)) globalTypes = true;
@@ -236,7 +240,10 @@ export function changedPlan(root, files) {
       fs.existsSync(path.join(root, file)),
   );
   const build =
-    consumerFixtures.length > 0 || acceptanceLayers.has('browser') || resolverConsumerChanged;
+    consumerFixtures.length > 0 ||
+    acceptanceLayers.has('browser') ||
+    docsBrowserScripts.length > 0 ||
+    resolverConsumerChanged;
   if (build) checks.push(node('build', ['tests/build/run.mjs', '--strict']));
   if (resolverConsumerChanged)
     checks.push(node('consumer', ['packages/ui-resolver/tests/consumer.mjs', '--themes']));
@@ -275,20 +282,21 @@ export function changedPlan(root, files) {
       for (const component of new Set(components))
         checks.push(node('compat', ['tests/compat/runner/index.mjs', '--component', component]));
   }
-  if (acceptanceLayers.has('browser')) {
+  if (acceptanceLayers.has('browser') || docsBrowserScripts.length) {
     const scripts = [...new Set(files)].filter(
       (file) => /^tests\/browser\/.*\.mjs$/.test(file) && fs.existsSync(path.join(root, file)),
     );
     checks.push(
       node('demo', [
         'scripts/verify-docs-browser.mjs',
-        ...new Set(
-          scripts.map((file) =>
+        ...new Set([
+          ...docsBrowserScripts,
+          ...scripts.map((file) =>
             file === 'tests/browser/audit-progress-check.mjs'
               ? 'tests/browser/audit-batch-docs.mjs'
               : file,
           ),
-        ),
+        ]),
       ]),
     );
   }
@@ -322,6 +330,8 @@ export function fullPlan() {
       packageRun('format', 'lint:format'),
       // The single build also generates Docs content; all checks below reuse it.
       node('build', ['tests/build/run.mjs', '--strict']),
+      // Browser failures must surface before coverage and the complete pixel matrix.
+      node('docs-browser', ['scripts/verify-docs-browser.mjs']),
       // Earlier runtime failures avoid waiting for unrelated checks; passing runs do the same work.
       packageRun('coverage', 'test:coverage', { vitest: true }),
       node('consumer-browser', ['packages/ui/src/tooltip/__tests__/z-index-browser.mjs']),
@@ -339,8 +349,7 @@ export function fullPlan() {
       node('visual', ['tests/visual/parallel.mjs']),
       docsRun('docs-types', 'typecheck'),
       docsRun('docs-tests', 'test'),
-      node('docs-browser', ['scripts/verify-docs-browser.mjs']),
-    ],
+    ].map((check, index) => ({ ...check, id: `${index}-${check.kind}` })),
   };
 }
 export function assertFrozenSource(root, sourceCommit) {
@@ -385,6 +394,17 @@ export function executePlan(
     scope: plan.scope,
     checks: [],
     passed: false,
+    startedAt: new Date().toISOString(),
+    host: {
+      platform: process.platform,
+      arch: process.arch,
+      logicalCpuCount: os.cpus().length,
+      totalMemory: os.totalmem(),
+      loadAverage: os.loadavg(),
+    },
+    ...(plan.layer ? { layer: plan.layer } : {}),
+    ...(plan.provenance ? { provenance: plan.provenance } : {}),
+    ...(plan.changes ? { changes: plan.changes } : {}),
     ...(plan.sourceCommit ? { sourceCommit: plan.sourceCommit } : {}),
   };
   const reportPath = reportFile ? path.resolve(root, reportFile) : null;
@@ -404,6 +424,7 @@ export function executePlan(
         : step.args;
       const started = performance.now();
       const check = {
+        ...(step.id ? { id: step.id, commandArgs: step.args } : {}),
         kind: step.kind,
         command: [step.command, ...step.args].join(' '),
         startedAt: new Date().toISOString(),
@@ -474,6 +495,8 @@ export function executePlan(
     report.error = error.message;
     console.error(`[verification] ${error.message}`);
   } finally {
+    report.finishedAt = new Date().toISOString();
+    report.finalLoadAverage = os.loadavg();
     saveReport();
     if (!reportPath) fs.rmSync(temporary, { recursive: true, force: true });
   }
