@@ -718,6 +718,9 @@ test('CI keeps scoped native preflight and aggregates independent readers of the
     'acceptance_checks',
   ]);
   assert.match(ci.jobs.acceptance.if, /always\(\)/);
+  const sourceResult = ci.jobs.acceptance.steps.find((step) => step.env?.SOURCE_RESULT);
+  assert.equal(sourceResult.env.SOURCE_RESULT, '$' + '{{ needs.acceptance_source.result }}');
+  assert.match(sourceResult.run, /test "\$SOURCE_RESULT" = success/);
   const aggregate = ci.jobs.acceptance.steps.find((step) => step.run?.includes('verify-full.mjs'));
   assert.match(aggregate.run, /--aggregate/);
   assert.ok(aggregate.env.ACCEPTANCE_JOB_RESULTS);

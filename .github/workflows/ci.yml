@@ -225,6 +225,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+      - name: Require successful source resolution, including tag reuse
+        env:
+          SOURCE_RESULT: ${{ needs.acceptance_source.result }}
+        run: test "$SOURCE_RESULT" = success
       - uses: ./.github/actions/setup
         if: needs.acceptance_source.outputs.reused != 'true'
       - uses: actions/download-artifact@v8
