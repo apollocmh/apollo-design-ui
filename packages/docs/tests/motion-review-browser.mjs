@@ -197,6 +197,10 @@ async function sample(page, selector, action, duration = 650) {
         });
       };
       document.addEventListener('visibilitychange', onVisibilityChange);
+      const initial = {
+        t: performance.now() - start,
+        nodes: [...document.querySelectorAll(selector)].map(capture),
+      };
       window.reviewSampling = new Promise((resolve) => {
         function tick(rafTimestamp) {
           const callbackStart = performance.now();
@@ -213,7 +217,7 @@ async function sample(page, selector, action, duration = 650) {
             observer.disconnect();
             for (const type of motionEvents) document.removeEventListener(type, onEnd, true);
             document.removeEventListener('visibilitychange', onVisibilityChange);
-            resolve({ frames, mutations, events, diagnostics });
+            resolve({ initial, frames, mutations, events, diagnostics });
           }
         }
         requestAnimationFrame(tick);

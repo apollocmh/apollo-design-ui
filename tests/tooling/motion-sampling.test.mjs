@@ -147,3 +147,15 @@ test('an insertion missed before the first frame cannot pass as an observed entr
   data.mutations.push({ t: 0, text: 'Old', rect: { y: 0 } });
   assert.equal(assessSampling(data, options).valid, false);
 });
+
+test('missing the first motion frame cannot shrink the measured distance and fabricate a jump', () => {
+  const data = sample([
+    [100, 40],
+    [116, 52],
+    [132, 64],
+  ]);
+  data.initial = { t: 0, nodes: [{ text: 'Old', rect: { y: 8 } }] };
+  const result = assessDisplacement(data, options);
+  assert.equal(result.distance, 56);
+  assert.equal(result.status, 'sampling-invalid');
+});

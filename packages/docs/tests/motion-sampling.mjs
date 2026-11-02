@@ -7,6 +7,11 @@ export function assessSampling(data, { text, read }) {
       text === undefined ? frame.nodes[0] : frame.nodes.find((item) => item.text.includes(text));
     return node ? [{ t: frame.t, value: read(node) }] : [];
   });
+  const initialNode =
+    text === undefined
+      ? data.initial?.nodes[0]
+      : data.initial?.nodes.find((item) => item.text.includes(text));
+  if (initialNode) points.unshift({ t: data.initial.t, value: read(initialNode) });
   const insertion = data.mutations.find((node) => text === undefined || node.text.includes(text));
   if (insertion && points.length && insertion.t < points[0].t)
     points.unshift({ t: insertion.t, value: read(insertion) });
