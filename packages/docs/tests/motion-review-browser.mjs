@@ -7,8 +7,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import vue from '@vitejs/plugin-vue';
-import { chromium } from 'playwright';
 import { createServer } from 'vite';
+import { launchBrowser } from '../../../tests/visual/stabilize.mjs';
 
 const root = process.cwd();
 const aliases = Object.fromEntries(
@@ -44,10 +44,12 @@ const server = await createServer({
   logLevel: 'error',
 });
 await server.listen();
-const browser = await chromium.launch();
+const { browser, channel, executablePath } = await launchBrowser();
 const report = {
   generatedAt: new Date().toISOString(),
   browserVersion: browser.version(),
+  browserChannel: channel,
+  browserExecutablePath: executablePath ?? null,
   nodeVersion: process.version,
   platform: process.platform,
   scenarios: {},
@@ -64,6 +66,20 @@ async function sample(page, selector, action, duration = 650) {
       const frames = [];
       const mutations = [];
       const events = [];
+      const diagnostics = {
+        environment: {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          visibilityState: document.visibilityState,
+          hidden: document.hidden,
+          hasFocus: document.hasFocus(),
+          reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        },
+        visibilityChanges: [],
+        mutationCallbacks: [],
+        motionDefinitions: [],
+      };
+      const capturedClasses = new WeakMap();
       const start = performance.now();
       const capture = (node) => {
         const style = getComputedStyle(node);
@@ -71,6 +87,30 @@ async function sample(page, selector, action, duration = 650) {
         const matrix = new DOMMatrixReadOnly(
           style.transform === 'none' ? undefined : style.transform,
         );
+        if (capturedClasses.get(node) !== node.className) {
+          capturedClasses.set(node, node.className);
+          diagnostics.motionDefinitions.push({
+            t: performance.now() - start,
+            text: node.textContent,
+            className: node.className,
+            animationName: style.animationName,
+            animationDuration: style.animationDuration,
+            animationDelay: style.animationDelay,
+            animationTimingFunction: style.animationTimingFunction,
+            animationPlayState: style.animationPlayState,
+            transitionProperty: style.transitionProperty,
+            transitionDuration: style.transitionDuration,
+            transitionDelay: style.transitionDelay,
+            transitionTimingFunction: style.transitionTimingFunction,
+            animations: node.getAnimations().map((animation) => ({
+              type: animation.constructor.name,
+              playState: animation.playState,
+              currentTime: animation.currentTime,
+              playbackRate: animation.playbackRate,
+              timing: animation.effect?.getTiming(),
+            })),
+          });
+        }
         return {
           text: node.textContent,
           className: node.className,
@@ -85,6 +125,7 @@ async function sample(page, selector, action, duration = 650) {
         };
       };
       const observer = new MutationObserver((records) => {
+        const callbackStart = performance.now();
         for (const record of records) {
           for (const node of record.addedNodes) {
             if (node instanceof Element) {
@@ -95,6 +136,11 @@ async function sample(page, selector, action, duration = 650) {
             }
           }
         }
+        diagnostics.mutationCallbacks.push({
+          t: callbackStart - start,
+          durationMs: performance.now() - callbackStart,
+          recordCount: records.length,
+        });
       });
       observer.observe(document.body, { subtree: true, childList: true });
       const onEnd = (event) => {
@@ -109,18 +155,32 @@ async function sample(page, selector, action, duration = 650) {
       };
       document.addEventListener('transitionend', onEnd, true);
       document.addEventListener('animationend', onEnd, true);
+      const onVisibilityChange = () => {
+        diagnostics.visibilityChanges.push({
+          t: performance.now() - start,
+          visibilityState: document.visibilityState,
+          hidden: document.hidden,
+        });
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
       window.reviewSampling = new Promise((resolve) => {
-        function tick() {
-          frames.push({
-            t: performance.now() - start,
+        function tick(rafTimestamp) {
+          const callbackStart = performance.now();
+          const frame = {
+            t: callbackStart - start,
+            rafT: rafTimestamp - start,
+            callbackDelayMs: callbackStart - rafTimestamp,
             nodes: [...document.querySelectorAll(selector)].map(capture),
-          });
+          };
+          frame.callbackDurationMs = performance.now() - callbackStart;
+          frames.push(frame);
           if (performance.now() - start < duration) requestAnimationFrame(tick);
           else {
             observer.disconnect();
             document.removeEventListener('transitionend', onEnd, true);
             document.removeEventListener('animationend', onEnd, true);
-            resolve({ frames, mutations, events });
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            resolve({ frames, mutations, events, diagnostics });
           }
         }
         requestAnimationFrame(tick);
@@ -130,6 +190,31 @@ async function sample(page, selector, action, duration = 650) {
   );
   await action();
   return page.evaluate(() => window.reviewSampling);
+}
+
+function recordScenario(name, data) {
+  const summarize = (values) => {
+    const sorted = [...values].sort((a, b) => a - b);
+    return {
+      count: sorted.length,
+      median: sorted[Math.floor(sorted.length / 2)] ?? null,
+      max: sorted.at(-1) ?? null,
+    };
+  };
+  data.diagnostics.timing = {
+    frameCount: data.frames.length,
+    sampleIntervalMs: summarize(data.frames.slice(1).map((frame, i) => frame.t - data.frames[i].t)),
+    rafIntervalMs: summarize(
+      data.frames.slice(1).map((frame, i) => frame.rafT - data.frames[i].rafT),
+    ),
+    callbackDelayMs: summarize(data.frames.map((frame) => frame.callbackDelayMs)),
+    callbackDurationMs: summarize(data.frames.map((frame) => frame.callbackDurationMs)),
+    mutationCallbackDurationMs: summarize(
+      data.diagnostics.mutationCallbacks.map((callback) => callback.durationMs),
+    ),
+  };
+  report.scenarios[name] = data;
+  console.log(`[motion-sampling] ${name} ${JSON.stringify(data.diagnostics.timing)}`);
 }
 
 function entrance(name, data, text) {
@@ -173,7 +258,7 @@ try {
       const data = await sample(page, selector, () =>
         page.evaluate((kind) => window.review[kind]('New'), kind),
       );
-      report.scenarios[`${side}.${kind}`] = data;
+      recordScenario(`${side}.${kind}`, data);
       entrance(`${side}.${kind}`, data, 'New');
       const old = data.frames
         .map((frame) => frame.nodes.find((node) => node.text.includes('Old')))
@@ -203,7 +288,7 @@ try {
     const open = await sample(page, selector, () =>
       page.evaluate(() => window.review.menu({ openKeys: ['outer', 'inner'] })),
     );
-    report.scenarios[`${side}.menu.open`] = open;
+    recordScenario(`${side}.menu.open`, open);
     const heights = open.frames
       .map((frame) => frame.nodes[0]?.rect.height)
       .filter((height) => height !== undefined);
@@ -227,7 +312,7 @@ try {
     const close = await sample(page, selector, () =>
       page.evaluate(() => window.review.menu({ openKeys: [] })),
     );
-    report.scenarios[`${side}.menu.close`] = close;
+    recordScenario(`${side}.menu.close`, close);
     check(
       `${side}.menu: 收起保留过渡帧`,
       close.frames.some(
@@ -249,7 +334,7 @@ try {
         page.evaluate((patch) => window.review.menu(patch), patch),
       );
       const key = Object.keys(patch)[0];
-      report.scenarios[`${side}.menu.${key}`] = change;
+      recordScenario(`${side}.menu.${key}`, change);
       check(
         `${side}.menu.${key}: 离场后才销毁`,
         change.frames.some((frame) => frame.nodes[0]?.rect.height > 1) &&
@@ -272,7 +357,7 @@ try {
         }),
       850,
     );
-    report.scenarios[`${side}.menu.rapid`] = rapid;
+    recordScenario(`${side}.menu.rapid`, rapid);
     check(
       `${side}.menu: 快速反向最终展开`,
       rapid.frames.at(-1).nodes[0]?.display !== 'none' &&

@@ -1,198 +1,193 @@
-# Stage one is scoped PR feedback. Stage two is an explicit frozen-version acceptance.
-name: CI
+name: v0.1.8 motion sampling probe
 
 on:
-  pull_request:
-    branches: [master]
-    paths-ignore:
-      - '.workbuddy/**'
-  push:
-    tags: ['v*']
   workflow_dispatch:
-    inputs:
-      stage:
-        description: Verification stage
-        type: choice
-        options: [architecture, acceptance]
-        default: architecture
-      reference_visual:
-        description: Also run optional upstream visual diagnostics after final acceptance
-        type: boolean
-        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
-  checks: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  MOTION_SOURCE_COMMIT: 62de0b718df9241d015a29d57a17ba22deb2ae51
+  SDK_SOURCE_COMMIT: d30f88d8ee9c16238a78dd538b8254cc3cbcc713
 
 jobs:
-  architecture:
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.stage != 'acceptance') }}
-    name: Architecture feedback for changed scopes
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-      - name: State, metadata and generated progress consistency
-        run: pnpm run registry:check
-      - name: Scoped behavior, types and necessary Docs checks
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          if [ -n "$BASE_SHA" ]; then
-            node scripts/verify-changed.mjs --base "$BASE_SHA" --report /tmp/architecture-checks.json
-          else
-            node scripts/verify-changed.mjs --base HEAD^ --report /tmp/architecture-checks.json
-          fi
-      - name: Keep focused results
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: architecture-checks
-          path: |
-            /tmp/architecture-checks.json
-            /tmp/architecture-checks.json.evidence/
-          if-no-files-found: warn
-          retention-days: 7
-
-  acceptance:
-    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
-    name: Complete nine-dimension acceptance on one frozen commit
-    # Pixel captures use the canonical macOS/browser/native font environment
-    # checked by tests/visual/environment.mjs; historical PNG origins stay intact.
+  probe:
     runs-on: macos-15-intel
-    # The complete native visual matrix follows ~44 minutes of build/runtime work.
-    # The first tag run hit 120 minutes mid-matrix; case limits remain test-owned.
-    timeout-minutes: 180
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0
-      - name: Reuse completed acceptance for the exact version-tag commit
-        if: github.ref_type == 'tag'
-        id: prior_acceptance
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/reuse-tag-acceptance.mjs
+          ref: ${{ github.sha }}
+          fetch-depth: 1
       - uses: ./.github/actions/setup
-        if: steps.prior_acceptance.outputs.reused != 'true'
-      - name: Match the canonical native font and scrollbar settings
-        if: steps.prior_acceptance.outputs.reused != 'true'
+      - name: Prepare native preferences and original source references
         run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-motion-probe"
           defaults write -g AppleShowScrollBars -string WhenScrolling
           defaults write -g AppleLanguages -array zh-Hans-CN
           defaults write -g AppleLocale -string zh_CN
-      - name: Install visual browser
-        if: steps.prior_acceptance.outputs.reused != 'true'
-        run: pnpm exec playwright install --with-deps chromium
-      - name: Install the exact approved visual Chrome
-        if: steps.prior_acceptance.outputs.reused != 'true'
-        id: visual_chrome
-        env:
-          APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
+          git fetch --no-tags --depth=1 origin "$MOTION_SOURCE_COMMIT" "$SDK_SOURCE_COMMIT"
+      - name: Download the original SDK archive without building
+        uses: actions/download-artifact@v8
+        with:
+          name: v018-visual-frozen-d30f88d8ee9c16238a78dd538b8254cc3cbcc713
+          run-id: '41376291926'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/apollo-motion-frozen
+      - name: Restore verified read-only SDK and fixture inputs
+        id: restore
         run: |
-          set -eu
-          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
-          ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
-          apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
-          "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
-          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
-      - name: One build, coverage/runtime once, immutable consumers and full native visuals
-        if: steps.prior_acceptance.outputs.reused != 'true'
+          set -euo pipefail
+          cd "$RUNNER_TEMP/apollo-motion-frozen"
+          shasum -a 256 -c apollo-visual-frozen.tar.gz.sha256
+          tar -xzf apollo-visual-frozen.tar.gz -C "$GITHUB_WORKSPACE"
+          cd "$GITHUB_WORKSPACE"
+          shasum -a 256 -c tests/visual/.artifacts/candidate-freeze/files.sha256 > "$RUNNER_TEMP/apollo-motion-probe/inputs-before.log"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { execFileSync } from 'node:child_process';
+          import fs from 'node:fs';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          const metadata = JSON.parse(fs.readFileSync('tests/visual/.artifacts/candidate-freeze/groups.json', 'utf8'));
+          assert.equal(metadata.sourceCommit, process.env.SDK_SOURCE_COMMIT);
+          assert.equal(artifactDigest(process.cwd()), metadata.sdkDigest);
+          assertFrozenSource(process.cwd(), process.env.GITHUB_SHA);
+          const changed = execFileSync('git', ['diff', '--name-only', process.env.MOTION_SOURCE_COMMIT, 'HEAD'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
+          const allowed = new Set(['.github/workflows/ci.yml', 'packages/docs/tests/motion-review-browser.mjs']);
+          assert.ok(changed.every(file => allowed.has(file)), `Unexpected probe source changes: ${changed.join(', ')}`);
+          const cssInputs = execFileSync('git', ['diff', '--name-only', process.env.SDK_SOURCE_COMMIT, process.env.MOTION_SOURCE_COMMIT, '--', 'packages/ui/src', 'packages/motion/src', 'packages/theme/src', 'tests/compat/motion-review', ':(exclude)**/__tests__/**'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
+          assert.deepEqual(cssInputs, ['packages/theme/src/get-design-token.ts']);
+          const origin = { targetedProbe: true, finalAcceptance: false, motionSourceCommit: process.env.MOTION_SOURCE_COMMIT, probeCommit: process.env.GITHUB_SHA, sdkRunId: '41376291926', sdkArtifactId: '13111302284', sdkSourceCommit: metadata.sourceCommit, sdkDigest: metadata.sdkDigest, sdkReuseBoundary: 'Original D30 dist/CSS. Current motion/UI source is 62de0b71; the sole production theme change repairs own __proto__ input, absent from default CSS inputs. This is not a rebuilt SDK acceptance.', changedProbeFiles: changed, changedProductionCssInputs: cssInputs };
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/apollo-motion-probe/origin.json`, `${JSON.stringify(origin, null, 2)}\n`);
+          NODE
+          chmod -R a-w packages/*/dist tests/visual/.artifacts/vue tests/visual/.artifacts/candidate-freeze
+      - name: Install the original Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Install approved Chrome for Testing 150
+        id: canonical
         env:
-          TMPDIR: ${{ runner.temp }}
-          APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
-        run: node scripts/verify-full.mjs --report /tmp/final-acceptance.json
-      - name: Package the same artifacts for optional reference diagnostics
-        if: ${{ inputs.reference_visual }}
-        run: tar czf build-dist.tar.gz packages/*/dist tests/visual/.artifacts/vue
-      - name: Keep build artifacts
-        if: ${{ inputs.reference_visual }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: build-dist
-          path: build-dist.tar.gz
-          if-no-files-found: error
-          retention-days: 1
-      - name: Keep final results and coverage
-        id: acceptance_artifacts
+          CHROME_VERSION: '150.0.7871.125'
+        run: |
+          set -euo pipefail
+          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-motion-chrome.zip"
+          ditto -x -k "$RUNNER_TEMP/apollo-motion-chrome.zip" "$RUNNER_TEMP/apollo-motion-chrome"
+          apollo_chrome_binary="$RUNNER_TEMP/apollo-motion-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          "$apollo_chrome_binary" --version | grep -F "$CHROME_VERSION"
+          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
+      - name: Run the unchanged 60 checks once per browser, then judge both outcomes
+        env:
+          APOLLO_CHROME_EXECUTABLE: ${{ steps.canonical.outputs.executable }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { execFileSync, spawnSync } from 'node:child_process';
+          import { createHash } from 'node:crypto';
+          import fs from 'node:fs';
+          import os from 'node:os';
+          import path from 'node:path';
+          import { chromium } from 'playwright';
+          const directory = `${process.env.RUNNER_TEMP}/apollo-motion-probe`;
+          const runner = 'packages/docs/tests/motion-review-browser.mjs';
+          const evidence = 'docs/audit/evidence/review-002-motion.json';
+          const candidate = fs.readFileSync(runner);
+          const originalEvidence = fs.readFileSync(evidence);
+          const baseline = execFileSync('git', ['show', `${process.env.MOTION_SOURCE_COMMIT}:${runner}`]);
+          const hash = data => createHash('sha256').update(data).digest('hex');
+          const host = () => ({ generatedAt: new Date().toISOString(), platform: process.platform, arch: process.arch, osRelease: os.release(), osVersion: execFileSync('sw_vers', ['-productVersion'], { encoding: 'utf8' }).trim(), osBuild: execFileSync('sw_vers', ['-buildVersion'], { encoding: 'utf8' }).trim(), cpuModels: [...new Set(os.cpus().map(cpu => cpu.model))], logicalCpuCount: os.cpus().length, totalMemory: os.totalmem(), freeMemory: os.freemem(), loadAverage: os.loadavg(), nodeVersion: process.version, nodeExecutable: process.execPath });
+          const metadata = { before: host(), playwrightDeclaredExecutable: chromium.executablePath(), declaredChromiumVersion: execFileSync(chromium.executablePath(), ['--version'], { encoding: 'utf8' }).trim(), canonicalExecutable: process.env.APOLLO_CHROME_EXECUTABLE, canonicalVersion: execFileSync(process.env.APOLLO_CHROME_EXECUTABLE, ['--version'], { encoding: 'utf8' }).trim(), runs: [] };
+          fs.writeFileSync(`${directory}/host.json`, `${JSON.stringify(metadata, null, 2)}\n`);
+          const plans = [{ name: 'baseline-chromium145', source: baseline, canonical: false, expectedMajor: '145.' }, { name: 'candidate-cft150', source: candidate, canonical: true, expectedMajor: '150.0.7871.125' }];
+          try {
+            for (const plan of plans) {
+              fs.writeFileSync(runner, plan.source);
+              fs.rmSync(evidence, { force: true });
+              const env = { ...process.env, DEBUG: 'pw:browser', DEBUG_COLORS: '0' };
+              if (!plan.canonical) delete env.APOLLO_CHROME_EXECUTABLE;
+              const stdoutFile = `${directory}/${plan.name}.stdout.log`;
+              const stderrFile = `${directory}/${plan.name}.stderr.log`;
+              const stdout = fs.openSync(stdoutFile, 'w'), stderr = fs.openSync(stderrFile, 'w');
+              const before = host(), started = performance.now();
+              console.log(`Starting ${plan.name}; the other browser still runs if this one fails.`);
+              let result;
+              try { result = spawnSync(process.execPath, [runner], { env, stdio: ['ignore', stdout, stderr] }); }
+              finally { fs.closeSync(stdout); fs.closeSync(stderr); }
+              const record = { name: plan.name, runnerSha256: hash(plan.source), exitCode: result.status, signal: result.signal, processError: result.error?.message, durationMs: Math.round(performance.now() - started), hostBefore: before, hostAfter: host(), stdoutFile, stderrFile, reportGenerated: fs.existsSync(evidence) };
+              const stderrText = fs.readFileSync(stderrFile, 'utf8');
+              record.actualExecutablePath = /<launching>\s+(.+?)\s+--/.exec(stderrText)?.[1];
+              process.stdout.write(fs.readFileSync(stdoutFile));
+              process.stderr.write(stderrText);
+              if (record.reportGenerated) {
+                fs.copyFileSync(evidence, `${directory}/${plan.name}.json`);
+                try {
+                  const report = JSON.parse(fs.readFileSync(evidence, 'utf8'));
+                  record.browserVersion = report.browserVersion;
+                  record.checkCount = report.checks.length;
+                  record.checkNames = report.checks.map(check => check.name);
+                  record.failures = report.checks.filter(check => !check.ok);
+                } catch (error) { record.reportReadError = error.message; }
+              }
+              record.passed = result.status === 0 && result.signal === null && record.checkCount === 60 && record.failures?.length === 0 && record.browserVersion?.startsWith(plan.expectedMajor) && Boolean(record.actualExecutablePath) && (!plan.canonical || record.actualExecutablePath === process.env.APOLLO_CHROME_EXECUTABLE);
+              metadata.runs.push(record);
+              fs.writeFileSync(runner, candidate);
+              fs.writeFileSync(evidence, originalEvidence);
+              fs.writeFileSync(`${directory}/comparison.json`, `${JSON.stringify(metadata, null, 2)}\n`);
+            }
+          } finally {
+            fs.writeFileSync(runner, candidate);
+            fs.writeFileSync(evidence, originalEvidence);
+          }
+          assert.equal(metadata.runs.length, 2);
+          assert.deepEqual(metadata.runs[1].checkNames, metadata.runs[0].checkNames, 'Both runs must retain the same 60 assertion names and order');
+          assert.ok(metadata.runs.every(run => run.passed), JSON.stringify(metadata.runs.map(({ name, exitCode, signal, browserVersion, actualExecutablePath, checkCount, failures }) => ({ name, exitCode, signal, browserVersion, actualExecutablePath, checkCount, failures })), null, 2));
+          NODE
+      - name: Verify SDK and source after both runs, including a failed comparison
+        if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          shasum -a 256 -c tests/visual/.artifacts/candidate-freeze/files.sha256 > "$RUNNER_TEMP/apollo-motion-probe/inputs-after.log"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          const origin = JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/apollo-motion-probe/origin.json`, 'utf8'));
+          assert.equal(artifactDigest(process.cwd()), origin.sdkDigest);
+          assertFrozenSource(process.cwd(), process.env.GITHUB_SHA);
+          NODE
+      - name: Upload both raw JSON reports, console and host evidence
+        id: upload_primary
         if: always()
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: final-acceptance
-          path: |
-            /tmp/final-acceptance.json
-            /tmp/final-acceptance.json.evidence/
-            /tmp/acceptance-reference.json
-            coverage/
-            tests/visual/report-apollo.json
-            tests/visual/diff/apollo/
-            ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
-            ${{ runner.temp }}/apollo-overlay-z-index-*/result.json
-            ${{ runner.temp }}/apollo-overlay-z-index-*/*.png
-          if-no-files-found: warn
-          retention-days: 14
-      - name: Recover the result upload once without rerunning acceptance
-        if: ${{ always() && steps.acceptance_artifacts.outcome == 'failure' }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: final-acceptance-upload-retry-1
-          path: |
-            /tmp/final-acceptance.json
-            /tmp/final-acceptance.json.evidence/
-            /tmp/acceptance-reference.json
-            coverage/
-            tests/visual/report-apollo.json
-            tests/visual/diff/apollo/
-            ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
-            ${{ runner.temp }}/apollo-overlay-z-index-*/result.json
-            ${{ runner.temp }}/apollo-overlay-z-index-*/*.png
+          name: v018-motion-probe-${{ github.sha }}
+          path: ${{ runner.temp }}/apollo-motion-probe/
           if-no-files-found: error
           retention-days: 14
-
-  reference:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.reference_visual && inputs.stage == 'acceptance' }}
-    needs: acceptance
-    continue-on-error: true
-    name: Optional historical upstream comparison
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@v8
-        with:
-          name: build-dist
-      - run: tar xzf build-dist.tar.gz
-      - run: pnpm exec playwright install --with-deps chromium
-      - name: Check historical reference integrity
-        run: pnpm run test:visual:reference:check
-      - name: Compare against the same published artifacts
-        continue-on-error: true
-        run: node tests/visual/run.mjs --no-build --mode compare --shard ${{ matrix.shard }}/4
-      - name: Reject incomplete rendering
-        if: always()
-        run: node tests/visual/assert-shard.mjs ${{ matrix.shard }}/4
-      - name: Keep reference diagnostics
-        if: always()
+      - name: Record the original upload failure before the sole recovery
+        if: ${{ always() && steps.upload_primary.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-motion-probe"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/apollo-motion-probe/upload-original-failure.json`, `${JSON.stringify({ originalUploadOutcome: 'failure', recoveryAttempt: 1, originalRunLog: `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`, note: 'Original upload error remains in its workflow step. This is the only recovery; a second failure fails the job.' }, null, 2)}\n`);
+          NODE
+      - name: Recover upload once under a separate artifact name
+        if: ${{ always() && steps.upload_primary.outcome == 'failure' }}
         uses: actions/upload-artifact@v7
         with:
-          name: reference-${{ matrix.shard }}
-          path: |
-            tests/visual/report-*.json
-            tests/visual/report-*.html
-            tests/visual/diff/
-            tests/visual/snapshots/
+          name: v018-motion-probe-${{ github.sha }}-upload-retry-1
+          path: ${{ runner.temp }}/apollo-motion-probe/
           if-no-files-found: error
           retention-days: 14
