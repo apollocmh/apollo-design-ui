@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "0.1.8",
-  "stage": "reviewed-baselines-first-final-acceptance-failed-theme-fix-integrated",
+  "stage": "reviewed-baselines-motion-test-clock-corrected-awaiting-new-final-acceptance",
   "expectedScenes": 1875,
   "candidateSources": [
     "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
@@ -1776,6 +1776,47 @@
       },
       "formalVisuals": "not-run",
       "remainingChecks": "not-run"
+    },
+    {
+      "runId": 41393657049,
+      "sourceCommit": "f4d478d7f19b8c74edc9a7f5aac45853aa57dbce",
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41393657049",
+      "status": "failed",
+      "completedKinds": [
+        "registry",
+        "format",
+        "build",
+        "consumer-browser",
+        "types",
+        "core"
+      ],
+      "fixedThemeRegression": "8 original CSS variable ownership tests passed",
+      "failure": "coverage: hydration.test.ts:50 visibleChanged(true) absent within vi.waitFor; precise cause not yet established",
+      "runtime": {
+        "files": 797,
+        "filesPassed": 796,
+        "tests": 17449,
+        "testsPassed": 17448,
+        "durationSeconds": 2467.43
+      },
+      "formalVisuals": "not-run",
+      "remainingChecks": "not-run"
     }
-  ]
+  ],
+  "motionHydrationTestFix": {
+    "scope": [
+      "packages/motion/src/__tests__/hydration.test.ts"
+    ],
+    "productionChanged": false,
+    "reproduction": "Delay the first default-scheduler rAF by 800ms: original changed(true) assertion fails after earlier DOM/draft/start checks pass.",
+    "ciPreciseFrameDelay": "not recorded; exact original scheduling remains unknown",
+    "change": "Drive the existing fake timers through two frames and 499+1ms deadlines; retain all4 hydration cases and add early-notification and strict event-order assertions.",
+    "focusedVerification": {
+      "hydrationTests": 4,
+      "unchangedRelatedTests": 146,
+      "unchangedRelatedFiles": 8,
+      "mainIntegrationHydrationTests": 4
+    },
+    "initialFocusedAttempt": "New immediate leave assertion needed a second Vue nextTick; original failure preserved, affected file rerun passed."
+  }
 }
