@@ -17,7 +17,6 @@ defaults:
 
 env:
   MOTION_SOURCE_COMMIT: 62de0b718df9241d015a29d57a17ba22deb2ae51
-  BASELINE_RUNNER_COMMIT: 36045ef963fd3aeca555566fa68607b36ad1b4b3
   SDK_SOURCE_COMMIT: d30f88d8ee9c16238a78dd538b8254cc3cbcc713
 
 jobs:
@@ -37,7 +36,7 @@ jobs:
           defaults write -g AppleShowScrollBars -string WhenScrolling
           defaults write -g AppleLanguages -array zh-Hans-CN
           defaults write -g AppleLocale -string zh_CN
-          git fetch --no-tags --depth=1 origin "$MOTION_SOURCE_COMMIT" "$SDK_SOURCE_COMMIT" "$BASELINE_RUNNER_COMMIT"
+          git fetch --no-tags --depth=1 origin "$MOTION_SOURCE_COMMIT" "$SDK_SOURCE_COMMIT"
       - name: Download the original SDK archive without building
         uses: actions/download-artifact@v8
         with:
@@ -64,7 +63,7 @@ jobs:
           assert.equal(artifactDigest(process.cwd()), metadata.sdkDigest);
           assertFrozenSource(process.cwd(), process.env.GITHUB_SHA);
           const changed = execFileSync('git', ['diff', '--name-only', process.env.MOTION_SOURCE_COMMIT, 'HEAD'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
-          const allowed = new Set(['.github/workflows/ci.yml', 'packages/docs/tests/motion-review-browser.mjs', 'tests/visual/stabilize.mjs', 'tests/tooling/chrome-launch.test.mjs']);
+          const allowed = new Set(['.github/workflows/ci.yml', 'packages/docs/tests/motion-review-browser.mjs', 'tests/visual/stabilize.mjs', 'tests/tooling/chrome-launch.test.mjs', 'packages/docs/tests/motion-sampling.mjs', 'tests/tooling/motion-sampling.test.mjs']);
           assert.ok(changed.every(file => allowed.has(file)), `Unexpected probe source changes: ${changed.join(', ')}`);
           const cssInputs = execFileSync('git', ['diff', '--name-only', process.env.SDK_SOURCE_COMMIT, process.env.MOTION_SOURCE_COMMIT, '--', 'packages/ui/src', 'packages/motion/src', 'packages/theme/src', 'tests/compat/motion-review', ':(exclude)**/__tests__/**'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
           assert.deepEqual(cssInputs, ['packages/theme/src/get-design-token.ts']);
@@ -72,8 +71,6 @@ jobs:
           fs.writeFileSync(`${process.env.RUNNER_TEMP}/apollo-motion-probe/origin.json`, `${JSON.stringify(origin, null, 2)}\n`);
           NODE
           chmod -R a-w packages/*/dist tests/visual/.artifacts/vue tests/visual/.artifacts/candidate-freeze
-      - name: Install the original Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
       - name: Install approved Chrome for Testing 150
         id: canonical
         env:
@@ -86,8 +83,8 @@ jobs:
           "$apollo_chrome_binary" --version | grep -F "$CHROME_VERSION"
           printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
       - name: Verify launch arguments without changing default consumers
-        run: node --test tests/tooling/chrome-launch.test.mjs
-      - name: Run the unchanged 60 checks on the same Chrome with and without presentation vsync
+        run: node --test tests/tooling/chrome-launch.test.mjs tests/tooling/motion-sampling.test.mjs
+      - name: Compare native display callbacks and the Chromium timer with identical capture code
         env:
           APOLLO_CHROME_EXECUTABLE: ${{ steps.canonical.outputs.executable }}
         run: |
@@ -99,18 +96,19 @@ jobs:
           import fs from 'node:fs';
           import os from 'node:os';
           import path from 'node:path';
-          import { chromium } from 'playwright';
           const directory = `${process.env.RUNNER_TEMP}/apollo-motion-probe`;
           const runner = 'packages/docs/tests/motion-review-browser.mjs';
           const evidence = 'docs/audit/evidence/review-002-motion.json';
           const candidate = fs.readFileSync(runner);
           const originalEvidence = fs.readFileSync(evidence);
-          const baseline = execFileSync('git', ['show', `${process.env.BASELINE_RUNNER_COMMIT}:${runner}`]);
+          const baseline = candidate;
+          const timerCandidate = Buffer.from(candidate.toString().replace('await launchBrowser();', 'await launchBrowser({ args: ["--enable-features=CDPScreenshotNewSurface,ForceMacVSyncTimerForDebugging"] });'));
+          assert.notEqual(timerCandidate.toString(), candidate.toString());
           const hash = data => createHash('sha256').update(data).digest('hex');
           const host = () => ({ generatedAt: new Date().toISOString(), platform: process.platform, arch: process.arch, osRelease: os.release(), osVersion: execFileSync('sw_vers', ['-productVersion'], { encoding: 'utf8' }).trim(), osBuild: execFileSync('sw_vers', ['-buildVersion'], { encoding: 'utf8' }).trim(), cpuModels: [...new Set(os.cpus().map(cpu => cpu.model))], logicalCpuCount: os.cpus().length, totalMemory: os.totalmem(), freeMemory: os.freemem(), loadAverage: os.loadavg(), nodeVersion: process.version, nodeExecutable: process.execPath });
-          const metadata = { before: host(), playwrightDeclaredExecutable: chromium.executablePath(), declaredChromiumVersion: execFileSync(chromium.executablePath(), ['--version'], { encoding: 'utf8' }).trim(), canonicalExecutable: process.env.APOLLO_CHROME_EXECUTABLE, canonicalVersion: execFileSync(process.env.APOLLO_CHROME_EXECUTABLE, ['--version'], { encoding: 'utf8' }).trim(), runs: [] };
+          const metadata = { before: host(), canonicalExecutable: process.env.APOLLO_CHROME_EXECUTABLE, canonicalVersion: execFileSync(process.env.APOLLO_CHROME_EXECUTABLE, ['--version'], { encoding: 'utf8' }).trim(), runs: [] };
           fs.writeFileSync(`${directory}/host.json`, `${JSON.stringify(metadata, null, 2)}\n`);
-          const plans = [{ name: 'baseline-cft150', source: baseline, canonical: true, expectedMajor: '150.0.7871.125' }, { name: 'candidate-cft150-no-vsync', source: candidate, canonical: true, expectedMajor: '150.0.7871.125' }];
+          const plans = [{ name: 'baseline-cft150-native-display', source: baseline, canonical: true, timer: false, expectedMajor: '150.0.7871.125' }, { name: 'candidate-cft150-native-timer', source: timerCandidate, canonical: true, timer: true, expectedMajor: '150.0.7871.125' }];
           try {
             for (const plan of plans) {
               fs.writeFileSync(runner, plan.source);
@@ -135,12 +133,15 @@ jobs:
                 try {
                   const report = JSON.parse(fs.readFileSync(evidence, 'utf8'));
                   record.browserVersion = report.browserVersion;
+                  record.browserArguments = report.browserArguments;
                   record.checkCount = report.checks.length;
                   record.checkNames = report.checks.map(check => check.name);
                   record.failures = report.checks.filter(check => !check.ok);
                 } catch (error) { record.reportReadError = error.message; }
               }
               record.passed = result.status === 0 && result.signal === null && record.checkCount === 60 && record.failures?.length === 0 && record.browserVersion?.startsWith(plan.expectedMajor) && Boolean(record.actualExecutablePath) && (!plan.canonical || record.actualExecutablePath === process.env.APOLLO_CHROME_EXECUTABLE);
+              record.timerFeaturePresent = record.browserArguments?.some(argument => argument.includes('ForceMacVSyncTimerForDebugging')) ?? false;
+              record.passed &&= record.timerFeaturePresent === plan.timer;
               metadata.runs.push(record);
               fs.writeFileSync(runner, candidate);
               fs.writeFileSync(evidence, originalEvidence);
