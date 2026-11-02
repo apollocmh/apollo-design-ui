@@ -65,15 +65,16 @@ export const STABILIZE_INIT = ({ freezeTime = true } = {}) => {
 
 /**
  * 启动浏览器。
+ * @param {{ args?: string[] }} [options]
  * @returns {Promise<{browser: import('playwright').Browser, channel: string, executablePath?: string}>}
  */
-export async function launchBrowser() {
+export async function launchBrowser({ args } = {}) {
   const executablePath = process.env.APOLLO_CHROME_EXECUTABLE;
   if (executablePath !== undefined) {
     if (!isAbsolute(executablePath)) {
       throw new Error('APOLLO_CHROME_EXECUTABLE must be a non-empty absolute path.');
     }
-    const browser = await chromium.launch({ channel: 'chrome', executablePath });
+    const browser = await chromium.launch({ channel: 'chrome', executablePath, args });
     return { browser, channel: '系统 Chrome', executablePath };
   }
 
@@ -86,7 +87,7 @@ export async function launchBrowser() {
   let lastError;
   for (const attempt of attempts) {
     try {
-      const browser = await chromium.launch({ channel: attempt.channel });
+      const browser = await chromium.launch({ channel: attempt.channel, args });
       return { browser, channel: attempt.label };
     } catch (error) {
       lastError = error;

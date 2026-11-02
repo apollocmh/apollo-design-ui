@@ -44,12 +44,15 @@ const server = await createServer({
   logLevel: 'error',
 });
 await server.listen();
-const { browser, channel, executablePath } = await launchBrowser();
+// Keep Chromium's frame limit while disabling presentation vsync for this sampler.
+const browserArgs = ['--disable-gpu-vsync'];
+const { browser, channel, executablePath } = await launchBrowser({ args: browserArgs });
 const report = {
   generatedAt: new Date().toISOString(),
   browserVersion: browser.version(),
   browserChannel: channel,
   browserExecutablePath: executablePath ?? null,
+  browserArgs,
   nodeVersion: process.version,
   platform: process.platform,
   scenarios: {},
