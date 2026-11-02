@@ -66,10 +66,11 @@ export function getDesignToken(
   const list: MappingAlgorithm[] = Array.isArray(algorithm) ? algorithm : [algorithm];
   const [first = defaultAlgorithm, ...following] = list;
 
-  const overrides: ThemeTokenOverrides = {};
-  for (const layer of [config.preset?.token, scheme?.token, config.token])
-    for (const [name, value] of Object.entries(layer ?? {}))
-      if (value !== undefined) overrides[name] = value;
+  const overrides: ThemeTokenOverrides = Object.fromEntries(
+    [config.preset?.token, scheme?.token, config.token].flatMap((layer) =>
+      Object.entries(layer ?? {}).filter(([, value]) => value !== undefined),
+    ),
+  );
   const seed: SeedToken = { ...defaultSeedToken, ...overrides };
 
   const derivativeToken = following.reduce<MapToken>(

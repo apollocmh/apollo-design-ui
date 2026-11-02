@@ -59,6 +59,38 @@ describe('Apollo token input contracts', () => {
     });
   });
 
+  it.each([
+    { schemeValue: undefined, ownValue: undefined, expected: 3 },
+    { schemeValue: 5, ownValue: undefined, expected: 5 },
+    { schemeValue: 5, ownValue: 7, expected: 7 },
+  ])(
+    'prototype-named extensions preserve layer precedence: $expected',
+    ({ schemeValue, ownValue, expected }) => {
+      const names = ['constructor', 'toString', '__proto__', 'hasOwnProperty'];
+      const extensions = (value: number | undefined) =>
+        Object.fromEntries(names.map((name) => [name, value]));
+      const token = getDesignToken({
+        preset: {
+          name: 'prototype-extensions',
+          token: extensions(3),
+          light: { token: extensions(schemeValue) },
+        },
+        token: extensions(ownValue),
+        algorithm: (seed) => {
+          for (const name of names) {
+            expect(Object.hasOwn(seed, name)).toBe(true);
+            expect(Object.getOwnPropertyDescriptor(seed, name)?.value).toBe(expected);
+          }
+          return defaultAlgorithm(seed);
+        },
+      });
+      for (const name of names) {
+        expect(Object.hasOwn(token, name)).toBe(true);
+        expect(Object.getOwnPropertyDescriptor(token, name)?.value).toBe(expected);
+      }
+    },
+  );
+
   it('nonempty custom algorithms run once in order with the preceding Map', () => {
     const calls: string[] = [];
     const first: MappingAlgorithm = (seed, previous) => {

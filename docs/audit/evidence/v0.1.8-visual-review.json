@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "0.1.8",
-  "stage": "reviewed-baselines-final-acceptance-not-yet-run",
+  "stage": "reviewed-baselines-first-final-acceptance-failed-theme-fix-integrated",
   "expectedScenes": 1875,
   "candidateSources": [
     "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
@@ -1752,5 +1752,30 @@
     "proved": "Conflicting Date and Playwright clock initialization can cause pauseAt in the past; single owner verified.",
     "originalTooltipTimeout": "Precise causality remains unproven. Original failure retained; no assertion removed, no forced close or automatic scene retries."
   },
-  "finalAcceptance": "pending"
+  "finalAcceptance": "pending-new-frozen-commit",
+  "finalAcceptanceAttempts": [
+    {
+      "runId": 41387164563,
+      "sourceCommit": "23e20ba603e1dff39af053467aba9ea4ee086507",
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41387164563",
+      "status": "failed",
+      "completedKinds": [
+        "registry",
+        "format",
+        "build",
+        "consumer-browser",
+        "types",
+        "core"
+      ],
+      "failure": "coverage: original __proto__ extension CSS variable assertion expected 7px, got undefined",
+      "runtime": {
+        "files": 797,
+        "filesPassed": 796,
+        "tests": 17446,
+        "testsPassed": 17445
+      },
+      "formalVisuals": "not-run",
+      "remainingChecks": "not-run"
+    }
+  ]
 }
