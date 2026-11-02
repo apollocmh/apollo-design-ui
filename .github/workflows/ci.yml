@@ -21,7 +21,11 @@ env:
 
 jobs:
   probe:
-    runs-on: macos-15-intel
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15-intel, ubuntu-24.04]
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
@@ -33,9 +37,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/apollo-motion-probe"
-          defaults write -g AppleShowScrollBars -string WhenScrolling
-          defaults write -g AppleLanguages -array zh-Hans-CN
-          defaults write -g AppleLocale -string zh_CN
+          if [ "$RUNNER_OS" = macOS ]; then
+            defaults write -g AppleShowScrollBars -string WhenScrolling
+            defaults write -g AppleLanguages -array zh-Hans-CN
+            defaults write -g AppleLocale -string zh_CN
+          fi
           git fetch --no-tags --depth=1 origin "$MOTION_SOURCE_COMMIT" "$SDK_SOURCE_COMMIT"
       - name: Download the original SDK archive without building
         uses: actions/download-artifact@v8
@@ -77,14 +83,20 @@ jobs:
           CHROME_VERSION: '150.0.7871.125'
         run: |
           set -euo pipefail
-          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-motion-chrome.zip"
-          ditto -x -k "$RUNNER_TEMP/apollo-motion-chrome.zip" "$RUNNER_TEMP/apollo-motion-chrome"
-          apollo_chrome_binary="$RUNNER_TEMP/apollo-motion-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          if [ "$RUNNER_OS" = macOS ]; then
+            curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-motion-chrome.zip"
+            ditto -x -k "$RUNNER_TEMP/apollo-motion-chrome.zip" "$RUNNER_TEMP/apollo-motion-chrome"
+            apollo_chrome_binary="$RUNNER_TEMP/apollo-motion-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          else
+            curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chrome-linux64.zip" --output "$RUNNER_TEMP/apollo-motion-chrome.zip"
+            unzip -q "$RUNNER_TEMP/apollo-motion-chrome.zip" -d "$RUNNER_TEMP/apollo-motion-chrome"
+            apollo_chrome_binary="$RUNNER_TEMP/apollo-motion-chrome/chrome-linux64/chrome"
+          fi
           "$apollo_chrome_binary" --version | grep -F "$CHROME_VERSION"
           printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
       - name: Verify launch arguments without changing default consumers
         run: node --test tests/tooling/chrome-launch.test.mjs tests/tooling/motion-sampling.test.mjs
-      - name: Compare native display callbacks and the Chromium timer with identical capture code
+      - name: Compare operating systems with identical current capture code and Chrome version
         env:
           APOLLO_CHROME_EXECUTABLE: ${{ steps.canonical.outputs.executable }}
         run: |
@@ -101,14 +113,11 @@ jobs:
           const evidence = 'docs/audit/evidence/review-002-motion.json';
           const candidate = fs.readFileSync(runner);
           const originalEvidence = fs.readFileSync(evidence);
-          const baseline = candidate;
-          const timerCandidate = Buffer.from(candidate.toString().replace('await launchBrowser();', 'await launchBrowser({ args: ["--enable-features=CDPScreenshotNewSurface,ForceMacVSyncTimerForDebugging"] });'));
-          assert.notEqual(timerCandidate.toString(), candidate.toString());
           const hash = data => createHash('sha256').update(data).digest('hex');
-          const host = () => ({ generatedAt: new Date().toISOString(), platform: process.platform, arch: process.arch, osRelease: os.release(), osVersion: execFileSync('sw_vers', ['-productVersion'], { encoding: 'utf8' }).trim(), osBuild: execFileSync('sw_vers', ['-buildVersion'], { encoding: 'utf8' }).trim(), cpuModels: [...new Set(os.cpus().map(cpu => cpu.model))], logicalCpuCount: os.cpus().length, totalMemory: os.totalmem(), freeMemory: os.freemem(), loadAverage: os.loadavg(), nodeVersion: process.version, nodeExecutable: process.execPath });
+          const host = () => ({ generatedAt: new Date().toISOString(), platform: process.platform, arch: process.arch, osRelease: os.release(), osVersion: process.platform === 'darwin' ? execFileSync('sw_vers', ['-productVersion'], { encoding: 'utf8' }).trim() : os.release(), osBuild: process.platform === 'darwin' ? execFileSync('sw_vers', ['-buildVersion'], { encoding: 'utf8' }).trim() : null, cpuModels: [...new Set(os.cpus().map(cpu => cpu.model))], logicalCpuCount: os.cpus().length, totalMemory: os.totalmem(), freeMemory: os.freemem(), loadAverage: os.loadavg(), nodeVersion: process.version, nodeExecutable: process.execPath });
           const metadata = { before: host(), canonicalExecutable: process.env.APOLLO_CHROME_EXECUTABLE, canonicalVersion: execFileSync(process.env.APOLLO_CHROME_EXECUTABLE, ['--version'], { encoding: 'utf8' }).trim(), runs: [] };
           fs.writeFileSync(`${directory}/host.json`, `${JSON.stringify(metadata, null, 2)}\n`);
-          const plans = [{ name: 'baseline-cft150-native-display', source: baseline, canonical: true, timer: false, expectedMajor: '150.0.7871.125' }, { name: 'candidate-cft150-native-timer', source: timerCandidate, canonical: true, timer: true, expectedMajor: '150.0.7871.125' }];
+          const plans = [{ name: `native-${process.platform}-cft150`, source: candidate, canonical: true, timer: false, expectedMajor: '150.0.7871.125' }];
           try {
             for (const plan of plans) {
               fs.writeFileSync(runner, plan.source);
@@ -151,15 +160,14 @@ jobs:
             fs.writeFileSync(runner, candidate);
             fs.writeFileSync(evidence, originalEvidence);
           }
-          assert.equal(metadata.runs.length, 2);
-          assert.deepEqual(metadata.runs[1].checkNames, metadata.runs[0].checkNames, 'Both runs must retain the same 60 assertion names and order');
+          assert.equal(metadata.runs.length, 1);
           for (const record of metadata.runs) {
             assert.equal(record.checkCount, 60, `${record.name} must finish all checks`);
             assert.equal(record.signal, null, `${record.name} must exit normally`);
             assert.equal(record.actualExecutablePath, process.env.APOLLO_CHROME_EXECUTABLE);
             assert.equal(record.browserVersion, '150.0.7871.125');
           }
-          assert.ok(metadata.runs[1].passed, JSON.stringify(metadata.runs.map(({ name, passed, exitCode, signal, browserVersion, actualExecutablePath, checkCount, failures }) => ({ name, passed, exitCode, signal, browserVersion, actualExecutablePath, checkCount, failures })), null, 2));
+          assert.ok(metadata.runs[0].passed, JSON.stringify(metadata.runs.map(({ name, passed, exitCode, signal, browserVersion, actualExecutablePath, checkCount, failures }) => ({ name, passed, exitCode, signal, browserVersion, actualExecutablePath, checkCount, failures })), null, 2));
           NODE
       - name: Verify SDK and source after both runs, including a failed comparison
         if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
@@ -180,7 +188,7 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: v018-motion-probe-${{ github.sha }}
+          name: v018-motion-probe-${{ github.sha }}-${{ matrix.runner }}
           path: ${{ runner.temp }}/apollo-motion-probe/
           if-no-files-found: error
           retention-days: 14
@@ -197,7 +205,7 @@ jobs:
         if: ${{ always() && steps.upload_primary.outcome == 'failure' }}
         uses: actions/upload-artifact@v7
         with:
-          name: v018-motion-probe-${{ github.sha }}-upload-retry-1
+          name: v018-motion-probe-${{ github.sha }}-${{ matrix.runner }}-upload-retry-1
           path: ${{ runner.temp }}/apollo-motion-probe/
           if-no-files-found: error
           retention-days: 14
