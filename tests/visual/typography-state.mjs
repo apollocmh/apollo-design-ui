@@ -34,7 +34,37 @@ export async function prepareTypographyVisual(page, variant) {
         n.focus();
       });
     await page.mouse.move(0, 0);
-    await tooltip.waitFor({ state: 'hidden' });
+    try {
+      await tooltip.waitFor({ state: 'hidden' });
+    } catch (error) {
+      const diagnostics = await page
+        .evaluate(() => {
+          const describe = (element) =>
+            element
+              ? {
+                  tag: element.tagName,
+                  id: element.id,
+                  class: element.getAttribute('class'),
+                  text: element.textContent?.slice(0, 120),
+                  hover: element.matches(':hover'),
+                  rect: element.getBoundingClientRect().toJSON(),
+                }
+              : null;
+          const tooltip = document.querySelector('[role="tooltip"]');
+          return {
+            date: Date.now(),
+            performance: performance.now(),
+            documentHasFocus: document.hasFocus(),
+            activeElement: describe(document.activeElement),
+            copy: describe(document.querySelector('.apollo-typography-copy')),
+            tooltip: describe(tooltip),
+            popup: describe(tooltip?.closest('.apollo-tooltip')),
+          };
+        })
+        .catch((diagnosticError) => ({ diagnosticError: diagnosticError.message }));
+      console.error('Typography copy Tooltip failed to close:', JSON.stringify(diagnostics));
+      throw error;
+    }
   }
   if (variant === 'current-provider') {
     const input = stage.locator('#typography-provider-draft');

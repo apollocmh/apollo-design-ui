@@ -239,9 +239,11 @@ async function main() {
         values.candidate ? CANDIDATES : path.join(HERE, 'snapshots/apollo'),
         item.id,
       );
+      const timedCopyFeedback = item.component === 'typography' && item.variant === 'copy-feedback';
       const { context, page } = await newStablePage(browser, {
         width: item.width,
         height: item.height,
+        freezeTime: !timedCopyFeedback,
       });
       // BorderBeam 在 reduced-motion 下按契约隐藏装饰；此场景验证正常模式的静态流光。
       // 通用稳定化仍禁用动画并固定 offset-distance 的初始帧。
@@ -259,8 +261,6 @@ async function main() {
           variant: item.variant,
           theme: item.theme,
         });
-        const timedCopyFeedback =
-          item.component === 'typography' && item.variant === 'copy-feedback';
         if (timedCopyFeedback) await page.clock.install({ time: new Date('2026-09-18T00:00:00Z') });
         await page.goto(`http://127.0.0.1:${server.address().port}/vue/vue.html?${query}`, {
           waitUntil: 'load',

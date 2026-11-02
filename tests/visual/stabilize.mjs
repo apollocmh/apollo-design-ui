@@ -38,13 +38,15 @@ const HIDE_FOCUS_CSS = ':focus { outline: none !important; }';
 export const STABILIZE_CSS = `${STABLE_RENDER_CSS}\n${HIDE_FOCUS_CSS}`;
 
 /** 稳定化 initScript：固定随机源与时间，保证两次渲染完全一致。 */
-export const STABILIZE_INIT = () => {
+export const STABILIZE_INIT = ({ freezeTime = true } = {}) => {
   // 固定 Math.random（antd 与我们的实现都可能用它生成 id）
   let seed = 20260918;
   Math.random = () => {
     seed = (seed * 1103515245 + 12345) & 0x7fffffff;
     return seed / 0x7fffffff;
   };
+  // Timed interaction scenes let Playwright own Date and timers together.
+  if (!freezeTime) return;
   // 固定时间：任何依赖 Date 的渲染（如相对时间）都得到确定结果。
   // 重新赋值全局 Date 是 init script 的合法做法（脚本作用域即页面 window，不是 Node 全局）。
   const FIXED = new Date('2026-09-18T00:00:00Z').getTime();
@@ -101,7 +103,7 @@ export async function launchBrowser() {
  * 创建一个已稳定的页面。
  * 固定 viewport / deviceScaleFactor / 时区 / locale / 配色方案。
  */
-export async function newStablePage(browser, { width, height }) {
+export async function newStablePage(browser, { width, height, freezeTime = true }) {
   const context = await browser.newContext({
     viewport: { width, height },
     deviceScaleFactor: 1, // DPR 必须固定，否则截图像素数不一致
@@ -114,7 +116,7 @@ export async function newStablePage(browser, { width, height }) {
   });
 
   const page = await context.newPage();
-  await page.addInitScript(STABILIZE_INIT);
+  await page.addInitScript(STABILIZE_INIT, { freezeTime });
   return { context, page };
 }
 
