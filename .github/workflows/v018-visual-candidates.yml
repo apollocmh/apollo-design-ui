@@ -1,0 +1,239 @@
+name: v0.1.8 visual candidates
+
+on:
+  push:
+    branches: [ci/v018-visual-candidates]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  producer:
+    name: One frozen SDK and Vue fixture
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: ./.github/actions/setup
+      - name: Prepare logs and canonical native preferences
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-candidate-logs"
+          defaults write -g AppleShowScrollBars -string WhenScrolling
+          defaults write -g AppleLanguages -array zh-Hans-CN
+          defaults write -g AppleLocale -string zh_CN
+      - name: Build and verify the SDK once
+        run: |
+          set -euo pipefail
+          node tests/build/run.mjs --strict 2>&1 | tee "$RUNNER_TEMP/apollo-candidate-logs/sdk-build.log"
+      - name: Build the Vue visual fixture once
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' 2>&1 | tee "$RUNNER_TEMP/apollo-candidate-logs/fixture-build.log"
+          import path from 'node:path';
+          import { buildSide } from './tests/visual/build.mjs';
+          await buildSide('vue', path.resolve('tests/visual/.artifacts/vue'));
+          NODE
+      - name: Freeze one source, one SDK and five balanced groups
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' 2>&1 | tee "$RUNNER_TEMP/apollo-candidate-logs/freeze.log"
+          import assert from 'node:assert/strict';
+          import { execFileSync } from 'node:child_process';
+          import { createHash } from 'node:crypto';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          import { buildCases } from './tests/visual/matrix.mjs';
+          const root = process.cwd();
+          const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+          assert.equal(sourceCommit, process.env.GITHUB_SHA);
+          assertFrozenSource(root, sourceCommit);
+          const cases = buildCases({ apollo: true });
+          assert.equal(cases.length, 1875);
+          const counts = new Map();
+          for (const item of cases) counts.set(item.component, (counts.get(item.component) ?? 0) + 1);
+          const groups = Array.from({ length: 5 }, (_, index) => ({ id: index + 1, count: 0, components: [] }));
+          for (const [name, count] of [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en'))) {
+            const group = [...groups].sort((a, b) => a.count - b.count || a.id - b.id)[0];
+            group.components.push(name);
+            group.count += count;
+          }
+          assert.deepEqual(groups.map(group => group.count), [375, 375, 375, 375, 375]);
+          const freeze = 'tests/visual/.artifacts/candidate-freeze';
+          fs.mkdirSync(freeze, { recursive: true });
+          const metadata = { sourceCommit, sdkDigest: artifactDigest(root), expectedCases: cases.length, groups };
+          fs.writeFileSync(`${freeze}/groups.json`, `${JSON.stringify(metadata, null, 2)}\n`);
+          const files = [];
+          const walk = directory => {
+            for (const item of fs.readdirSync(directory, { withFileTypes: true })) {
+              const file = path.join(directory, item.name);
+              if (item.isDirectory()) walk(file);
+              else files.push(file);
+            }
+          };
+          for (const item of fs.readdirSync('packages')) {
+            const directory = `packages/${item}/dist`;
+            if (fs.existsSync(directory)) walk(directory);
+          }
+          walk('tests/visual/.artifacts/vue');
+          files.push(`${freeze}/groups.json`);
+          const lines = files.sort().map(file => `${createHash('sha256').update(fs.readFileSync(file)).digest('hex')}  ${file}\n`);
+          fs.writeFileSync(`${freeze}/files.sha256`, lines.join(''));
+          console.log(JSON.stringify({ ...metadata, frozenFiles: files.length }, null, 2));
+          NODE
+          tar -czf "$RUNNER_TEMP/apollo-visual-frozen.tar.gz" packages/*/dist tests/visual/.artifacts/vue tests/visual/.artifacts/candidate-freeze
+          cd "$RUNNER_TEMP"
+          shasum -a 256 apollo-visual-frozen.tar.gz > apollo-visual-frozen.tar.gz.sha256
+      - name: Upload the sole frozen input archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: v018-visual-frozen-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/apollo-visual-frozen.tar.gz
+            ${{ runner.temp }}/apollo-visual-frozen.tar.gz.sha256
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
+      - name: Keep producer evidence even when a build fails
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: v018-visual-producer-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/apollo-candidate-logs/
+            tests/visual/.artifacts/candidate-freeze/
+          if-no-files-found: warn
+          retention-days: 14
+
+  renderer:
+    name: Candidates group ${{ matrix.group }} of 5
+    needs: producer
+    runs-on: macos-15-intel
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        group: [1, 2, 3, 4, 5]
+    env:
+      GROUP: ${{ matrix.group }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: ./.github/actions/setup
+      - name: Prepare logs and canonical native preferences
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-candidate-logs"
+          defaults write -g AppleShowScrollBars -string WhenScrolling
+          defaults write -g AppleLanguages -array zh-Hans-CN
+          defaults write -g AppleLocale -string zh_CN
+      - name: Download the same frozen input archive
+        uses: actions/download-artifact@v8
+        with:
+          name: v018-visual-frozen-${{ github.sha }}
+          path: ${{ runner.temp }}/apollo-visual-frozen
+      - name: Verify, restore and make the built inputs read-only
+        id: restore
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/apollo-visual-frozen"
+          shasum -a 256 -c apollo-visual-frozen.tar.gz.sha256
+          tar -xzf apollo-visual-frozen.tar.gz -C "$GITHUB_WORKSPACE"
+          cd "$GITHUB_WORKSPACE"
+          shasum -a 256 -c tests/visual/.artifacts/candidate-freeze/files.sha256 > "$RUNNER_TEMP/apollo-candidate-logs/input-checksums.log"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          const metadata = JSON.parse(fs.readFileSync('tests/visual/.artifacts/candidate-freeze/groups.json', 'utf8'));
+          assert.equal(metadata.sourceCommit, process.env.GITHUB_SHA);
+          assertFrozenSource(process.cwd(), metadata.sourceCommit);
+          assert.equal(artifactDigest(process.cwd()), metadata.sdkDigest);
+          NODE
+          chmod -R a-w packages/*/dist tests/visual/.artifacts/vue tests/visual/.artifacts/candidate-freeze
+      - name: Install the exact canonical Chrome for Testing
+        id: visual_chrome
+        env:
+          APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
+        run: |
+          set -euo pipefail
+          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
+          ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
+          apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
+          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
+      - name: Capture exactly the assigned 375 candidates without a rebuild
+        env:
+          APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' 2>&1 | tee "$RUNNER_TEMP/apollo-candidate-logs/capture.log"
+          import assert from 'node:assert/strict';
+          import { spawnSync } from 'node:child_process';
+          import fs from 'node:fs';
+          import { buildCases } from './tests/visual/matrix.mjs';
+          const metadata = JSON.parse(fs.readFileSync('tests/visual/.artifacts/candidate-freeze/groups.json', 'utf8'));
+          const group = metadata.groups.find(group => group.id === Number(process.env.GROUP));
+          assert.ok(group);
+          const expected = buildCases({ apollo: true }).filter(item => group.components.includes(item.component)).map(item => item.id).sort();
+          assert.equal(group.count, 375);
+          assert.equal(expected.length, group.count);
+          const directory = `tests/visual/candidates/v018/group-${group.id}`;
+          const report = `tests/visual/report-v018-group-${group.id}.json`;
+          const args = ['tests/visual/apollo.mjs', '--candidate', '--no-build', '--candidate-dir', directory, '--report-file', report, ...group.components.flatMap(name => ['--component', name])];
+          const started = performance.now();
+          const result = spawnSync(process.execPath, args, { stdio: 'inherit', env: process.env });
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/apollo-candidate-logs/capture-status.json`, `${JSON.stringify({ sourceCommit: metadata.sourceCommit, sdkDigest: metadata.sdkDigest, group, command: [process.execPath, ...args], exitCode: result.status, signal: result.signal, durationMs: Math.round(performance.now() - started) }, null, 2)}\n`);
+          if (result.error) throw result.error;
+          assert.equal(result.signal, null);
+          assert.equal(result.status, 0);
+          const manifest = JSON.parse(fs.readFileSync(`${directory}/manifest.json`, 'utf8'));
+          const summary = JSON.parse(fs.readFileSync(report, 'utf8'));
+          assert.equal(manifest.complete, true);
+          assert.deepEqual(Object.keys(manifest.entries).sort(), expected);
+          assert.equal(summary.expected, group.count);
+          assert.deepEqual(summary.results.map(item => item.id).sort(), expected);
+          assert.ok(summary.results.every(item => item.verdict === 'CANDIDATE'));
+          assert.ok(Object.values(manifest.entries).every(item => item.sourceCommit === metadata.sourceCommit && item.dirty === false));
+          NODE
+      - name: Verify that capture left the frozen inputs unchanged
+        if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          shasum -a 256 -c tests/visual/.artifacts/candidate-freeze/files.sha256 > "$RUNNER_TEMP/apollo-candidate-logs/input-checksums-after.log"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          const metadata = JSON.parse(fs.readFileSync('tests/visual/.artifacts/candidate-freeze/groups.json', 'utf8'));
+          assertFrozenSource(process.cwd(), metadata.sourceCommit);
+          assert.equal(artifactDigest(process.cwd()), metadata.sdkDigest);
+          NODE
+      - name: Keep this group's candidates, provenance, reports and failures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: v018-visual-candidates-${{ github.sha }}-group-${{ matrix.group }}
+          path: |
+            tests/visual/candidates/v018/group-${{ matrix.group }}/
+            tests/visual/report-v018-group-${{ matrix.group }}.json
+            tests/visual/.artifacts/candidate-freeze/
+            ${{ runner.temp }}/apollo-candidate-logs/
+          compression-level: 0
+          if-no-files-found: warn
+          retention-days: 14
