@@ -8,7 +8,7 @@
  * 运行：
  *   DOCS_URL=http://127.0.0.1:4477/apollo-design-ui node packages/docs/tests/menu-browser.mjs
  */
-import { chromium } from 'playwright';
+import { launchBrowser } from '../../../tests/visual/stabilize.mjs';
 
 const BASE = process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui';
 const results = [];
@@ -20,7 +20,7 @@ const check = (name, ok, detail = '') => {
 const demo = (id) => `.demo-renderer[data-demo="menu-${id}"]`;
 const near = (a, b, tolerance = 3) => Math.abs(a - b) <= tolerance;
 
-const browser = await chromium.launch();
+const { browser } = await launchBrowser();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 page.setDefaultTimeout(20000);
 const consoleErrors = [];
@@ -39,12 +39,43 @@ async function hoverTitle(scope, index = 0) {
   // 屏外示例尚未挂载，先激活卡片，再定位其菜单内容。
   await page.locator(scope).scrollIntoViewIfNeeded();
   const title = page.locator(`${scope} .apollo-menu-submenu-title`).nth(index);
-  await title.scrollIntoViewIfNeeded();
-  const box = await title.boundingBox();
-  if (!box) throw new Error(`找不到 ${scope} 的第 ${index} 个 submenu title`);
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 5 });
-  await page.waitForTimeout(250);
+  // hover 的 actionability 等待真实标题布局稳定，避免懒挂载/滚动锚定后的旧坐标。
+  await title.hover();
   return { title, controls: await title.getAttribute('aria-controls') };
+}
+
+async function waitForPopupLayout(title, popup) {
+  const state = await page.evaluateHandle(
+    ({ title, popup }) => ({ title, popup, previous: null }),
+    { title: await title.elementHandle(), popup: await popup.elementHandle() },
+  );
+  try {
+    await page.waitForFunction((state) => {
+      const { title, popup } = state;
+      if (
+        !title.isConnected ||
+        !popup.isConnected ||
+        title.getAttribute('aria-expanded') !== 'true' ||
+        /apollo-(?:zoom-big|slide-up)-(?:appear|enter|leave)(?:\s|-|$)/.test(popup.className) ||
+        popup
+          .getAnimations()
+          .some((animation) => animation.playState === 'running' || animation.pending)
+      ) {
+        state.previous = null;
+        return false;
+      }
+      const popupRect = popup.getBoundingClientRect();
+      const current =
+        popupRect.width && popupRect.height
+          ? JSON.stringify([title.getBoundingClientRect().toJSON(), popupRect.toJSON(), scrollY])
+          : null;
+      const stable = current !== null && current === state.previous;
+      state.previous = current;
+      return stable;
+    }, state);
+  } finally {
+    await state.dispose();
+  }
 }
 
 // Read both rectangles in one layout snapshot after hover/lazy Demo updates.
@@ -57,6 +88,64 @@ async function popupGeometry(title, popup) {
     }),
     await popup.elementHandle(),
   );
+}
+
+const popupContainsPoint = (popup, point) =>
+  popup.evaluate(
+    (node, { x, y }) => node.contains(node.ownerDocument.elementFromPoint(x, y)),
+    point,
+  );
+
+async function observeExpansionDuring(title, action) {
+  const observation = await title.evaluateHandle((title) => {
+    let stayedOpen = title.getAttribute('aria-expanded') === 'true';
+    const inspect = (records) => {
+      // oldValue 捕获同一批次内 false → true，最终值不能抹掉中途关闭。
+      if (
+        title.getAttribute('aria-expanded') !== 'true' ||
+        records.some((record) => record.oldValue === 'false')
+      ) {
+        stayedOpen = false;
+      }
+    };
+    const observer = new MutationObserver(inspect);
+    observer.observe(title, {
+      attributes: true,
+      attributeFilter: ['aria-expanded'],
+      attributeOldValue: true,
+    });
+    return () => {
+      inspect(observer.takeRecords());
+      observer.disconnect();
+      return stayedOpen;
+    };
+  });
+  let result;
+  let stayedOpen;
+  try {
+    result = await action();
+  } finally {
+    stayedOpen = await observation.evaluate((stop) => stop());
+    await observation.dispose();
+  }
+  return { result, stayedOpen };
+}
+
+async function moveIntoVerticalPopup(popup, geometry) {
+  const sharedTop = Math.max(geometry.title.top, geometry.popup.top);
+  const sharedBottom = Math.min(geometry.title.bottom, geometry.popup.bottom);
+  if (sharedBottom <= sharedTop)
+    throw new Error(`标题与垂直弹层没有可移入的共同边界：${JSON.stringify(geometry)}`);
+  const y = (sharedTop + sharedBottom) / 2;
+  // 先留在当前标题内横移，再跨过相邻边界；直奔弹层中心会先 hover 到兄弟标题。
+  await page.mouse.move(geometry.title.right - 4, y, { steps: 4 });
+  await page.mouse.move(geometry.popup.left + 16, y, { steps: 4 });
+  const point = {
+    x: geometry.popup.x + geometry.popup.width / 2,
+    y: geometry.popup.y + geometry.popup.height / 2,
+  };
+  await page.mouse.move(point.x, point.y, { steps: 4 });
+  return popupContainsPoint(popup, point);
 }
 
 try {
@@ -105,6 +194,7 @@ try {
   const horizontalPopup = page.locator(
     `.apollo-menu-submenu-popup:has(ul[id="${horizontalHover.controls}"])`,
   );
+  await waitForPopupLayout(horizontalHover.title, horizontalPopup);
   const {
     title: hTitleBox,
     popup: hPopupBox,
@@ -169,20 +259,24 @@ try {
   const verticalPopup = page.locator(
     `.apollo-menu-submenu-popup:has(ul[id="${verticalHover.controls}"])`,
   );
-  const { popup: initialPopupBox } = await popupGeometry(verticalHover.title, verticalPopup);
+  await waitForPopupLayout(verticalHover.title, verticalPopup);
+  const initialGeometry = await popupGeometry(verticalHover.title, verticalPopup);
+  const initialPopupBox = initialGeometry.popup;
   check('M-06 垂直弹层存在', initialPopupBox !== null);
   // Demo 默认已打开，首次可能保留近视口边缘时的合法翻转；rightTop 在下方新会话验证。
-  await page.mouse.move(
-    initialPopupBox.x + initialPopupBox.width / 2,
-    initialPopupBox.y + initialPopupBox.height / 2,
-    {
-      steps: 8,
+  const { result: enteredPopup, stayedOpen: stayedOpenEntering } = await observeExpansionDuring(
+    verticalHover.title,
+    async () => {
+      const enteredPopup = await moveIntoVerticalPopup(verticalPopup, initialGeometry);
+      await page.waitForTimeout(250);
+      return enteredPopup;
     },
   );
-  await page.waitForTimeout(250);
   check(
     'M-03/M-06 移入弹层后保持展开',
-    (await verticalHover.title.getAttribute('aria-expanded')) === 'true',
+    enteredPopup &&
+      stayedOpenEntering &&
+      (await verticalHover.title.getAttribute('aria-expanded')) === 'true',
   );
   await page.mouse.move(5, 5);
   await page.waitForTimeout(150);
@@ -201,6 +295,7 @@ try {
   );
   // 重开
   const reopenedHover = await hoverTitle(`${demo('vertical')}`, 0);
+  await waitForPopupLayout(reopenedHover.title, verticalPopup);
   check('M-07 离场后可再次打开', (await verticalPopup.count()) === 1);
   const {
     title: vTitleBox,
@@ -225,14 +320,22 @@ try {
     const up = Math.min(120, scrollY);
     return { y: scrollY, max, delta: down >= up ? down : -up };
   });
-  // mouse.move 不会像 locator.hover 那样自动滚动页面；指针保留在前后弹层的交集内。
-  await page.mouse.move(
-    vPopupBox.x + 10,
-    vPopupBox.y + (scrollPlan.delta > 0 ? 10 : vPopupBox.height - 10),
-  );
+  // 入场缩放会改变 bbox，必须在完成后求前后弹层的交集，才能验证滚动保活。
+  const sharedTop = Math.max(vPopupBox.top, vPopupBox.top - scrollPlan.delta);
+  const sharedBottom = Math.min(vPopupBox.bottom, vPopupBox.bottom - scrollPlan.delta);
+  if (sharedBottom - sharedTop <= 16) throw new Error('滚动前后弹层没有足够的指针交集');
+  const scrollPointer = { x: vPopupBox.x + 16, y: (sharedTop + sharedBottom) / 2 };
+  await moveIntoVerticalPopup(verticalPopup, { title: vTitleBox, popup: vPopupBox });
+  await page.mouse.move(scrollPointer.x, scrollPointer.y, { steps: 4 });
+  const insideBeforeScroll = await popupContainsPoint(verticalPopup, scrollPointer);
   const beforeScroll = await popupGeometry(reopenedHover.title, verticalPopup);
-  await page.evaluate((top) => window.scrollBy({ top, behavior: 'instant' }), scrollPlan.delta);
-  await page.waitForTimeout(200);
+  const { stayedOpen: stayedOpenScrolling } = await observeExpansionDuring(
+    reopenedHover.title,
+    async () => {
+      await page.evaluate((top) => window.scrollBy({ top, behavior: 'instant' }), scrollPlan.delta);
+      await waitForPopupLayout(reopenedHover.title, verticalPopup);
+    },
+  );
   const afterScroll = await popupGeometry(reopenedHover.title, verticalPopup);
   const afterScrollY = await page.evaluate(() => scrollY);
   const stillOpen = (await reopenedHover.title.getAttribute('aria-expanded')) === 'true';
@@ -240,6 +343,9 @@ try {
     'M-06 滚动后弹层跟随标题',
     Math.abs(afterScrollY - scrollPlan.y) > 5 &&
       stillOpen &&
+      stayedOpenScrolling &&
+      insideBeforeScroll &&
+      (await popupContainsPoint(verticalPopup, scrollPointer)) &&
       beforeScroll.title &&
       beforeScroll.popup &&
       afterScroll.title &&
@@ -257,6 +363,8 @@ try {
       scrollPlan,
       afterScrollY,
       stillOpen,
+      stayedOpenScrolling,
+      scrollPointer,
       before: beforeScroll,
       after: afterScroll,
     }),

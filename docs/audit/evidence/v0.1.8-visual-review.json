@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "0.1.8",
-  "stage": "reviewed-baselines-header-contrast-fixed-final-freeze-pending",
+  "stage": "formal-visual-pass-on-d6db136a-final-source-acceptance-pending",
   "expectedScenes": 1875,
   "candidateSources": [
     "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
@@ -1752,7 +1752,7 @@
     "proved": "Conflicting Date and Playwright clock initialization can cause pauseAt in the past; single owner verified.",
     "originalTooltipTimeout": "Precise causality remains unproven. Original failure retained; no assertion removed, no forced close or automatic scene retries."
   },
-  "finalAcceptance": "pending-final-source-with-header-contrast-fix",
+  "finalAcceptance": "pending-source-with-menu-driver-correction",
   "finalAcceptanceAttempts": [
     {
       "runId": 41387164563,
@@ -1801,6 +1801,35 @@
       },
       "formalVisuals": "not-run",
       "remainingChecks": "not-run"
+    },
+    {
+      "runId": 41401368824,
+      "sourceCommit": "d6db136aae91484233e1438dde7e46b41b34d6f7",
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41401368824",
+      "status": "failed",
+      "passedChecks": 13,
+      "failedCheck": "docs-browser",
+      "runtime": {
+        "files": 797,
+        "tests": 17449,
+        "passed": 17449,
+        "durationSeconds": 2047.9
+      },
+      "coverage": {
+        "statements": 92.1,
+        "branches": 83.84,
+        "functions": 91.84,
+        "lines": 93.06
+      },
+      "formalVisuals": {
+        "passed": 1875,
+        "pending": 0
+      },
+      "failure": "Menu browser 26/28: pointer entry persistence and scroll-follow persistence",
+      "unexecutedBrowserGroups": [
+        "notification-motion",
+        "motion-review"
+      ]
     }
   ],
   "motionHydrationTestFix": {
@@ -1826,5 +1855,29 @@
     "status": "success",
     "onlineBehaviorChecks": 20,
     "versionTagCreated": false
+  },
+  "formalVisualComparison": {
+    "runId": 41401368824,
+    "sourceCommit": "d6db136aae91484233e1438dde7e46b41b34d6f7",
+    "expected": 1875,
+    "results": 1875,
+    "passed": 1875,
+    "pending": 0,
+    "errors": [],
+    "artifactDigest": "4ec9cd6f334f2cb72c223e5e3d1b94f0a8a2530d50731b785311f0b85099b0f8",
+    "scope": "independent fresh comparison against reviewed baselines; full run still failed in Docs Menu browser"
+  },
+  "menuDriverFix": {
+    "productionChanged": false,
+    "retainedChecks": 28,
+    "controlledOldProbe": "CPU6x with read-only trajectory trace:27/28; original CI26/28 preserved",
+    "fixed": "28/28 both ordinary and CPU6x traced; final continuity assertions28/28; main integration28/28",
+    "change": "canonical Chrome, completed motion and two stable geometry frames, shared-boundary pointer path, actual hit tests and continuous aria-expanded observation",
+    "remainingBrowserGroups": {
+      "notificationMotion": 21,
+      "motionReview": 60,
+      "passed": true,
+      "limitation": "targeted current sources with unchanged producer UI/Motion CSS; not final full acceptance"
+    }
   }
 }

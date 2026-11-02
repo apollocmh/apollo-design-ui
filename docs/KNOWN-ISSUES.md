@@ -1,8 +1,8 @@
 # Apollo Design · 已知问题与支持限制
 
-核对日期：2026-11-01。数值层级修复与当前回归基于冻结源码 `9ea05180`；此前支持边界沿用仍适用的 `31a1eece` 定向证据。历史阶段状态、静态候选及构建警告分别保留原义。
+核对日期：2026-11-02。数值层级修复沿用冻结源码 `9ea05180`；未受后续改动影响的支持边界沿用 `31a1eece` 定向证据。`d6db136a` 已通过17449条运行时测试及1875项正式视觉比较；最新同一提交的完整验收仍待收口，不能据局部通过标记整库完成。
 
-[本轮收口记录](audit/2026-11-01-z-index-closeout.md) · [预算校准](audit/2026-11-01-issues-budget-calibration.md) · [唯一状态来源](../registry/vue-native-audit.json) · [原定向复核证据](audit/evidence/known-issues-review-2026-11-01.json) · [清理前全文归档](history/known-issues-2026-11-01.md)
+[v0.1.8 当前收口](audit/2026-11-02-v0.1.8-release.md) · [原冻结收口](audit/2026-11-01-z-index-closeout.md) · [预算校准](audit/2026-11-01-issues-budget-calibration.md) · [唯一状态来源](../registry/vue-native-audit.json) · [原定向复核证据](audit/evidence/known-issues-review-2026-11-01.json) · [清理前全文归档](history/known-issues-2026-11-01.md)
 
 ## 支持限制
 
@@ -15,7 +15,7 @@
 | 额外源模板检查：Tag | 同一额外配置下，[CheckableTagGroup.vue](../packages/ui/src/tag/CheckableTagGroup.vue#L87) 的 `aria-label` 仍有 TS2353；[CheckableTag.ts](../packages/ui/src/tag/CheckableTag.ts#L73) 实际将 attrs 合入原生 span，当前证据是组件边界类型诊断，不是已复现的 DOM 标签丢失。四个真实入口及 21 个传递 SFC 检查 exit 2，仅剩这两条诊断；ColorHexInput / PanelPicker 独立额外检查已通过。详见[类型复核](audit/evidence/known-issues-review-2026-11-01.json)。 |
 | 自定义前缀 CSS | `prefixCls` 的 DOM 更新不自动生成任意前缀 CSS。消费者须预生成/加载配套静态 CSS；`cssVarPrefix` 同样需要配套样式。[架构约定](../ARCHITECTURE.md)、[配置文档与真实示例](../packages/ui/src/config-provider/index.zh-CN.md)。这不是待裁决的运行时 CSS-in-JS 方案。 |
 | F11 静态来源索引 | [当前来源 JSON](audit/evidence/content-slot-inventory.json)已重新生成；[旧快照](history/content-slot-inventory-before-2026-11-01.json)保留。工具只覆盖特定 interface / 同名线索，不能充分覆盖 Slots 类型别名、内联 props 和动态消费；`review` 是候选，`implemented-verified` 是历史字段报告索引，均不是当前缺陷数或剩余任务数。 |
-| Docs 资产与示例范围 | `9ea05180` 构建成功；当前 app 最大 JS chunk 2,404,376 B、cascader 3,849,741 B，仅属构建体积观察，尚无完整首屏网络、CPU 或 LCP 测量。`menu/demo/component-token.md` 缺可选 `order`，当前按名称排序并给出内容警告，非运行失败。debug / 外部服务示例按声明场景判断；详情及原记录见[复核证据](audit/evidence/known-issues-review-2026-11-01.json)。 |
+| Docs 资产与示例范围 | 旧冻结 `9ea05180` 构建成功；当时 app 最大 JS chunk 2,404,376 B、cascader 3,849,741 B，仅属构建体积观察，尚无完整首屏网络、CPU 或 LCP 测量。`menu/demo/component-token.md` 缺可选 `order`，当前按名称排序并给出内容警告，非运行失败。debug / 外部服务示例按声明场景判断；详情及原记录见[复核证据](audit/evidence/known-issues-review-2026-11-01.json)。 |
 
 ## 待核实
 
@@ -24,13 +24,9 @@
 | 代码高亮跨初始化差异 | [旧实验](audit/2026-10-24-demo-order-remediation.md)只有跨初始化状态的 token 分段线索；同初始化输出已相等。[当前高亮器](../packages/docs/tooling/content/markdown.mjs#L39)与构建/冒烟通过，均不等于已验证跨进程确定性。尚无当前用户可见错误复现，不先更换高亮器或归为功能缺陷。 |
 | List 拖拽示例能力覆盖 | [当前文档](../packages/ui/src/list/index.zh-CN.md#L32)仍明确该示例待审；未承诺 List 内建拖拽排序能力。本轮未做完整示例能力矩阵，不能把历史文件差额或示例待审等同于缺少组件功能。 |
 
-## 远端验收阻塞
-
-| 项目 | 已确认事实与剩余检查 |
-| --- | --- |
-| CI 视觉环境一致性 | `v0.1.7` 本地完整视觉 1875 项通过，远端仍未通过。[六例对照 41322884353](https://github.com/apollocmh/apollo-design-ui/actions/runs/41322884353)实际确认：原环境 0/6 通过；设为叠加滚动条后消除 15px 尺寸差，4/6 通过，该设置已纳入后续 CI。再匹配中文区域仍为 4/6，Affix 文字的 26 个像素及 Watermark 多行文字仍被原比较器判 FAIL；两例真实看图及同条件探针确认原生字形/Canvas 度量差异，可限定归类 PLATFORM，不能扩展到未跑完的全矩阵。使用旧配置的完整运行已主动停止，未更换基线、接受差异或放宽阈值。完整结果见[环境证据](audit/evidence/visual-environment-2026-11-01.json)及[收口记录](audit/2026-11-01-z-index-closeout.md)。 |
-
 ## 历史追溯与验收
+
+macOS15固定原生环境的1875项正式比较已在[运行41401368824](https://github.com/apollocmh/apollo-design-ui/actions/runs/41401368824)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。该运行最后在Docs Menu两项浏览器交互失败；测试路径修正与Header可读性修复的定向验证见最新收口记录，最终完整验收仍须以其实际结果为准。
 
 已修复、重复及过期的逐组件阶段记录、旧计数、旧执行顺序和验收等待均迁入[清理前归档](history/known-issues-2026-11-01.md)，原审计报告和验收证据继续保留。F11 的来源文件漂移已刷新；额外模板检查中 ColorHexInput / PanelPicker 的旧诊断已由当前检查证伪，不保留为开放问题。
 
