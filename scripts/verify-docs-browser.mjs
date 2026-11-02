@@ -18,7 +18,13 @@ export const DOCS_BROWSER_SCRIPTS = [
 export function docsBrowserScriptsForFiles(files) {
   const selected = new Set();
   for (const file of files) {
-    if (['scripts/verify-docs-browser.mjs', 'tests/visual/stabilize.mjs'].includes(file))
+    if (
+      [
+        'scripts/verify-docs-browser.mjs',
+        'tests/visual/stabilize.mjs',
+        '.github/actions/browser/action.yml',
+      ].includes(file)
+    )
       for (const script of DOCS_BROWSER_SCRIPTS) selected.add(script);
     else if (DOCS_BROWSER_SCRIPTS.includes(file)) selected.add(file);
     else if (

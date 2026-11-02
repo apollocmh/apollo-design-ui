@@ -274,7 +274,11 @@ test('Docs browser changes and their shared tools select the affected real brows
       false,
     );
   }
-  for (const file of ['scripts/verify-docs-browser.mjs', 'tests/visual/stabilize.mjs']) {
+  for (const file of [
+    'scripts/verify-docs-browser.mjs',
+    'tests/visual/stabilize.mjs',
+    '.github/actions/browser/action.yml',
+  ]) {
     const plan = changedPlan(f.root, [file]);
     const browser = plan.checks.find((step) => step.kind === 'demo');
     assert.equal(browser.args.length, 7);
@@ -673,7 +677,7 @@ test('CI keeps scoped native preflight and aggregates independent readers of the
   const scoped = ci.jobs.architecture.steps.flatMap((step) => step.run ?? '').join('\n');
   assert.match(scoped, /verify-changed\.mjs/);
   assert.doesNotMatch(scoped, /verify-full\.mjs|test:coverage/);
-  assert.equal(ci.jobs.architecture['runs-on'], 'macos-15-intel');
+  assert.equal(ci.jobs.architecture['runs-on'], 'ubuntu-24.04');
   assert.ok(ci.jobs.architecture.steps.some((step) => step.uses === './.github/actions/browser'));
   const build = ci.jobs.acceptance_build.steps.filter((step) =>
     step.run?.includes('verify-full.mjs'),
@@ -682,7 +686,10 @@ test('CI keeps scoped native preflight and aggregates independent readers of the
   assert.match(build[0].run, /--layer build/);
   const readers = ci.jobs.acceptance_checks;
   assert.equal(readers.needs, 'acceptance_build');
-  assert.equal(readers['runs-on'], 'macos-15-intel');
+  assert.equal(
+    readers['runs-on'],
+    '$' + "{{ matrix.layer == 'docs' && 'ubuntu-24.04' || 'macos-15-intel' }}",
+  );
   assert.deepEqual(readers.strategy.matrix.layer, [
     'docs',
     'runtime',
@@ -748,7 +755,7 @@ test('CI keeps scoped native preflight and aggregates independent readers of the
   const docsCommands = docs.jobs.docs.steps.flatMap((step) => step.run ?? '').join('\n');
   assert.equal((docsCommands.match(/verify-docs\.mjs --build/g) ?? []).length, 1);
   assert.doesNotMatch(docsCommands, /build:docs|content:build/);
-  assert.equal(docs.jobs.docs['runs-on'], 'macos-15-intel');
+  assert.equal(docs.jobs.docs['runs-on'], 'ubuntu-24.04');
   assert.ok(docs.jobs.docs.steps.some((step) => step.uses === './.github/actions/browser'));
   for (const check of [
     'smoke-browser.mjs',

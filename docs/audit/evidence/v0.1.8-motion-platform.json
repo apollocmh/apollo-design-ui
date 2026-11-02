@@ -1,0 +1,938 @@
+{
+  "kind": "paired-real-motion-environment-diagnostic",
+  "finalAcceptance": false,
+  "workflowRun": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41470873868",
+  "sourceCommit": "0f42ca13d57587552a6fa590fb95b0ecdba5f988",
+  "productionMotionSourceCommit": "62de0b718df9241d015a29d57a17ba22deb2ae51",
+  "sdkSourceCommit": "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
+  "reuseBoundary": "Only frozen CSS is reused; the current UI/Motion source is compiled for the fixture. The sole production theme difference repairs own __proto__ inputs, absent from this fixture default CSS inputs. Both jobs verify the identical SDK digest and all source inputs before and after.",
+  "capture": "Identical runner bytes, locale zh-CN, timezone Asia/Shanghai, real clock, unmodified CSS durations, original 60 assertions and displacement threshold plus a stricter sampling-validity gate. No experimental frame flags.",
+  "results": [
+    {
+      "platform": "darwin",
+      "jobId": 125363791979,
+      "runnerSha256": "18cd170d47c041adeeb74a049029c5a47872f4685a89d5ee1d9d7b2b1f75bb33",
+      "sourceCommit": "0f42ca13d57587552a6fa590fb95b0ecdba5f988",
+      "sdkDigest": "223af05fc5ed73491a7d4b52a7c1413a89ba40f976c55f08a6d3288cef5b266e",
+      "browserVersion": "150.0.7871.125",
+      "browserArguments": [
+        "/Users/runner/work/_temp/apollo-motion-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+        "--disable-field-trial-config",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-back-forward-cache",
+        "--disable-breakpad",
+        "--disable-client-side-phishing-detection",
+        "--disable-component-extensions-with-background-pages",
+        "--disable-component-update",
+        "--no-default-browser-check",
+        "--disable-default-apps",
+        "--disable-dev-shm-usage",
+        "--disable-extensions",
+        "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints",
+        "--enable-features=CDPScreenshotNewSurface",
+        "--allow-pre-commit-input",
+        "--disable-hang-monitor",
+        "--disable-ipc-flooding-protection",
+        "--disable-popup-blocking",
+        "--disable-prompt-on-repost",
+        "--disable-renderer-backgrounding",
+        "--force-color-profile=srgb",
+        "--metrics-recording-only",
+        "--no-first-run",
+        "--password-store=basic",
+        "--use-mock-keychain",
+        "--no-service-autorun",
+        "--export-tagged-pdf",
+        "--disable-search-engine-choice-screen",
+        "--unsafely-disable-devtools-self-xss-warnings",
+        "--edge-skip-compat-layer-relaunch",
+        "--enable-automation",
+        "--disable-infobars",
+        "--disable-search-engine-choice-screen",
+        "--disable-sync",
+        "--enable-unsafe-swiftshader",
+        "--headless",
+        "--hide-scrollbars",
+        "--mute-audio",
+        "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+        "--no-sandbox",
+        "--user-data-dir=/var/folders/20/jp1_0n3n7kndh6rnbqb5344m0000gn/T/playwright_chromiumdev_profile-Bq3Uhn",
+        "--remote-debugging-pipe",
+        "--no-startup-window",
+        "--noerrdialogs",
+        "--flag-switches-begin",
+        "--flag-switches-end",
+        "--enable-unsafe-swiftshader"
+      ],
+      "passed": false,
+      "checks": 60,
+      "passedChecks": 34,
+      "productFailures": 0,
+      "invalidSamples": 26,
+      "notRun": 0,
+      "durationMs": 32472,
+      "rawReportSha256": "71edf16a47a04166042528955e2a9ebf8a1aaa5e20ef641784614b17a00e1d30",
+      "timing": {
+        "react.message": {
+          "frameCount": 21,
+          "sampleIntervalMs": {
+            "count": 20,
+            "median": 40.79999999998836,
+            "max": 70
+          },
+          "rafIntervalMs": {
+            "count": 20,
+            "median": 33.30000000000018,
+            "max": 66.69999999999982
+          },
+          "callbackDelayMs": {
+            "count": 21,
+            "median": 5.399999999965075,
+            "max": 15.90000000001146
+          },
+          "callbackDurationMs": {
+            "count": 21,
+            "median": 0.20000000001164153,
+            "max": 1.2999999999883585
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.9000000000232831,
+            "max": 0.9000000000232831
+          }
+        },
+        "react.notice": {
+          "frameCount": 22,
+          "sampleIntervalMs": {
+            "count": 21,
+            "median": 25.100000000034925,
+            "max": 80.59999999997672
+          },
+          "rafIntervalMs": {
+            "count": 21,
+            "median": 16.700000000000728,
+            "max": 66.69999999999982
+          },
+          "callbackDelayMs": {
+            "count": 22,
+            "median": 9.200000000011642,
+            "max": 17.999999999976353
+          },
+          "callbackDurationMs": {
+            "count": 22,
+            "median": 0.29999999998835847,
+            "max": 5.2000000000116415
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 3,
+            "max": 3
+          }
+        },
+        "react.menu.open": {
+          "frameCount": 24,
+          "sampleIntervalMs": {
+            "count": 23,
+            "median": 25.199999999953434,
+            "max": 71.20000000001164
+          },
+          "rafIntervalMs": {
+            "count": 23,
+            "median": 16.700000000000728,
+            "max": 66.59999999999945
+          },
+          "callbackDelayMs": {
+            "count": 24,
+            "median": 6.499999999988177,
+            "max": 15.499999999976353
+          },
+          "callbackDurationMs": {
+            "count": 24,
+            "median": 0.20000000001164153,
+            "max": 1
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 2.7999999999883585,
+            "max": 2.7999999999883585
+          }
+        },
+        "react.menu.close": {
+          "frameCount": 27,
+          "sampleIntervalMs": {
+            "count": 26,
+            "median": 20.20000000001164,
+            "max": 76.09999999997672
+          },
+          "rafIntervalMs": {
+            "count": 26,
+            "median": 16.699999999999818,
+            "max": 66.69999999999982
+          },
+          "callbackDelayMs": {
+            "count": 27,
+            "median": 5.899999999965075,
+            "max": 14.499999999988177
+          },
+          "callbackDurationMs": {
+            "count": 27,
+            "median": 0.5,
+            "max": 1.5
+          },
+          "mutationCallbackDurationMs": {
+            "count": 0,
+            "median": null,
+            "max": null
+          }
+        },
+        "react.menu.mode": {
+          "frameCount": 25,
+          "sampleIntervalMs": {
+            "count": 24,
+            "median": 30.29999999998836,
+            "max": 62
+          },
+          "rafIntervalMs": {
+            "count": 24,
+            "median": 33.29999999999927,
+            "max": 66.60000000000036
+          },
+          "callbackDelayMs": {
+            "count": 25,
+            "median": 6.999999999988177,
+            "max": 15.13799999999992
+          },
+          "callbackDurationMs": {
+            "count": 25,
+            "median": 0.09999999997671694,
+            "max": 1.2999999999883585
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.29999999998835847,
+            "max": 0.29999999998835847
+          }
+        },
+        "react.menu.inlineCollapsed": {
+          "frameCount": 27,
+          "sampleIntervalMs": {
+            "count": 26,
+            "median": 16.900000000023283,
+            "max": 80.39999999996508
+          },
+          "rafIntervalMs": {
+            "count": 26,
+            "median": 16.700000000000728,
+            "max": 66.60000000000036
+          },
+          "callbackDelayMs": {
+            "count": 27,
+            "median": 6.399999999965075,
+            "max": 14.799999999964712
+          },
+          "callbackDurationMs": {
+            "count": 27,
+            "median": 0,
+            "max": 0.7000000000116415
+          },
+          "mutationCallbackDurationMs": {
+            "count": 2,
+            "median": 0.1000000000349246,
+            "max": 0.1000000000349246
+          }
+        },
+        "react.menu.rapid": {
+          "frameCount": 32,
+          "sampleIntervalMs": {
+            "count": 31,
+            "median": 20.400000000023283,
+            "max": 85.09999999997672
+          },
+          "rafIntervalMs": {
+            "count": 31,
+            "median": 16.700000000000728,
+            "max": 83.30000000000109
+          },
+          "callbackDelayMs": {
+            "count": 32,
+            "median": 6.500000000010914,
+            "max": 15.699999999987995
+          },
+          "callbackDurationMs": {
+            "count": 32,
+            "median": 0.3999999999650754,
+            "max": 0.9000000000232831
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 1.5,
+            "max": 1.5
+          }
+        },
+        "vue.message": {
+          "frameCount": 22,
+          "sampleIntervalMs": {
+            "count": 21,
+            "median": 24,
+            "max": 74.40000000002328
+          },
+          "rafIntervalMs": {
+            "count": 21,
+            "median": 16.700000000000273,
+            "max": 66.70000000000027
+          },
+          "callbackDelayMs": {
+            "count": 22,
+            "median": 2.9999999999881766,
+            "max": 14.799999999999955
+          },
+          "callbackDurationMs": {
+            "count": 22,
+            "median": 0.20000000001164153,
+            "max": 0.6999999999534339
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.30000000004656613,
+            "max": 0.30000000004656613
+          }
+        },
+        "vue.notice": {
+          "frameCount": 32,
+          "sampleIntervalMs": {
+            "count": 31,
+            "median": 16.900000000023283,
+            "max": 60.59999999997672
+          },
+          "rafIntervalMs": {
+            "count": 31,
+            "median": 16.700000000000273,
+            "max": 50.100000000000364
+          },
+          "callbackDelayMs": {
+            "count": 32,
+            "median": 6.499999999976808,
+            "max": 23.199999999976626
+          },
+          "callbackDurationMs": {
+            "count": 32,
+            "median": 0.5,
+            "max": 15.200000000011642
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.29999999998835847,
+            "max": 0.29999999998835847
+          }
+        },
+        "vue.menu.open": {
+          "frameCount": 28,
+          "sampleIntervalMs": {
+            "count": 27,
+            "median": 17.79999999998836,
+            "max": 74.5
+          },
+          "rafIntervalMs": {
+            "count": 27,
+            "median": 16.699999999999818,
+            "max": 66.69999999999982
+          },
+          "callbackDelayMs": {
+            "count": 28,
+            "median": 2.400000000023283,
+            "max": 14.300000000000182
+          },
+          "callbackDurationMs": {
+            "count": 28,
+            "median": 0.29999999998835847,
+            "max": 2.2000000000116415
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 2.5,
+            "max": 2.5
+          }
+        },
+        "vue.menu.close": {
+          "frameCount": 27,
+          "sampleIntervalMs": {
+            "count": 26,
+            "median": 19.300000000046566,
+            "max": 72.79999999998836
+          },
+          "rafIntervalMs": {
+            "count": 26,
+            "median": 16.699999999999818,
+            "max": 66.69999999999982
+          },
+          "callbackDelayMs": {
+            "count": 27,
+            "median": 2.4999999999881766,
+            "max": 15.400000000023283
+          },
+          "callbackDurationMs": {
+            "count": 27,
+            "median": 0.19999999995343387,
+            "max": 1.2000000000116415
+          },
+          "mutationCallbackDurationMs": {
+            "count": 0,
+            "median": null,
+            "max": null
+          }
+        },
+        "vue.menu.mode": {
+          "frameCount": 19,
+          "sampleIntervalMs": {
+            "count": 18,
+            "median": 34.899999999965075,
+            "max": 71
+          },
+          "rafIntervalMs": {
+            "count": 18,
+            "median": 33.399999999999636,
+            "max": 66.70000000000073
+          },
+          "callbackDelayMs": {
+            "count": 19,
+            "median": 4.600000000011278,
+            "max": 18.1000000000231
+          },
+          "callbackDurationMs": {
+            "count": 19,
+            "median": 0.09999999997671694,
+            "max": 1
+          },
+          "mutationCallbackDurationMs": {
+            "count": 3,
+            "median": 0,
+            "max": 0.1000000000349246
+          }
+        },
+        "vue.menu.inlineCollapsed": {
+          "frameCount": 29,
+          "sampleIntervalMs": {
+            "count": 28,
+            "median": 18.400000000023283,
+            "max": 63.79999999998836
+          },
+          "rafIntervalMs": {
+            "count": 28,
+            "median": 16.700000000000728,
+            "max": 50
+          },
+          "callbackDelayMs": {
+            "count": 29,
+            "median": 8.799999999999272,
+            "max": 16.799999999999272
+          },
+          "callbackDurationMs": {
+            "count": 29,
+            "median": 0,
+            "max": 0.7999999999883585
+          },
+          "mutationCallbackDurationMs": {
+            "count": 3,
+            "median": 0,
+            "max": 0.1000000000349246
+          }
+        },
+        "vue.menu.rapid": {
+          "frameCount": 32,
+          "sampleIntervalMs": {
+            "count": 31,
+            "median": 25.20000000001164,
+            "max": 71.59999999997672
+          },
+          "rafIntervalMs": {
+            "count": 31,
+            "median": 16.700000000000728,
+            "max": 66.69999999999891
+          },
+          "callbackDelayMs": {
+            "count": 32,
+            "median": 2.099999999976717,
+            "max": 15.999999999976353
+          },
+          "callbackDurationMs": {
+            "count": 32,
+            "median": 0.3999999999650754,
+            "max": 1
+          },
+          "mutationCallbackDurationMs": {
+            "count": 0,
+            "median": null,
+            "max": null
+          }
+        }
+      }
+    },
+    {
+      "platform": "linux",
+      "jobId": 125363791506,
+      "runnerSha256": "18cd170d47c041adeeb74a049029c5a47872f4685a89d5ee1d9d7b2b1f75bb33",
+      "sourceCommit": "0f42ca13d57587552a6fa590fb95b0ecdba5f988",
+      "sdkDigest": "223af05fc5ed73491a7d4b52a7c1413a89ba40f976c55f08a6d3288cef5b266e",
+      "browserVersion": "150.0.7871.125",
+      "browserArguments": [
+        "/home/runner/work/_temp/apollo-motion-chrome/chrome-linux64/chrome",
+        "--disable-field-trial-config",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-back-forward-cache",
+        "--disable-breakpad",
+        "--disable-client-side-phishing-detection",
+        "--disable-component-extensions-with-background-pages",
+        "--disable-component-update",
+        "--no-default-browser-check",
+        "--disable-default-apps",
+        "--disable-dev-shm-usage",
+        "--disable-extensions",
+        "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints",
+        "--enable-features=CDPScreenshotNewSurface",
+        "--allow-pre-commit-input",
+        "--disable-hang-monitor",
+        "--disable-ipc-flooding-protection",
+        "--disable-popup-blocking",
+        "--disable-prompt-on-repost",
+        "--disable-renderer-backgrounding",
+        "--force-color-profile=srgb",
+        "--metrics-recording-only",
+        "--no-first-run",
+        "--password-store=basic",
+        "--use-mock-keychain",
+        "--no-service-autorun",
+        "--export-tagged-pdf",
+        "--disable-search-engine-choice-screen",
+        "--unsafely-disable-devtools-self-xss-warnings",
+        "--edge-skip-compat-layer-relaunch",
+        "--enable-automation",
+        "--disable-infobars",
+        "--disable-search-engine-choice-screen",
+        "--disable-sync",
+        "--enable-unsafe-swiftshader",
+        "--headless",
+        "--hide-scrollbars",
+        "--mute-audio",
+        "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+        "--no-sandbox",
+        "--user-data-dir=/tmp/playwright_chromiumdev_profile-OtFFln",
+        "--remote-debugging-pipe",
+        "--no-startup-window",
+        "--noerrdialogs",
+        "--ozone-platform=headless",
+        "--ozone-override-screen-size=800,600",
+        "--use-angle=swiftshader-webgl",
+        "--flag-switches-begin",
+        "--flag-switches-end",
+        "--enable-unsafe-swiftshader"
+      ],
+      "passed": true,
+      "checks": 60,
+      "passedChecks": 60,
+      "productFailures": 0,
+      "invalidSamples": 0,
+      "notRun": 0,
+      "durationMs": 20646,
+      "rawReportSha256": "88cf5811c2f98f3d3f1fbb2ca8b56044946f88bd379f72529a3659c325260b75",
+      "timing": {
+        "react.message": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.69999999999709,
+            "max": 17.099999999998545
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999932,
+            "max": 16.799999999999955
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.20000000000140972,
+            "max": 1.909999999997126
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0.09999999999854481,
+            "max": 0.5
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.39999999999417923,
+            "max": 0.39999999999417923
+          }
+        },
+        "react.notice": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.60000000000582,
+            "max": 16.900000000001455
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.700000000000273
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.1999999999998181,
+            "max": 13.900000000000091
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0.09999999999854481,
+            "max": 0.5
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.5999999999985448,
+            "max": 0.5999999999985448
+          }
+        },
+        "react.menu.open": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.69999999999709,
+            "max": 17
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.2000000000016371,
+            "max": 4.299999999998363
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0.09999999999854481,
+            "max": 0.5999999999985448
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 1.5999999999985448,
+            "max": 1.5999999999985448
+          }
+        },
+        "react.menu.close": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.69999999999709,
+            "max": 17
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.1999999999989086,
+            "max": 1.3339999999998327
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0.10000000000582077,
+            "max": 0.7000000000043656
+          },
+          "mutationCallbackDurationMs": {
+            "count": 0,
+            "median": null,
+            "max": null
+          }
+        },
+        "react.menu.mode": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.69999999999709,
+            "max": 17
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.19999999999708962,
+            "max": 13.937999999993735
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0,
+            "max": 0.6000000000058208
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0,
+            "max": 0
+          }
+        },
+        "react.menu.inlineCollapsed": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.69999999999709,
+            "max": 16.90000000000873
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.700000000000728
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.1999999999998181,
+            "max": 14.938000000000102
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0,
+            "max": 0.7000000000116415
+          },
+          "mutationCallbackDurationMs": {
+            "count": 2,
+            "median": 0.09999999999126885,
+            "max": 0.09999999999126885
+          }
+        },
+        "react.menu.rapid": {
+          "frameCount": 52,
+          "sampleIntervalMs": {
+            "count": 51,
+            "median": 16.69999999999709,
+            "max": 17
+          },
+          "rafIntervalMs": {
+            "count": 51,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 52,
+            "median": 0.29999999999381544,
+            "max": 3.0000000000027285
+          },
+          "callbackDurationMs": {
+            "count": 52,
+            "median": 0.10000000000582077,
+            "max": 0.5
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 1.5,
+            "max": 1.5
+          }
+        },
+        "vue.message": {
+          "frameCount": 40,
+          "sampleIntervalMs": {
+            "count": 39,
+            "median": 16.69999999999709,
+            "max": 17.40000000000873
+          },
+          "rafIntervalMs": {
+            "count": 39,
+            "median": 16.699999999999818,
+            "max": 16.799999999999955
+          },
+          "callbackDelayMs": {
+            "count": 40,
+            "median": 0.20000000000300133,
+            "max": 1.100000000002865
+          },
+          "callbackDurationMs": {
+            "count": 40,
+            "median": 0.10000000000582077,
+            "max": 0.39999999999417923
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.19999999999708962,
+            "max": 0.19999999999708962
+          }
+        },
+        "vue.notice": {
+          "frameCount": 40,
+          "sampleIntervalMs": {
+            "count": 39,
+            "median": 16.69999999999709,
+            "max": 17.5
+          },
+          "rafIntervalMs": {
+            "count": 39,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 40,
+            "median": 0.20000000000300133,
+            "max": 2.5
+          },
+          "callbackDurationMs": {
+            "count": 40,
+            "median": 0.09999999999126885,
+            "max": 0.20000000001164153
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 0.19999999999708962,
+            "max": 0.19999999999708962
+          }
+        },
+        "vue.menu.open": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.60000000000582,
+            "max": 17.90000000000873
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.2999999999974534,
+            "max": 6.799999999993815
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0.10000000000582077,
+            "max": 0.6999999999970896
+          },
+          "mutationCallbackDurationMs": {
+            "count": 1,
+            "median": 1.6000000000058208,
+            "max": 1.6000000000058208
+          }
+        },
+        "vue.menu.close": {
+          "frameCount": 40,
+          "sampleIntervalMs": {
+            "count": 39,
+            "median": 16.69999999999709,
+            "max": 19
+          },
+          "rafIntervalMs": {
+            "count": 39,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 40,
+            "median": 0.29999999999381544,
+            "max": 3.400000000003274
+          },
+          "callbackDurationMs": {
+            "count": 40,
+            "median": 0.10000000000582077,
+            "max": 0.5999999999912689
+          },
+          "mutationCallbackDurationMs": {
+            "count": 0,
+            "median": null,
+            "max": null
+          }
+        },
+        "vue.menu.mode": {
+          "frameCount": 41,
+          "sampleIntervalMs": {
+            "count": 40,
+            "median": 16.69999999999709,
+            "max": 17.60000000000582
+          },
+          "rafIntervalMs": {
+            "count": 40,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 41,
+            "median": 0.19999999999708962,
+            "max": 7.971999999999753
+          },
+          "callbackDurationMs": {
+            "count": 41,
+            "median": 0,
+            "max": 0.5999999999912689
+          },
+          "mutationCallbackDurationMs": {
+            "count": 3,
+            "median": 0,
+            "max": 0.09999999999126885
+          }
+        },
+        "vue.menu.inlineCollapsed": {
+          "frameCount": 40,
+          "sampleIntervalMs": {
+            "count": 39,
+            "median": 16.69999999999709,
+            "max": 17.80000000000291
+          },
+          "rafIntervalMs": {
+            "count": 39,
+            "median": 16.699999999999818,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 40,
+            "median": 0.20000000000254659,
+            "max": 1.300000000000182
+          },
+          "callbackDurationMs": {
+            "count": 40,
+            "median": 0,
+            "max": 0.5
+          },
+          "mutationCallbackDurationMs": {
+            "count": 3,
+            "median": 0,
+            "max": 0.09999999999126885
+          }
+        },
+        "vue.menu.rapid": {
+          "frameCount": 52,
+          "sampleIntervalMs": {
+            "count": 51,
+            "median": 16.69999999999709,
+            "max": 17.09999999999127
+          },
+          "rafIntervalMs": {
+            "count": 51,
+            "median": 16.69999999999891,
+            "max": 16.800000000000182
+          },
+          "callbackDelayMs": {
+            "count": 52,
+            "median": 0.29999999999381544,
+            "max": 1.8000000000029104
+          },
+          "callbackDurationMs": {
+            "count": 52,
+            "median": 0.10000000000582077,
+            "max": 0.6999999999970896
+          },
+          "mutationCallbackDurationMs": {
+            "count": 0,
+            "median": null,
+            "max": null
+          }
+        }
+      }
+    }
+  ],
+  "limits": "OS is the compared environment factor; this does not isolate one Chromium subsystem. Linux passes the targeted 60-case motion gate, not final Docs or the complete same-SHA acceptance."
+}

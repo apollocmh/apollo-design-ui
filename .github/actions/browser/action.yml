@@ -1,5 +1,5 @@
 name: Canonical native browser
-description: Install the approved macOS Chrome and export its executable for every browser check.
+description: Install the approved Chrome version and export its executable for every browser check.
 outputs:
   executable:
     description: Exact Chrome for Testing executable
@@ -8,6 +8,7 @@ runs:
   using: composite
   steps:
     - name: Match native font and scrollbar settings
+      if: runner.os == 'macOS'
       shell: bash
       run: |
         defaults write -g AppleShowScrollBars -string WhenScrolling
@@ -20,9 +21,19 @@ runs:
         APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
       run: |
         set -euo pipefail
-        curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
-        ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
-        apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+        case "$RUNNER_OS-$RUNNER_ARCH" in
+          macOS-X64)
+            curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
+            ditto -x -k "$RUNNER_TEMP/apollo-visual-chrome.zip" "$RUNNER_TEMP/apollo-visual-chrome"
+            apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+            ;;
+          Linux-X64)
+            curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/linux64/chrome-linux64.zip" --output "$RUNNER_TEMP/apollo-visual-chrome.zip"
+            unzip -q "$RUNNER_TEMP/apollo-visual-chrome.zip" -d "$RUNNER_TEMP/apollo-visual-chrome"
+            apollo_chrome_binary="$RUNNER_TEMP/apollo-visual-chrome/chrome-linux64/chrome"
+            ;;
+          *) echo "Unsupported browser host: $RUNNER_OS-$RUNNER_ARCH" >&2; exit 1 ;;
+        esac
         "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
         printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
         printf 'APOLLO_CHROME_EXECUTABLE=%s\n' "$apollo_chrome_binary" >> "$GITHUB_ENV"

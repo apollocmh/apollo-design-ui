@@ -41,12 +41,10 @@ export function captureFrozenInputs(root, sourceCommit) {
   const files = Object.fromEntries(
     directories
       .flatMap((directory) => collectFiles(root, directory))
-      .sort(([a], [b]) => a.localeCompare(b)),
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
   );
   const toolchain = {
     node: process.version,
-    platform: process.platform,
-    arch: process.arch,
     packageManager: JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
       .packageManager,
     lockfileSha256: hash(fs.readFileSync(path.join(root, 'pnpm-lock.yaml'))),
@@ -55,6 +53,7 @@ export function captureFrozenInputs(root, sourceCommit) {
   return {
     sourceCommit,
     toolchain,
+    producerHost: { platform: process.platform, arch: process.arch },
     artifactDigest: artifact,
     files,
     inputDigest: hash(JSON.stringify({ sourceCommit, toolchain, artifact, files })),
@@ -136,7 +135,11 @@ export function aggregateAcceptance(reports, manifest, sourceCommit, ciJobResult
     stage: 'acceptance',
     sourceCommit,
     artifactDigest: manifest.artifactDigest,
-    provenance: { inputDigest: manifest.inputDigest, toolchain: manifest.toolchain },
+    provenance: {
+      inputDigest: manifest.inputDigest,
+      toolchain: manifest.toolchain,
+      producerHost: manifest.producerHost,
+    },
     passed: true,
     checks: checks.sort((a, b) => Number.parseInt(a.id, 10) - Number.parseInt(b.id, 10)),
     layers: reports,

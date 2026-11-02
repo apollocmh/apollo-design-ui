@@ -97,6 +97,18 @@ test('final aggregation requires all 14 checks, one SHA and the exact 1875 uniqu
   assert.equal(result.layers.length, 6);
 });
 
+test('portable SDK readers may use another OS while Node, lockfile and every built byte remain fixed', (t) => {
+  const f = fixture(t);
+  const manifest = structuredClone(f.manifest);
+  manifest.producerHost = {
+    platform: process.platform === 'darwin' ? 'linux' : 'darwin',
+    arch: 'x64',
+  };
+  assert.doesNotThrow(() => verifyFrozenInputs(f.root, manifest, 'frozen-source'));
+  manifest.toolchain.node = 'different-node-version';
+  assert.throws(() => verifyFrozenInputs(f.root, manifest, 'frozen-source'), /toolchain/);
+});
+
 test('missing, repeated, nonzero, interrupted and incomplete checks cannot aggregate to PASS', (t) => {
   const f = fixture(t);
   for (const mutate of [

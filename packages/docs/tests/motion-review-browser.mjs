@@ -289,7 +289,11 @@ function entrance(name, data, text) {
 
 try {
   for (const side of ['react', 'vue']) {
-    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    const page = await browser.newPage({
+      viewport: { width: 1440, height: 900 },
+      locale: 'zh-CN',
+      timezoneId: 'Asia/Shanghai',
+    });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(`${server.resolvedUrls.local[0]}index.html?side=${side}`);

@@ -36,7 +36,7 @@ jobs:
   architecture:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.stage != 'acceptance') }}
     name: Architecture feedback for changed scopes
-    runs-on: macos-15-intel
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
@@ -139,7 +139,8 @@ jobs:
   acceptance_checks:
     needs: acceptance_build
     name: Frozen acceptance / ${{ matrix.layer }}
-    runs-on: macos-15-intel
+    # Functional animation uses the verified Linux frame source; approved pixels stay on macOS.
+    runs-on: ${{ matrix.layer == 'docs' && 'ubuntu-24.04' || 'macos-15-intel' }}
     timeout-minutes: 90
     strategy:
       fail-fast: false
