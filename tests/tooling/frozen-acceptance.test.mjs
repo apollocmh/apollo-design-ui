@@ -8,6 +8,7 @@ import {
   acceptanceLayerPlan,
   aggregateAcceptance,
   captureFrozenInputs,
+  readLayerReports,
   verifyFrozenInputs,
 } from '../../scripts/frozen-acceptance.mjs';
 import { fullPlan } from '../../scripts/verification.mjs';
@@ -28,6 +29,7 @@ function fixture(t) {
   const manifest = captureFrozenInputs(root, 'frozen-source');
   const reports = Object.keys(ACCEPTANCE_LAYERS).map((layer) => ({
     layer,
+    ciRunAttempt: 1,
     sourceCommit: manifest.sourceCommit,
     provenance: { inputDigest: manifest.inputDigest, toolchain: manifest.toolchain },
     passed: true,
@@ -165,4 +167,41 @@ test('a failed, skipped or cancelled Actions job cannot pass on otherwise green 
         }),
       /required CI layer/,
     );
+});
+
+test('layer reruns preserve history and select the latest attempt even when it fails', (t) => {
+  const f = fixture(t);
+  const directory = path.join(f.root, 'reports');
+  for (const report of f.reports)
+    f.write(
+      `reports/acceptance-layer-${report.layer}-1/acceptance-${report.layer}.json`,
+      JSON.stringify(report),
+    );
+  const docs = structuredClone(f.reports.find((report) => report.layer === 'docs'));
+  docs.ciRunAttempt = 2;
+  const latest = 'reports/acceptance-layer-docs-2/acceptance-docs.json';
+  f.write(latest, JSON.stringify(docs));
+  // A cancelled write from the superseded attempt must not break a valid resumption.
+  f.write('reports/acceptance-layer-docs-1/acceptance-docs.json', '{');
+  let reports = readLayerReports(directory);
+  assert.equal(reports.find((report) => report.layer === 'docs').ciRunAttempt, 2);
+  assert.equal(aggregateAcceptance(reports, f.manifest, 'frozen-source').passed, true);
+  docs.passed = false;
+  f.write(latest, JSON.stringify(docs));
+  reports = readLayerReports(directory);
+  assert.equal(reports.find((report) => report.layer === 'docs').passed, false);
+  assert.throws(() => aggregateAcceptance(reports, f.manifest, 'frozen-source'), /docs: failed/);
+  fs.rmSync(path.join(f.root, latest));
+  assert.throws(() => readLayerReports(directory), /ENOENT/);
+  docs.passed = true;
+  f.write(latest, JSON.stringify(docs));
+  const recovery = 'reports/acceptance-layer-docs-2-upload-retry-1/acceptance-docs.json';
+  f.write(recovery, JSON.stringify(docs));
+  assert.equal(
+    readLayerReports(directory).find((report) => report.layer === 'docs').evidenceArtifacts.length,
+    2,
+  );
+  docs.passed = false;
+  f.write(recovery, JSON.stringify(docs));
+  assert.throws(() => readLayerReports(directory), /conflicting reports/);
 });

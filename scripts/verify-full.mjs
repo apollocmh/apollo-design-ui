@@ -6,10 +6,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import {
-  ACCEPTANCE_LAYERS,
   acceptanceLayerPlan,
   aggregateAcceptance,
   captureFrozenInputs,
+  readLayerReports,
   verifyFrozenInputs,
 } from './frozen-acceptance.mjs';
 import {
@@ -63,11 +63,7 @@ try {
             report.ciJobResults = JSON.parse(process.env.ACCEPTANCE_JOB_RESULTS);
           }
           const manifest = JSON.parse(fs.readFileSync(values.inputs, 'utf8'));
-          const reports = Object.keys(ACCEPTANCE_LAYERS).map((layer) =>
-            JSON.parse(
-              fs.readFileSync(path.join(values.aggregate, `acceptance-${layer}.json`), 'utf8'),
-            ),
-          );
+          const reports = readLayerReports(values.aggregate);
           report = aggregateAcceptance(reports, manifest, sourceCommit, report.ciJobResults);
         } else {
           plan.sourceCommit = sourceCommit;

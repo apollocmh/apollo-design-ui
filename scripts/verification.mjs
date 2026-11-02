@@ -395,6 +395,7 @@ export function executePlan(
     checks: [],
     passed: false,
     startedAt: new Date().toISOString(),
+    ciRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT ?? '1'),
     host: {
       platform: process.platform,
       arch: process.arch,

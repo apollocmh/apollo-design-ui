@@ -735,7 +735,7 @@ test('CI keeps scoped native preflight and aggregates independent readers of the
   assert.equal(resultUpload['continue-on-error'], true);
   assert.ok(resultUpload.with.path.includes('/tmp/final-acceptance.json'));
   const recovery = ci.jobs.acceptance.steps.find(
-    (step) => step.with?.name === 'final-acceptance-upload-retry-1',
+    (step) => step.with?.name === 'final-acceptance-$' + '{{ github.run_attempt }}-upload-retry-1',
   );
   assert.equal(
     recovery.if,
@@ -745,9 +745,20 @@ test('CI keeps scoped native preflight and aggregates independent readers of the
   assert.equal(recovery.with['if-no-files-found'], 'error');
   const layerUpload = readers.steps.find((step) => step.id === 'layer_report');
   assert.ok(layerUpload.with.path.includes('.json.evidence/'));
-  const focusedUpload = ci.jobs.architecture.steps.find(
-    (step) => step.with?.name === 'architecture-checks',
+  assert.equal(layerUpload.with['if-no-files-found'], 'error');
+  assert.ok(ci.jobs.acceptance_build.outputs.frozen_artifact.includes('frozen_upload'));
+  assert.equal(
+    readers.steps.find((step) => step.uses === 'actions/download-artifact@v8').with.name,
+    '$' + '{{ needs.acceptance_build.outputs.frozen_artifact }}',
   );
+  assert.equal(
+    ci.jobs.acceptance.steps.find((step) => step.with?.pattern === 'acceptance-layer-*').with[
+      'merge-multiple'
+    ],
+    false,
+  );
+  assert.ok(layerUpload.with.name.includes('github.run_attempt'));
+  const focusedUpload = ci.jobs.architecture.steps.find((step) => step.id === 'focused_report');
   assert.ok(focusedUpload.with.path.includes('/tmp/architecture-checks.json.evidence/'));
   assert.ok(focusedUpload.with.path.includes('apollo-docs-browser-'));
   const docs = read('docs-ci.yml');

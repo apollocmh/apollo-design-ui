@@ -1,6 +1,6 @@
 # Apollo Design · 已知问题与支持限制
 
-核对日期：2026-11-02。数值层级修复沿用冻结源码 `9ea05180`；未受后续改动影响的支持边界沿用 `31a1eece` 定向证据。`62de0b71` 已通过17449条运行时测试、2409条类型及1875项正式视觉比较；Motion浏览器门禁仍未通过，不能据局部通过标记整库完成。
+核对日期：2026-11-03。数值层级修复沿用冻结源码 `9ea05180`；未受后续改动影响的支持边界沿用 `31a1eece` 定向证据。`62de0b71` 已通过17449条运行时测试、2409条类型及1875项正式视觉比较；`e5b572e6` 已通过Linux六组Docs浏览器预检（含Motion60项）。最终同一SHA完整验收仍待执行，不能据局部通过标记整库完成。
 
 [v0.1.8 当前收口](audit/2026-11-02-v0.1.8-release.md) · [原冻结收口](audit/2026-11-01-z-index-closeout.md) · [预算校准](audit/2026-11-01-issues-budget-calibration.md) · [唯一状态来源](../registry/vue-native-audit.json) · [原定向复核证据](audit/evidence/known-issues-review-2026-11-01.json) · [清理前全文归档](history/known-issues-2026-11-01.md)
 

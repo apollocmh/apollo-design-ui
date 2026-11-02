@@ -59,9 +59,11 @@ jobs:
           fi
       - name: Keep focused results
         if: always()
+        id: focused_report
+        continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: architecture-checks
+          name: architecture-checks-${{ github.run_attempt }}
           path: |
             /tmp/architecture-checks.json
             /tmp/architecture-checks.json.evidence/
@@ -70,12 +72,25 @@ jobs:
           retention-days: 7
 
 
+      - name: Recover only the focused result upload once
+        if: ${{ always() && steps.focused_report.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: architecture-checks-${{ github.run_attempt }}-upload-retry-1
+          path: |
+            /tmp/architecture-checks.json
+            /tmp/architecture-checks.json.evidence/
+            ${{ runner.temp }}/apollo-docs-browser-*/docs/audit/evidence/
+          if-no-files-found: error
+          retention-days: 7
+
   acceptance_source:
     if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
     name: Resolve frozen acceptance source
     runs-on: ubuntu-latest
     outputs:
       reused: ${{ steps.prior_acceptance.outputs.reused }}
+      reference_artifact: ${{ format('acceptance-reference-{0}', github.run_attempt) }}
     steps:
       - uses: actions/checkout@v7
       - name: Reuse completed acceptance for the exact version-tag commit
@@ -87,7 +102,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: steps.prior_acceptance.outputs.reused == 'true'
         with:
-          name: acceptance-reference
+          name: acceptance-reference-${{ github.run_attempt }}
           path: /tmp/acceptance-reference.json
           if-no-files-found: error
 
@@ -95,6 +110,8 @@ jobs:
     needs: acceptance_source
     if: needs.acceptance_source.outputs.reused != 'true'
     name: Build one frozen SDK and Docs
+    outputs:
+      frozen_artifact: ${{ steps.frozen_upload.outcome == 'success' && format('frozen-{0}-{1}', github.sha, github.run_attempt) || format('frozen-{0}-{1}-upload-retry-1', github.sha, github.run_attempt) }}
     runs-on: macos-15-intel
     timeout-minutes: 25
     steps:
@@ -111,8 +128,21 @@ jobs:
           cd "$RUNNER_TEMP"
           shasum -a 256 frozen.tar.gz > frozen.tar.gz.sha256
       - uses: actions/upload-artifact@v7
+        id: frozen_upload
+        continue-on-error: true
         with:
-          name: frozen-${{ github.sha }}
+          name: frozen-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/frozen.tar.gz
+            ${{ runner.temp }}/frozen.tar.gz.sha256
+            ${{ runner.temp }}/frozen-input.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Recover only the frozen input upload once
+        if: ${{ steps.frozen_upload.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: frozen-${{ github.sha }}-${{ github.run_attempt }}-upload-retry-1
           path: |
             ${{ runner.temp }}/frozen.tar.gz
             ${{ runner.temp }}/frozen.tar.gz.sha256
@@ -124,14 +154,14 @@ jobs:
         id: build_report
         continue-on-error: true
         with:
-          name: acceptance-layer-build
+          name: acceptance-layer-build-${{ github.run_attempt }}
           path: ${{ runner.temp }}/acceptance-build.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
       - uses: actions/upload-artifact@v7
         if: ${{ always() && steps.build_report.outcome == 'failure' }}
         with:
-          name: acceptance-layer-build-upload-retry-1
+          name: acceptance-layer-build-${{ github.run_attempt }}-upload-retry-1
           path: ${{ runner.temp }}/acceptance-build.json
           if-no-files-found: error
           retention-days: 14
@@ -156,7 +186,7 @@ jobs:
         if: ${{ contains(fromJSON('["docs","consumers","visual"]'), matrix.layer) }}
       - uses: actions/download-artifact@v8
         with:
-          name: frozen-${{ github.sha }}
+          name: ${{ needs.acceptance_build.outputs.frozen_artifact }}
           path: ${{ runner.temp }}/frozen
       - name: Restore the original build without rebuilding packages
         run: |
@@ -177,17 +207,17 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: acceptance-layer-${{ matrix.layer }}
+          name: acceptance-layer-${{ matrix.layer }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json
             ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json.evidence/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
       - name: Recover only the result upload once
         if: ${{ always() && steps.layer_report.outcome == 'failure' }}
         uses: actions/upload-artifact@v7
         with:
-          name: acceptance-layer-${{ matrix.layer }}-upload-retry-1
+          name: acceptance-layer-${{ matrix.layer }}-${{ github.run_attempt }}-upload-retry-1
           path: |
             ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json
             ${{ runner.temp }}/acceptance-${{ matrix.layer }}.json.evidence/
@@ -197,7 +227,7 @@ jobs:
         if: ${{ always() && matrix.layer != 'types' }}
         uses: actions/upload-artifact@v7
         with:
-          name: acceptance-diagnostics-${{ matrix.layer }}
+          name: acceptance-diagnostics-${{ matrix.layer }}-${{ github.run_attempt }}
           path: |
             coverage/
             tests/visual/report-apollo.json
@@ -213,7 +243,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: ${{ inputs.reference_visual && matrix.layer == 'visual' }}
         with:
-          name: build-dist
+          name: build-dist-${{ github.run_attempt }}
           path: build-dist.tar.gz
           if-no-files-found: error
           retention-days: 1
@@ -235,18 +265,18 @@ jobs:
       - uses: actions/download-artifact@v8
         if: needs.acceptance_source.outputs.reused == 'true'
         with:
-          name: acceptance-reference
+          name: ${{ needs.acceptance_source.outputs.reference_artifact }}
           path: /tmp
       - uses: actions/download-artifact@v8
         if: needs.acceptance_source.outputs.reused != 'true' && needs.acceptance_build.result == 'success'
         with:
-          name: frozen-${{ github.sha }}
+          name: ${{ needs.acceptance_build.outputs.frozen_artifact }}
           path: ${{ runner.temp }}/frozen
       - uses: actions/download-artifact@v8
         if: needs.acceptance_source.outputs.reused != 'true' && needs.acceptance_build.result == 'success'
         with:
           pattern: acceptance-layer-*
-          merge-multiple: true
+          merge-multiple: false
           path: ${{ runner.temp }}/reports
       - name: Require all layers, the exact SHA, immutable inputs and the complete visual matrix
         if: needs.acceptance_source.outputs.reused != 'true'
@@ -259,7 +289,7 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: final-acceptance
+          name: final-acceptance-${{ github.run_attempt }}
           path: |
             /tmp/final-acceptance.json
             /tmp/acceptance-reference.json
@@ -269,7 +299,7 @@ jobs:
         if: ${{ always() && steps.acceptance_artifacts.outcome == 'failure' }}
         uses: actions/upload-artifact@v7
         with:
-          name: final-acceptance-upload-retry-1
+          name: final-acceptance-${{ github.run_attempt }}-upload-retry-1
           path: |
             /tmp/final-acceptance.json
             /tmp/acceptance-reference.json
@@ -292,8 +322,16 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: actions/download-artifact@v8
         with:
-          name: build-dist
-      - run: tar xzf build-dist.tar.gz
+          pattern: build-dist-*
+          path: reference-bundles
+      - name: Restore the latest accepted reference bundle without rebuilding it
+        run: |
+          python3 - <<'PY'
+          import pathlib, subprocess
+          bundles = list(pathlib.Path('reference-bundles').glob('build-dist-*'))
+          bundle = max(bundles, key=lambda item: int(item.name.rsplit('-', 1)[1]))
+          subprocess.run(['tar', 'xzf', str(bundle / 'build-dist.tar.gz')], check=True)
+          PY
       - run: pnpm exec playwright install --with-deps chromium
       - name: Check historical reference integrity
         run: pnpm run test:visual:reference:check

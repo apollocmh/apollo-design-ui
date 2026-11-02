@@ -74,6 +74,32 @@ export function verifyFrozenInputs(root, manifest, sourceCommit) {
   );
   return current;
 }
+export function readLayerReports(directory) {
+  const candidates = fs.readdirSync(directory).flatMap((name) => {
+    const match =
+      /^acceptance-layer-(build|runtime|types|consumers|visual|docs)-(\d+)(?:-upload-retry-1)?$/.exec(
+        name,
+      );
+    return match ? [{ name, layer: match[1], attempt: Number(match[2]) }] : [];
+  });
+  return Object.keys(ACCEPTANCE_LAYERS).map((layer) => {
+    const versions = candidates.filter((entry) => entry.layer === layer);
+    assert.ok(versions.length, `Missing ${layer} acceptance report`);
+    const attempt = Math.max(...versions.map((entry) => entry.attempt));
+    const latest = versions.filter((entry) => entry.attempt === attempt);
+    const copies = latest.map((entry) =>
+      fs.readFileSync(path.join(directory, entry.name, `acceptance-${layer}.json`), 'utf8'),
+    );
+    assert.ok(
+      copies.every((bytes) => bytes === copies[0]),
+      `${layer}: conflicting reports for one attempt`,
+    );
+    const report = JSON.parse(copies[0]);
+    assert.equal(report.layer, layer);
+    assert.equal(report.ciRunAttempt, attempt, `${layer}: report attempt differs from artifact`);
+    return { ...report, evidenceArtifacts: latest.map((entry) => entry.name) };
+  });
+}
 export function aggregateAcceptance(reports, manifest, sourceCommit, ciJobResults) {
   if (ciJobResults)
     assert.ok(
