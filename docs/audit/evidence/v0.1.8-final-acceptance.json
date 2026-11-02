@@ -1,0 +1,649 @@
+{
+  "version": "0.1.8",
+  "scope": "Frozen v0.1.8 full acceptance; current support limits remain documented separately",
+  "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+  "passed": true,
+  "fullAcceptance": {
+    "runId": 41477925031,
+    "attempt": 2,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/2",
+    "checkRunId": 125441890332,
+    "completedAt": "2026-11-02T17:41:05Z",
+    "artifact": "final-acceptance-2",
+    "reportSha256": "0c006299852e179fa5031dab84e0c647ad4b8693f9853cd55880563c61292986",
+    "checks": [
+      {
+        "id": "0-registry",
+        "commandArgs": [
+          "run",
+          "registry:check"
+        ],
+        "kind": "registry",
+        "command": "pnpm run registry:check",
+        "startedAt": "2026-11-02T16:07:19.300Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:07:21.887Z",
+        "durationMs": 2587
+      },
+      {
+        "id": "1-format",
+        "commandArgs": [
+          "run",
+          "lint:format"
+        ],
+        "kind": "format",
+        "command": "pnpm run lint:format",
+        "startedAt": "2026-11-02T16:07:21.887Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:07:43.563Z",
+        "durationMs": 21675
+      },
+      {
+        "id": "2-build",
+        "commandArgs": [
+          "tests/build/run.mjs",
+          "--strict"
+        ],
+        "kind": "build",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node tests/build/run.mjs --strict",
+        "startedAt": "2026-11-02T16:07:43.564Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:19:00.578Z",
+        "durationMs": 677016
+      },
+      {
+        "id": "3-docs-browser",
+        "commandArgs": [
+          "scripts/verify-docs-browser.mjs"
+        ],
+        "kind": "docs-browser",
+        "command": "/opt/hostedtoolcache/node/22.23.2/x64/bin/node scripts/verify-docs-browser.mjs",
+        "startedAt": "2026-11-02T16:21:05.800Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:22:54.930Z",
+        "durationMs": 109130
+      },
+      {
+        "id": "4-coverage",
+        "commandArgs": [
+          "run",
+          "test:coverage"
+        ],
+        "kind": "coverage",
+        "command": "pnpm run test:coverage",
+        "startedAt": "2026-11-02T16:59:39.178Z",
+        "exitCode": 0,
+        "signal": null,
+        "testReport": "acceptance-runtime.json.evidence/apollo-focused-check-Z2pUKD/0.json",
+        "tests": {
+          "total": 17449,
+          "passed": 17449,
+          "failed": 0,
+          "pending": 0
+        },
+        "finishedAt": "2026-11-02T17:40:15.637Z",
+        "durationMs": 2436215
+      },
+      {
+        "id": "5-consumer-browser",
+        "commandArgs": [
+          "packages/ui/src/tooltip/__tests__/z-index-browser.mjs"
+        ],
+        "kind": "consumer-browser",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node packages/ui/src/tooltip/__tests__/z-index-browser.mjs",
+        "startedAt": "2026-11-02T16:23:31.492Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:28:27.145Z",
+        "durationMs": 295505
+      },
+      {
+        "id": "6-types",
+        "commandArgs": [
+          "node_modules/vue-tsc/bin/vue-tsc.js",
+          "--noEmit",
+          "-p",
+          "tsconfig.json"
+        ],
+        "kind": "types",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tsconfig.json",
+        "startedAt": "2026-11-02T16:22:53.283Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:27:40.983Z",
+        "durationMs": 287557
+      },
+      {
+        "id": "7-types",
+        "commandArgs": [
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--project",
+          "types"
+        ],
+        "kind": "types",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node node_modules/vitest/vitest.mjs run --project types",
+        "startedAt": "2026-11-02T16:27:40.984Z",
+        "exitCode": 0,
+        "signal": null,
+        "testReport": "acceptance-types.json.evidence/apollo-focused-check-G6QSlF/1.json",
+        "tests": {
+          "total": 2409,
+          "passed": 2409,
+          "failed": 0,
+          "pending": 0
+        },
+        "finishedAt": "2026-11-02T16:35:20.514Z",
+        "durationMs": 459301
+      },
+      {
+        "id": "8-core",
+        "commandArgs": [
+          "run",
+          "test:tooling"
+        ],
+        "kind": "core",
+        "command": "pnpm run test:tooling",
+        "startedAt": "2026-11-02T16:35:20.515Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:35:59.342Z",
+        "durationMs": 38808
+      },
+      {
+        "id": "9-consumer",
+        "commandArgs": [
+          "tests/consumer/run.mjs"
+        ],
+        "kind": "consumer",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node tests/consumer/run.mjs",
+        "startedAt": "2026-11-02T16:28:27.146Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:28:58.402Z",
+        "durationMs": 31240
+      },
+      {
+        "id": "10-consumer",
+        "commandArgs": [
+          "packages/ui-resolver/tests/consumer.mjs",
+          "--themes"
+        ],
+        "kind": "consumer",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node packages/ui-resolver/tests/consumer.mjs --themes",
+        "startedAt": "2026-11-02T16:28:58.403Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:31:24.469Z",
+        "durationMs": 145994
+      },
+      {
+        "id": "11-visual",
+        "commandArgs": [
+          "tests/visual/parallel.mjs"
+        ],
+        "kind": "visual",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node tests/visual/parallel.mjs",
+        "startedAt": "2026-11-02T16:22:35.206Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:49:17.897Z",
+        "durationMs": 1602415
+      },
+      {
+        "id": "12-docs-types",
+        "commandArgs": [
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "typecheck"
+        ],
+        "kind": "docs-types",
+        "command": "pnpm --filter @apollo-design/docs run typecheck",
+        "startedAt": "2026-11-02T16:22:54.931Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:23:24.649Z",
+        "durationMs": 29718
+      },
+      {
+        "id": "13-docs-tests",
+        "commandArgs": [
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "test"
+        ],
+        "kind": "docs-tests",
+        "command": "pnpm --filter @apollo-design/docs run test",
+        "startedAt": "2026-11-02T16:23:24.649Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T16:23:37.037Z",
+        "durationMs": 12388
+      }
+    ],
+    "layers": [
+      {
+        "layer": "build",
+        "ciRunAttempt": 1,
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+        "artifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+        "provenance": {
+          "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+          "toolchain": {
+            "node": "v22.23.2",
+            "packageManager": "pnpm@12.4.2",
+            "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+          }
+        },
+        "passed": true,
+        "startedAt": "2026-11-02T16:07:19.296Z",
+        "finishedAt": "2026-11-02T16:19:00.582Z",
+        "host": {
+          "platform": "darwin",
+          "arch": "x64",
+          "logicalCpuCount": 4,
+          "totalMemory": 15032385536,
+          "loadAverage": [
+            17.5517578125,
+            26.87158203125,
+            14.66357421875
+          ]
+        },
+        "finalLoadAverage": [
+          3.2099609375,
+          9.40771484375,
+          11.31201171875
+        ],
+        "evidenceArtifacts": [
+          "acceptance-layer-build-1"
+        ]
+      },
+      {
+        "layer": "runtime",
+        "ciRunAttempt": 2,
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+        "artifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+        "provenance": {
+          "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+          "toolchain": {
+            "node": "v22.23.2",
+            "packageManager": "pnpm@12.4.2",
+            "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+          }
+        },
+        "passed": true,
+        "startedAt": "2026-11-02T16:59:39.175Z",
+        "finishedAt": "2026-11-02T17:40:15.642Z",
+        "host": {
+          "platform": "darwin",
+          "arch": "x64",
+          "logicalCpuCount": 4,
+          "totalMemory": 15032385536,
+          "loadAverage": [
+            11.0966796875,
+            14.5380859375,
+            8.14306640625
+          ]
+        },
+        "finalLoadAverage": [
+          5.9169921875,
+          4.3876953125,
+          4.6142578125
+        ],
+        "evidenceArtifacts": [
+          "acceptance-layer-runtime-2"
+        ]
+      },
+      {
+        "layer": "types",
+        "ciRunAttempt": 1,
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+        "artifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+        "provenance": {
+          "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+          "toolchain": {
+            "node": "v22.23.2",
+            "packageManager": "pnpm@12.4.2",
+            "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+          }
+        },
+        "passed": true,
+        "startedAt": "2026-11-02T16:22:53.278Z",
+        "finishedAt": "2026-11-02T16:35:59.343Z",
+        "host": {
+          "platform": "darwin",
+          "arch": "x64",
+          "logicalCpuCount": 4,
+          "totalMemory": 15032385536,
+          "loadAverage": [
+            10.04638671875,
+            27.8427734375,
+            15.6455078125
+          ]
+        },
+        "finalLoadAverage": [
+          3.8828125,
+          8.3720703125,
+          11.05419921875
+        ],
+        "evidenceArtifacts": [
+          "acceptance-layer-types-1"
+        ]
+      },
+      {
+        "layer": "consumers",
+        "ciRunAttempt": 1,
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+        "artifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+        "provenance": {
+          "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+          "toolchain": {
+            "node": "v22.23.2",
+            "packageManager": "pnpm@12.4.2",
+            "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+          }
+        },
+        "passed": true,
+        "startedAt": "2026-11-02T16:23:31.479Z",
+        "finishedAt": "2026-11-02T16:31:24.471Z",
+        "host": {
+          "platform": "darwin",
+          "arch": "x64",
+          "logicalCpuCount": 4,
+          "totalMemory": 15032385536,
+          "loadAverage": [
+            15.2001953125,
+            21.60888671875,
+            13.6044921875
+          ]
+        },
+        "finalLoadAverage": [
+          8.61962890625,
+          13.13623046875,
+          12.83984375
+        ],
+        "evidenceArtifacts": [
+          "acceptance-layer-consumers-1"
+        ]
+      },
+      {
+        "layer": "visual",
+        "ciRunAttempt": 1,
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+        "artifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+        "provenance": {
+          "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+          "toolchain": {
+            "node": "v22.23.2",
+            "packageManager": "pnpm@12.4.2",
+            "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+          }
+        },
+        "passed": true,
+        "startedAt": "2026-11-02T16:22:35.203Z",
+        "finishedAt": "2026-11-02T16:49:17.906Z",
+        "host": {
+          "platform": "darwin",
+          "arch": "x64",
+          "logicalCpuCount": 4,
+          "totalMemory": 15032385536,
+          "loadAverage": [
+            7.35009765625,
+            13.77490234375,
+            9.84521484375
+          ]
+        },
+        "finalLoadAverage": [
+          10.28857421875,
+          9.33056640625,
+          10.24560546875
+        ],
+        "evidenceArtifacts": [
+          "acceptance-layer-visual-1"
+        ]
+      },
+      {
+        "layer": "docs",
+        "ciRunAttempt": 1,
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+        "artifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+        "provenance": {
+          "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+          "toolchain": {
+            "node": "v22.23.2",
+            "packageManager": "pnpm@12.4.2",
+            "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+          }
+        },
+        "passed": true,
+        "startedAt": "2026-11-02T16:21:05.799Z",
+        "finishedAt": "2026-11-02T16:23:37.038Z",
+        "host": {
+          "platform": "linux",
+          "arch": "x64",
+          "logicalCpuCount": 4,
+          "totalMemory": 16760344576,
+          "loadAverage": [
+            0.63,
+            0.16,
+            0.05
+          ]
+        },
+        "finalLoadAverage": [
+          2.22,
+          0.92,
+          0.36
+        ],
+        "evidenceArtifacts": [
+          "acceptance-layer-docs-1"
+        ]
+      }
+    ]
+  },
+  "frozenInputs": {
+    "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+    "toolchain": {
+      "node": "v22.23.2",
+      "packageManager": "pnpm@12.4.2",
+      "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+    },
+    "producerHost": {
+      "platform": "darwin",
+      "arch": "x64"
+    },
+    "sdkArtifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+    "artifact": "frozen-479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5-1",
+    "artifactId": 13160291003,
+    "archiveSha256": "f8d6af351f3d122bceec951ad6b01a17d297ff8d3849d3024510d3bbc5f679e4"
+  },
+  "runtime": {
+    "testFiles": 797,
+    "tests": {
+      "total": 17449,
+      "passed": 17449,
+      "failed": 0,
+      "pending": 0
+    },
+    "coverage": {
+      "statements": {
+        "total": 42848,
+        "covered": 39464,
+        "skipped": 0,
+        "pct": 92.1
+      },
+      "branches": {
+        "total": 31002,
+        "covered": 25995,
+        "skipped": 0,
+        "pct": 83.84
+      },
+      "functions": {
+        "total": 11679,
+        "covered": 10727,
+        "skipped": 0,
+        "pct": 91.84
+      },
+      "lines": {
+        "total": 38691,
+        "covered": 36008,
+        "skipped": 0,
+        "pct": 93.06
+      }
+    }
+  },
+  "publicTypes": {
+    "total": 2409,
+    "passed": 2409,
+    "failed": 0,
+    "pending": 0
+  },
+  "tooling": {
+    "tests": 117,
+    "passed": 117,
+    "failed": 0
+  },
+  "formalVisual": {
+    "expected": 1875,
+    "uniqueResults": 1875,
+    "passed": 1875,
+    "pending": 0,
+    "errors": [],
+    "caseIdSetSha256": "3c8465e0033969226726c1bb0b893a27a239e4c67850c25ca41c9517b02a0ed6",
+    "baselineReview": "docs/audit/evidence/v0.1.8-visual-review.json",
+    "diagnosticsArtifact": "acceptance-diagnostics-visual-1",
+    "environment": "macOS 15.7.9 / 24G830 x64; Chrome for Testing 150.0.7871.125; original pixel thresholds"
+  },
+  "docs": {
+    "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+    "browserGroups": [
+      {
+        "script": "packages/docs/tests/smoke-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-02T16:21:05.925Z",
+        "finishedAt": "2026-11-02T16:21:22.783Z",
+        "durationMs": 16858
+      },
+      {
+        "script": "docs/audit/tools/stage2-demo-probe.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-02T16:21:22.783Z",
+        "finishedAt": "2026-11-02T16:21:36.223Z",
+        "durationMs": 13440
+      },
+      {
+        "script": "docs/audit/visual-v3/verify.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-02T16:21:36.223Z",
+        "finishedAt": "2026-11-02T16:22:06.045Z",
+        "durationMs": 29822
+      },
+      {
+        "script": "packages/docs/tests/menu-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-02T16:22:06.045Z",
+        "finishedAt": "2026-11-02T16:22:16.125Z",
+        "durationMs": 10080
+      },
+      {
+        "script": "packages/docs/tests/notification-motion-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-02T16:22:16.125Z",
+        "finishedAt": "2026-11-02T16:22:35.875Z",
+        "durationMs": 19749
+      },
+      {
+        "script": "packages/docs/tests/motion-review-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-02T16:22:35.875Z",
+        "finishedAt": "2026-11-02T16:22:54.598Z",
+        "durationMs": 18723
+      }
+    ],
+    "browserReportSha256": "72a0ce8499112dd6adbd2303b5f1f4a4eeead9e2c84a0c5f3acb02f8da458c49",
+    "types": "passed",
+    "unitTests": {
+      "files": 17,
+      "passed": 167,
+      "failed": 0
+    },
+    "motion": {
+      "browserVersion": "150.0.7871.125",
+      "browserExecutablePath": "/home/runner/work/_temp/apollo-visual-chrome/chrome-linux64/chrome",
+      "platform": "linux",
+      "expected": 60,
+      "passed": true,
+      "productFailures": 0,
+      "invalidSamples": 0,
+      "notRun": 0
+    },
+    "motionReportSha256": "8268280f8e58f32c95ca698f2fb8cc9796f6c257b82f9beab58436af5abdf25d",
+    "diagnosticsArtifact": "acceptance-diagnostics-docs-1"
+  },
+  "recovery": {
+    "initialAttempt": 1,
+    "initialRuntimeJob": 125397221311,
+    "failure": "GitHub checkout HTTPS timeout and DNS resolution failure; runtime tests never started",
+    "resumedAttempt": 2,
+    "resumedRuntimeJob": 125418175330,
+    "reusedFrozenArtifact": true,
+    "rebuiltSdk": false,
+    "reranSuccessfulLayers": false,
+    "proof": "All six source and input digests match the original producer"
+  },
+  "versionTag": {
+    "name": "v0.1.8",
+    "object": "b7122986f0ce24b4ee8a359cd95c5707da2ec91a",
+    "target": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+    "previousV017Object": "e30ca7f921a5bc23cb3a1c3f91f31618cddd24a8",
+    "previousV017Target": "35b1ff589cfa8b8fccc50cb653a316ba1cefb035",
+    "overwrittenExistingTag": false
+  },
+  "tagCi": {
+    "runId": 41493722760,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41493722760",
+    "conclusion": "success",
+    "reusedExactShaAcceptance": true,
+    "referencedCheckRunId": 125441890332,
+    "claimedNewFullTestRun": false
+  },
+  "preservedHistory": {
+    "architectureTasks": 85,
+    "architectureDone": 85,
+    "activeAssignments": 0,
+    "historicalAcceptanceRecords": 25,
+    "tasksSha256BeforeLedgerUpdate": "6d73a9c98c9abfb4c65c63a651514d12591b430dee8d569973921e7c58f88a10",
+    "previousFinalAcceptance": "docs/audit/evidence/z-index-closeout-2026-11-01.json"
+  },
+  "remainingBoundaries": "docs/KNOWN-ISSUES.md; eight documented support limits and two unverified leads are not declared fixed",
+  "tagDeployment": {
+    "runId": 41493722686,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41493722686",
+    "event": "push v0.1.8",
+    "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+    "buildConclusion": "success",
+    "deployConclusion": "success",
+    "completedAt": "2026-11-02T17:48:53Z",
+    "ssgPages": 86,
+    "docsTypes": "passed",
+    "docsUnitTests": 167,
+    "site": "https://apollocmh.github.io/apollo-design-ui/"
+  },
+  "ledgerValidation": {
+    "registryGeneration": "passed",
+    "registryValidation": {
+      "checks": 19,
+      "warnings": 0
+    },
+    "derivedProgress": "passed",
+    "tasksUnchanged": true,
+    "jsonParsing": "passed",
+    "gitDiffCheck": "passed",
+    "biome": "These Markdown/JSON paths are excluded by the repository configuration; the attempted focused Biome command processed no files and is not counted as a format pass."
+  }
+}

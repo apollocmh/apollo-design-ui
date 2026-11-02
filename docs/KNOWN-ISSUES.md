@@ -1,6 +1,6 @@
 # Apollo Design · 已知问题与支持限制
 
-核对日期：2026-11-03。数值层级修复沿用冻结源码 `9ea05180`；未受后续改动影响的支持边界沿用 `31a1eece` 定向证据。`62de0b71` 已通过17449条运行时测试、2409条类型及1875项正式视觉比较；`e5b572e6` 已通过Linux六组Docs浏览器预检（含Motion60项）。最终同一SHA完整验收仍待执行，不能据局部通过标记整库完成。
+核对日期：2026-11-03。`v0.1.8` 的冻结源码 `479e5f69` 已通过同一SHA、同一SDK的全部14项九维验收：17449条运行时测试、2409条类型、1875项正式视觉、零待补基线，Docs六组浏览器全部通过（Motion60项、采样无效及未执行均0）。[当前云端证据](audit/evidence/v0.1.8-final-acceptance.json)保留摘要与执行链接；未受后续改动影响的支持边界仍沿用 `31a1eece` 定向证据，不冒充本轮重新验证。以下保留8项支持限制和2项待核实线索。
 
 [v0.1.8 当前收口](audit/2026-11-02-v0.1.8-release.md) · [原冻结收口](audit/2026-11-01-z-index-closeout.md) · [预算校准](audit/2026-11-01-issues-budget-calibration.md) · [唯一状态来源](../registry/vue-native-audit.json) · [原定向复核证据](audit/evidence/known-issues-review-2026-11-01.json) · [清理前全文归档](history/known-issues-2026-11-01.md)
 
@@ -26,7 +26,7 @@
 
 ## 历史追溯与验收
 
-macOS15固定原生环境的1875项正式比较已在[运行41401368824](https://github.com/apollocmh/apollo-design-ui/actions/runs/41401368824)及[后续运行41415627881](https://github.com/apollocmh/apollo-design-ui/actions/runs/41415627881)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。后续Menu28项通过，最新阻塞为Motion54/60；浏览器入口、漏采分类与快速验证整改见[#81](https://github.com/apollocmh/apollo-design-ui/issues/81)、[#82](https://github.com/apollocmh/apollo-design-ui/issues/82)和最新收口记录。定向通过不代替最终同SHA完整验收。
+macOS15固定原生环境的1875项正式比较已在[当前完整验收41477925031 / attempt 2](https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/2)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。此前Motion54/60的阻塞已由统一浏览器入口、有效采样判据及同代码环境对照修复；[#81](https://github.com/apollocmh/apollo-design-ui/issues/81)已验证关闭，原失败与无效试验保留在[v0.1.8收口记录](audit/2026-11-02-v0.1.8-release.md)。[#82](https://github.com/apollocmh/apollo-design-ui/issues/82)的分层执行及定向预检已落地，计时采样另行收尾，不将其写作组件运行时缺陷。
 
 已修复、重复及过期的逐组件阶段记录、旧计数、旧执行顺序和验收等待均迁入[清理前归档](history/known-issues-2026-11-01.md)，原审计报告和验收证据继续保留。F11 的来源文件漂移已刷新；额外模板检查中 ColorHexInput / PanelPicker 的旧诊断已由当前检查证伪，不保留为开放问题。
 
@@ -34,4 +34,4 @@ KI01 数值根样式问题已修复于 `4f5944c2`，包括 Popconfirm 的同根�
 
 原两个 ResizeObserver 严格场景本轮各首次复测 exit 0，原生错误和 RO 诊断为空；结果限定于源码浏览器场景，未过滤或重试。历史通知的因果归结仍未知，原失败记录保留在[定向复核证据](audit/evidence/known-issues-review-2026-11-01.json)。
 
-本轮验收以 [Registry](../registry/vue-native-audit.json) 与[收口记录](audit/2026-11-01-z-index-closeout.md)为准；B6 的旧/新预算及调整依据见[基线校准](audit/2026-11-01-issues-budget-calibration.md)。本批 21 个 GitHub issue 已验证并关闭；后续主题与按需引入的相关验收见[独立交付记录](audit/2026-11-01-theme-and-imports.md)，不覆盖原冻结版本的九维结果。
+当前验收以 [Registry](../registry/vue-native-audit.json) 与[v0.1.8收口记录](audit/2026-11-02-v0.1.8-release.md)为准；原 `9ea05180` 的验收事实保留在[zIndex历史收口](audit/2026-11-01-z-index-closeout.md)。B6 的旧/新预算及调整依据见[基线校准](audit/2026-11-01-issues-budget-calibration.md)，当前冻结构建已重新通过，未再压缩实现或放宽预算。原批21个GitHub issue的关闭证据及后续主题、按需引入的[独立交付](audit/2026-11-01-theme-and-imports.md)均保留原版本含义。

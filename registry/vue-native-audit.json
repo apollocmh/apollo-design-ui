@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 252,
+  "revision": 253,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -12145,12 +12145,12 @@
   ],
   "finalAcceptance": {
     "status": "passed",
-    "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+    "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
     "gates": [
       {
         "dimension": "api",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "types",
           "coverage",
@@ -12158,28 +12158,28 @@
           "consumer"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "tokens",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "coverage",
           "visual",
           "consumer-browser"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "styles",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "build",
           "visual",
@@ -12187,78 +12187,78 @@
           "consumer-browser"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "unit",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "coverage"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "interaction",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "coverage",
           "consumer-browser",
           "docs-browser"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "types",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "types",
           "docs-types"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "a11y",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "coverage",
           "docs-browser"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "visual",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "visual"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       },
       {
         "dimension": "docs",
         "status": "passed",
-        "sourceCommit": "9ea0518035acc46d7036d5f7ae9a3391fcee8ba2",
+        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
         "checks": [
           "build",
           "docs-types",
@@ -12266,8 +12266,8 @@
           "docs-browser"
         ],
         "evidence": [
-          "docs/audit/evidence/z-index-closeout-2026-11-01.json",
-          "docs/audit/2026-11-01-z-index-closeout.md"
+          "docs/audit/evidence/v0.1.8-final-acceptance.json",
+          "docs/audit/2026-11-02-v0.1.8-release.md"
         ]
       }
     ]
