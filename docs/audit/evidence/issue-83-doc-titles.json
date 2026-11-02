@@ -1,0 +1,257 @@
+{
+  "issue": 83,
+  "url": "https://github.com/apollocmh/apollo-design-ui/issues/83",
+  "implementationCommit": "a66df64f36ace09af82ef4ca342109b44995f547",
+  "baseCommit": "fc204eec11dbe5aef7e396f494ed7b385da96587",
+  "scope": "Component Docs page title ownership only; no Skeleton implementation, public API, visual baseline or version tag changes",
+  "inventory": {
+    "componentPages": 72,
+    "languagePages": 144,
+    "duplicateTitlePages": 38,
+    "affectedComponents": [
+      "affix",
+      "anchor",
+      "carousel",
+      "cascader",
+      "date-picker",
+      "form",
+      "input",
+      "input-number",
+      "pagination",
+      "popconfirm",
+      "segmented",
+      "skeleton",
+      "slider",
+      "table",
+      "tabs",
+      "tour",
+      "transfer",
+      "tree",
+      "tree-select"
+    ],
+    "matchingTitlesVerified": true,
+    "datePickerPreamblePreserved": true
+  },
+  "reproduction": {
+    "initialRegressionCommand": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts tests/content.test.ts tests/manifest.test.ts (cwd packages/docs)",
+    "beforeFix": {
+      "exitCode": 1,
+      "failed": 4,
+      "passed": 49,
+      "total": 53
+    },
+    "sourceSkeletonZhBlob": "ae27dd75c56c279484e39a995368f3c6d11f7d2d",
+    "rawMarkdownUnchanged": true
+  },
+  "implementation": "Only component intro rendering receives the shell title and title/subtitle pair. Matching top-level H1 tokens are omitted from HTML while reserving their existing slug; quoted/code/different headings and guide rendering remain intact. Markdown tools now have explicit declarations for their test/TS consumers.",
+  "generatedComparison": {
+    "pagesCompared": 144,
+    "changed": [
+      "anchor/zh",
+      "anchor/en",
+      "input-number/zh",
+      "input-number/en",
+      "segmented/zh",
+      "segmented/en",
+      "transfer/zh",
+      "transfer/en",
+      "tour/zh",
+      "tour/en",
+      "cascader/zh",
+      "cascader/en",
+      "input/zh",
+      "input/en",
+      "slider/zh",
+      "slider/en",
+      "date-picker/zh",
+      "date-picker/en",
+      "popconfirm/zh",
+      "popconfirm/en",
+      "carousel/zh",
+      "carousel/en",
+      "affix/zh",
+      "affix/en",
+      "table/zh",
+      "table/en",
+      "skeleton/zh",
+      "skeleton/en",
+      "tabs/zh",
+      "tabs/en",
+      "pagination/zh",
+      "pagination/en",
+      "tree-select/zh",
+      "tree-select/en",
+      "form/zh",
+      "form/en",
+      "tree/zh",
+      "tree/en"
+    ],
+    "allOtherIntroRestBytesAndTocUnchanged": true
+  },
+  "localValidation": {
+    "docsTypes": {
+      "exitCode": 0,
+      "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tsconfig.json (cwd packages/docs)"
+    },
+    "docsTests": {
+      "files": 17,
+      "tests": 174,
+      "passed": 174,
+      "failed": 0
+    },
+    "productionSsg": {
+      "passed": true,
+      "sdkSourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+      "sdkRebuilt": false,
+      "previousLocalDistPreserved": "/tmp/apollo-83-old-sdk-dist"
+    },
+    "browserSmoke": {
+      "passed": 48,
+      "failed": 0,
+      "skeletonMatrixCases": 8,
+      "matrix": [
+        "zh-CN",
+        "en-US",
+        "light",
+        "dark",
+        "1 column",
+        "2 columns"
+      ],
+      "assertions": [
+        "one main H1",
+        "description retained",
+        "9 demos retained",
+        "API h2 and TOC anchor retained",
+        "actual grid columns and theme"
+      ],
+      "screenshotsVisuallyReviewed": [
+        "skeleton-zh-CN-dark-2.png",
+        "skeleton-en-US-light-1.png"
+      ],
+      "rawLogSha256": "0cf41c9fafa9a510891a7f328babb2dacf4f70eaef902bb0cc514bb461d1508e"
+    },
+    "biome": {
+      "exitCode": 0,
+      "existingWarnings": 3,
+      "newWarnings": 0
+    },
+    "gitDiffCheck": "passed"
+  },
+  "ci": {
+    "runId": 41503503513,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41503503513",
+    "status": "completed",
+    "conclusion": "success",
+    "sourceCommit": "a66df64f36ace09af82ef4ca342109b44995f547",
+    "checks": [
+      {
+        "kind": "core",
+        "command": "/opt/hostedtoolcache/node/22.23.2/x64/bin/node --test tests/tooling/audit-migration.test.mjs tests/tooling/audit-workflow.test.mjs tests/tooling/button-visual.test.mjs tests/tooling/chrome-launch.test.mjs tests/tooling/consumer-version.test.mjs tests/tooling/content-slot-inventory.test.mjs tests/tooling/frozen-acceptance.test.mjs tests/tooling/image-visual.test.mjs tests/tooling/independence.test.mjs tests/tooling/list-visual.test.mjs tests/tooling/motion-sampling.test.mjs tests/tooling/qrcode-visual.test.mjs tests/tooling/result-visual.test.mjs tests/tooling/skeleton-visual.test.mjs tests/tooling/spin-visual.test.mjs tests/tooling/statistic-visual.test.mjs tests/tooling/tag-acceptance.test.mjs tests/tooling/verification-workflow.test.mjs tests/tooling/visual-clock.test.mjs tests/tooling/visual-environment.test.mjs tests/tooling/visual-parallel.test.mjs tests/tooling/vue-native-status.test.mjs",
+        "startedAt": "2026-11-02T18:45:43.571Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T18:46:04.057Z",
+        "durationMs": 20486
+      },
+      {
+        "kind": "format",
+        "command": "/opt/hostedtoolcache/node/22.23.2/x64/bin/node node_modules/@biomejs/biome/bin/biome check packages/docs/tests/smoke-browser.mjs packages/docs/tooling/content/build-manifest.mjs packages/docs/tooling/content/markdown.mjs",
+        "startedAt": "2026-11-02T18:46:04.058Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T18:46:04.132Z",
+        "durationMs": 75
+      },
+      {
+        "kind": "build",
+        "command": "/opt/hostedtoolcache/node/22.23.2/x64/bin/node tests/build/run.mjs --strict",
+        "startedAt": "2026-11-02T18:46:04.133Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T18:50:12.951Z",
+        "durationMs": 248819
+      },
+      {
+        "kind": "demo",
+        "command": "/opt/hostedtoolcache/node/22.23.2/x64/bin/node scripts/verify-docs-browser.mjs packages/docs/tests/smoke-browser.mjs",
+        "startedAt": "2026-11-02T18:50:12.952Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T18:50:36.367Z",
+        "durationMs": 23415
+      },
+      {
+        "kind": "docs-types",
+        "command": "pnpm --filter @apollo-design/docs run typecheck",
+        "startedAt": "2026-11-02T18:50:36.367Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T18:51:17.005Z",
+        "durationMs": 40638
+      },
+      {
+        "kind": "docs-tests",
+        "command": "pnpm --filter @apollo-design/docs run test",
+        "startedAt": "2026-11-02T18:51:17.005Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-02T18:51:36.558Z",
+        "durationMs": 19553
+      }
+    ],
+    "reportSha256": "0bd0b7f685e9caf11c598e96d507a8484c498f106e41f4d1d15e4d83c0068eb7",
+    "host": {
+      "platform": "linux",
+      "arch": "x64",
+      "logicalCpuCount": 4,
+      "totalMemory": 16760344576,
+      "loadAverage": [
+        0.47,
+        0.18,
+        0.06
+      ]
+    }
+  },
+  "deployment": {
+    "runId": 41503506591,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41503506591",
+    "status": "completed",
+    "conclusion": "success",
+    "sourceCommit": "a66df64f36ace09af82ef4ca342109b44995f547",
+    "completedAt": "2026-11-02T18:51:54Z"
+  },
+  "onlineVerification": {
+    "sourceCommit": "a66df64f36ace09af82ef4ca342109b44995f547",
+    "url": "https://apollocmh.github.io/apollo-design-ui/components/skeleton",
+    "passed": 48,
+    "failed": 0,
+    "skeletonMatrixCases": 8,
+    "matrixResults": [
+      "✅ Skeleton 标题/正文/API zh-CN/light/2列 — h1=1, columns=2",
+      "✅ Skeleton 标题/正文/API zh-CN/light/1列 — h1=1, columns=1",
+      "✅ Skeleton 标题/正文/API zh-CN/dark/2列 — h1=1, columns=2",
+      "✅ Skeleton 标题/正文/API zh-CN/dark/1列 — h1=1, columns=1",
+      "✅ Skeleton 标题/正文/API en-US/light/2列 — h1=1, columns=2",
+      "✅ Skeleton 标题/正文/API en-US/light/1列 — h1=1, columns=1",
+      "✅ Skeleton 标题/正文/API en-US/dark/2列 — h1=1, columns=2",
+      "✅ Skeleton 标题/正文/API en-US/dark/1列 — h1=1, columns=1"
+    ],
+    "rawLogSha256": "f8a47d5e03860c1aab8cc8fc55ec52b4567cceea030e5aa820004ddc5d94cd78",
+    "screenshots": [
+      {
+        "file": "skeleton-zh-CN-dark-2.png",
+        "sha256": "0a07f4c935ce222e1645e742b10126e54239322d28b965c94bec0699a926590d",
+        "visuallyReviewed": true
+      },
+      {
+        "file": "skeleton-en-US-light-1.png",
+        "sha256": "a0159c947c37681ba1749df8ce985ebd61c547c7cffe94c809f9181ab5f12da9",
+        "visuallyReviewed": true
+      }
+    ],
+    "baselineUpdates": 0
+  },
+  "acceptanceBoundary": "The v0.1.8 full nine-dimension result and tag remain on 479e5f69; this Docs-only fix receives affected checks and is not represented as a new full-library pass.",
+  "issueState": "closed",
+  "closedAt": "2026-11-02T18:58:13Z"
+}

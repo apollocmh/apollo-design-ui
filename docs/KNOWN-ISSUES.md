@@ -35,3 +35,5 @@ KI01 数值根样式问题已修复于 `4f5944c2`，包括 Popconfirm 的同根�
 原两个 ResizeObserver 严格场景本轮各首次复测 exit 0，原生错误和 RO 诊断为空；结果限定于源码浏览器场景，未过滤或重试。历史通知的因果归结仍未知，原失败记录保留在[定向复核证据](audit/evidence/known-issues-review-2026-11-01.json)。
 
 当前验收以 [Registry](../registry/vue-native-audit.json) 与[v0.1.8收口记录](audit/2026-11-02-v0.1.8-release.md)为准；原 `9ea05180` 的验收事实保留在[zIndex历史收口](audit/2026-11-01-z-index-closeout.md)。B6 的旧/新预算及调整依据见[基线校准](audit/2026-11-01-issues-budget-calibration.md)，当前冻结构建已重新通过，未再压缩实现或放宽预算。原批21个GitHub issue的关闭证据及后续主题、按需引入的[独立交付](audit/2026-11-01-theme-and-imports.md)均保留原版本含义。
+
+后续[#83](https://github.com/apollocmh/apollo-design-ui/issues/83)的组件文档重复主标题已在构建层修复并上线，38篇正文去重且其余内容/API锚点保留；[定向CI与线上证据](audit/evidence/issue-83-doc-titles.json)单独记录，不冒充新的组件架构审计或新SHA全库验收。
