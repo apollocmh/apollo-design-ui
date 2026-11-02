@@ -92,6 +92,15 @@ describe('图标目录（独立资源，不计入 72 组件）', () => {
 });
 
 describe('组件页数据', () => {
+  it('72个组件的双语正文不重复页面壳的主标题', () => {
+    for (const p of pages) {
+      for (const lang of ['zh', 'en'] as const) {
+        const html = p.data.doc[lang].introHtml + p.data.doc[lang].restHtml;
+        expect(html, `${p.meta.name}/${lang}`).not.toMatch(/<h1(?:\s|>)/);
+      }
+    }
+  });
+
   it('每个组件都有正文，且正文总量不被截断', () => {
     for (const p of pages) {
       const zh = p.data.doc.zh.introHtml + p.data.doc.zh.restHtml;

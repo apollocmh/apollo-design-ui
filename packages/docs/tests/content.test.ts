@@ -14,6 +14,54 @@ import {
   normalizeText,
   parseFrontmatter,
 } from '../tooling/content/frontmatter.mjs';
+import { renderDocWithToc } from '../tooling/content/markdown.mjs';
+
+describe('组件页标题由页面壳统一渲染', () => {
+  it.each([
+    ['Skeleton 骨架屏', ''],
+    ['Skeleton', ''],
+    ['DatePicker 日期选择器', '> 当前 API 提示。\n\n'],
+  ])('仅去掉正文中匹配页面标题的 H1：%s', async (heading, prefix) => {
+    const title = heading.startsWith('DatePicker') ? 'DatePicker' : 'Skeleton';
+    const { html, toc } = await renderDocWithToc(
+      `${prefix}# ${heading}\n\n组件简介。\n\n## API\n\n### Props\n\n保留契约。`,
+      { pageTitles: [title, heading] },
+    );
+    expect(html).not.toMatch(/<h1(?:\s|>)/);
+    expect(html).toContain('<p>组件简介。</p>');
+    expect(html).toContain('<h2 id="api">API</h2>');
+    expect(toc).toEqual([
+      { level: 2, text: 'API', id: 'api' },
+      { level: 3, text: 'Props', id: 'props' },
+    ]);
+    if (prefix) expect(html).toContain('<blockquote>');
+  });
+
+  it('保留其他标题、引用与代码中的同名内容', async () => {
+    const { html } = await renderDocWithToc(
+      '# Usage\n\n> # Skeleton\n\n```markdown\n# Skeleton\n```',
+      { pageTitles: ['Skeleton'] },
+    );
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    expect(doc.querySelector('h1')?.textContent).toBe('Usage');
+    expect(doc.querySelector('blockquote h1')?.textContent).toBe('Skeleton');
+    expect(doc.querySelector('pre code')?.textContent?.trim()).toBe('# Skeleton');
+  });
+
+  it('指南等未声明页面标题的调用保留其 H1', async () => {
+    const { html } = await renderDocWithToc('# Skeleton\n\n正文。');
+    expect(html).toContain('<h1 id="skeleton">Skeleton</h1>');
+  });
+
+  it('保留后续同名 API 小节的原锚点', async () => {
+    const { html, toc } = await renderDocWithToc('# Table\n\n### Table\n\n契约。', {
+      pageTitles: ['Table'],
+    });
+    expect(html).not.toMatch(/<h1(?:\s|>)/);
+    expect(html).toContain('<h3 id="table-2">Table</h3>');
+    expect(toc).toEqual([{ level: 3, text: 'Table', id: 'table-2' }]);
+  });
+});
 
 /** frontmatter 的值是动态结构，断言时按「双语对象」读取。 */
 const titleOf = (meta: Record<string, unknown>): Record<string, string> =>

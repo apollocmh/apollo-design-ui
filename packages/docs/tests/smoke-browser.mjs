@@ -264,6 +264,54 @@ try {
   await page.waitForTimeout(400);
   check('移动端抽屉 Esc 关闭', !(await page.locator('.site-drawer').isVisible()));
   await page.screenshot({ path: `${SHOT_DIR}/mobile.png` });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  // 页面壳拥有唯一主标题；正文去重不能吞掉简介、示例、API 或其目录锚点。
+  for (const lang of ['zh-CN', 'en-US']) {
+    await page.goto(`${BASE}/components/skeleton?lang=${lang}`, { waitUntil: 'networkidle' });
+    const intro = lang === 'zh-CN' ? '按预期结构显示加载占位' : 'Display a placeholder';
+    const bodyIntro = page.locator('.component-page > .doc-markdown').first();
+    await bodyIntro.getByText(intro, { exact: false }).waitFor();
+    for (const mode of ['light', 'dark']) {
+      const picker = page.locator('.site-theme-picker');
+      if (!(await picker.evaluate((node) => node.open)))
+        await page.locator('.site-theme-toggle').click();
+      await page.locator('.site-mode-select').selectOption(mode);
+      await page.locator('.site-theme-toggle').click();
+      for (const columns of [2, 1]) {
+        const label =
+          lang === 'zh-CN'
+            ? columns === 2
+              ? '自动布局'
+              : '单列'
+            : columns === 2
+              ? 'Auto layout'
+              : 'Single column';
+        await page.locator('.demos-toolbar').getByText(label, { exact: true }).click();
+        const grid = page.locator('.demos-grid');
+        const headings = await page.locator('.component-page h1').allTextContents();
+        const actualColumns = await grid.evaluate(
+          (node) => getComputedStyle(node).gridTemplateColumns.split(' ').length,
+        );
+        check(
+          `Skeleton 标题/正文/API ${lang}/${mode}/${columns}列`,
+          headings.length === 1 &&
+            headings[0].includes('Skeleton') &&
+            (await bodyIntro.innerText()).includes(intro) &&
+            (await grid.locator(':scope > *').count()) === 9 &&
+            (await page.locator('.component-page h2#api').count()) === 1 &&
+            (await page.locator('.site-toc-link[href="#api"]').count()) === 1 &&
+            actualColumns === columns &&
+            (await page.locator('html').getAttribute('data-apollo-theme')) === mode,
+          `h1=${headings.length}, columns=${actualColumns}`,
+        );
+        if (
+          (lang === 'zh-CN' && mode === 'dark' && columns === 2) ||
+          (lang === 'en-US' && mode === 'light' && columns === 1)
+        )
+          await page.screenshot({ path: `${SHOT_DIR}/skeleton-${lang}-${mode}-${columns}.png` });
+      }
+    }
+  }
 } catch (e) {
   check('意外中断', false, e.message);
 }

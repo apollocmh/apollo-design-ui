@@ -60,7 +60,7 @@ async function getHighlighter() {
 }
 
 /** 创建配置好的 markdown-it 实例（构建期调用一次）。 */
-export async function createMarkdownRenderer({ currentPathPrefix = '' } = {}) {
+export async function createMarkdownRenderer({ currentPathPrefix = '', pageTitles = [] } = {}) {
   const highlighter = await getHighlighter();
 
   const md = new MarkdownIt({
@@ -100,6 +100,12 @@ export async function createMarkdownRenderer({ currentPathPrefix = '' } = {}) {
     const text = stripTags(tokens[idx + 1]?.content ?? '');
     const slug = uniqueSlug(text);
     token.attrSet('id', slug);
+    if (level === 1 && token.level === 0 && pageTitles.includes(text)) {
+      // 页面壳已展示该标题；仍占用原 slug，避免后续同名 API 的锚点改号。
+      token.hidden = true;
+      tokens[idx + 1].children = [];
+      tokens[idx + 2].hidden = true;
+    }
     if (level >= 2 && level <= 3) {
       headings.push({ level, text, id: slug });
     }
@@ -137,7 +143,11 @@ export async function renderDoc(markdownText, options = {}) {
   return { html, toc: structuredClone(md.core.ruler ? [] : []) };
 }
 
-/** 渲染并回收标题（配合 heading_open 钩子拿 TOC）。 */
+/**
+ * 渲染并回收标题。组件页传入已由页面壳展示的标题，正文只去掉匹配的顶层 H1。
+ * @param {string} markdownText
+ * @param {{ currentPathPrefix?: string, pageTitles?: string[] }} options
+ */
 export async function renderDocWithToc(markdownText, options = {}) {
   const { md, headings } = await createMarkdownRenderer(options);
   const html = md.render(markdownText);

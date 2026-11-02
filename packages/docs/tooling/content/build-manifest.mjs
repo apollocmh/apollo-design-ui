@@ -432,7 +432,9 @@ async function renderComponentDocs(comp) {
   for (const lang of ['zh', 'en']) {
     const body = comp.body[lang];
     const { intro, rest } = splitDocBody(body);
-    const introR = await renderDocWithToc(intro || '', { currentPathPrefix: '' });
+    const introR = await renderDocWithToc(intro || '', {
+      pageTitles: [comp.title[lang], `${comp.title[lang]} ${comp.subtitle[lang]}`.trim()],
+    });
     const restR = rest ? await renderDocWithToc(rest) : { html: '', toc: [] };
     out[lang] = {
       introHtml: introR.html,
