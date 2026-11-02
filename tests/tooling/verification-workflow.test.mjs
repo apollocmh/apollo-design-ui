@@ -317,6 +317,10 @@ test('nonzero exits, missing executable, child signals and a green-looking stdou
   );
   assert.equal(missing.passed, false);
   assert.ok(missing.checks[0].error);
+  for (const check of missing.checks) {
+    assert.ok(Number.isFinite(Date.parse(check.finishedAt)));
+    assert.ok(check.durationMs >= 0);
+  }
 });
 
 test('zero collected tests and empty plans cannot be recorded as passed', (t) => {
@@ -352,21 +356,204 @@ test('zero collected tests and empty plans cannot be recorded as passed', (t) =>
   );
 });
 
+test('reported checks persist live timing and preserve original Vitest results after failure', (t) => {
+  const { root } = fixture(t);
+  const output = path.join(root, 'checks.json');
+  const messages = [];
+  t.mock.method(console, 'log', (message) => messages.push(message));
+  const originals = [];
+  let executions = 0;
+  const result = executePlan(
+    {
+      stage: 'acceptance',
+      scope: ['fixture'],
+      checks: [
+        { kind: 'types', command: 'fixture', args: [], vitest: true },
+        fullPlan().checks.find((step) => step.kind === 'coverage'),
+        { kind: 'consumer', command: 'must-not-run', args: [] },
+      ],
+    },
+    {
+      root,
+      reportFile: output,
+      execute(_command, args, options) {
+        const current = JSON.parse(fs.readFileSync(output, 'utf8'));
+        assert.equal(current.passed, false);
+        assert.equal(current.checks.length, executions + 1);
+        const active = current.checks[executions];
+        assert.ok(Number.isFinite(Date.parse(active.startedAt)));
+        assert.equal(active.finishedAt, undefined);
+        assert.equal(active.durationMs, undefined);
+        assert.equal(active.exitCode, null);
+        if (executions) {
+          assert.ok(Number.isFinite(Date.parse(current.checks[0].finishedAt)));
+          assert.ok(current.checks[0].durationMs >= 0);
+          assert.equal(current.artifactDigest, 'unchanged-fixture');
+          assert.deepEqual(args.slice(0, 2), ['run', 'test:coverage']);
+        }
+        assert.ok(args.includes('--reporter=default'));
+        assert.ok(args.includes('--reporter=json'));
+        assert.equal(options.stdio, 'inherit');
+        const file = args
+          .find((arg) => arg.startsWith('--outputFile='))
+          .slice('--outputFile='.length);
+        assert.equal(path.resolve(path.dirname(output), active.testReport), file);
+        const tests = {
+          success: executions === 0,
+          numTotalTests: 3,
+          numPassedTests: executions ? 2 : 3,
+          numFailedTests: executions ? 1 : 0,
+          numPendingTests: 0,
+          testResults: [{ assertionResults: [{ failureMessages: ['original failure detail'] }] }],
+        };
+        const original = `${JSON.stringify(tests, null, 2)}\n`;
+        originals.push({ file, original });
+        fs.writeFileSync(file, original);
+        return { status: executions++ === 0 ? 0 : 1, signal: null };
+      },
+      afterCheck(_step, report) {
+        report.artifactDigest = 'unchanged-fixture';
+      },
+    },
+  );
+  assert.equal(result.passed, false);
+  assert.equal(executions, 2);
+  assert.equal(result.checks.length, 2);
+  assert.equal(result.checks[1].exitCode, 1);
+  assert.deepEqual(result.checks[1].tests, { total: 3, passed: 2, failed: 1, pending: 0 });
+  assert.deepEqual(JSON.parse(fs.readFileSync(output, 'utf8')), result);
+  for (const check of result.checks) {
+    assert.ok(Date.parse(check.finishedAt) >= Date.parse(check.startedAt));
+    assert.ok(Number.isInteger(check.durationMs) && check.durationMs >= 0);
+  }
+  for (const { file, original } of originals) assert.equal(fs.readFileSync(file, 'utf8'), original);
+  assert.ok(messages.some((message) => message.includes('acceptance 2/3 coverage started:')));
+  assert.ok(
+    messages.some((message) => message.includes('acceptance 2/3 coverage finished: failed')),
+  );
+});
+
+test('a reused report path cannot reuse old Vitest success or hide source diagnostics', (t) => {
+  const { root } = fixture(t);
+  const output = path.join(root, 'checks.json');
+  const plan = {
+    stage: 'architecture',
+    scope: ['fixture'],
+    checks: [{ kind: 'types', command: 'fixture', args: [], vitest: true }],
+  };
+  let firstReport;
+  for (const outcome of ['passed', 'missing', 'source-errors']) {
+    const result = executePlan(plan, {
+      root,
+      quiet: true,
+      reportFile: output,
+      execute(_command, args) {
+        const file = args
+          .find((arg) => arg.startsWith('--outputFile='))
+          .slice('--outputFile='.length);
+        if (outcome !== 'missing')
+          fs.writeFileSync(
+            file,
+            JSON.stringify({ success: outcome === 'passed', numPassedTests: 3, numFailedTests: 0 }),
+          );
+        return { status: 0, signal: null };
+      },
+    });
+    assert.equal(result.passed, outcome === 'passed');
+    assert.equal(result.checks[0].exitCode, 0);
+    if (outcome === 'passed') firstReport = result.checks[0].testReport;
+    else {
+      assert.notEqual(result.checks[0].testReport, firstReport);
+      assert.ok(result.checks[0].error);
+    }
+    assert.equal(fs.existsSync(path.resolve(path.dirname(output), firstReport)), true);
+  }
+});
+
+test('the coverage script entry forwards both reporters to an isolated Vitest fixture', (t) => {
+  const f = fixture(t);
+  const root = path.resolve(import.meta.dirname, '../..');
+  fs.symlinkSync(path.join(root, 'node_modules'), path.join(f.root, 'node_modules'), 'junction');
+  f.write(
+    'package.json',
+    JSON.stringify({ private: true, scripts: { 'test:coverage': 'vitest run' } }),
+  );
+  f.write(
+    'vitest.config.mjs',
+    "export default { cacheDir: './.vite-cache', test: { include: ['probe.test.mjs'], environment: 'node', maxWorkers: 1 } };",
+  );
+  f.write(
+    'probe.test.mjs',
+    "import { expect, test } from 'vitest'; test('report fixture', () => expect(true).toBe(true));",
+  );
+  const output = path.join(f.root, 'checks.json');
+  let stdout;
+  const result = executePlan(
+    {
+      stage: 'fixture',
+      scope: ['fixture'],
+      checks: [fullPlan().checks.find((step) => step.kind === 'coverage')],
+    },
+    {
+      root: f.root,
+      quiet: true,
+      reportFile: output,
+      execute(command, args, options) {
+        const child = spawnSync(command, args, options);
+        stdout = child.stdout;
+        return child;
+      },
+    },
+  );
+  assert.equal(result.passed, true);
+  assert.equal(result.checks[0].tests.passed, 1);
+  assert.match(stdout, /Test Files/);
+  assert.match(stdout, /probe\.test\.mjs/);
+  const original = JSON.parse(
+    fs.readFileSync(path.resolve(path.dirname(output), result.checks[0].testReport), 'utf8'),
+  );
+  assert.equal(original.success, true);
+  assert.equal(original.numPassedTests, 1);
+});
+
 test('dry runs execute nothing and never manufacture a successful report', (t) => {
   const { root } = fixture(t);
+  const output = path.join(root, 'checks.json');
   const result = executePlan(fullPlan(), {
     root,
     dryRun: true,
+    reportFile: output,
     execute() {
       throw new Error('must not execute');
     },
   });
   assert.equal(result.dryRun, true);
   assert.equal(result.passed, false);
+  assert.equal(fs.existsSync(output), false);
+  assert.equal(fs.existsSync(`${output}.evidence`), false);
 });
 
 test('the final plan builds once, runs runtime through coverage once and preserves complete native visuals', () => {
   const plan = fullPlan();
+  assert.deepEqual(
+    plan.checks.map((step) => step.kind),
+    [
+      'registry',
+      'format',
+      'build',
+      'coverage',
+      'consumer-browser',
+      'types',
+      'types',
+      'core',
+      'consumer',
+      'consumer',
+      'visual',
+      'docs-types',
+      'docs-tests',
+      'docs-browser',
+    ],
+  );
   const build = plan.checks.filter((step) => step.kind === 'build');
   assert.equal(build.length, 1);
   assert.ok(build[0].args.includes('--strict'));
@@ -380,6 +567,10 @@ test('the final plan builds once, runs runtime through coverage once and preserv
   assert.ok(resolver.args.includes('--themes'));
   assert.ok(plan.checks.indexOf(resolver) > plan.checks.indexOf(build[0]));
   assert.equal(plan.checks.filter((step) => step.kind === 'coverage').length, 1);
+  const coverage = plan.checks.find((step) => step.kind === 'coverage');
+  assert.equal(plan.checks.indexOf(coverage), plan.checks.indexOf(build[0]) + 1);
+  assert.deepEqual(coverage.args, ['run', 'test:coverage']);
+  assert.equal(coverage.vitest, true);
   assert.equal(
     plan.checks.some(
       (step) =>
@@ -467,6 +658,17 @@ test('CI keeps PR feedback scoped and Docs browser checks on the single explicit
   );
   assert.equal(resultRecovery['continue-on-error'], undefined);
   assert.equal(resultRecovery.with['if-no-files-found'], 'error');
+  const focusedUpload = ci.jobs.architecture.steps.find(
+    (step) => step.with?.name === 'architecture-checks',
+  );
+  for (const [upload, file] of [
+    [focusedUpload, '/tmp/architecture-checks.json'],
+    [resultUpload, '/tmp/final-acceptance.json'],
+    [resultRecovery, '/tmp/final-acceptance.json'],
+  ]) {
+    assert.ok(upload.with.path.split('\n').includes(file));
+    assert.ok(upload.with.path.split('\n').includes(`${file}.evidence/`));
+  }
   const docs = read('docs-ci.yml');
   assert.deepEqual(Object.keys(docs.on), ['workflow_dispatch']);
   const docsCommands = docs.jobs.docs.steps.flatMap((step) => step.run ?? '').join('\n');

@@ -55,7 +55,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: architecture-checks
-          path: /tmp/architecture-checks.json
+          path: |
+            /tmp/architecture-checks.json
+            /tmp/architecture-checks.json.evidence/
           if-no-files-found: warn
           retention-days: 7
 
@@ -127,6 +129,7 @@ jobs:
           name: final-acceptance
           path: |
             /tmp/final-acceptance.json
+            /tmp/final-acceptance.json.evidence/
             /tmp/acceptance-reference.json
             coverage/
             tests/visual/report-apollo.json
@@ -143,6 +146,7 @@ jobs:
           name: final-acceptance-upload-retry-1
           path: |
             /tmp/final-acceptance.json
+            /tmp/final-acceptance.json.evidence/
             /tmp/acceptance-reference.json
             coverage/
             tests/visual/report-apollo.json

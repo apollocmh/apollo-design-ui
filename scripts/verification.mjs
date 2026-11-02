@@ -9,7 +9,12 @@ import ts from 'typescript';
 export const ROOT = path.resolve(import.meta.dirname, '..');
 const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 const node = (kind, args, extra = {}) => ({ kind, command: process.execPath, args, ...extra });
-const packageRun = (kind, script) => ({ kind, command: pnpm, args: ['run', script] });
+const packageRun = (kind, script, extra = {}) => ({
+  kind,
+  command: pnpm,
+  args: ['run', script],
+  ...extra,
+});
 export const docsRun = (kind, script) => ({
   kind,
   command: pnpm,
@@ -317,6 +322,8 @@ export function fullPlan() {
       packageRun('format', 'lint:format'),
       // The single build also generates Docs content; all checks below reuse it.
       node('build', ['tests/build/run.mjs', '--strict']),
+      // Earlier runtime failures avoid waiting for unrelated checks; passing runs do the same work.
+      packageRun('coverage', 'test:coverage', { vitest: true }),
       node('consumer-browser', ['packages/ui/src/tooltip/__tests__/z-index-browser.mjs']),
       node('types', ['node_modules/vue-tsc/bin/vue-tsc.js', '--noEmit', '-p', 'tsconfig.json'], {
         env: { NODE_OPTIONS: '--max-old-space-size=4096' },
@@ -326,7 +333,6 @@ export function fullPlan() {
         env: { NODE_OPTIONS: '--max-old-space-size=4096' },
       }),
       packageRun('core', 'test:tooling'),
-      packageRun('coverage', 'test:coverage'),
       // These consumers build only their isolated fixture, never packages/*/dist.
       node('consumer', ['tests/consumer/run.mjs']),
       node('consumer', ['packages/ui-resolver/tests/consumer.mjs', '--themes']),
@@ -381,45 +387,84 @@ export function executePlan(
     passed: false,
     ...(plan.sourceCommit ? { sourceCommit: plan.sourceCommit } : {}),
   };
-  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-focused-check-'));
+  const reportPath = reportFile ? path.resolve(root, reportFile) : null;
+  const evidenceRoot = reportPath ? `${reportPath}.evidence` : os.tmpdir();
+  if (reportPath) fs.mkdirSync(evidenceRoot, { recursive: true });
+  const temporary = fs.mkdtempSync(path.join(evidenceRoot, 'apollo-focused-check-'));
+  const saveReport = () => {
+    if (reportPath) fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  };
   try {
+    saveReport();
     if (!plan.checks.length) throw new Error('No checks selected; nothing was verified');
     for (const step of plan.checks) {
       const testReport = path.join(temporary, `${report.checks.length}.json`);
       const args = step.vitest
-        ? [...step.args, '--reporter=json', `--outputFile=${testReport}`]
+        ? [...step.args, '--reporter=default', '--reporter=json', `--outputFile=${testReport}`]
         : step.args;
-      const result = execute(step.command, args, {
-        cwd: root,
-        env: { ...process.env, ...step.env },
-        encoding: 'utf8',
-        stdio: quiet ? 'pipe' : 'inherit',
-        maxBuffer: 16 * 1024 * 1024,
-        shell: process.platform === 'win32',
-      });
+      const started = performance.now();
       const check = {
         kind: step.kind,
         command: [step.command, ...step.args].join(' '),
-        exitCode: result.status ?? null,
-        signal: result.signal ?? null,
+        startedAt: new Date().toISOString(),
+        exitCode: null,
+        signal: null,
+        ...(step.vitest && reportPath
+          ? { testReport: path.relative(path.dirname(reportPath), testReport) }
+          : {}),
       };
-      if (result.error) check.error = result.error.message;
-      if (step.vitest && result.status === 0) {
-        if (!fs.existsSync(testReport)) check.error = 'Vitest did not produce a result report';
-        else {
-          const tests = JSON.parse(fs.readFileSync(testReport, 'utf8'));
-          if (!(tests.numPassedTests > 0) || tests.numFailedTests > 0 || tests.success === false)
-            check.error = 'No passing tests, failed tests or source diagnostics in Vitest report';
-        }
-      }
       report.checks.push(check);
-      if (check.exitCode !== 0 || check.signal || check.error) {
-        if (quiet) process.stderr.write((result.stdout ?? '') + (result.stderr ?? ''));
-        throw new Error(
-          `${step.kind} failed (${check.signal ?? check.exitCode}): ${check.error ?? check.command}`,
+      const label = `${plan.stage} ${report.checks.length}/${plan.checks.length} ${step.kind}`;
+      console.log(`[verification] ${label} started: ${check.command}`);
+      saveReport();
+      try {
+        const result = execute(step.command, args, {
+          cwd: root,
+          env: { ...process.env, ...step.env },
+          encoding: 'utf8',
+          stdio: quiet ? 'pipe' : 'inherit',
+          maxBuffer: 16 * 1024 * 1024,
+          shell: process.platform === 'win32',
+        });
+        check.exitCode = result.status ?? null;
+        check.signal = result.signal ?? null;
+        if (result.error) check.error = result.error.message;
+        if (step.vitest) {
+          if (!fs.existsSync(testReport)) {
+            if (result.status === 0) check.error = 'Vitest did not produce a result report';
+          } else {
+            const tests = JSON.parse(fs.readFileSync(testReport, 'utf8'));
+            check.tests = {
+              total: tests.numTotalTests,
+              passed: tests.numPassedTests,
+              failed: tests.numFailedTests,
+              pending: tests.numPendingTests,
+            };
+            if (
+              result.status === 0 &&
+              (!(tests.numPassedTests > 0) || tests.numFailedTests > 0 || tests.success === false)
+            )
+              check.error = 'No passing tests, failed tests or source diagnostics in Vitest report';
+          }
+        }
+        if (check.exitCode !== 0 || check.signal || check.error) {
+          if (quiet) process.stderr.write((result.stdout ?? '') + (result.stderr ?? ''));
+          throw new Error(
+            `${step.kind} failed (${check.signal ?? check.exitCode}): ${check.error ?? check.command}`,
+          );
+        }
+        afterCheck?.(step, report);
+      } catch (error) {
+        check.error ??= error.message;
+        throw error;
+      } finally {
+        check.finishedAt = new Date().toISOString();
+        check.durationMs = Math.round(performance.now() - started);
+        console.log(
+          `[verification] ${label} finished: ${check.error ? 'failed' : 'passed'} (${check.durationMs}ms)`,
         );
+        saveReport();
       }
-      afterCheck?.(step, report);
     }
     report.passed = true;
     console.log(
@@ -429,9 +474,8 @@ export function executePlan(
     report.error = error.message;
     console.error(`[verification] ${error.message}`);
   } finally {
-    if (reportFile)
-      fs.writeFileSync(path.resolve(root, reportFile), `${JSON.stringify(report, null, 2)}\n`);
-    fs.rmSync(temporary, { recursive: true, force: true });
+    saveReport();
+    if (!reportPath) fs.rmSync(temporary, { recursive: true, force: true });
   }
   return report;
 }
