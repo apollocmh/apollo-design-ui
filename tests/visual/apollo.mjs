@@ -24,6 +24,12 @@ import { prepareConfigProviderVisual } from './config-provider-state.mjs';
 import { prepareDescriptionsVisual } from './descriptions-state.mjs';
 import { prepareDividerVisual } from './divider-state.mjs';
 import { prepareEmptyVisual } from './empty-state.mjs';
+import {
+  assertNativeRenderingEnvironment,
+  assertRenderingEnvironment,
+  readNativeRenderingEnvironment,
+  readRenderingEnvironment,
+} from './environment.mjs';
 import { prepareFlexVisual } from './flex-state.mjs';
 import { prepareGridVisual } from './grid-state.mjs';
 import { prepareImageVisual } from './image-state.mjs';
@@ -160,6 +166,10 @@ async function main() {
       return;
     }
   }
+  // Metadata checks/acceptance preserve their original capture provenance on any host.
+  // Actual pixels are rendered only in the canonical CI environment, before any build.
+  const nativeRendering = readNativeRenderingEnvironment();
+  assertNativeRenderingEnvironment(nativeRendering);
   // Import browser/build dependencies only for rendering; metadata checks need no React installation.
   const { buildSide } = await import('./build.mjs');
   const { comparePair } = await import('./compare.mjs');
@@ -195,6 +205,7 @@ async function main() {
     server.listen(0, '127.0.0.1', resolve);
   });
   let browser;
+  let rendering;
   const results = [];
   const candidateManifest = { complete: false, entries: {} };
   if (values.candidate) {
@@ -204,6 +215,8 @@ async function main() {
   try {
     const launched = await launchBrowser();
     browser = launched.browser;
+    rendering = await readRenderingEnvironment(launched, nativeRendering);
+    assertRenderingEnvironment(rendering);
     const environment = `${process.platform}/${process.arch}/${browser.version()}/${launched.channel}`;
     const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
       cwd: ROOT,
@@ -303,6 +316,7 @@ async function main() {
           candidateManifest.entries[item.id] = {
             sha256: digest(output),
             environment,
+            rendering,
             sourceCommit,
             dirty,
             capturedAt: new Date().toISOString(),
@@ -341,7 +355,7 @@ async function main() {
   }
   fs.writeFileSync(
     REPORT,
-    `${JSON.stringify({ expected: cases.length, pending, results }, null, 2)}\n`,
+    `${JSON.stringify({ expected: cases.length, pending, rendering, results }, null, 2)}\n`,
   );
   for (const result of results)
     console.log(`${result.verdict}: ${result.id} ${result.reason ?? ''}`);

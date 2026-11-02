@@ -26,6 +26,7 @@ concurrency:
 
 permissions:
   contents: read
+  checks: read
 
 jobs:
   architecture:
@@ -61,8 +62,8 @@ jobs:
   acceptance:
     if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
     name: Complete nine-dimension acceptance on one frozen commit
-    # Approved Apollo images use Darwin/x64 and overlay scrollbars.
-    # OS font differences remain visible to the unchanged pixel comparator.
+    # Pixel captures use the canonical macOS/browser/native font environment
+    # checked by tests/visual/environment.mjs; historical PNG origins stay intact.
     runs-on: macos-15-intel
     # The complete native visual matrix follows ~44 minutes of build/runtime work.
     # The first tag run hit 120 minutes mid-matrix; case limits remain test-owned.
@@ -71,12 +72,25 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - name: Reuse completed acceptance for the exact version-tag commit
+        if: github.ref_type == 'tag'
+        id: prior_acceptance
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/reuse-tag-acceptance.mjs
       - uses: ./.github/actions/setup
-      - name: Match the reviewed native overlay scrollbar setting
-        run: defaults write -g AppleShowScrollBars -string WhenScrolling
+        if: steps.prior_acceptance.outputs.reused != 'true'
+      - name: Match the canonical native font and scrollbar settings
+        if: steps.prior_acceptance.outputs.reused != 'true'
+        run: |
+          defaults write -g AppleShowScrollBars -string WhenScrolling
+          defaults write -g AppleLanguages -array zh-Hans-CN
+          defaults write -g AppleLocale -string zh_CN
       - name: Install visual browser
+        if: steps.prior_acceptance.outputs.reused != 'true'
         run: pnpm exec playwright install --with-deps chromium
       - name: Install the exact approved visual Chrome
+        if: steps.prior_acceptance.outputs.reused != 'true'
         id: visual_chrome
         env:
           APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
@@ -88,6 +102,7 @@ jobs:
           "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
           printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
       - name: One build, coverage/runtime once, immutable consumers and full native visuals
+        if: steps.prior_acceptance.outputs.reused != 'true'
         env:
           TMPDIR: ${{ runner.temp }}
           APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
@@ -110,6 +125,7 @@ jobs:
           name: final-acceptance
           path: |
             /tmp/final-acceptance.json
+            /tmp/acceptance-reference.json
             coverage/
             tests/visual/report-apollo.json
             tests/visual/diff/apollo/

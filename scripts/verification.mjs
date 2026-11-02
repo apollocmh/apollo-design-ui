@@ -330,7 +330,7 @@ export function fullPlan() {
       // These consumers build only their isolated fixture, never packages/*/dist.
       node('consumer', ['tests/consumer/run.mjs']),
       node('consumer', ['packages/ui-resolver/tests/consumer.mjs', '--themes']),
-      node('visual', ['tests/visual/apollo.mjs']),
+      node('visual', ['tests/visual/parallel.mjs']),
       docsRun('docs-types', 'typecheck'),
       docsRun('docs-tests', 'test'),
       node('docs-browser', ['scripts/verify-docs-browser.mjs']),

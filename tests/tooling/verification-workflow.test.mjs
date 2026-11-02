@@ -393,7 +393,7 @@ test('the final plan builds once, runs runtime through coverage once and preserv
     false,
   );
   const visual = plan.checks.find((step) => step.kind === 'visual');
-  assert.ok(visual.args.includes('tests/visual/apollo.mjs'));
+  assert.deepEqual(visual.args, ['tests/visual/parallel.mjs']);
   assert.equal(visual.args.includes('--approved-only'), false);
   assert.equal(docsPlan({ build: true }).checks.filter((step) => step.kind === 'build').length, 1);
   assert.equal(
