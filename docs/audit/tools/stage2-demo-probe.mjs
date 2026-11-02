@@ -9,7 +9,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { chromium } from 'playwright';
+import { launchBrowser } from '../../../tests/visual/stabilize.mjs';
 
 const BASE = process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui';
 const OUT = path.resolve('docs/audit/evidence/stage2-demo.json');
@@ -19,7 +19,7 @@ function check(condition, label, detail = '') {
   console.log(`${condition ? '✅' : '❌'} ${label}${detail ? ` — ${detail}` : ''}`);
   if (!condition) failures.push(label);
 }
-const browser = await chromium.launch();
+const { browser } = await launchBrowser();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 page.on('console', (msg) => {
   if (msg.type() === 'error') console.error('[browser.error]', msg.text());

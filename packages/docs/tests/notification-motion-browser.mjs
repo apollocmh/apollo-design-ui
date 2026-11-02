@@ -11,7 +11,7 @@
  * 运行：
  *   DOCS_URL=http://127.0.0.1:4477/apollo-design-ui node packages/docs/tests/notification-motion-browser.mjs
  */
-import { chromium } from 'playwright';
+import { launchBrowser } from '../../../tests/visual/stabilize.mjs';
 
 const BASE = process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui';
 const results = [];
@@ -20,7 +20,7 @@ const check = (name, ok, detail = '') => {
   console.log(`${ok ? '✅' : '❌'} ${name}${detail ? ` — ${detail}` : ''}`);
 };
 
-const browser = await chromium.launch();
+const { browser } = await launchBrowser();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 page.setDefaultTimeout(20000);
 const consoleErrors = [];
