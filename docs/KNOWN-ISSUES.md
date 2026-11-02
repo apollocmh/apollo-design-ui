@@ -26,7 +26,7 @@
 
 ## 历史追溯与验收
 
-macOS15固定原生环境的1875项正式比较已在[当前完整验收41477925031 / attempt 2](https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/2)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。此前Motion54/60的阻塞已由统一浏览器入口、有效采样判据及同代码环境对照修复；[#81](https://github.com/apollocmh/apollo-design-ui/issues/81)已验证关闭，原失败与无效试验保留在[v0.1.8收口记录](audit/2026-11-02-v0.1.8-release.md)。[#82](https://github.com/apollocmh/apollo-design-ui/issues/82)的分层执行及定向预检已落地，计时采样另行收尾，不将其写作组件运行时缺陷。
+macOS15固定原生环境的1875项正式比较已在[当前完整验收41477925031 / attempt 2](https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/2)通过；245张差异图逐项审阅、1630张原基线保留，未降低阈值。旧环境失败事实移入[环境归档](history/known-issues-visual-environment-2026-11-02.md)。此前Motion54/60的阻塞已由统一浏览器入口、有效采样判据及同代码环境对照修复；[#81](https://github.com/apollocmh/apollo-design-ui/issues/81)已验证关闭，原失败与无效试验保留在[v0.1.8收口记录](audit/2026-11-02-v0.1.8-release.md)。[#82](https://github.com/apollocmh/apollo-design-ui/issues/82)的分层执行、定向预检、独立恢复及三次前后计时已验证关闭；[实测](audit/evidence/v0.1.8-ci-timings.json)未证明类型阶段提速，不将反馈链整改写成组件缺陷或整体吞吐已优化。
 
 已修复、重复及过期的逐组件阶段记录、旧计数、旧执行顺序和验收等待均迁入[清理前归档](history/known-issues-2026-11-01.md)，原审计报告和验收证据继续保留。F11 的来源文件漂移已刷新；额外模板检查中 ColorHexInput / PanelPicker 的旧诊断已由当前检查证伪，不保留为开放问题。
 

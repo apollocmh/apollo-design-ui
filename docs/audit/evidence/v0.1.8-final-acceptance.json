@@ -645,5 +645,578 @@
     "jsonParsing": "passed",
     "gitDiffCheck": "passed",
     "biome": "These Markdown/JSON paths are excluded by the repository configuration; the attempted focused Biome command processed no files and is not counted as a format pass."
-  }
+  },
+  "progressDeployment": {
+    "runId": 41495162352,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41495162352",
+    "event": "workflow_dispatch after acceptance metadata update",
+    "sourceCommit": "07ea09ae43b094b881183566efa14b512a4f6d6c",
+    "conclusion": "success",
+    "changesFromAcceptedSource": [
+      "docs/KNOWN-ISSUES.md",
+      "docs/audit/2026-11-02-v0.1.8-release.md",
+      "docs/audit/evidence/v0.1.8-final-acceptance.json",
+      "packages/docs/content/guide/audit-progress.md",
+      "registry/vue-native-audit.json"
+    ],
+    "publicComponentSourceDependenciesAndBrowserChecksChanged": false,
+    "newFullAcceptanceClaimed": false
+  },
+  "online": {
+    "site": "https://apollocmh.github.io/apollo-design-ui/",
+    "deployedSourceCommit": "07ea09ae43b094b881183566efa14b512a4f6d6c",
+    "uiAndFrozenSdkSourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+    "browser": {
+      "version": "150.0.7871.125",
+      "channel": "系统 Chrome",
+      "executablePath": null
+    },
+    "clock": "normal; no screenshot time/random stabilization",
+    "startedAt": "2026-11-02T17:58:10.264Z",
+    "finishedAt": "2026-11-02T17:58:51.028Z",
+    "durationMs": 40764,
+    "passed": true,
+    "themeAndTagChecks": [
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "default",
+        "mode": "light",
+        "appearance": "light",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "default",
+        "mode": "dark",
+        "appearance": "dark",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "default",
+        "mode": "system",
+        "appearance": "dark",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "default",
+        "mode": "system",
+        "appearance": "light",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "mono",
+        "mode": "light",
+        "appearance": "light",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "mono",
+        "mode": "dark",
+        "appearance": "dark",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "mono",
+        "mode": "system",
+        "appearance": "dark",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "mono",
+        "mode": "system",
+        "appearance": "light",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "material3",
+        "mode": "light",
+        "appearance": "light",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "material3",
+        "mode": "dark",
+        "appearance": "dark",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "material3",
+        "mode": "system",
+        "appearance": "dark",
+        "passed": true
+      },
+      {
+        "name": "preset/mode/OS + same native input/draft/selection + actual styles",
+        "preset": "material3",
+        "mode": "system",
+        "appearance": "light",
+        "passed": true
+      },
+      {
+        "name": "refresh retains Mono/system/English preferences",
+        "passed": true
+      },
+      {
+        "name": "client-side page change retains preferences",
+        "passed": true
+      },
+      {
+        "name": "Tag 3 variants × 3 groups: real gaps/wrap/no overlap/styles",
+        "mode": "light",
+        "passed": true
+      },
+      {
+        "name": "Tag 3 variants × 3 groups: real gaps/wrap/no overlap/styles",
+        "mode": "dark",
+        "passed": true
+      },
+      {
+        "name": "Tag 3 variants × 3 groups: real gaps/wrap/no overlap/styles",
+        "mode": "light",
+        "passed": true
+      },
+      {
+        "name": "Tag 3 variants × 3 groups: real gaps/wrap/no overlap/styles",
+        "mode": "dark",
+        "passed": true
+      },
+      {
+        "name": "390px native Header keyboard access and Escape focus return",
+        "passed": true
+      },
+      {
+        "name": "real iframe keeps document, selected Menu value and collapsed state through controlled theme updates; native keyboard expands at 390px",
+        "passed": true
+      }
+    ],
+    "themeAndTagRawReportSha256": "27f6196c31170323021b81353c97d9be150f8acfa8ebcd888911a4a843786ec7",
+    "oracle": {
+      "source": "/tmp/apollo-v018-c6-online-oracle/packages/theme",
+      "version": "0.1.8",
+      "artifactHashes": {
+        "dist/index.mjs": "ea6011208c0f01f710a80075098805b12a539261d5462b1446ef3ae05982df94",
+        "dist/presets/default.mjs": "8707ee9f7ed5dbc46df18154e88fe2a96acfd23f8c244d79a4cd14be9b250152",
+        "dist/presets/mono.mjs": "e2a4c84129a31277a3fabc1d00ddbe5c23204a0123d2961fd837245dd49809cc",
+        "dist/presets/material3.mjs": "3d9148b5ffc321fc12aee02217473823b343cd0f147ef77a5936e4c381a73855"
+      },
+      "sdkFileHashesVerifiedAgainstFrozenManifest": 4005
+    },
+    "headerAndLayout": {
+      "passed": 46,
+      "failed": 0,
+      "reportSha256": "5263713628952fc5b367ee784dfc46f727103fc6e1ee38f402e0bba30ae2359e",
+      "minimumTextContrast": 8.548541171336243,
+      "minimumUnderlineContrast": 8.548541171336243,
+      "minimumKeyboardFocusContrast": 9.307923648735162,
+      "measurements": [
+        {
+          "preset": "default",
+          "mode": "light",
+          "state": "active",
+          "textContrast": 16.558445686376146,
+          "underlineContrast": 16.558445686376146,
+          "focusContrast": 16.558445686376146
+        },
+        {
+          "preset": "default",
+          "mode": "light",
+          "state": "hover",
+          "textContrast": 15.960491119268886,
+          "underlineContrast": 15.960491119268886,
+          "focusContrast": 16.558445686376146
+        },
+        {
+          "preset": "default",
+          "mode": "light",
+          "state": "keyboard-focus",
+          "textContrast": 16.558445686376146,
+          "underlineContrast": 16.558445686376146,
+          "focusContrast": 16.558445686376146
+        },
+        {
+          "preset": "default",
+          "mode": "light",
+          "state": "pointer-pressed",
+          "textContrast": 15.960491119268886,
+          "underlineContrast": 15.960491119268886,
+          "focusContrast": 16.558445686376146
+        },
+        {
+          "preset": "default",
+          "mode": "dark",
+          "state": "active",
+          "textContrast": 13.402131056145574,
+          "underlineContrast": 13.402131056145574,
+          "focusContrast": 13.402131056145574
+        },
+        {
+          "preset": "default",
+          "mode": "dark",
+          "state": "hover",
+          "textContrast": 12.37543385732721,
+          "underlineContrast": 12.37543385732721,
+          "focusContrast": 13.402131056145574
+        },
+        {
+          "preset": "default",
+          "mode": "dark",
+          "state": "keyboard-focus",
+          "textContrast": 13.402131056145574,
+          "underlineContrast": 13.402131056145574,
+          "focusContrast": 13.402131056145574
+        },
+        {
+          "preset": "default",
+          "mode": "dark",
+          "state": "pointer-pressed",
+          "textContrast": 12.37543385732721,
+          "underlineContrast": 12.37543385732721,
+          "focusContrast": 13.402131056145574
+        },
+        {
+          "preset": "mono",
+          "mode": "light",
+          "state": "active",
+          "textContrast": 12.66439506424674,
+          "underlineContrast": 12.66439506424674,
+          "focusContrast": 12.66439506424674
+        },
+        {
+          "preset": "mono",
+          "mode": "light",
+          "state": "hover",
+          "textContrast": 12.270885501357188,
+          "underlineContrast": 12.270885501357188,
+          "focusContrast": 12.66439506424674
+        },
+        {
+          "preset": "mono",
+          "mode": "light",
+          "state": "keyboard-focus",
+          "textContrast": 12.66439506424674,
+          "underlineContrast": 12.66439506424674,
+          "focusContrast": 12.66439506424674
+        },
+        {
+          "preset": "mono",
+          "mode": "light",
+          "state": "pointer-pressed",
+          "textContrast": 12.270885501357188,
+          "underlineContrast": 12.270885501357188,
+          "focusContrast": 12.66439506424674
+        },
+        {
+          "preset": "mono",
+          "mode": "dark",
+          "state": "active",
+          "textContrast": 10.643818217215921,
+          "underlineContrast": 10.643818217215921,
+          "focusContrast": 10.643818217215921
+        },
+        {
+          "preset": "mono",
+          "mode": "dark",
+          "state": "hover",
+          "textContrast": 9.645646410893427,
+          "underlineContrast": 9.645646410893427,
+          "focusContrast": 10.643818217215921
+        },
+        {
+          "preset": "mono",
+          "mode": "dark",
+          "state": "keyboard-focus",
+          "textContrast": 10.643818217215921,
+          "underlineContrast": 10.643818217215921,
+          "focusContrast": 10.643818217215921
+        },
+        {
+          "preset": "mono",
+          "mode": "dark",
+          "state": "pointer-pressed",
+          "textContrast": 9.645646410893427,
+          "underlineContrast": 9.645646410893427,
+          "focusContrast": 10.643818217215921
+        },
+        {
+          "preset": "material3",
+          "mode": "light",
+          "state": "active",
+          "textContrast": 11.733286540773857,
+          "underlineContrast": 11.733286540773857,
+          "focusContrast": 11.733286540773857
+        },
+        {
+          "preset": "material3",
+          "mode": "light",
+          "state": "hover",
+          "textContrast": 11.378604557139061,
+          "underlineContrast": 11.378604557139061,
+          "focusContrast": 11.733286540773857
+        },
+        {
+          "preset": "material3",
+          "mode": "light",
+          "state": "keyboard-focus",
+          "textContrast": 11.733286540773857,
+          "underlineContrast": 11.733286540773857,
+          "focusContrast": 11.733286540773857
+        },
+        {
+          "preset": "material3",
+          "mode": "light",
+          "state": "pointer-pressed",
+          "textContrast": 11.378604557139061,
+          "underlineContrast": 11.378604557139061,
+          "focusContrast": 11.733286540773857
+        },
+        {
+          "preset": "material3",
+          "mode": "dark",
+          "state": "active",
+          "textContrast": 9.307923648735162,
+          "underlineContrast": 9.307923648735162,
+          "focusContrast": 9.307923648735162
+        },
+        {
+          "preset": "material3",
+          "mode": "dark",
+          "state": "hover",
+          "textContrast": 8.548541171336243,
+          "underlineContrast": 8.548541171336243,
+          "focusContrast": 9.307923648735162
+        },
+        {
+          "preset": "material3",
+          "mode": "dark",
+          "state": "keyboard-focus",
+          "textContrast": 9.307923648735162,
+          "underlineContrast": 9.307923648735162,
+          "focusContrast": 9.307923648735162
+        },
+        {
+          "preset": "material3",
+          "mode": "dark",
+          "state": "pointer-pressed",
+          "textContrast": 8.548541171336243,
+          "underlineContrast": 8.548541171336243,
+          "focusContrast": 9.307923648735162
+        }
+      ]
+    },
+    "progress": {
+      "passed": true,
+      "url": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress?lang=zh-CN",
+      "version": "v0.1.8",
+      "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+      "finalAcceptance": "passed",
+      "browser": "150.0.7871.125",
+      "pageErrors": [],
+      "checkedAt": "2026-11-02T17:58:44.778Z"
+    },
+    "screenshots": [
+      {
+        "name": "input-default-light-1440.png",
+        "sha256": "164bfc75e24959fe1a7f881ff40a54de2151ace732096b280867a85a43e7b131",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "input-default-dark-1440.png",
+        "sha256": "779a4b6f934ad6df6eea860745005e0cf3cc74384065248ebcfc224f8af39ea5",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "input-mono-light-1440.png",
+        "sha256": "fb0b43cbe16da43d96aed0e83e8b656b00a87713e2a10bb1a88b5f923bbc3c7f",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "input-mono-dark-1440.png",
+        "sha256": "89f5068e7f326ed820e5c66c2f3963b48be849bf5eef3d5e9369f0b4c7192df4",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "input-material3-light-1440.png",
+        "sha256": "d120dafdb16763a55855bb352b8c08bd64d5a07bfb3eb5f7ca59c8076cd0ca11",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "input-material3-dark-1440.png",
+        "sha256": "fcd6cc1d14e51b3dc3b681b309d793de3325f55ef118ebfa722199b2e4e10be7",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "tag-1440-light.png",
+        "sha256": "4eb3fb0e59ed9c37bb9cf9a479e9ca12a20b55ddd93feec387e915bc9254391f",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "tag-1440-dark.png",
+        "sha256": "bea616f6d059c532130aa7b07d299cc278dedbd30cc44b0f75834e2d161e0583",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "tag-390-light.png",
+        "sha256": "4be5abf24e06081f7dfff2f576c6e9e81a332072a74696b37a334f2a0a826778",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "tag-390-dark.png",
+        "sha256": "0e9477038eb651470294f5cc21691924aa7c688ce6cee9881916049ca359d5ec",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "header-390-mono-dark.png",
+        "sha256": "7da150f29fbc864abd383176900aeaa81277f11f59be8316bd5e94ae65c66ab0",
+        "visuallyReviewed": true
+      },
+      {
+        "name": "menu-frame-390.png",
+        "sha256": "4be66f9938971cb2bba304f2448e567d896ac0fb9ef767682e6f9e08712bc699",
+        "visuallyReviewed": true
+      }
+    ],
+    "review": "All 12 actual screenshots inspected: three input presets in both modes, Tag 1440/390 light/dark, native mobile Header focus and live Menu iframe. No baseline updates.",
+    "pageErrors": [],
+    "httpErrors": [
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/sider-current?lang=en-US&preset=mono&theme=dark&embed=1&frameId=v-0-29",
+        "status": 404,
+        "resourceType": "document",
+        "isDemoFallback": true
+      }
+    ],
+    "requestFailures": [
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/assets/style-class-pW1RydIp.js",
+        "resourceType": "script",
+        "failure": {
+          "errorText": "net::ERR_ABORTED"
+        },
+        "documentURL": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+        "navigation": {
+          "kind": "goto",
+          "from": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+          "to": "https://apollocmh.github.io/apollo-design-ui/components/menu"
+        },
+        "expectedNavigationCancellation": true,
+        "classification": "expected-navigation-cancellation"
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/assets/ExclamationCircleOutlined-Cy_bFeXU.js",
+        "resourceType": "script",
+        "failure": {
+          "errorText": "net::ERR_ABORTED"
+        },
+        "documentURL": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+        "navigation": {
+          "kind": "goto",
+          "from": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+          "to": "https://apollocmh.github.io/apollo-design-ui/components/menu"
+        },
+        "expectedNavigationCancellation": true,
+        "classification": "expected-navigation-cancellation"
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/assets/SyncOutlined-aMVc_U0h.js",
+        "resourceType": "script",
+        "failure": {
+          "errorText": "net::ERR_ABORTED"
+        },
+        "documentURL": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+        "navigation": {
+          "kind": "goto",
+          "from": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+          "to": "https://apollocmh.github.io/apollo-design-ui/components/menu"
+        },
+        "expectedNavigationCancellation": true,
+        "classification": "expected-navigation-cancellation"
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/assets/status-BaVeJxHc.js",
+        "resourceType": "script",
+        "failure": {
+          "errorText": "net::ERR_ABORTED"
+        },
+        "documentURL": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+        "navigation": {
+          "kind": "goto",
+          "from": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+          "to": "https://apollocmh.github.io/apollo-design-ui/components/menu"
+        },
+        "expectedNavigationCancellation": true,
+        "classification": "expected-navigation-cancellation"
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/assets/style-class-i9rHAUJ3.css",
+        "resourceType": "stylesheet",
+        "failure": {
+          "errorText": "net::ERR_ABORTED"
+        },
+        "documentURL": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+        "navigation": {
+          "kind": "goto",
+          "from": "https://apollocmh.github.io/apollo-design-ui/components/tag",
+          "to": "https://apollocmh.github.io/apollo-design-ui/components/menu"
+        },
+        "expectedNavigationCancellation": true,
+        "classification": "expected-navigation-cancellation"
+      }
+    ],
+    "console": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()",
+        "location": {
+          "url": "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/sider-current?lang=en-US&preset=mono&theme=dark&embed=1&frameId=v-0-29",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      }
+    ],
+    "networkScope": "The existing standalone-demo 404 SPA fallback and only the recorded outgoing-document same-origin asset ERR_ABORTED requests during explicit Tag-to-Menu navigation are retained; no other errors were accepted."
+  },
+  "performanceEvidence": "docs/audit/evidence/v0.1.8-ci-timings.json",
+  "followUpTypeSamples": [
+    {
+      "runId": 41477925031,
+      "attempt": 3,
+      "onlyTypesExecutedAgain": true,
+      "all14ChecksAggregated": true,
+      "allLayersSameShaAndInputDigest": true,
+      "originalReportSha256": "175fb78c033e16df2bb648c860ceaab38b1d595af7306f54f970e77a4ee461a0"
+    },
+    {
+      "runId": 41477925031,
+      "attempt": 4,
+      "onlyTypesExecutedAgain": true,
+      "all14ChecksAggregated": true,
+      "allLayersSameShaAndInputDigest": true,
+      "originalReportSha256": "ba629a96817d71c6ed70b9733f9f9fe2ea5f41e11a49d37cec714e12233d245d"
+    }
+  ],
+  "issueClosures": [
+    {
+      "number": 81,
+      "url": "https://github.com/apollocmh/apollo-design-ui/issues/81",
+      "state": "closed",
+      "closedAt": "2026-11-02T17:44:05Z",
+      "acceptanceItemsVerified": 6
+    },
+    {
+      "number": 82,
+      "url": "https://github.com/apollocmh/apollo-design-ui/issues/82",
+      "state": "closed",
+      "closedAt": "2026-11-02T18:17:04Z",
+      "acceptanceItemsVerified": 5
+    }
+  ]
 }

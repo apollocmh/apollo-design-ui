@@ -1,0 +1,226 @@
+{
+  "scope": "Issue 82 comparable public-type stage observations; not three complete-library reruns",
+  "metric": {
+    "start": "First Vitest typechecker experimental warning in the public types stage",
+    "finish": "The matching public-type JSON report written line",
+    "unit": "milliseconds, rounded from the original UTC log timestamps",
+    "excludes": [
+      "checkout/setup/queue",
+      "source vue-tsc command",
+      "tooling",
+      "runtime/visual/Docs and SDK build"
+    ],
+    "why": "Historical reports before command timing was added do not contain whole-command durations; this common observed interval is available on both sides. Current whole-command times are retained separately and are not mixed into the baseline."
+  },
+  "environment": {
+    "runner": "macos-15-intel",
+    "os": "macOS 15.7.9 / 24G830 x64",
+    "node": "v22.23.2",
+    "pnpm": "12.4.2",
+    "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6",
+    "project": "types"
+  },
+  "inputComparison": {
+    "publicTypeCasesProductionVueTypeScriptAndTypeConfigurationChanged": false,
+    "differencesOutsideTypeProject": [
+      "packages/docs/src/styles/site.css",
+      "packages/docs/tests/* browser sampling/scripts",
+      "packages/motion/src/__tests__/hydration.test.ts",
+      "workflow/tooling and dated evidence"
+    ],
+    "method": "git diff f4d478d7..479e5f69 for production source, type cases, Vitest/root tsconfig and lockfile; lockfile hashes checked at each baseline commit"
+  },
+  "before": [
+    {
+      "run": 41393657049,
+      "sourceCommit": "f4d478d7f19b8c74edc9a7f5aac45853aa57dbce",
+      "start": "2026-11-02T05:40:51.3445680Z Testing types with tsc and vue-tsc is an experimental feature.",
+      "finish": "2026-11-02T05:45:36.4384630Z JSON report written to /Users/runner/work/_temp/apollo-focused-check-wODfvc/5.json",
+      "observedDurationMs": 285094,
+      "attempt": 1,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41393657049/attempts/1",
+      "typeStagePassed": true,
+      "wholeRunPassed": false,
+      "originalAcceptanceReportSha256": "a3031179377e29b9a84bc7fb0bcab923aadb06cb0ad81ed8ce238e8a136a944c"
+    },
+    {
+      "run": 41401368824,
+      "sourceCommit": "d6db136aae91484233e1438dde7e46b41b34d6f7",
+      "start": "2026-11-02T06:57:05.1380260Z Testing types with tsc and vue-tsc is an experimental feature.",
+      "finish": "2026-11-02T07:01:48.9176440Z JSON report written to /Users/runner/work/_temp/apollo-focused-check-9e8mAb/5.json",
+      "observedDurationMs": 283780,
+      "attempt": 1,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41401368824/attempts/1",
+      "typeStagePassed": true,
+      "wholeRunPassed": false,
+      "originalAcceptanceReportSha256": "511cb7572605509f1d8bcaaa4371334c2a8f77da5477f99c328df9402b355cbe"
+    },
+    {
+      "run": 41415627881,
+      "sourceCommit": "62de0b718df9241d015a29d57a17ba22deb2ae51",
+      "start": "2026-11-02T09:32:40.6474430Z Testing types with tsc and vue-tsc is an experimental feature.",
+      "finish": "2026-11-02T09:36:28.8266260Z JSON report written to /tmp/final-acceptance.json.evidence/apollo-focused-check-UVBay4/6.json",
+      "observedDurationMs": 228179,
+      "attempt": 1,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41415627881/attempts/1",
+      "typeStagePassed": true,
+      "wholeRunPassed": false,
+      "originalAcceptanceReportSha256": "8152fd004aef65ac349afe947bb60ab8764280a391e83a909acc2b252720a645"
+    }
+  ],
+  "after": [
+    {
+      "run": 41477925031,
+      "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+      "start": "2026-11-02T16:27:42.6591170Z Testing types with tsc and vue-tsc is an experimental feature.",
+      "finish": "2026-11-02T16:35:17.7946450Z JSON report written to /Users/runner/work/_temp/acceptance-types.json.evidence/apollo-focused-check-G6QSlF/1.json",
+      "observedDurationMs": 455136,
+      "attempt": 1,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/1",
+      "typeStagePassed": true,
+      "tests": {
+        "total": 2409,
+        "passed": 2409,
+        "failed": 0,
+        "pending": 0
+      },
+      "wholeTypeCommandDurationMs": 459301,
+      "sourceTypeCheckDurationMs": 287557,
+      "toolingDurationMs": 38808,
+      "host": {
+        "platform": "darwin",
+        "arch": "x64",
+        "logicalCpuCount": 4,
+        "totalMemory": 15032385536,
+        "loadAverage": [
+          10.04638671875,
+          27.8427734375,
+          15.6455078125
+        ]
+      },
+      "finalLoadAverage": [
+        3.8828125,
+        8.3720703125,
+        11.05419921875
+      ],
+      "originalTypeReportSha256": "d7b9e779e966cc6cad46c5ea87da0cd57e8036344cf7936fd690a6aee4ee1864"
+    },
+    {
+      "run": 41477925031,
+      "attempt": 3,
+      "jobId": 125443984117,
+      "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+      "start": "2026-11-02T17:50:17.4891710Z Testing types with tsc and vue-tsc is an experimental feature.",
+      "finish": "2026-11-02T17:56:15.4350000Z JSON report written to /Users/runner/work/_temp/acceptance-types.json.evidence/apollo-focused-check-R259QL/1.json",
+      "observedDurationMs": 357946,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/3",
+      "typeStagePassed": true,
+      "tests": {
+        "total": 2409,
+        "passed": 2409,
+        "failed": 0,
+        "pending": 0
+      },
+      "wholeTypeCommandDurationMs": 361323,
+      "sourceTypeCheckDurationMs": 241728,
+      "toolingDurationMs": 29972,
+      "host": {
+        "platform": "darwin",
+        "arch": "x64",
+        "logicalCpuCount": 4,
+        "totalMemory": 15032385536,
+        "loadAverage": [
+          13.78369140625,
+          23.26171875,
+          11.8701171875
+        ]
+      },
+      "finalLoadAverage": [
+        6.61962890625,
+        10.8720703125,
+        10.83642578125
+      ],
+      "originalTypeReportSha256": "7cc774ca646ee440a31971828e0d703a01b26ff4676fd40da67aceed56fd68f1"
+    },
+    {
+      "run": 41477925031,
+      "attempt": 4,
+      "jobId": 125451570564,
+      "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+      "start": "2026-11-02T18:04:48.9086720Z Testing types with tsc and vue-tsc is an experimental feature.",
+      "finish": "2026-11-02T18:10:42.5236440Z JSON report written to /Users/runner/work/_temp/acceptance-types.json.evidence/apollo-focused-check-k32THM/1.json",
+      "observedDurationMs": 353615,
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41477925031/attempts/4",
+      "typeStagePassed": true,
+      "tests": {
+        "total": 2409,
+        "passed": 2409,
+        "failed": 0,
+        "pending": 0
+      },
+      "wholeTypeCommandDurationMs": 357244,
+      "sourceTypeCheckDurationMs": 262080,
+      "toolingDurationMs": 32256,
+      "host": {
+        "platform": "darwin",
+        "arch": "x64",
+        "logicalCpuCount": 4,
+        "totalMemory": 15032385536,
+        "loadAverage": [
+          14.84033203125,
+          26.04736328125,
+          14.10546875
+        ]
+      },
+      "finalLoadAverage": [
+        3.7958984375,
+        9.27880859375,
+        11.06298828125
+      ],
+      "originalTypeReportSha256": "7f6ab734e8aac0a2503102922b35a12f90b26eace6b231bc4fa47bf034f1afe6"
+    }
+  ],
+  "statistics": {
+    "before": {
+      "samples": 3,
+      "valuesMs": [
+        285094,
+        283780,
+        228179
+      ],
+      "medianMs": 283780,
+      "minimumMs": 228179,
+      "maximumMs": 285094,
+      "spreadMs": 56915
+    },
+    "after": {
+      "samples": 3,
+      "valuesMs": [
+        455136,
+        357946,
+        353615
+      ],
+      "medianMs": 357946,
+      "minimumMs": 353615,
+      "maximumMs": 455136,
+      "spreadMs": 101521
+    },
+    "medianChangePercent": 26.135
+  },
+  "interpretation": {
+    "perStageSpeedImprovementProven": false,
+    "finding": "The matched public-type observed median increased. Do not describe CI fan-out as faster type execution or the original serial run failures as whole-run passes.",
+    "feedback": "All six Docs groups now finish independently immediately after the frozen build; the Linux architecture preflight passed without coverage or 1875 visual comparisons.",
+    "currentFullRun": "The first full run included a checkout DNS/HTTPS failure and waiting for a single-layer recovery. Its total elapsed time is not an accelerated full-run baseline.",
+    "resourceBoundary": "Current layers record 4 logical CPUs, 15032385536 bytes RAM and initial/final load. Historical comparable type stages do not record per-stage CPU/RSS/load, so the cause of throughput variation remains unproven. No worker count or check threshold was changed."
+  },
+  "verification": {
+    "frozenSource": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
+    "inputDigest": "50d5f5e27dd11ff3db8ce87e5d4a7dad3dde5e0fb063e52fdcad06bb933d2f60",
+    "sdkArtifactDigest": "a88df9dd854d5368059b319641ed858f77554351143096247c4e2b6a9be4d988",
+    "sdkBuildsForAdditionalSamples": 0,
+    "runtimeOrVisualRerunsForAdditionalSamples": 0,
+    "newFullRunsClaimed": false,
+    "existingPnpmCacheAndExactShaTagReusePreserved": true
+  }
+}
