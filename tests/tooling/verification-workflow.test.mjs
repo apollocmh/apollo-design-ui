@@ -456,6 +456,17 @@ test('CI keeps PR feedback scoped and Docs browser checks on the single explicit
     acceptance.env.APOLLO_CHROME_EXECUTABLE,
     '$' + '{{ steps.visual_chrome.outputs.executable }}',
   );
+  const resultUpload = ci.jobs.acceptance.steps.find((step) => step.id === 'acceptance_artifacts');
+  assert.equal(resultUpload['continue-on-error'], true);
+  const resultRecovery = ci.jobs.acceptance.steps.find(
+    (step) => step.with?.name === 'final-acceptance-upload-retry-1',
+  );
+  assert.equal(
+    resultRecovery.if,
+    '$' + "{{ always() && steps.acceptance_artifacts.outcome == 'failure' }}",
+  );
+  assert.equal(resultRecovery['continue-on-error'], undefined);
+  assert.equal(resultRecovery.with['if-no-files-found'], 'error');
   const docs = read('docs-ci.yml');
   assert.deepEqual(Object.keys(docs.on), ['workflow_dispatch']);
   const docsCommands = docs.jobs.docs.steps.flatMap((step) => step.run ?? '').join('\n');

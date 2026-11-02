@@ -1,0 +1,1756 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.8",
+  "stage": "reviewed-baselines-final-acceptance-not-yet-run",
+  "expectedScenes": 1875,
+  "candidateSources": [
+    "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
+    "1cc8f37301fbc945602d93024228977d708f5a2a"
+  ],
+  "sdkSourceCommit": "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
+  "sdkDigest": "223af05fc5ed73491a7d4b52a7c1413a89ba40f976c55f08a6d3288cef5b266e",
+  "canonicalRenderingFingerprint": "15.7.9/24G830/3fa4f058cca66b165b77821dad9a2414697454443f690fad321f64654f164d24/c86ce196453f17210d41ca0ee1c19c6dcf15f424dec493aea4003281d6aaea83",
+  "previousBaselineCommit": "95156d1e38e9d746841a695cc852498e190df875",
+  "previousBaselineManifestSha256": "912e013e2ea892f68c45b280d376bee32e76041665f504cc8379d6071d323159",
+  "beforeBaselineComparison": {
+    "passed": 1630,
+    "failed": 245
+  },
+  "unchangedBaselines": 1630,
+  "changedBaselines": 245,
+  "reviewedChanges": [
+    {
+      "id": "input/dynamic-wrappers__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，https:// 前缀、已保存草稿、2–7 选区、清除按钮、0 后缀和蓝色焦点边框均完整且位置一致；375px 窄屏无新增裁切。仅焦点边缘少量平台栅格像素变化。",
+      "previousSha256": "4404e2445a15a74a5830268281dd3443e2a8f4757b8b254d7d2cd321343fddaf",
+      "candidateSha256": "3833432a7c4b82f185f82c8bb2f8a03f587d15b6fa0511f51b1fa4b8e8923fcf"
+    },
+    {
+      "id": "input/dynamic-wrappers__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，前缀、草稿文本及选区、清除按钮、0 后缀的布局和颜色一致，768px 无溢出；动态包装后的原生输入焦点仍清楚。差异仅为焦点边缘少量平台栅格像素。",
+      "previousSha256": "a7e7c5034af8cb6b14c60b6ca65b788a843ec27516a390eaed2c4fce4e7f576b",
+      "candidateSha256": "64a5a9de64e3abdd72d24dd3bb2358efe53508c4b81fb1cbe8beaa1f0ac8fbd7"
+    },
+    {
+      "id": "input/dynamic-wrappers__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，动态包装后的草稿文本、选区、前后缀和清除入口均保持原布局；1440px 未出现截断或错位。差异仅为焦点边缘的平台栅格像素。",
+      "previousSha256": "9576b642ff77a678a99e9ba0b2df1cc2cc3af58581983ffbfa82e982b46822c3",
+      "candidateSha256": "a46d7cdcb20c7c587e02e9cd7983b5f7496d20cf2ecc85cb0ce70e6b206eda97"
+    },
+    {
+      "id": "avatar/native-focus__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，A/B/+2 头像组、蓝色键盘焦点圈和已展开的 C/D 弹层均完整，375px 无遮挡或水平溢出；差异局限于头像重叠圆弧/字形边缘，符合平台栅格变化。",
+      "previousSha256": "253f462496623b5ad7ccd61b91ba8e835ea40174bed61c63edaaf929d48e8e66",
+      "candidateSha256": "ca187b2ee5d6c98cbf4ffe2e263bac05df11ce941e3a575962444c6091b94819"
+    },
+    {
+      "id": "avatar/native-focus__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，头像大小、重叠顺序、+2 焦点圈、弹层位置及 C/D 内容与基线相同，768px 无截断；仅头像边缘出现平台栅格差异。",
+      "previousSha256": "8703306c7942836840272c6f57c77ee34effddfd93439ebf36e27f141028f368",
+      "candidateSha256": "c16bdde8c852493c58b9137dcb5a7beb08a058e3b1056d76eb4b87aa89a5d627"
+    },
+    {
+      "id": "avatar/native-focus__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，组内 A/B/+2 和弹层 C/D 完整，蓝色焦点圈清晰且未移位，1440px 布局保持；仅头像重叠圆弧/文字边缘的平台栅格变化。",
+      "previousSha256": "64c3063800e1526c38b8da98f95f04882cb7d398761bdb695c6324e5ae21e515",
+      "candidateSha256": "d06d62048a7a57da246ae8968015563f379d7819a437022efcd126a8ca2aa6b6"
+    },
+    {
+      "id": "badge/status-placement__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，768px 的状态点、浮动文档按钮及 RTL/LTR 数字角标位置、颜色和内容一致，无裁切；差异只落在文档图标细线边缘的平台绘制像素。",
+      "previousSha256": "2950e189195a6e569020f03e02f9f9ec87833123871b55ed5d2e86acfccc07cd",
+      "candidateSha256": "a5436606fc349deb2ef49d71bd9bcf0b97e9ef0509f1c2a1aec527d3f3205c57"
+    },
+    {
+      "id": "badge/status-placement__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，1440px 的状态点、浮动按钮和 RTL/LTR 角标保持相同位置与尺寸，文字完整；差异仅为文档图标细线边缘的平台栅格像素。",
+      "previousSha256": "9a77c1029a40bea7a0b38777a8f321f2c34a4644662a61367d490dec1db3039e",
+      "candidateSha256": "21eae82bc3b55b0b5ff2b30551dadce6df9637cc87d2230e0a016ce52128246a"
+    },
+    {
+      "id": "badge/semantic-tokens__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，375px 下 25/15、富内容 First tail0、状态点和原生根描边均可见，第二行换行与基线一致，无遮挡；差异限于粗体/斜体文字栅格。",
+      "previousSha256": "08d427509f107723e8eec3461c59071690762aebd571d90f0aa66cb76484c1cc",
+      "candidateSha256": "1230aadd41cefcc0712950fc97ab4a14d709a0b5f320cc88b5040d49e3d0f7e7"
+    },
+    {
+      "id": "badge/semantic-tokens__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图核对后，768px 下九个 Token 示例的红色尺寸、状态点、First tail0 富文本和显式蓝色根边框均保持，单行布局未变；差异限于粗体/斜体字形栅格。",
+      "previousSha256": "652bc89eacdacf2738365e1426df97ba4109461a419c47f258b63737b876fbe8",
+      "candidateSha256": "16c9927c72335e73254f08eba19f14b7018a4a7401ca91552864974b671783fd"
+    },
+    {
+      "id": "badge/semantic-tokens__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，九个 Token 的大小、红/绿/蓝颜色、富文本 First tail0 和根边框一致，未见截断或遮挡；差异仅为富文本粗斜字形的栅格变化。",
+      "previousSha256": "0d1acaed29227fa0c9c5f130abde04badcb3f5344bf2ec7d6f452af355305ea6",
+      "candidateSha256": "6a97ed5529ef4e77a7fac131a153344db0343682914b11e2ca1347c757472370"
+    },
+    {
+      "id": "badge/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，Current draft、15 角标、Current ribbon 和 Business content 完整；RTL 边框在右侧，下面示例的窄屏折行与基线一致，未出现遮挡。差异限于数字字形平台栅格。",
+      "previousSha256": "085ff68df5bf5cadb609863455fcb96a05f11d60c5fad11bddaafccf81abf840",
+      "candidateSha256": "c0fb77f1fcc344674780ba6dcb49b26dc855def8008f5f41911db27e836a92d3"
+    },
+    {
+      "id": "badge/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，Provider 更新后的输入、左上 15 角标、蓝 Ribbon 和共享示例位置、颜色均一致，草稿文字完整；差异仅为角标数字边缘的平台绘制。",
+      "previousSha256": "6a56f999cf2d0b407d5fd060d5336819120654d696662a1b7b2b07e111498e36",
+      "candidateSha256": "10d6b6f64e12d7859448d16950919875d801e3483108bcbd11e076765561184f"
+    },
+    {
+      "id": "badge/current-provider__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，Provider 的草稿、Ribbon、共享状态点、大小计数及右侧蓝边框保持一致，无裁切或错位；差异仅为角标数字边缘的平台绘制。",
+      "previousSha256": "19872c240ca6ad5667a09813155ada9dc828ef16e6ec7b8a95ef723c66fae7af",
+      "candidateSha256": "4a8de033213c4d7f0722fc6dfa22fa5969f9747395ccda30612b4f93a0627b1a"
+    },
+    {
+      "id": "typography/decorations__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，code/mark/underline/delete/strong/keyboard/italic 七种装饰和全部叠加示例均完整可读；等宽字体变宽及行度量变化带来相邻项小幅位移，仍保持3/3/1的窄屏换行，无重叠、截断或颜色丢失，接受当前平台字体呈现。",
+      "previousSha256": "ed29fee3cf21a0eb29130b0fd65a6c227d3c379f479138948691ad48aa847439",
+      "candidateSha256": "7ef9ee81124f6fbfcde8d8bfcdf9c239efb7aebc1a63bc2e7a74bba9a208e8d5"
+    },
+    {
+      "id": "typography/decorations__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，七种装饰保持同一行，完整叠加示例在下一行，所有下划线、删除线、粗斜体及黄色底色可辨；当前平台等宽字体宽度和行度量造成小幅位移，无溢出或遮挡。",
+      "previousSha256": "e8c22ed8b31fd69bea08987bf667de3236f18b0904a9d9bece2fc70d5bc793e0",
+      "candidateSha256": "83ba0aa116452d0c3b2fe910b8d618c2be446d052ce3e3f32e5658cacb3485a4"
+    },
+    {
+      "id": "typography/decorations__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，七种单独装饰和全部叠加的内容、颜色、边框均完整；平台等宽字体度量使后续内容和次行位置小幅变化，排列仍清晰且无重叠、裁切。",
+      "previousSha256": "b2645fd6492285c53b4d98888d52b20fe873d7dfe4806ede2f98753c7134b7da",
+      "candidateSha256": "0d4028471d2aee81d89746be8d23aab16beebd555b3f4a3e769f5a4b05391585"
+    },
+    {
+      "id": "typography/complete-content__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，标题、两段 First tail0 富文本、Retained 输入、复制图标与键盘编辑提示完整，原生输入没有被复制入口遮挡；差异仅为复制图标和粗斜体边缘的平台栅格。",
+      "previousSha256": "d602a9148b4a1c7383b8b2767f2f80ba0efde777a59b7c0ee62cba8a6818133a",
+      "candidateSha256": "6605799b5ae07453c537967bd2d62c771cfc52cc08dc8469bb33814b4a9042d5"
+    },
+    {
+      "id": "typography/complete-content__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，完整原生内容、Retained 草稿和两个蓝色复制入口保持布局与颜色，文字无截断，编辑提示完整；差异仅为图标细线及富文本边缘平台栅格。",
+      "previousSha256": "73fd96c0dbe493cbdf6b656ded4330b2f44830879e95ef23b03134939d7277bb",
+      "candidateSha256": "714b21d0b845b60de26b11522c46eabce375c66ec5ff84a7768a058a009fb902"
+    },
+    {
+      "id": "typography/complete-content__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，标题、富文本、草稿输入和复制入口的位置与基线一致，内容没有缺失或重叠；仅复制图标细线及粗斜体边缘的平台栅格差异。",
+      "previousSha256": "86baa129d99f070263bb6d34770b6c1fc2120d2ff765d1e35ebf561d2f9a9019",
+      "candidateSha256": "323fa5297080c6c52d6e9318d54d9b0d3b4dc33e2a5801b5390b4c8039fb801b"
+    },
+    {
+      "id": "typography/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，Provider stage 1、Current draft、富文本 First tail0 和蓝色左边框完整，原生输入与内容未换位或遮挡；差异仅在复制图标的细线边缘。",
+      "previousSha256": "d508d67d721fc32d9e10a63eac472b483b4148406eb5ead11b4f46c35e5f8868",
+      "candidateSha256": "c5f416bc4ebdbbbec9f512ada016ce64b89e02a8511d690c30417f5364d1c88e"
+    },
+    {
+      "id": "typography/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，当前 Provider 标题、草稿输入、富文本、复制入口和蓝色边框保持位置、尺寸和颜色；无内容丢失，差异仅为复制图标平台栅格。",
+      "previousSha256": "d3634e48faa6d05295b63d4e17cffb45637bd6153aca6aa3eac3080df11ec0c5",
+      "candidateSha256": "6f1369aad5dd5bf2a406e3d817088f9349fe669537680ea5003f684662b74275"
+    },
+    {
+      "id": "typography/current-provider__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，Provider stage 1 与保留的 Current draft 清晰可见，富文本及左边框未变；差异只在蓝色复制图标细线的平台绘制像素。",
+      "previousSha256": "7d8309118c7bbafdda45954e45bbaf8e12dc6ccd6bd9f74f04af0f86580b9b6a",
+      "candidateSha256": "4327a23d60568dfbab62669d05593007de4175bff2e7c6a960092d5dde3cb80f"
+    },
+    {
+      "id": "typography/theme-dark__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，暗色背景、四种语义色、下划线链接、复制入口、多行编辑器蓝色焦点和两行省略/Expand 完整；段落正常换行，未见截断或遮挡。差异仅在复制图标。",
+      "previousSha256": "75933b1e7b154534615562ac780c9cebe114dfe4030ab42fa3fbef10846b9bb3",
+      "candidateSha256": "294b6bcae79317ac07fbeb060bf056af49d40ff164e94d2030e97874c38a6f96"
+    },
+    {
+      "id": "typography/theme-dark__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，暗色主题的文字/语义色与链接均可读，编辑器两行、确认图标、焦点边框及 Expand 完整；布局与基线一致，差异局限于复制图标平台栅格。",
+      "previousSha256": "755d564f9ccfc8e0b5d1943cac075113835ae0702e177da7ac6261ffaf69f727",
+      "candidateSha256": "265284b75c31b20facadc55d15b0d74219aa9541b06525c9a2983773d7937a5a"
+    },
+    {
+      "id": "typography/theme-dark__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，暗色背景与各语义色、编辑器、复制操作、两行截断和 Expand 的布局保持，底部 Destination 完整；仅复制图标细线有平台绘制差异。",
+      "previousSha256": "e4683ee6b4b2e9613617b290d85582db836875404c822076965d7639713cd309",
+      "candidateSha256": "a20e1e6c86009469d9a0f23231ccf42d2478fa7108c56f6af128a691612e3d2b"
+    },
+    {
+      "id": "typography/theme-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，紧凑字号的段落换行、四种语义色链接、两行编辑器、蓝色焦点边框及省略/Expand 均清楚，内容无拥挤遮挡；差异仅在复制图标。",
+      "previousSha256": "9988757e8ffa7daa95cbd346d664df4652e9e34f9dfc9f50e47e03dc894a3ac0",
+      "candidateSha256": "d5d272e30d276b0b4e417d3f42ff1e7ac6b940803449ccb16570adf4ee514dc7"
+    },
+    {
+      "id": "typography/theme-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，紧凑主题的字号/间距、链接颜色、编辑器两行、确认图标与 Expand 保持布局且完整；仅复制图标细线的平台栅格变化。",
+      "previousSha256": "91a47cad073822e28e6ea972582d834c555300f580edb0d5ee30e3ad77256ad3",
+      "candidateSha256": "d10f01a48f7b13ad9453cd3105f9bc8dd2123ab401864274e080ecfeca932299"
+    },
+    {
+      "id": "typography/theme-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，紧凑主题文字、语义色、编辑器和 Expand 完整，蓝色焦点边框未移位，底部内容可见；差异仅为复制图标平台栅格。",
+      "previousSha256": "9c4c68d36aa9983639cd65fe23eca0929c6510cbde7ba932a7ab2040bd37e139",
+      "candidateSha256": "48ff8f389661854c2f113f1ebcf0a8323185ffa0a4c656f162b57fcad46e4480"
+    },
+    {
+      "id": "typography/theme-dark-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，暗色紧凑组合的语义色、链接、编辑器两行、焦点边框与省略/Expand 正常；窄屏文本完整，无遮挡或额外溢出。差异仅在复制图标细线。",
+      "previousSha256": "7a9604f687de8bce42b751b766b18b504b48502ddf034838213ee20062e0e0cf",
+      "candidateSha256": "4f402a059abfc5ee5c3933a55d0b94a6556d8b5d1f93ecf83fc687f4be5f3fea"
+    },
+    {
+      "id": "typography/theme-dark-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，暗色紧凑组合的标题、语义色链接、两行编辑器和 Expand 保持清楚，焦点边框和底部内容完整；差异仅为复制图标细线的平台栅格。",
+      "previousSha256": "ce0a4315c2fe22fddf3cf29f4ecefa15a75f2f287edac9fbc13b7be0aa377db9",
+      "candidateSha256": "f488d201ff49ed6e3fe7c915bf6aaba8f60456f3f46d6cab2d2fdaafe9e79bf3"
+    },
+    {
+      "id": "typography/theme-dark-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，暗色紧凑组合的背景、文字颜色、链接、编辑器与展开入口保持原布局，无截断或遮挡；仅复制图标有少量平台绘制差异。",
+      "previousSha256": "93058cd93ade42e50f90f7a2e6b191287acc17666f70415f3fced908464c8451",
+      "candidateSha256": "0d65545c7b8be3d968ecf1e542701c752fb6dad69612f01b1476ad70110187b8"
+    },
+    {
+      "id": "affix/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，top 80px 的200×60蓝色 AFFIX 内容完整进入截图，白色文字居中且可读，无遮挡；差异只在 sans-serif 字母栅格，块位置/尺寸/颜色保持。",
+      "previousSha256": "67c697ccf08195a3f0c2c0f1b7db541bf238017ba09fa4e6f93d6519aeb330b9",
+      "candidateSha256": "5efcf23b5f8a6f715409a102afd9f62b2efed0cb0a7d8c3923d5abe7d0da57b8"
+    },
+    {
+      "id": "affix/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，蓝色固定块的顶部偏移、200×60尺寸及白字居中位置与基线一致，完整可见；差异只在 AFFIX 字母的平台字体栅格。",
+      "previousSha256": "2b5e4dfc141481be68c02ab12bb6a2673889e5cead8e60d3f953a25e6d1b7ae3",
+      "candidateSha256": "eb94a9039db08b08bd7c910674a9756f45c6df33210677d5dc84c39bace3c078"
+    },
+    {
+      "id": "affix/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，固定蓝块的位置、尺寸、底色和白字居中未变，未出现裁切或遮挡；仅 AFFIX 字形有平台绘制差异。",
+      "previousSha256": "e60749f0012cb4bd4333191de706618e160e25c20dea0c7cdbf6f3e7ca2c33ba",
+      "candidateSha256": "68d7d1669139c9395ae90d5bc895cb2cdf02313ff2627243dcd970e2b6df8e23"
+    },
+    {
+      "id": "affix/offset-bottom__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，offsetBottom 初始未固定的蓝色块在16px位置完整可见，200×60块和居中白字保持，窄屏无溢出；仅 sans-serif 字母的平台栅格变化。",
+      "previousSha256": "b1a8df56220b976d993accb18fed8d423d7176bf1f76f9abec6db9a42c466800",
+      "candidateSha256": "e445af94a8e57d1cc27d273bcd8f3635b4aece41e41683e824c3e85622dba211"
+    },
+    {
+      "id": "affix/offset-bottom__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，底部偏移场景的初始蓝块位置、尺寸和颜色保持一致，白色 AFFIX 完整居中；差异只为平台字体字母边缘。",
+      "previousSha256": "6e7123d60f3fb9c9632670d3cad7541e39ec7d95e33cfe3fc8926df786a82f96",
+      "candidateSha256": "60922468fc755a09f802ca34423afd4eebb9fb5819e0ef59683b5b34de66a958"
+    },
+    {
+      "id": "affix/offset-bottom__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，offsetBottom 初始状态与基线相同，蓝块及白色 AFFIX 均完整且无位移；差异仅在 sans-serif 字体的平台栅格。",
+      "previousSha256": "553384469f770300a05022bcc15aabc0088e50c0b31ec909ae1641fea882b272",
+      "candidateSha256": "a5c4e80e0cce5049f839a709be422567f8063c5ad647caefe501f120f73d3420"
+    },
+    {
+      "id": "affix/class__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，附加 class 场景的 top 80px 蓝块、尺寸和白色居中文字完整，未影响布局或窄屏可见性；差异仅在 AFFIX 字形栅格。",
+      "previousSha256": "67c697ccf08195a3f0c2c0f1b7db541bf238017ba09fa4e6f93d6519aeb330b9",
+      "candidateSha256": "5efcf23b5f8a6f715409a102afd9f62b2efed0cb0a7d8c3923d5abe7d0da57b8"
+    },
+    {
+      "id": "affix/class__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，附加 class 场景的蓝色固定块位置、200×60尺寸和白字均保持，无截断遮挡；差异仅为 AFFIX 字母的平台字体栅格。",
+      "previousSha256": "2b5e4dfc141481be68c02ab12bb6a2673889e5cead8e60d3f953a25e6d1b7ae3",
+      "candidateSha256": "eb94a9039db08b08bd7c910674a9756f45c6df33210677d5dc84c39bace3c078"
+    },
+    {
+      "id": "affix/class__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，附加 class 场景的固定蓝块保持顶部80px、200×60大小和居中白字，内容完整；差异仅为 AFFIX 字体栅格。",
+      "previousSha256": "e60749f0012cb4bd4333191de706618e160e25c20dea0c7cdbf6f3e7ca2c33ba",
+      "candidateSha256": "68d7d1669139c9395ae90d5bc895cb2cdf02313ff2627243dcd970e2b6df8e23"
+    },
+    {
+      "id": "affix/style__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，原生 style 的浅黄色占位区域与下方蓝块完整显示，200×60内容在top 80px位置且白字居中，无裁切或相互遮挡；差异仅为白字平台栅格。",
+      "previousSha256": "147ed0d301ed525a30d7cd332ad78b19e49c0fbbbfbf487402d4600fde153d1b",
+      "candidateSha256": "b97efdc26cdf9c7f6fe29f22d21fd0edee0b49b424786ab0091168ad9e978538"
+    },
+    {
+      "id": "affix/style__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，浅黄色占位区宽度、蓝色固定内容的位置与尺寸均与基线相同，白色 AFFIX 完整可读；差异只在字母栅格。",
+      "previousSha256": "ae84534da1669c5ec3956b011a72a066b06e640f07d4db9cd5015bba65b0050d",
+      "candidateSha256": "fcff087ec6e507ead975a7400f75e8ea104dc0150c0fd03a06d18a41cf835c28"
+    },
+    {
+      "id": "affix/style__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，原生 style 的浅黄占位和蓝色固定块布局保持，完整蓝块与居中白字未被截图边界裁切；仅白色字形有平台绘制差异。",
+      "previousSha256": "c2d714fe9bb9760fe5078c741e495ec7a987417f89b861689729f2d3cced1627",
+      "candidateSha256": "a87252742a6b33c9d2bc6035e2960b29161465991358813a78671f8e39fdd43f"
+    },
+    {
+      "id": "tree/directory__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，目录树展开箭头、文件夹/文件图标、四行内容及 leaf 1 整行蓝色选中完整，选中白字可读，窄屏无横向截断；差异只落在图标细线边缘。",
+      "previousSha256": "0b22f73e7d51f44bb55ee1ee5dc69488bb903739d4b91a8790e22ab11b2825b8",
+      "candidateSha256": "3c477014bf6fe0446aba1d4dff7f625f6a3ab5d546f9cde47f1f634fb6c84a93"
+    },
+    {
+      "id": "tree/directory__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，目录树层级缩进、展开态、全行蓝色选中及四项文本保持，图标清晰且无缺失/遮挡；差异仅为文件/文件夹轮廓的平台栅格。",
+      "previousSha256": "676b3b8c20ed1534ece15e14f203e85499cb364e50002bf9419d7274a5cdcc12",
+      "candidateSha256": "a90e3c0ff16445b1cb301f432297f71de2421af0350abab2cd8376e7d70e5d0b"
+    },
+    {
+      "id": "tree/directory__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，目录树四项内容、缩进、展开箭头和横向选中行保持，白字及文件图标均完整；差异只为图标细线平台栅格。",
+      "previousSha256": "5102a434f43218e93360e65fe63e512561781445bf8bd51e936bfcb461da79de",
+      "candidateSha256": "0feade7e4a88c759bb721f67b51ab2abbfcfabbbd2d063c16c4009a5cc77b919"
+    },
+    {
+      "id": "tree/show-line__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px 逐图核对后，父子连接线完整，展开减号可辨，leaf 1 浅蓝选中、两叶节点及 parent 2 均可见，未见裁切或遮挡；差异仅在减号方框的细线边缘。",
+      "previousSha256": "83ff0ea50a016d49378b911b23071df04282ece7d333970d5ab26373af62653a",
+      "candidateSha256": "6938648d9745f373307324386217548983343da7a6796c19f20f03af1a3d3fd5"
+    },
+    {
+      "id": "tree/show-line__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px 逐图核对后，连接线和展开减号保持对齐，leaf 1 浅蓝选中及全部节点文字完整，层级未变；差异仅为展开方框的平台栅格。",
+      "previousSha256": "bd5f5cb1f8580166ba7c367589df1793b466aa04168f4b84898ffaff07fa8c67",
+      "candidateSha256": "3c17d0221cf9dbd19d4e64f0fe3ca1ad7789fbefc6d70b88f6c80232779874d5"
+    },
+    {
+      "id": "tree/show-line__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px 逐图核对后，父子连接线、减号展开态、leaf 1 选中及四行文字保持布局，图标与线条未缺失；差异只在展开方框细线的平台绘制像素。",
+      "previousSha256": "eee1f239da28b831e567eae3bfd6c2cd19e65dfa24730608ed4fe7fa02e85e41",
+      "candidateSha256": "29f030917fd9d196251b3083b547d86119cfd0a1d547820edfc53460a1799f6a"
+    },
+    {
+      "id": "layout/rtl__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：RTL 侧栏、浮动触发器、内容/输入框及页脚的尺寸与位置一致；差异仅为 Content 首字边缘的少量栅格像素。state 无溢出或遮挡，当前移动端内容可完整阅读。",
+      "previousSha256": "91acd1db756693db3cbfb516b8e7cdad094cecd8205e75876a42a0a0d3d3d773",
+      "candidateSha256": "a95e3d3c138f9cfc63bddfcccb889e7ae6d5603335efe88a79b59b14bea24a75"
+    },
+    {
+      "id": "layout/rtl__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板 RTL 侧栏、触发器、输入框与页脚一致，差异局限于 Content 字形边缘；state scrollWidth=width 且 overlaps 为空，当前布局正常。",
+      "previousSha256": "0db2fbef492fd32b117029bb5ff213f2dca0d0cb6a94d15777ffadaa170d95b3",
+      "candidateSha256": "6a9eef7c808aa1dace173b2f18d29e3c9730a24b426624b99ca34810e29c9471"
+    },
+    {
+      "id": "layout/rtl__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面 RTL 导航选中项、40px 浮动触发器、输入区域与页脚均保持原位；diff 只标记 Content 字形边缘。state 无溢出/遮挡，候选内容正确。",
+      "previousSha256": "681a0bbb710425a548dd2671a925f4945a7a651ba75cbf9e1ea12d7fecbec610",
+      "candidateSha256": "b1bb9b3310cb6702e085463774d3d50dc4bec0377db4406b3f5b0a9081de0f1e"
+    },
+    {
+      "id": "layout/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：Provider 更新后的 RTL、144px 侧栏、蓝色 70px 页头、Saved layout draft 及两行页脚与基线一致；diff 仅 Content 首字栅格像素。触发器完整可见，state 无重叠。",
+      "previousSha256": "22464d96d5af17ae64bb93629e7f79576a4fa206c61c1e0b0de57f241ab9a41e",
+      "candidateSha256": "c9329b0e66c145469a499ef206f80d0b8ec553dbc98b4ea4df2b4b99a6867fe1"
+    },
+    {
+      "id": "layout/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板 Provider 更新后的页头、RTL 144px 侧栏、已保存输入和页脚保持相同尺寸/间距；diff 仅 Content 首字边缘像素，state 无水平溢出或覆盖。",
+      "previousSha256": "837b3fc6da699ab0229eed33800b6218271f1a25bc033b485ee9c8fa10d4c19d",
+      "candidateSha256": "f5225e39283ccc77521bf7d1783b69846ca4cdbcee4cd45ec9ee14b737b54211"
+    },
+    {
+      "id": "layout/current-provider__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面 Provider 的蓝色页头、选中导航、已保存文本及底部折叠箭头完整一致；差异只在 Content 的字形栅格，state 无溢出和重叠。",
+      "previousSha256": "0d374a1d8a9849ca7a4dced74ac54466daff9725b622c30071390a1b160ea61a",
+      "candidateSha256": "4b267709a8d49f944ea221bb99d73407ec98ee45a295c5b50ec44690aa173a19"
+    },
+    {
+      "id": "tag/complete-content__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端完整标签的斜体、Draft、输入、Tail0 与尾部关闭区均完整，尺寸/基线/间距一致；diff 仅尾部 × 的字形像素，state 单根且无溢出。",
+      "previousSha256": "f7aecb50a04f745a05ea7dc51c30429b64c8d5285d4055c9321093098629bf9e",
+      "candidateSha256": "377b51eab36e3426ed7550689e9b169a18aab1a76b5e66df8c46698a1629aa76"
+    },
+    {
+      "id": "tag/complete-content__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板完整标签的图标、Draft 输入、Tail0 和调用方关闭字形均完整对齐；仅关闭交叉线的边缘栅格有差异，无内容/间距变化，state 无溢出。",
+      "previousSha256": "84c5b18db449f017847a5c31ddc78b43aacd8876baac1d45d75389b6ed595d86",
+      "candidateSha256": "57c2819b2f9ba8752a321ff8a9f44707058a360d95a0fd390368b2011eed381c"
+    },
+    {
+      "id": "tag/complete-content__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面完整标签在相同位置呈现全部插槽内容，输入和尾部关闭区无裁切；diff 仅调用方交叉线的渲染像素，尺寸与间距保持一致。",
+      "previousSha256": "e8c8b7a14918898dcc4cb0b7bdf3ba0583b1a76cff6f96e6389428f012c68136",
+      "candidateSha256": "90f926f237e64a89ba12ab59d5a0f253ba962fc27833f0a5653f269aa5fa3096"
+    },
+    {
+      "id": "tag/close-canceled__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端取消关闭后 Close label 和 Still visible 两标签仍在，调用方关闭字形完整；差异只落在交叉线边缘，state roots=2 且无横向溢出。",
+      "previousSha256": "55fc3e28aff804204fc750b56e56e7a086fbbf58b3266f5d614a645e1ff76de6",
+      "candidateSha256": "d6760c05544ae53c141b4e779c2423867cdc15c0109c837daedcd5d73bdff940"
+    },
+    {
+      "id": "tag/close-canceled__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板取消关闭状态仍显示两标签，文本、背景、间隔和位置一致；diff 仅调用方 SVG 交叉线边缘，未见缺失或焦点异常，state 无溢出。",
+      "previousSha256": "24384c9571049e226b10f03fa736b02f6ec44804d6525fb20d7f777919985910",
+      "candidateSha256": "d713b265ad0ceba8a130464f559a01698d12665d0a7494628389104013a708ab"
+    },
+    {
+      "id": "tag/close-canceled__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面 Close label 与 Still visible 完整保留，两标签尺寸/间距一致；差异局限于调用方关闭交叉线的少量栅格像素，候选状态正确。",
+      "previousSha256": "b3053fe2809bd55b8d38269bd0dba8a4762e452f3bd3f392b318575f8c273144",
+      "candidateSha256": "9366e2fa4dd6cdd12a8b9685ba6ebd3825caa8ece8d3aac27167241c3fd47d48"
+    },
+    {
+      "id": "tag/semantic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端四语义区的虚线边框、加粗图标/文本、输入和 8px 关闭间隔均保持；diff 仅交叉线边缘，全部内容完整且 state 无溢出。",
+      "previousSha256": "d0ba9327afe47d8045a167ddfa276d7624f1ebe2e118bded8bf23baa736e1225",
+      "candidateSha256": "49626e75ff644bc784e58ed137a188a2553504fc828503bbfd63182f84cfabea"
+    },
+    {
+      "id": "tag/semantic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板语义标签的虚线根边框、加粗内容、65px 输入和独立关闭区均一致；仅 SVG 交叉线的边缘栅格不同，未见尺寸、对齐或颜色退化。",
+      "previousSha256": "0a58f0b3e2da98d62bca51be7b2441ac8e3883e31b53d3549c17cd39d6423425",
+      "candidateSha256": "ffc68c7bf7f78babb5076ee8ac5439f5b1c3b8e2287c0091f6610507aec643ef"
+    },
+    {
+      "id": "tag/semantic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面语义标签全部插槽内容完整，根边框和关闭区间距保持；diff 只在交叉线局部，state 单根且 scrollWidth=width。",
+      "previousSha256": "6d3e3c46faaf44f6c9b2bcb9ae983bb48fecaef968dca77444e65ae198c80d83",
+      "candidateSha256": "f950ce23ad0e9abf7ebd945aa55615578f7eefc7f190dcd592afdb99c3874127"
+    },
+    {
+      "id": "tag/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端 Provider 更新后的蓝紫背景/文字与加粗样式一致，草稿输入显示相同的尾部滚动内容；state 确认 Saved draft 保留。仅关闭 SVG 交叉线边缘不同，无新增遮挡。",
+      "previousSha256": "2a91e5d1bf4a26321da63b5fd728e71dc021442cfad4bb98d7af61c696c73ce9",
+      "candidateSha256": "96fa6564b7a299994190d51ad3631d31704c63ec5f2831efccaa61b010e1be5a"
+    },
+    {
+      "id": "tag/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板 Provider 标签的蓝紫配色、内容粗细及草稿输入滚动位置一致；state complete=Saved draft。diff 仅关闭交叉线边缘，候选无新增裁切或溢出。",
+      "previousSha256": "640caf83eb83a2db8188abf21c8cdb5e9ff5dbc811031aa3bab687c9f67de0b6",
+      "candidateSha256": "779a56fe555089fbe5be3e9f3d135aef2212c9dcd0a04472cc98fb15d5bb13db"
+    },
+    {
+      "id": "tag/current-provider__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面 Provider 标签保留草稿输入与所有图标/尾部文本，背景、颜色和尺寸一致；仅关闭 SVG 局部栅格有差异，state 确认草稿完整。",
+      "previousSha256": "4bc834a973b04d6300baabb481d9703dda97fcb8f3c938cb8cc3dd3526dca9c6",
+      "candidateSha256": "d384afe23ee4f31f068335d6e7152e3e8b2806a68aacf764ca4b1083265a09a9"
+    },
+    {
+      "id": "tag/rtl__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端 RTL 标签的关闭区位于左侧，图标在右侧，Custom 正常换到下一行；7 个标签颜色、顺序和间距一致。diff 仅首标签交叉线像素，state 无横向溢出。",
+      "previousSha256": "1cdd85adbf29d1e68dac7c7ba144a976adccd28aace60f77b12fefa0e7c91c2a",
+      "candidateSha256": "ef9dcf6bea04e1961efbcd22cef71da629b0941a7097feeee836d7de98d77d83"
+    },
+    {
+      "id": "tag/rtl__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板 RTL 首标签左右语义区正确，下面六个标签保持同一行，文本/颜色/间隔一致；差异只在首标签关闭交叉线边缘，state roots=7 且无溢出。",
+      "previousSha256": "2c87fc7e493c21a0091ea69d8af98113372c517e043cd5c6fde31447bd41e9b4",
+      "candidateSha256": "62df9dec5f3efcd03d5a8c0c2e59a2ad60882c2bded7e8e0749a8cc37c421fd4"
+    },
+    {
+      "id": "tag/rtl__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面 RTL 关闭区、图标、Draft 输入与 Tail0 顺序完整，第二行各色标签一行呈现且间距一致；diff 仅首标签交叉线局部栅格，当前图正确。",
+      "previousSha256": "f49c81503463ade482aae90debd0f9f05f59dc67c229a003b77cb8ea1b111856",
+      "candidateSha256": "a26dae757e6945ef22fd445d105acb3881d4d249e794e0e05700def7903fe6f5"
+    },
+    {
+      "id": "button/type__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端六种按钮均完整，Link/确定仍按相同顺序换到第二行；英文控件尺寸与间距一致，差异集中在确定的中文字形及不足 1px 的宽度取整，未引起遮挡/新增换行。state 六按钮、无溢出。",
+      "previousSha256": "b8a2bd14e8773f6b43e0a8cad3ee58e97e82a8da1b06301e6e226167807a938a",
+      "candidateSha256": "88bbc4c6d1e5585d1d69661f4b7711a6023ce80fc0c87bbcbe02a23a2091ed79"
+    },
+    {
+      "id": "button/type__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板六按钮单行、类型配色、虚线/边框和间隔一致；diff 只落在确定中文字形附近，文字完整居中，无布局或状态改变。",
+      "previousSha256": "9486a32c36b4b5bbaea396c5035fb5df6dc3849233169739ba0c3b31c78b7921",
+      "candidateSha256": "69fd204cf9f125d1d3d04c6d046559d5234dd1ff1a91f69ff3d040a8c783be92"
+    },
+    {
+      "id": "button/type__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面六按钮单行排布与各类型外观一致；差异仅确定中文字形栅格，未见裁切、位置变化或焦点异常，state 六个内容宿主且无溢出。",
+      "previousSha256": "48c5bfda5d64117ef3311652460572d5012948398425af0a0bdd3ca982074a0e",
+      "candidateSha256": "9748c88f0d79503a126fc97b5ffd94fb7bb355f305145c5059650ec115969549"
+    },
+    {
+      "id": "button/complete-content__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端完整业务内容与前置 ✓ 同行，确定及后置 ✓ 按钮正常换到第二行；内容无截断。中文字体度量的细小差异传到相邻文本栅格/边框，未改变排布；state 三按钮、无溢出。",
+      "previousSha256": "373f6df270b952b3665c3dab3307ccda430ed90fa53d5b82acf93eb59605cce0",
+      "candidateSha256": "608da634576aa6c03607114ca932e698df806a61326584135184c259957a36fa"
+    },
+    {
+      "id": "button/complete-content__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板三按钮完整单行，强文本 business content、尾部 0、确定、末端 ✓ 均正确；中文度量/相邻控件亚像素取整造成字边及右边框局部差异，间距和可读性正常。",
+      "previousSha256": "2ccc668edd9acfb807b91d917bdc7d0a7ba05785209b79b5a17d449823ef59d9",
+      "candidateSha256": "0275fe978dde1e649c69d8a6ad5e96a9000799112c8859d16b75ed90337b5e42"
+    },
+    {
+      "id": "button/complete-content__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面完整内容按钮和两种后续按钮保持单行，前后图标位置、32px 高度与文字齐全；diff 集中于中文和其后控件的亚像素渲染，未见裁切、遮挡或新增换行。",
+      "previousSha256": "d5d430fefe2ca1108866b126b23c007007f57205eb2a74307f17a3694dcf52e9",
+      "candidateSha256": "3a2fb4b0fc5baa3c1b6d259f0132e58a2e8158b9bef866dd9a28ed50355a57f9"
+    },
+    {
+      "id": "button/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端 Provider 的圆形边角、主色描边、灰色禁用态与 Local square 三行布局一致；diff 仅圆角/底边阴影的栅格边缘。文本完整且四按钮无溢出，候选样式符合场景。",
+      "previousSha256": "bebb9b099a7f8546743d4715006930d939ba9f8e809f89556abc44185affb1da",
+      "candidateSha256": "ae63f311b2610d2fe250bf5af616fb50d8fd6b85d88d9fa2a454837ec37653f8"
+    },
+    {
+      "id": "button/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板继承圆角主色、显式描边、嵌套禁用和方角覆盖四按钮单行一致；差异只在圆角底边的少量抗锯齿/阴影像素，边界尺寸与间距正常。",
+      "previousSha256": "e1f55f6086fe8d626515c71bd8ac0a2635cd3114f641f60a3770135202356930",
+      "candidateSha256": "5e431b4862c068e0ca4f7c04c58ac226a452a8e8fc0d119be7be9d1cb9ade613"
+    },
+    {
+      "id": "button/current-provider__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面四个 Provider 按钮的文字、颜色、禁用状态、圆角与方角覆盖均正确；diff 局限于圆角下缘栅格，无几何位移、裁切或状态变化。",
+      "previousSha256": "08ca99c41ee0227ee217a7284976263e7a7909578d6a416b3d2cd3ad6280201f",
+      "candidateSha256": "1eb19cf384f5eb62bc3e2e71819237f3f395463bf0f791e5ecc84eee35557585"
+    },
+    {
+      "id": "button/theme-dark__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：暗色移动端背景、各类型按钮及 Text/Link/确定第二行保持，中文标签完整可读；diff 在中文字形和由其宽度取整产生的右边缘，未增加换行或遮挡。",
+      "previousSha256": "733b812a6425521aebaa8109946c7c96f36d0562d590dd7d1c77a21fd88f2a72",
+      "candidateSha256": "ae71cfb2c59d5f6c956d7afd15c878a1bcc981c687982d7c696c6b3792f443a8"
+    },
+    {
+      "id": "button/theme-dark__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：暗色平板六按钮单行，主色、普通/虚线边框与 Link 对比度保持；差异只在确定字形边缘，候选无缺字或内容裁切。",
+      "previousSha256": "b9119fac9ffa30a4e2e8bc385d94210dd74168eed4cc1c33cd4f4d1134d8065a",
+      "candidateSha256": "e88c62288fdce906962846e5271f2f6627a12c7f34bb701cee3438e3c73c3156"
+    },
+    {
+      "id": "button/theme-dark__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：暗色桌面按钮尺寸、排列、背景和文本颜色一致；diff 仅确定中文字形栅格，六个内容宿主正常且 state 无横向溢出。",
+      "previousSha256": "33f8bdf9afcd98223fabe158ba9a79645c15bc3326b359cdd623ffa7cca6760b",
+      "candidateSha256": "c180a008b2b125280719c4d86a4a61ef87c99e15eac24a4b77c7aae6e0c93179"
+    },
+    {
+      "id": "button/theme-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：紧凑移动端按钮较小字号/高度保持，Link 与确定在第二行，所有文字完整；中文栅格及宽度取整令其右缘约 1px 不同，排布、间隔和状态正常。",
+      "previousSha256": "af630d118e46266ece0aa885e09dbb0f2424ee4a23465c879424ebfa3d3127d7",
+      "candidateSha256": "a02b0b1dabc91a1bb802b443e478eb599cfed63d82afd46ec5a215f3a9717adf"
+    },
+    {
+      "id": "button/theme-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：紧凑平板六按钮单行、紧凑高度与各类型配色一致；diff 仅中文笔画和其按钮右边缘取整，未见挤压、裁切或溢出。",
+      "previousSha256": "fc1613e598ec6816173a43a3fea081f769eeece55d25ed73b09a9b132e296b83",
+      "candidateSha256": "633229641a667ee6bc2e6bbf65a0f1f6108e6417c3aefb0f749eec7510450fd6"
+    },
+    {
+      "id": "button/theme-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：紧凑桌面文字、主色按钮、普通与虚线按钮和 Link 均完整对齐；差异仅中文的字形/宽度栅格取整，state 六按钮且无溢出。",
+      "previousSha256": "85f14d941a2804368ed3bdb7252a6aa58eb6424b3a77bb7e3ad100366eebcb1e",
+      "candidateSha256": "a2f4500d7bc360b2773181243d0939d3c034a464bfc6b173f76b6c714480e136"
+    },
+    {
+      "id": "button/theme-dark-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：暗色紧凑移动端六按钮内容完整，Text 留在首行、Link/确定第二行，背景与紧凑尺寸一致；diff 仅中文笔画与右边界取整，未造成额外换行。",
+      "previousSha256": "ecd8bd014045864ac97a64fde6996c23c6c19ea446a96111128279e318618cc6",
+      "candidateSha256": "bf8dd3222483001ec7e2e1a3ca5e377ea2f0f3a35d04e11b95e316a448d36437"
+    },
+    {
+      "id": "button/theme-dark-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：暗色紧凑平板各类型按钮单行、对比度与高度正常；差异只在确定中文字形及控件右缘栅格，文字完整、无拥挤或裁切。",
+      "previousSha256": "63bd64b7ba964a0628e0c8b176c5d83623b6bfc8ea2d92a39cb1777633f5fa7a",
+      "candidateSha256": "d08ce91c25020ccb98c6d3d2051bf66e6a7b0b5f8b876b65561777f5263c40d5"
+    },
+    {
+      "id": "button/theme-dark-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：暗色紧凑桌面六按钮排列、字号和配色一致；diff 局限于中文标签/边缘取整，state 六内容宿主且无溢出，候选呈现正确。",
+      "previousSha256": "657594b80a54c46aaa27bd2bfdbe2c1b4e2b3da5eda36e688b997b97b368af9c",
+      "candidateSha256": "f3a94b5bc1f1b3c38c827857aca7570219d03ed1a9691b5393885ecfac973dc2"
+    },
+    {
+      "id": "date-picker/variants__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端 12 行变体的日期值、边框/填充/下划线、大小、错误/警告色、禁用态及前后缀均正确且与基线同位；diff 只覆盖左侧说明标签的字体度量/栅格。标签固定 140px 宽，控件无移位或裁切。",
+      "previousSha256": "f99ca92fd54b65bf36a51ed0bdb4d00e816e3822f1d822e70c2b50be52ef6224",
+      "candidateSha256": "d4deb9ac7b520cdfe8905835f9b232b7a76fd349e7f6c78fd04e6d7cc7ae3232"
+    },
+    {
+      "id": "date-picker/variants__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板 12 行日期变体内容、尺寸、状态色、禁用灰度、¥ 前缀和无后缀呈现正确；diff 全在固定 140px 左侧标签的字形/度量，触发器位置不受影响，间距及完整内容正常。",
+      "previousSha256": "5eb8f81896b18b4ab11f72e5784f352f0220f0497795503a6fa52918650ae0c9",
+      "candidateSha256": "1cf164f7da240bf6316d79954d9edbcfd1dd1a96d8c8c2dfd033ae9be066f928"
+    },
+    {
+      "id": "date-picker/variants__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面所有变体的 2026-09-30 值、日历图标、大小和状态视觉与基线同位；只有说明标签字体栅格/宽度不同。标签未换行或侵占输入区域，候选内容完整。",
+      "previousSha256": "af119e444464b575a159bb74d28478df132272ecddb72247591d7d26a0c439ea",
+      "candidateSha256": "72643531c16564d8d2f09edbd00684347b840854bb81d8073f2186d7292bad39"
+    },
+    {
+      "id": "cascader/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端浙江/杭州值、三级展开内容和浙江/杭州高亮均正确；三列、箭头、边界及阴影保持，西湖完整可见。diff 仅中文笔画栅格，无新增换行或列遮挡。",
+      "previousSha256": "ae3d8eba58ace792e0857a90c2d351fd360a7f0bfcf2333af5eafa88079c32ee",
+      "candidateSha256": "f416c345e75bcd9d59c220ea3b65eb698bcd09734af73df12b090d89997898ee"
+    },
+    {
+      "id": "cascader/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板基础级联的输入值和浙江/江苏、杭州/宁波、西湖全部完整，选中高亮、箭头与三列尺寸一致；差异局限于中文字体边缘，未见位移/遮挡。",
+      "previousSha256": "08c2a9267c2e85e93c7ce7b53401c39f903647a30e468807067fc5238ca7620a",
+      "candidateSha256": "69785eb815824508959e6a39ce4def73b186508ba45f11badc6f9bcdcfe0c83b"
+    },
+    {
+      "id": "cascader/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面基础级联保持三级路径、两列高亮和完整选项文本，输入与浮层位置、边框及阴影一致；diff 只落在中文笔画，候选内容和间距正确。",
+      "previousSha256": "54ee82b31e58f0d5cb58e2faa92778a3956dfd7e790c0926ed350a34847ae76f",
+      "candidateSha256": "969d43f8f9f6f7ab8bb78c955f3d7b122ba8fd5e1b4c444d84f297b3724820c6"
+    },
+    {
+      "id": "cascader/multiple__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端多选未选值输入、两个未勾选复选框、浙江/江苏与展开箭头全部正确；菜单尺寸、间距与阴影一致，diff 仅中文字体笔画，没有内容缺失或遮挡。",
+      "previousSha256": "fff0ea0f475bd91eddd730340b4583b9b34d9f3c9462747aaad7da7bcbde8dfc",
+      "candidateSha256": "f82942969595d540d9677f048d3607456d93bf19447c23be8e0f4ea3a058a153"
+    },
+    {
+      "id": "cascader/multiple__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板多选首列保持两项未勾选、空输入和右侧箭头，所有内容完整；差异仅浙江/江苏的字形栅格，菜单几何、边框和阴影未变。",
+      "previousSha256": "00626e91bb3065aab9e4496a06b1f63fae3ded49b0b21c7044197d1732f2097e",
+      "candidateSha256": "e2fdf01a294652bb667fd3968dfe58898f81519a6e49f46ecad37e592ad157e4"
+    },
+    {
+      "id": "cascader/multiple__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面多选空值与两项未勾选状态正确，列宽、上下间隔和浮层位置一致；diff 仅中文笔画边缘，无额外换行、遮挡或状态漂移。",
+      "previousSha256": "06630ea9d151ace2035f8f39c6d8d9191d5a237a44e417b58adde5f6958061c2",
+      "candidateSha256": "851f5e17d07374db8bc2ade99e4912863addc47aa74e3ec45497517cbf0cfcbe"
+    },
+    {
+      "id": "cascader/panel__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：移动端独立面板浙江/江苏与两行展开箭头完整，80px 面板高度、边框圆角及行间距一致；diff 仅中文笔画栅格，候选无裁切或遮挡。",
+      "previousSha256": "1cf03d25e8080acc385523fda05adc6a5b54a4bb621f980f69441b5641400190",
+      "candidateSha256": "21901ed3e34e9a7388be79268777251ef3836f0d99633cc20e2c2e38b136415b"
+    },
+    {
+      "id": "cascader/panel__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：平板独立级联面板两行文本、箭头和外框均保持，字形变化未影响行高、对齐或宽度；diff 只在中文笔画，当前内容正确。",
+      "previousSha256": "1b41e4c8a30d0feb363d7d2df3fb0f373bff099351e3da46d72b00313f8254c1",
+      "candidateSha256": "67c501e264ea3dbd57ec0a8a71e504ca69aa24e4963490fde3308ce43c4ea27d"
+    },
+    {
+      "id": "cascader/panel__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐图对照：桌面独立面板完整显示浙江/江苏与展开箭头，边框、圆角、上下留白和行距一致；仅中文字体栅格不同，无内容/颜色/几何退化。",
+      "previousSha256": "a816c015cd6520115adcf50a67235d6784a92e2293fb9923c2dee36a0a2a72cd",
+      "candidateSha256": "d59bff447f20b25671e9e40d0eb27a1d5f890ea814f19d38f4e084205031aae2"
+    },
+    {
+      "id": "pagination/totalText__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。375×136 尺寸一致；共 500 条、当前第 3 页、上一/下一页及省略项内容完整，50 与下一页按窄屏同样换至第二行且未裁切；中文总数的原生字宽/栅格差异令第一行后续项约右移 1px，当前页蓝色边框与文本色保持正确。fixture/分页 CSS 确认为固定字号与 flex-wrap，没有内容或响应式退化，归为 Mac12→15 字体平台差异。",
+      "previousSha256": "ff8fd5ab27b8766a39df346e4be92db296c176cf64542d2decec158f5df7f7ce",
+      "candidateSha256": "f191e660697bdfd78b7a340f670fdf108272ad70ea15a5d367fce6f4e64573c7"
+    },
+    {
+      "id": "pagination/totalText__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。768×96 尺寸一致；共 500 条、当前第 3 页、50 页末项、10 / page 均清晰完整且单行排列，未出现挤压或焦点样式异常；中文总数字宽令其后页码和选择器约右移 1px，选择器尺寸、蓝色当前页框及灰色箭头保持正确。与 total slot/固定 32px 分页项契约吻合，归为 Mac12→15 字体平台差异。",
+      "previousSha256": "11ef07726ebcdf12de2916325607692e621220e4ae0814f41654518568f70e16",
+      "candidateSha256": "01f2bdc91555d6940995d51a20176317025a5ca67588b3bf5b7ad35abbde12b9"
+    },
+    {
+      "id": "pagination/totalText__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。1440×96 尺寸一致；桌面额外第 5 页仍显示，总数、页码与 10 / page 无缺失、换行或遮挡；总数字宽造成后续项约 1px 横移，当前页边框、尺寸与颜色稳定。fixture 内容及分页固定项尺寸未改变，归为 Mac12→15 字体平台差异。",
+      "previousSha256": "026e5d71eae6322f081bf8b9a327b09ebb45c8e55cb37d95809afb0b70a46713",
+      "candidateSha256": "3497d37468f5e18ae26aed27bc2fdf10476add35ceb44b63ebf0f2b3d87deeff"
+    },
+    {
+      "id": "watermark/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。375×292 容器和 260px 子区域一致，Ant Design 文字完整清晰、默认 -22° 倾角与交错平铺正确；右下边界处部分重复文字被容器裁切与基线相同，未产生内容遮挡。差异限于原生 sans-serif Canvas 字形/字宽及相应平铺间距；源码以 measureText 宽高计算瓦片，规范环境已硬查指标，归为平台差异。",
+      "previousSha256": "6cfc49e1e92d4b653a52611915b4a0822ffc9ef96b48d7efd4ae0473f6492041",
+      "candidateSha256": "a11d5d92ade6491d0a1c697a143cba8dd6135c624b9665ba93ebb25bcdb4d479"
+    },
+    {
+      "id": "watermark/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。768×292 容器一致；四列交错重复的 Ant Design 完整、倾角与淡灰色保持正确，底部同样按容器边界裁切。候选随字宽略增而逐列累积横向位置差，未发生重复丢失、拥挤或遮挡；与 measureText 驱动的瓦片计算和已核验原生 Canvas 指标一致，归为平台差异。",
+      "previousSha256": "c7ededb4cbb9410de1ac2e685e33da3593dccaf0c744a08b2b6bb88b79865799",
+      "candidateSha256": "27b560387397d378685b8c6426acae99175d3320810cd6a56341d9637467c7ba"
+    },
+    {
+      "id": "watermark/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。1440×292 容器一致；宽屏全部重复列均逐一查看，文字完整、倾角与交错行次序正确，边界裁切符合容器。差异在文本轮廓及随列累计的间距，最右重复仍清晰且不重叠；源码以原生 measureText 决定瓦片大小，与已核验 Canvas 字宽变化一致，归为平台差异。",
+      "previousSha256": "581617e17be03e3de892acd67b8680e372614ff00cfad85c23956f2f8f0b511d",
+      "candidateSha256": "887b36a5c64a53a4703c60aa57c68e9134e0e03919ab07f8adc41357690afa50"
+    },
+    {
+      "id": "watermark/multi-line__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。375×292 尺寸一致；Ant Design 与字号更小的 Happy Working 两行均完整清晰，行距、共同 -22° 倾角及交错关系保持正确，无二行互相覆盖或切断。变化限于原生 Canvas 两组 sans-serif 字形/字宽和相应平铺间距，与 multi-line fixture 和 measureText 计算一致，归为平台差异。",
+      "previousSha256": "d025606521be46f47f662f54082887dddfcafadf79637426df7934fc3dcf6056",
+      "candidateSha256": "76d29b6e5b953db1f03b8418164e07d310e786acda61ab2eb4a82e1703c41cf0"
+    },
+    {
+      "id": "watermark/multi-line__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。768×292 尺寸一致；逐个双行标记确认 Ant Design/Happy Working 内容、第二行 12px 层级和行距正确，交错图案不重叠、无新裁切。随列累计的微小横移及字形差异符合两组原生 Canvas 指标变化与源码尺寸计算，归为平台差异。",
+      "previousSha256": "3cf8278a32640a3a720e1aafe5de2284c5d39e9e6fd22e2aa89035ed3c6beb67",
+      "candidateSha256": "580caa4344152f52e9b9924f802d4360120b75c9f277f99c5c9ac45c547f7aad"
+    },
+    {
+      "id": "watermark/multi-line__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。1440×292 尺寸一致；全部双行标记的文字、字号层级、-22° 倾角与交错平铺正确；右侧部分重复被容器边界裁切，基线亦如此，内部标记完整、没有遮挡。横向累计位移和轮廓差来自原生 measureText 字宽/光栅变化，归为平台差异。",
+      "previousSha256": "51da6a7700662dad8e21bf1ce7f8a72a9b54e7b35d885368d2dd6f77f62a6679",
+      "candidateSha256": "fe92e3eccdedc442b8288bf5ea9dbf1a1f8b7d1459b5dbdd4f23c1a525692d3f"
+    },
+    {
+      "id": "watermark/gap-offset__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。375×292 尺寸一致；浅灰子区域边界、-15° 倾角、较密交错平铺与 offset [20,20] 正确，内部 Ant Design 完整清晰且不重叠。顶部/底部及右侧重复按背景平铺边界自然裁切，基线亦有；差异仅字形和随原生 Canvas 字宽变化的周期位置，归为平台差异。",
+      "previousSha256": "32a0b4388a5ac11c5718f9e1268fbc8ca5cc07b6f3b981fdcec38aad4137222d",
+      "candidateSha256": "fe2ea09d25a0ea6f6c09cf44389d246bd135b31df49723038f20eb657b3afc41"
+    },
+    {
+      "id": "watermark/gap-offset__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。768×292 浅灰子区域和容器边界一致；全部内部 Ant Design 完整、-15° 倾角和密集交错行次序正确，没有重叠或遮挡。首尾重复的边界裁切与基线同类；随列累计的水平位移与原生 measureText 字宽驱动的平铺周期一致，归为平台差异。",
+      "previousSha256": "42464e0192a42e12bb988498a3f922012aec6ce210acaca0687284f150a13cc6",
+      "candidateSha256": "b498c0dac02663a48e3d55c7d95ea51df3415d2c3eb26c6bd92ffb91c6971cf7"
+    },
+    {
+      "id": "watermark/gap-offset__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。1440×292 容器与浅灰背景几何一致，逐列确认文字清晰、-15° 旋转、gap [40,60] 与 offset [20,20] 的交错关系正确。右侧边界露出的末端重复面积随平铺周期变化，内部标记无缺失、叠字或遮挡；源码未改，变化符合已硬查原生 Canvas 字宽，归为平台差异。",
+      "previousSha256": "fb6b0621b78925c6ca37a7ef4717bebb4bc78c00ddb24531d9d6a335d650d66f",
+      "candidateSha256": "37710e9693c5a0cadd6da56d659182f95220da109f95bf9c60ddaa0609bd5955"
+    },
+    {
+      "id": "drawer/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。375×452 窄屏面板完整适配可用宽度，关闭图标、Drawer Title、Extra、正文和 Footer 全部完整，标题/页脚分隔线与内距一致。比较器仅标记标题 y=39、x=141..143 的 3 个字体像素，没有几何或颜色契约变化；组件生产实现与视觉 fixture 自原基线提交未改，归为平台字形栅格差异。",
+      "previousSha256": "7538d59cbcda8b1c9304540cd667a5da467a32ef28f51b1ed4256781042f6c33",
+      "candidateSha256": "e07b01ccad05743d673f15d1aeff937d76726edc61344aae35f6c13adecffc05"
+    },
+    {
+      "id": "drawer/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。768×452 尺寸一致；右侧 378px 面板、左侧遮罩/阴影、关闭图标、标题、Extra、正文与 Footer 的位置和颜色均保持正确。仅标题 y=39、x=499..501 的 3 个字形像素被标记，内容无裁切或额外焦点外观；生产实现与 fixture 未改，归为平台字体栅格差异。",
+      "previousSha256": "f166653fc5eeac6ac5d26e7367b8ede71b913eb81fdc1e2da91ea1be383cb1f0",
+      "candidateSha256": "bbd446d0160ac3f5c567d6035e858e9ed260b22fb53ff8d8f6868a5a423c0d75"
+    },
+    {
+      "id": "drawer/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。1440×452 尺寸一致；800px fixture 内的 378px 右面板、遮罩、阴影和页脚位置一致，所有文字及关闭图标完整，无新增遮挡。仅标题 y=39、x=563..565 的 3 个字形像素被标记；生产组件和 fixture 未改，归为平台字体栅格差异。",
+      "previousSha256": "b4f3abe435b26e77d56e1aef2999280f01156bb013b805a9b3ea280b73af9782",
+      "candidateSha256": "0946bca015b879f1dff07b995f691e20dc982760f30680cc334e69b2c792fb61"
+    },
+    {
+      "id": "upload/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。375×312 尺寸一致；Select File、finished.txt、uploading.txt、failed.txt 三种状态完整，上传进度保持 60%，窄屏进度和删除按钮均在边界内。错误项红色与正文/灰色图标层级保持正确；5 个差异像素局限于错误项附件/删除 SVG 图标边缘（y=139..148），未见路径或位置变化。生产组件及 fixture 未改，归为平台 SVG 栅格差异。",
+      "previousSha256": "bbaa8da2027395dc74420f8b4d6251b3134fa4420114fec7a392dfbc663291f0",
+      "candidateSha256": "bccb8483ac65c1f2ac7180e5ed77a7932fea6835ac278fcaf1f84dd2935b3bde"
+    },
+    {
+      "id": "upload/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。768×312 尺寸一致；上传按钮、完成/上传中/失败三行、60% 蓝色进度条、红色附件和删除动作完整，内容宽度与位置一致。5 个差异像素仅落在错误项附件/删除图标边缘，未改变红色状态表达、图标轮廓或布局；生产实现和 fixture 未改，归为平台 SVG 栅格差异。",
+      "previousSha256": "48214f8acbb02cd12042cd392146b782468dd11703eb3715cacdd3d674f6ecd9",
+      "candidateSha256": "24d289df62e0e1d2f64bc831168897047cb48e1b90afa2c50644c2a65899923e"
+    },
+    {
+      "id": "upload/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐张查看基线、候选及 diff。1440×312 尺寸一致；420px fixture 内的按钮、三条文件记录、60% 进度、失败态红色和删除图标均清晰完整，宽屏未拉伸内容或错位。标记的 5 个像素与 tablet 同样局限于错误项附件/删除 SVG 边缘；生产组件及 fixture 未改，归为平台 SVG 栅格差异。",
+      "previousSha256": "1c4abc8a5dc17a95c8346d5454c2b8cb103edec2f7a8dc312ccda4914c1c8e62",
+      "candidateSha256": "92b92e892826551675d14cfb919f8ade167dfcd3410e8dba59e91be85a5bae64"
+    },
+    {
+      "id": "alert/custom-icon__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：◆与·为用例提供的文本图标（tests/visual/render/cases/apollo/alert.js），当前◆轮廓略大，差异仅限字形边缘及相邻文本末端；蓝色、边框、图文间距及343px内容区域正常，无新增换行或裁切。state为1个通知，标题完整，scrollWidth=width。",
+      "previousSha256": "e601b3185e8ed4117e437228b65a7d3e1adc004ef3e1baed24122bb87b41fabe",
+      "candidateSha256": "26c3111cea4509275ceb14444dcf14b28b162b5048dd3e4d1f284ca827762449"
+    },
+    {
+      "id": "alert/custom-icon__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：文本◆/·的原生字形边缘变化与mobile相同；蓝色图标、背景、边框及704px通知布局正常，标题完整，state内容宽736px且无页面溢出。无焦点或展开状态。",
+      "previousSha256": "c623e27490d6f8dc5feb4cf51606b5d570b9c753cb092761cb160735e8a919bf",
+      "candidateSha256": "587990f10881d14acbd4d3a593124a4674de9d1925a2e4f176af294f96e77862"
+    },
+    {
+      "id": "alert/custom-icon__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：文本◆/·的原生字形边缘变化与其他视口相同；标题、蓝色、圆角边框及全宽布局正常，1408px内容区域无溢出。用例未触发焦点或交互状态。",
+      "previousSha256": "249faf873d6c6c1a45e853f1e886e73b0652976fce6ab03e1326beeed5e8b32a",
+      "candidateSha256": "217f618a7ab4c8d13740dd3c052e73a3354d7c5fdbd406846905cd2a30a0c349"
+    },
+    {
+      "id": "alert/error-boundary__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对ErrorBoundary.ts：差异集中在原生pre等宽字体，当前URL字距较旧图大；错误标题完整、错误配色及容器尺寸相同。375px下URL在自身可聚焦role=region、overflowX:auto的pre内横向滚动（既有契约），不是新增页面裁切；state保留完整runtime-0文本且scrollWidth=width=343。",
+      "previousSha256": "befc54e0047c06f830f17b26d15ec9e300885c57b1c02b5f095fb7b03b3b6d6f",
+      "candidateSha256": "3089c600530219cbd70e2dbe6679e03a88863b9cf34cfa51b74dfcee0896e09a"
+    },
+    {
+      "id": "alert/error-boundary__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：错误信息pre等宽字形/字距变化，当前URL完整显示runtime-0，标题与错误背景/边框布局正常。源码以tabindex=0、role=region和overflowX:auto承载错误详情；state通知数1、内容完整且736px区域无溢出。",
+      "previousSha256": "023cb7f6069b48ef1ee67340015a948ce21454f2e6b6ccd57d4da088538704ba",
+      "candidateSha256": "999bc35c5e74ba47e7f658feff910f9f4378f48d7417d0ec12f49448257c3998"
+    },
+    {
+      "id": "alert/error-boundary__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：差异仅在原生pre等宽字形与字距；当前完整URL和错误标题均清晰显示，错误颜色、边框、内边距及通知高度正常。state为1个通知，1408px内容区域无溢出。",
+      "previousSha256": "b50d19b337e5006f4a58963b2eacf0daab088ec005e3bec448419127867f7f40",
+      "candidateSha256": "e69a9c709ad075f3b245ce3481e73d878e1da2ffbb0326f97fd0a228dfe212d9"
+    },
+    {
+      "id": "breadcrumb/theme-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：6个标记像素集中于HomeOutlined图标边缘；紧凑字号、两行面包屑、分隔符和菜单箭头位置正常，文字无换行/截断。state roots=2、invalidText=false，343px区域无溢出，菜单未展开。",
+      "previousSha256": "b45a192caf2c14482d7e11529eaa4ae6d9d96b34ac0a315ce09c7dc36b8ae2fb",
+      "candidateSha256": "5e02c84c9e117cdb4057b548796d1cbd33d569d8aac80975bc367095dbfafb7a"
+    },
+    {
+      "id": "breadcrumb/theme-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：6个差异像素仅在HomeOutlined边缘；紧凑主题颜色、字号与两行布局一致，Home/Users及Current page完整。state roots=2、menus=0、clippedMenus=0，736px区域无溢出。",
+      "previousSha256": "1963d0dbf9ede395a25c2bf69f617a7870f0606227a768277dd852980bcf092d",
+      "candidateSha256": "85d84b7c3e6a268a65c130a59bd7f0bb4c3c12b5ea03216c445a75fde84595fc"
+    },
+    {
+      "id": "breadcrumb/theme-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：HomeOutlined边缘6像素变化，当前图标轮廓完整；紧凑字号、文字颜色、分隔符及菜单按钮布局正常。state roots=2、invalidText=false，1408px区域无溢出，未展开菜单。",
+      "previousSha256": "2ad5494a31715d854a2d4b75f9125c90969eb3b45c4a9b713710513270940cc9",
+      "candidateSha256": "09fa23652b863f54fb3de8a1cf741bf86a1ef03a3bdbf8b10103a918e9a21c94"
+    },
+    {
+      "id": "breadcrumb/theme-dark-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：暗色紧凑模式仅HomeOutlined边缘6像素变化；深色容器、文字对比度、两条面包屑、分隔符和下拉箭头均正常。mobile标题和条目完整，state背景rgb(20,20,20)、roots=2、menus=0，343px区域无溢出。",
+      "previousSha256": "9c82c77669ed6b0db09b62fe8a58898d7d6f2cac1e2f02da701a910ea12d36b0",
+      "candidateSha256": "197fb375feaf010c2ec6df049325a3f783dd3b75aab044e67387d3c1296b1ac8"
+    },
+    {
+      "id": "breadcrumb/theme-dark-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：深色紧凑模式6个差异像素位于HomeOutlined轮廓边缘；背景rgb(20,20,20)、文字对比度、两行条目与菜单箭头布局正常。state roots=2、invalidText=false，736px内容无溢出，menus=clippedMenus=0。",
+      "previousSha256": "36cf48ca3decfaa78dfc300fdf001a20aaaa3c599146a741ffcb6ee8ca2cafd8",
+      "candidateSha256": "e5b908a228754ba5f165ab164aab253709fe91365a40cc6ae1204dec1d62acf0"
+    },
+    {
+      "id": "breadcrumb/theme-dark-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：深色紧凑模式6个差异像素仅在HomeOutlined边缘；当前图标、分隔符、文字颜色及两行面包屑位置完整正常。state roots=2、背景rgb(20,20,20)，1408px区域无溢出，菜单未展开。",
+      "previousSha256": "174e356750a950367f7eaba31ae24e2367f3c0ce54bb0742b24215252b30004a",
+      "candidateSha256": "4e2fee70c7e3f8c3b6d706f05a7ceec60f984ac0daf2b3b1c4f2cff182ad459b"
+    },
+    {
+      "id": "divider/with-text__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：27个差异像素集中在Section标题字形边缘，当前center/start/end位置和两侧横线正常；mobile段落自然分两行，与旧图断行相同，无裁切。state groups=3、separators=3、direction=ltr，343px区域无溢出。",
+      "previousSha256": "1e9dc77b0c2819a6d9f20deb8648f2ea67708c976c289440db48116a257a53f8",
+      "candidateSha256": "b23be407b2f3c64e4aa819372c8f9523b2a8549d4708cd142576fbf36cd26aea"
+    },
+    {
+      "id": "divider/with-text__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：25个差异像素仅在Section文字轮廓；居中、起点、终点标题与横线位置正常，段落完整单行显示。state groups=3、separators=3，736px内容无溢出，无交互焦点状态。",
+      "previousSha256": "0943aaa1fbfc71ac6dcb3bdbd7ad459882ac1e8c9dc37e884c82bd0ceb9b8a27",
+      "candidateSha256": "a2665d062c43d1aa20bbbca2b35025b69dfcb768bfc4ee290f02652f9848f217"
+    },
+    {
+      "id": "divider/with-text__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：25个像素变化只在Section文字轮廓，当前三种标题对齐、横线长度/颜色和段落单行布局正常。state groups=3、separators=3，1408px内容无溢出，未见裁切。",
+      "previousSha256": "160febdfac91e422eb583aa18bd4e5a63ec8e865dce711424a7662a626e19eb8",
+      "candidateSha256": "80ab7fe0fd7eb65a56cdeacf4a9cbda240930b713490efdfda536ea06119d006"
+    },
+    {
+      "id": "divider/semantic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：9个差异像素位于Semantic文字边缘；当前蓝色横线、浅蓝内容底、深蓝文字与20px语义内边距符合用例样式，标题居中完整。state groups=1、separators=1，343px内容无溢出。",
+      "previousSha256": "0402c1f25ff2b6bc85aaf18dcc4105468cf1a7b57888df98bad8e62b5acac496",
+      "candidateSha256": "3f6878da3c4e2604fc767fb261cc26407f541594bc098266a843b5b80ad0909f"
+    },
+    {
+      "id": "divider/semantic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：9个差异像素仅在Semantic字形轮廓；深蓝标题和浅蓝内容底、蓝色横线均正常，内容在tablet居中，无截断或换行。state groups=1、separators=1，736px内容无溢出。",
+      "previousSha256": "5e70c2988e5a70129b1dc3f6f0d15768044363553e7b233cdc46ab0b207f8e7b",
+      "candidateSha256": "ef8d1f321f280b845241dc390e62216dfea95900e7d77b2a3c87e31ddb34f91e"
+    },
+    {
+      "id": "divider/semantic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：9个差异像素仅为Semantic首字母轮廓变化，当前蓝色语义内容与横线完整、居中，颜色和间距正常。state groups=1、separators=1，1408px内容无溢出。",
+      "previousSha256": "3446dc14222e5a0c67cd9a2977377dec4f27f3a9d3ae443cbace723ef3858454",
+      "candidateSha256": "cf4e17f6dcb1fa48453482d7bb6c97f2192004828ed9fadbc0dac8910ef400f4"
+    },
+    {
+      "id": "divider/complete-content__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：7个差异像素仅在数字0的轮廓；Section 0与Project draft输入框、独立0以及空内容槽都按用例完整渲染。mobile页面标题和段落断行与旧图相同，输入未裁切，state groups=3、separators=3、343px区域无溢出。",
+      "previousSha256": "7315ac8c278d292e297b1bf1b120a63b8fa02305174627fc5c66cecaec618b95",
+      "candidateSha256": "beca4d0ce70d681ae46ed05d80435153010b53b64a2d2a45956af70ee5e6dee0"
+    },
+    {
+      "id": "divider/complete-content__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：5个变化像素落在数字0边缘，当前Section 0、Project draft输入框、第二段独立0及空槽横线布局正常；标题/段落完整单行。state groups=3、separators=3，736px内容无溢出，输入未聚焦。",
+      "previousSha256": "abba114c6fd2579e8145b7a79fcf0b97f10c293f0d18de9fd8c92e444e5a04cb",
+      "candidateSha256": "e306f6aa7727a1b76ae73d277274391b2adecc33981c127ec79687bdfe8cfa09"
+    },
+    {
+      "id": "divider/complete-content__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：5个差异像素仅在数字0字形边缘；Section 0与Project draft输入框居中完整，独立0和空内容槽横线保留，段落完整单行。state groups=3、separators=3，1408px内容无溢出。",
+      "previousSha256": "b1bb5df8f17b83c5f1267eef5be329f60f51fcaad1069810fad8854fb8a0c564",
+      "candidateSha256": "91be4f0383a5c4f1ff959d96dc60dbb6f880133e91b59d0d7e648aa9cbf7fb72"
+    },
+    {
+      "id": "divider/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对prepareDividerVisual：13个差异像素仅在Current section字形边缘；Provider更新后rtl布局、physical-left定位和20px内容内边距正常，输入保持同一DOM/焦点及完整Saved section draft值（捕获前已有断言）。130px原生单行输入按光标横向滚动，旧图同样显示尾部；mobile段落断行相同，343px容器无溢出。",
+      "previousSha256": "2ddeb55bb3e1f88b225b556fc5541582d170e4413fcfd0d2c879f6719da479f4",
+      "candidateSha256": "b1e8edd0dd63e5592f9f22bf47078ebbc0c34c15a0006d36c2a3e3e49de313b1"
+    },
+    {
+      "id": "divider/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对prepareDividerVisual：6个变化像素仅在Current section文字边缘；更新后rtl、small尺寸和20px内边距正常。捕获前断言已核对输入DOM、焦点及完整Saved section draft值；130px单行框显示尾部属于原生横向滚动，旧图一致。736px区域无溢出，段落完整。",
+      "previousSha256": "95f30a23e19e5fab5ee8fd0a001a126311f8c01372f9da19b7f4272e8c51acf2",
+      "candidateSha256": "7f10a40ff8aeb30ba958d6b3ba4cb94813f8c0304f7ac479c98b7248c7098988"
+    },
+    {
+      "id": "divider/semantic-tokens__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：13个差异像素位于Token/Dotted文字边缘；Token spacing起点间距、First/Second间垂直线及dotted优先横线显示正常。mobile标题自然两行，无内容裁切；已核对捕获前24px内容padding、20px垂直margin断言，state垂直分隔线高12.59375px，343px区域无溢出。",
+      "previousSha256": "eb86c1f7a3db9b596a14ca18e7750803c299bddc06c2af231ac227b0d6543c6e",
+      "candidateSha256": "d8980943b1ce4ca5fc4602e9cc407b1015b8919a2cf8f8f95f88355bc2cb7fb7"
+    },
+    {
+      "id": "divider/semantic-tokens__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：12个差异像素仅在Token/Dotted字形轮廓；当前24px标题padding、orientationMargin布局、20px垂直分隔线间距和dotted横线正常。标题/段落无裁切，state垂直线高12.59375px、axis=vertical，1408px区域无溢出。",
+      "previousSha256": "80987297fba4768de06a7678a6e7fc0f3d92345f4c7dba9064454eb37b776958",
+      "candidateSha256": "7f3ef3e526ccb47e741add3a52bec0c2b87948e56499e65235a90162abb30eff"
+    },
+    {
+      "id": "divider/rtl__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：7个变化像素只在Physical left字形边缘；rtl下physical left仍在左侧、logical start在右侧，横线与段落布局正常。mobile段落断行与旧图相同，state direction=rtl、groups=2、separators=2，343px区域无溢出。",
+      "previousSha256": "2d0381cad71fa777091b3257cd58a43b03863a8a5090bc43d27de693da7d19fa",
+      "candidateSha256": "fc15085efb45d701d413da3811f88be0650177665ea7761f3140349e6262c27d"
+    },
+    {
+      "id": "divider/rtl__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：10个变化像素只在Physical left字形边缘；rtl下物理left在左、逻辑start在右，标题、横线和完整单行段落均正常。state direction=rtl、groups=2、separators=2，1408px内容无溢出。",
+      "previousSha256": "e284e64a166284748e6720012db122b999adc63daab46083c7bb2f7c39a33aa9",
+      "candidateSha256": "5c01d987ad183ec24b49ffd5eec575608f7b502f7ac06ca0c5a431fe2adeb560"
+    },
+    {
+      "id": "flex/gap__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：10个标记像素位于16px gap标签字形边缘，所有蓝色方块与透明度、五组位置和间距正常。state geometry逐组显示80×54方块，gap=8/16/16/24/16px；最大组x=248..328，仍在mobile内容内，width=scrollWidth=375，无裁切/换行。",
+      "previousSha256": "0f6df73e1864e5fe1ceb34aa4d8a893a704df72e9c30cf03ef867449bd2558ae",
+      "candidateSha256": "b44a4a2e695e98ebc4453014756df9ec6d26e6746e2a8686f7adf289d19c4106"
+    },
+    {
+      "id": "flex/gap__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：10个差异像素仅在16px gap标签轮廓；5组蓝色方块和颜色/透明度一致，80×54尺寸及small=8、medium=middle=16、large=24、16px=16实际间距由state geometry确认。tablet宽768px无溢出，全部nowrap。",
+      "previousSha256": "f904710b0fa42331186753673fcbc092ef53953be4d66bc14840d1580a95746e",
+      "candidateSha256": "fa778e4239362cd5dccd69cbed604f0ca050945134f9418e0775ce3ed4ab5606"
+    },
+    {
+      "id": "flex/gap__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：10个差异像素只在16px gap标签边缘；五组方块布局和蓝色/透明度正常，state geometry核对80×54尺寸及8/16/16/24/16px间距。desktop width=scrollWidth=1440、invalidText=false，全部nowrap，无裁切。",
+      "previousSha256": "fc5e1707ff17591fa821baf2b219ea3eca7bd4532f80847ffab3c043b07988c3",
+      "candidateSha256": "8f5e0794abae38277a6a37d1e151290472e32df84ba8e299b1d61f7f2f6e08dc"
+    },
+    {
+      "id": "flex/wrap__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：8个差异像素在Twelve标签字形边缘，12个蓝色方块全部可见，mobile为2列6行，颜色/透明度和排列正常。state geometry为每项120×54、行列间距8px、content宽295高364，width=scrollWidth=375，无裁切或异常断行。",
+      "previousSha256": "2657cf68d8b0e1668457b39b83def45b5e92cb4bfd42897a5cb174503cd3a727",
+      "candidateSha256": "c0fd3be56685239bb7f247fd2b4b7aba7069adfde0de1367c2a048528b8a8e2e"
+    },
+    {
+      "id": "flex/wrap__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：8个差异像素仅在Twelve标签轮廓；tablet的12项按5/5/2布局正确，蓝色交替和方块尺寸正常。state geometry确认120×54尺寸、8px行列间距、content高178，width=scrollWidth=768，无裁切。",
+      "previousSha256": "fdc0537cb7b8a3d0b13aaf123ec2c9ae138e631d75d692f2105aaee24b3c1957",
+      "candidateSha256": "ed07ca28e963b6ac3ccdc2f111f287108b02870b4ab44815ae64a9735c010073"
+    },
+    {
+      "id": "flex/wrap__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：8个差异像素只在Twelve标签字形边缘；desktop的12项为10/2两行、颜色/透明度与布局正常。state geometry确认每项120×54、8px行列间距、content高116，width=scrollWidth=1440，无溢出。",
+      "previousSha256": "691b38770845f26e73dc729abcafb13d5c46b056b40a19f94baeae88fcc4ccb9",
+      "candidateSha256": "84ca454c40200e3ce86622e224b38e569fbc5ea69c82adf445b658ea008900dd"
+    },
+    {
+      "id": "rate/character__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对vue/rate.js字符用例：19个差异像素集中于第二个好字的原生字形边缘；当前两组各5项，A为3项金色、好为2项金色，其余浅灰，与defaultValue=3/2一致。字形、间距和两行高度完整，无截断、半填错误或焦点状态；该项输入没有额外state元数据，不宣称额外交互验证。",
+      "previousSha256": "3f88ff25e903c761f35523e51044b78957185b1bf207226b1fa12e0ee54b5a9e",
+      "candidateSha256": "641eea3ff80f86484b111fae28bf4bdb10656f6cc99472c6619db7c7cf9ec92d"
+    },
+    {
+      "id": "rate/character__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并对照字符用例：19个差异像素仅为第二个好字的原生字形轮廓变化，A=3/5、好=2/5金色填充正确，余项浅灰；tablet下两组完整、间距和行高正常，无裁切或焦点/悬停状态。输入无额外state元数据，结论限于本截图及用例初值。",
+      "previousSha256": "1c2ddf47f6548b227226958e0059a0fe2e0d66975ba8494da6d482d819ae86e3",
+      "candidateSha256": "8ec0aaab877cb1bc8f51df04467117d2ea0d8ebc5a89f11bfaef787240d01146"
+    },
+    {
+      "id": "rate/character__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并对照字符用例：19个差异像素落在第二个好字边缘，当前5个A与5个好字完整，金色分别3/2项，浅灰余项正确。desktop两行位置、尺寸与间距正常，无裁切、错填或焦点状态；输入无额外state元数据，未扩大为交互通过结论。",
+      "previousSha256": "1b21b403a16f75ad3aa4442386c67fa14d34b825c025ea7ea0ac5126dd6d50ac",
+      "candidateSha256": "36f291883860fe987ad3e37f9b521cfe87f334ed9bf0d0bde1f223ad5027d263"
+    },
+    {
+      "id": "list/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：Alpha/Beta/Gamma 三行完整，分隔线与12px纵向留白正确，场景容器343px无横向溢出；基线、当前图和差异图已逐一查看，4个差异像素仅在 Review queue 标题字形边缘。",
+      "previousSha256": "80d0cfa5122fb1ade5a50ce1d492a248475a7a62930ce0086c0f07835b3c83cc",
+      "candidateSha256": "22a9fffa82592dd0306c15f22ed900b74a8b875cd35ef8fa2cef73aeab588674"
+    },
+    {
+      "id": "list/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：三行内容、行距、分隔线及左右留白一致，场景容器736px与scrollWidth相同；逐图确认4个差异像素仅在 Review queue 标题字形边缘，当前内容无截断或重叠。",
+      "previousSha256": "99a2bb7d4ff61b3c88eac3c2b4ffa3259fe783d2b2d4232541dbf7332a1b24ea",
+      "candidateSha256": "181f882967a19cc0d2465458f369b15e7d34b54a5ce3b623a1751124a9f00f11"
+    },
+    {
+      "id": "list/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：三行从左侧对齐且分隔线延展到容器右侧，1408px场景容器无横向溢出；逐图确认4个差异像素仅在 Review queue 标题字形边缘。",
+      "previousSha256": "6338b2f39bc8e9eed34973c5836d866cc90d7fecef481c46256b9369b47ec1e0",
+      "candidateSha256": "508a07e42d047238b830a5607c9ba80e6272b8569fa32cae5a85d05966767b03"
+    },
+    {
+      "id": "list/meta__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：三个圆形头像、Alpha/Beta/Gamma标题和完整说明逐行排列，头像间距、说明层级、分隔线正确；4个差异像素仅位于舞台 Review queue 标题，列表内容没有变动。",
+      "previousSha256": "6da0ff12289b1ea2e94a06aa64f1aa19074f0ac32597fe4e6f61908cafaded73",
+      "candidateSha256": "3f1d87e6d72671b23c63051f9916104e9375d008135ba3084d9fa1c17cce82ee"
+    },
+    {
+      "id": "list/meta__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：三个Meta行标题、完整说明与32px头像对齐，行间分隔及留白正确，无裁切；逐图确认仅舞台 Review queue 标题4个字形边缘像素差异。",
+      "previousSha256": "d67daf930bb0afe85802cebd8e04d41329ddbfc575345b621a9b6bdb804e33c1",
+      "candidateSha256": "fcf81848e3f1d92c975ee31b73a5798943cf2615a3df82c1779f8a09b17e8a79"
+    },
+    {
+      "id": "list/meta__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：Meta三行的头像、标题、说明与分隔线保持正确对齐，宽屏内容无拉伸或重叠；4个差异像素仅在 Review queue 标题字形边缘。",
+      "previousSha256": "36537816c868de41a36d2e376117d224db4cb99e78fb4f025da472eebee8d89a",
+      "candidateSha256": "f67594130ead262414945af4d973ba2f5dc12c5d75bf754ad1f816a695be3b43"
+    },
+    {
+      "id": "list/actions__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：三条说明在窄屏自然换为两行，Edit/More按钮完整且与说明分开，未重叠头像或分隔线；state为3行且343px无横向溢出，差异仅舞台标题4像素。",
+      "previousSha256": "f5fc9dda3a54fe35849639f8174b4f3d12f97f34c76c64a65605ac010962803b",
+      "candidateSha256": "7eedec5792cbcddf5675f3e002bfe4bb9c23e2436d731b61d0b897783b709e95"
+    },
+    {
+      "id": "list/actions__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：三行Meta说明单行展示，Edit/More操作位于右侧并垂直对齐，分隔线与按钮均完整；4个差异像素仅在 Review queue 标题字形边缘。",
+      "previousSha256": "aef7a589dad7b8bb4de3109ff750482bcd1bed1877c77bc6dd8ef283d865736d",
+      "candidateSha256": "ff8dcc1075eb7eca6c5c586528d878873715d1af048c7613cd368f2f30cc6c31"
+    },
+    {
+      "id": "list/actions__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：三条Meta行左侧内容与右端Edit/More操作分布清晰，按钮及说明均无裁切、重叠；逐图确认差异只在舞台标题4个字形边缘像素。",
+      "previousSha256": "a3db503fc1d8fc1e30f61b2dec10293af0c60392f9a7d82bf3d6dbb61cd51821",
+      "candidateSha256": "a5f75de15f52d75203fd2935e0cf3bc379101b01d92d9eafa780594f610b2add"
+    },
+    {
+      "id": "list/bordered__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：圆角边框、Current work表头、三行数据和End of queue页脚均完整，24px横向内边距及分隔线正确，343px无溢出；差异仅舞台标题4像素。",
+      "previousSha256": "fb1a5639cead268ad8ba2638cb560cf75ad27b3325243e8340acfe87d748ced5",
+      "candidateSha256": "40665336c83b0d65f6bbc7f42da726e6f0a94c9ef834232de05da84ec4fdfc1f"
+    },
+    {
+      "id": "list/bordered__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：圆角边框包围Current work、三行数据和End of queue，24px横向内边距、行分隔、表头页脚高度正确；逐图确认仅舞台Review queue标题4像素变化。",
+      "previousSha256": "cee4a06166a8cd88992dc10b0eca44b4a2390cdf1e1abcb002000c7d49bb978b",
+      "candidateSha256": "94968d950a6ffb3553df380b69f942f6242e7d78a79940e43ca59e682b569710"
+    },
+    {
+      "id": "list/bordered__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：宽屏完整边框和各行分隔线未断裂，表头、Alpha/Beta/Gamma及页脚对齐，无溢出；差异仅舞台Review queue标题4个字形边缘像素。",
+      "previousSha256": "4e2b6463ec604a5278b85e3e7efb5122e4e1d058aaf5f683bd8c6e821169d875",
+      "candidateSha256": "98f10078afea67c2bcb0d9d45d9470a92e3693d0b00cf63eedaee9447da1bbf1"
+    },
+    {
+      "id": "list/vertical__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：纵向Meta标题/说明、下方Edit/More及右侧Due today均完整且彼此分离，三行间距正确，343px无横向溢出；11个差异像素位于Review queue及Beta/Gamma标题字形边缘。",
+      "previousSha256": "7fcb50d198d44cec8d59817f9037381b67bb5cbde2372b21c93b2fb5ed107eaf",
+      "candidateSha256": "e619a0d6fffcde143a09ed5246b1342705c304ed7f421b3b79752896080bfda1"
+    },
+    {
+      "id": "list/vertical__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：三条纵向记录均保留头像、标题、说明、下方操作与右端Due today，所有文字和按钮无截断重叠；差异图11像素仅位于舞台及Meta标题边缘。",
+      "previousSha256": "419fde67bcf03e00f0f1f123f08cb5d983a185b790bd740dda0349f8ff47aa6f",
+      "candidateSha256": "d08151098588f42c2931160d34ae9b75c05bb3bcb99294762db51dac4cd62fb8"
+    },
+    {
+      "id": "list/vertical__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：纵向记录的左侧Meta、下方操作、右端Due today布局完整，三行分隔正确，1408px无溢出；11个差异像素只在Review queue和Beta/Gamma字形边缘。",
+      "previousSha256": "9c051f329f31431fee31ad1839d613c579963dc1533bf9e0bb203f9c95b49a71",
+      "candidateSha256": "508ea8cf336ce04635f5d668aa3ce4b0e481a09d445ebb1c803248a95875777e"
+    },
+    {
+      "id": "list/grid__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：网格按xs:1展示单列六项Alpha至Zeta，头像/标题/说明完整且间距均匀，未裁去末项；state.rows=6，差异仅舞台Review queue标题4像素。",
+      "previousSha256": "3e262aef0a1b1b97957c364925407cca1878ec5aabe3def71ffd059286d20884",
+      "candidateSha256": "fb216557e25ac9a0a23ad5473ce869ef9fc2c149511a19ad906cd36abcd8dfb5"
+    },
+    {
+      "id": "list/grid__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：md:3使六项排为三列两行，Alpha/Beta/Gamma及Delta/Epsilon/Zeta顺序正确，16px列沟槽、头像和完整说明没有重叠；差异仅舞台标题4像素。",
+      "previousSha256": "159f8d58e99365d6f38d1f553b21b6374ff664a0c1b65cea4b8ab68628f460f5",
+      "candidateSha256": "a7eba513a8c7e7a9bb82f4e2948f3dfa80105eaac3ce107ccb4f346656ce4456"
+    },
+    {
+      "id": "list/grid__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：网格为三列两行，六项内容和头像完整、列间距均匀，宽屏未拉伸文本或越界；state.rows=6，逐图确认差异仅舞台标题4像素。",
+      "previousSha256": "81f6a572a06711f51e0ce023aa4120d732866b6982bcd20033077c535badaece",
+      "candidateSha256": "e3d508219eab79c851e3bf1e3b4dab85598c897ea9b3dabd776f78b2fa2ae40d"
+    },
+    {
+      "id": "list/pagination__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：上下两组居中分页均显示1/2/3，第一页蓝色选中、上一页灰色禁用、下一页可用，两条当前页记录Alpha/Beta完整；6像素差异位于舞台标题和选中页框底角边缘。",
+      "previousSha256": "2cf4af3c706546c61fceff56e19c37a71bdd9afd74c0e58e31b5d27cc5904bad",
+      "candidateSha256": "6af3f402cb8e97a78c8fd6dfeb4873e5f6357d58714b71bbdd7ddf9fdd402ca6"
+    },
+    {
+      "id": "list/pagination__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：上下分页居中且第一页高亮与禁用上一页清楚，两行数据和分隔线完整，分页不挤压内容；6个差异像素仅在舞台标题和页码选中框底角边缘。",
+      "previousSha256": "1402d3edb7e0bae3bd829fc601a7afa031a12cd8618d917c998af4e4551c4cf2",
+      "candidateSha256": "5cdf141f5693cd5abcb99b02343378e936d99496b5be1f1ea0d48d97e9a355c2"
+    },
+    {
+      "id": "list/pagination__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：上下分页均居中且1/2/3、禁用上一页与可用下一页完整，Alpha/Beta两条记录和分隔线正确；6像素差异仅在Review queue标题与选中页框底角边缘。",
+      "previousSha256": "52a5c8513942a19bee81e10c31d2220009000322022373e3e321c0ca8d83e3ef",
+      "candidateSha256": "ca36817563aacc3dfd34e815e000587a94acefc6c492d76172c2e5478a6c4778"
+    },
+    {
+      "id": "list/loading__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：loading=true，三条原记录淡化保留，蓝色加载标记及Updating queue居中，说明未被容器截断；4个差异像素仅在舞台Review queue标题字形边缘。",
+      "previousSha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+      "candidateSha256": "23afdfc7e3391e2ee5b10c66807a1dc73f59d5df21a09c7f4bb262de3649f0bc"
+    },
+    {
+      "id": "list/loading__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：加载标记与Updating queue在列表中央，三行底层数据以淡色保留且分隔线正确，736px无横向溢出；差异图仅舞台标题4像素。",
+      "previousSha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+      "candidateSha256": "925d719570ddc7a6db9d26c0f6255d5a0a1793f48417048cfee62ffdb7c8cc81"
+    },
+    {
+      "id": "list/loading__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：宽屏加载标记及说明保持水平居中，原数据三行淡化且完整，无错误空态或裁切；state.loading=true，差异仅Review queue标题4像素。",
+      "previousSha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+      "candidateSha256": "18dc451295801324b96641d523fd43d1f66c5334fe84e17ee07a22be0d558329"
+    },
+    {
+      "id": "list/empty__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：state.rows=0且empty=1，空态图标和No data完整居中，留白正确，没有残留数据行或多余分页；差异仅舞台Review queue标题4像素。",
+      "previousSha256": "2db09c6334a0d0c7fb4a31b83e17229a2c06f34f96bb69799ce37cf1210add42",
+      "candidateSha256": "b49eaeb3f7365bde5d971616d02c48c8afed2ecb973a4e96e18b1d8d772ff6a6"
+    },
+    {
+      "id": "list/empty__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：空态图标、No data和上下留白完整，位于列表中央，无残留记录；state证实0行、1空态，4个差异像素只在舞台标题。",
+      "previousSha256": "827d50457c99c06814ca0fefc194d3b8b9c8db7a5fd69219ce17854b6478e400",
+      "candidateSha256": "54e6004124311c4b65176f91937d8a53045ac806b1e3a9b5c3624ff8fe26a943"
+    },
+    {
+      "id": "list/empty__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：宽屏空态图标与No data居中，图形和文案无裁切，列表为0行且无分页；逐图确认差异只在舞台Review queue标题4像素。",
+      "previousSha256": "b2e268aa48f68f33375c13de4fbdf45e8c0670406ef4b31ed482e6b122e9b642",
+      "candidateSha256": "cc7c26fc8aa91b4dfbb67576aaf5c467a2be8935ba9e415533af7c0e55240dc2"
+    },
+    {
+      "id": "list/size__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：Large与Small两个独立边框列表均有Alpha/Beta/Gamma，Large留白更宽、Small行距更紧，16px组间间隔完整；当前无裁切，4像素差异仅舞台标题。",
+      "previousSha256": "9b1810a96cc4960ae5147da7cfb5e4fc9e48faae4cd02d13def424853aee3202",
+      "candidateSha256": "f33ab04faa8116ff71bb0ea842feadce0225276329fb3ce4902f2a4b2a91dd0b"
+    },
+    {
+      "id": "list/size__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：大小两组列表边框、标题和三行记录均完整，Large的16px纵向/24px横向padding与Small紧凑行高可见；差异仅Review queue标题4个边缘像素。",
+      "previousSha256": "1c496ccaf8a0a039437fbfe3c2436c52ede9ea9e1f5a736497c61235f1883c37",
+      "candidateSha256": "92fa4c5db447348ebf9d2506c5e2021f07aaf2220198d5b7910a2c39f1b3c643"
+    },
+    {
+      "id": "list/size__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：Large、Small两个宽屏边框列表分组清楚，各自三行数据、分隔线和圆角完整，1408px无横向溢出；差异仅舞台标题4像素。",
+      "previousSha256": "b748e9c1654e3f27540656f01c9f2d3763ac3cfe40c314aef0ab4d677321bae2",
+      "candidateSha256": "dc82f1e23f2f31ddd1c35d1ec30fc9e730eb6b4f5912a28851acf75179616eda"
+    },
+    {
+      "id": "list/rtl__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：direction=rtl，头像与标题在右、More/Edit操作在左，三条说明自然换行；Current work/End of queue右对齐，根extra摘要在窄屏移到底部，343px无溢出；差异仅舞台标题4像素。",
+      "previousSha256": "a4e9f4040d35a42d0204e477c6388dd2755af5acdef3b4e69b08577f7ec14b3a",
+      "candidateSha256": "132a96c95f206947fc8e8f575e8405e7faddc36350446445e43b73fd517e766b"
+    },
+    {
+      "id": "list/rtl__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：RTL头像和Meta右对齐、操作移至左侧，根extra摘要位于左侧独立列，三条记录及表头页脚完整；源码逻辑网格与state.direction=rtl吻合，差异仅舞台标题4像素。",
+      "previousSha256": "82e62072269ce10adbd82f8546556758db54a04a4be12d56a1d6a246059c3f90",
+      "candidateSha256": "5f886a16259318bc80367ae386d533b675094376352bfa0d9fd0b21948fb57a9"
+    },
+    {
+      "id": "list/rtl__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：RTL宽屏摘要左列、内容右列，三行头像、标题、说明、More/Edit及表头页脚均完整，没有相互覆盖；4个差异像素只在舞台Review queue标题。",
+      "previousSha256": "1ca29895c592992834f97a1f869c8ada1faf02b86031f04e5dcfd48ecf1c9c4f",
+      "candidateSha256": "5b24859dd015bee555ec436590c7760bee9a9dcb519bb6339b9ec2db5a33d96c"
+    },
+    {
+      "id": "list/extra__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：根extra摘要在表尾下方，第二个列表的三条Due today行级extra在右；首列表窄屏说明换行且操作按钮完整，两个列表互不重叠，343px无溢出；差异仅舞台标题4像素。",
+      "previousSha256": "a6dfff47869b22b3f8706da233ddec120e92820575cb58d6941dc9050bba5290",
+      "candidateSha256": "11afba3cca485dd2b33cbcdc3b87be8451f1cf29ad8959e29ff88b98bcdf3785"
+    },
+    {
+      "id": "list/extra__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：根extra摘要位于右侧独立列，主列表三条Meta和操作均完整，下方第二列表的Due today靠右且行分隔正确；state.rootExtra=1，差异仅舞台标题4像素。",
+      "previousSha256": "23e4aebbc4c09a669f369aa8923dcf93ffa5b1b416b9b8bd57f53ad7999ee4b0",
+      "candidateSha256": "2ad5878f9b81035f5cfd21689c87613a158c823c74fa8f30d0eebf04179d8715"
+    },
+    {
+      "id": "list/extra__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：右侧根extra与第一列表主内容分区清楚，下方三条行级extra与名称对齐，没有裁切或叠入操作区；1408px无溢出，差异仅舞台Review queue标题4像素。",
+      "previousSha256": "44c8e6da36a98865a6bc2612c68150392680790a3b700e1119bcfd1b7dc0046e",
+      "candidateSha256": "13b04499cec795232eaa62bbae4f1dc02b66245c39db971c9d59bd77c77c0791"
+    },
+    {
+      "id": "list/nested__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：外层小尺寸带边框列表完整包住内层三条大尺寸Meta，内层按split:false不显示分隔线，头像和说明有充足间距；state为2列表/4个li，差异仅舞台标题4像素。",
+      "previousSha256": "7997191ac120ab2f9e56ce918836231742006681bcc07ecbd3b54e4c1e802ffc",
+      "candidateSha256": "1ecd47380a0a10f0a60c180855f95f158b9ae7971707e179e714e85ed3c70ba0"
+    },
+    {
+      "id": "list/nested__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：嵌套列表的三项Meta和外层圆角边框完整，内层保留大尺寸行间留白且无分隔线，没有继承外层小尺寸行高；差异仅Review queue标题4像素。",
+      "previousSha256": "be707cf0b15fa6933e2a9ef94fd07242800cae8fdf59e1557c716949a99d888f",
+      "candidateSha256": "c40b0ad8af88aac80d203f462e6b51d5debad1ab3d459a97a03c89bcdd4410fb"
+    },
+    {
+      "id": "list/nested__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：外层边框完整，内层Alpha/Beta/Gamma头像、标题、说明与大尺寸留白一致，内外尺寸职责未混用，1408px无溢出；差异仅舞台标题4像素。",
+      "previousSha256": "a659629ec41c8fd53e353056cf312b3af517eaed9fac1b3b5f5228c1b762e8c0",
+      "candidateSha256": "bf279e4ce21bc6dc307882fd730c2ec7ab7a3d98f7b8b2954d80f4f55aeb1035"
+    },
+    {
+      "id": "list/tokens__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：Token header浅蓝、Token footer浅紫、21px/23px行padding、18px说明及头像间距均生效；三条说明自然换行，Extra独立靠右，下方空态完整；11像素差异仅舞台及Beta/Gamma字形边缘。",
+      "previousSha256": "504549b02516c83ed8cbd6289ac5b1fae1600bed5ce42b96b5f9d77600452d15",
+      "candidateSha256": "445763ad77846db48db9d462faa0bd974bbd8817b6badc23cf32f202573b8a50"
+    },
+    {
+      "id": "list/tokens__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：浅蓝表头、浅紫页脚、21px/23px行padding、18px说明与19px头像间距生效；三条说明单行完整、Extra靠右、空态有独立留白；11像素差异仅舞台及Beta/Gamma标题字形边缘。",
+      "previousSha256": "717e84a5e6f42905874f8c2346b3e40ffc05313bac424fbd716797e20dda97c5",
+      "candidateSha256": "defb47e622e7363202aa31f5d81192f5ab651c457195c47b181900a18bd47d6a"
+    },
+    {
+      "id": "list/tokens__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：Token配色与增大的说明/留白完整应用于三行，Extra保持右侧且不与说明重叠，表头页脚圆角及下方No data完整；差异图11像素只落在舞台和Meta标题边缘。",
+      "previousSha256": "831c4e12eb12504475cdd029a6b5b7f91d73ab9186379c1b36933427d0a0fa0b",
+      "candidateSha256": "febb9395c641addbdee8555332ce081671e992205a7aecab4ee198fae497c200"
+    },
+    {
+      "id": "list/theme-compact__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：紧凑主题12px字号、8px/16px行padding生效，三条Meta说明与Edit/More均完整且不重叠，根extra在底部显示；4像素差异仅舞台Review queue标题字形边缘。",
+      "previousSha256": "3abef60675d7e1a6646407832ddc60bed42b0d8c7ea69ed5a36849d2a55a9c96",
+      "candidateSha256": "61d3d07754fd78408fd8f76da16ed336ea7e4ff6e69ae98a1fcbb8d8f63b72cc"
+    },
+    {
+      "id": "list/theme-compact__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：紧凑主题的小字号及行padding与普通场景区分清楚，三条Meta、操作、表头页脚及右侧摘要完整；state.fontSize=12px，差异仅舞台标题4像素。",
+      "previousSha256": "15de68fe275b24fe3a79a92610d47a863b97b9b7b3f442001d527e2934ccb36e",
+      "candidateSha256": "e1dfafb211ee29940d935eded28b1531dcbe4fc175b0644cac678f3f2451d1e1"
+    },
+    {
+      "id": "list/theme-compact__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：紧凑三行与表头页脚、右侧摘要均完整，12px文字、8px/16px留白无裁切或重叠，宽屏布局清楚；4像素差异仅舞台Review queue标题边缘。",
+      "previousSha256": "6522564ec07835ac895fd38ec36a6e12e8fe99016101e094381f86ae74db1cf4",
+      "candidateSha256": "d03cb26cd4fe2e28f41c570e2b23bc37738f4e17f59536e1645135fdca18bd1f"
+    },
+    {
+      "id": "list/native-focus__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "375px：Before list按钮、Review draft输入及Save完整；输入框蓝色原生焦点轮廓和选中文本清晰且未被列表裁切，单行操作没有重叠；捕获脚本确认Tab到输入框，差异仅舞台标题4像素。",
+      "previousSha256": "24a086e82c1ad76bc4ed8cb2852168ed8972696431f859d04bd2069b2f2ef7c9",
+      "candidateSha256": "d10eee56cbc0b292fe17195e6c278d039acacfe2a496ad671f2099f976b30ddf"
+    },
+    {
+      "id": "list/native-focus__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "768px：输入框有完整蓝色焦点边框与Review draft选区，Before list及右侧Save完整，1条列表行正确；结合捕获脚本的activeElement/outline检查，差异只在舞台标题4像素。",
+      "previousSha256": "442077525891d8110f200fb4b38bfe6ef1ccac416b103d2c6137923e4cea5360",
+      "candidateSha256": "9fc94cf024c1956bd6121e6cf64b23103bcedd284af1aa5036d96c9d9b5fdd07"
+    },
+    {
+      "id": "list/native-focus__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "1440px：原生输入框焦点轮廓、Review draft选区与右端Save完整可见，宽屏行内容不越界，Before list单独排列；捕获脚本确认键盘焦点，差异仅舞台Review queue标题4像素。",
+      "previousSha256": "1d078c40bc6fd750da650d6240f8dd6e4dce7f813368869fce71881897ceb518",
+      "candidateSha256": "8bb2e5f1433383431086b8e823f87726deca26462df81ceea7bc42aedd339b72"
+    },
+    {
+      "id": "config-provider/locale__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：英文及中文 locale 内容和居中空状态正确，候选宽度与 scrollWidth 相等；差异仅中文标题/“暂无数据”字形栅格，无位置、尺寸或遮挡变化。",
+      "previousSha256": "d9981dca74d0b0d438883004a41abbcfca7740737c80988331431ecf67a16e35",
+      "candidateSha256": "2be6a3ca36dfa0a415bf6b40485b2b29f480d073ce1d6a94e929297311b72df7"
+    },
+    {
+      "id": "config-provider/locale__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：英文及中文 locale 内容和居中空状态正确，候选宽度与 scrollWidth 相等；差异仅中文标题/“暂无数据”字形栅格，无位置、尺寸或遮挡变化。",
+      "previousSha256": "222822255acd17da20d7f887c81c7d6464ec47f1512d9af2cd9545c804a3508c",
+      "candidateSha256": "359df58a97dce6194cbb91023e5443d7d82904208025ad4611a39777964ab10d"
+    },
+    {
+      "id": "config-provider/locale__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：英文及中文 locale 内容和居中空状态正确，候选宽度与 scrollWidth 相等；差异仅中文标题/“暂无数据”字形栅格，无位置、尺寸或遮挡变化。",
+      "previousSha256": "f113f80476532b7afcacdddcdab4a068870a8a428a8c247219da56c42c3c4783",
+      "candidateSha256": "3d88719fb4a1020e8fbafeaeb42466f019721d4e1e25d5e698f369def08e3b65"
+    },
+    {
+      "id": "config-provider/current-provider__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：280×40 的 RTL 编辑器、蓝色焦点边框与选区保留，Saved provider draft 和语言空状态正确；移动标题自然换行，无横溢。差异集中“暂无数据”字形栅格，布局/焦点无回归。",
+      "previousSha256": "48803cc7de02a44e0a49b8cd9b948930f63db7c7edf963adf871208311cf77fb",
+      "candidateSha256": "f093d6175ba45b4a8ad88d0fcd1b3e96433de4dd97cef42b8bbf59b423689b17"
+    },
+    {
+      "id": "config-provider/current-provider__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：280×40 的 RTL 编辑器、蓝色焦点边框与选区保留，Saved provider draft 和语言空状态正确；移动标题自然换行，无横溢。差异集中“暂无数据”字形栅格，布局/焦点无回归。",
+      "previousSha256": "e5500409e43bb69dc689b1cbbe64920d334ed8a5053212b56e5cd5dce51b286c",
+      "candidateSha256": "b27852c1d4df91fdda5aed9eddeedba8a55eb231c0a63664ac68d26c34ea9820"
+    },
+    {
+      "id": "config-provider/current-provider__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：280×40 的 RTL 编辑器、蓝色焦点边框与选区保留，Saved provider draft 和语言空状态正确；移动标题自然换行，无横溢。差异集中“暂无数据”字形栅格，布局/焦点无回归。",
+      "previousSha256": "61d8e5fb734b4d66b0a55903a22d7b31f0452e2f4781c05a76628226bf78703e",
+      "candidateSha256": "e8364b93212321d53d5b81c5d8ce9471b0761ea2e324d8b457aeea058a4029a5"
+    },
+    {
+      "id": "card/grid__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：固定宽卡片的标题、四列网格、六个 Content、边框与第二行位置一致，窄屏无裁切；仅标题约 5 个栅格差异像素，没有几何或内容变化。",
+      "previousSha256": "0b7fe70d6cf0794efc4872377dbb52d2a5b69fd0e3a45f21a2c4ab82bd8dec20",
+      "candidateSha256": "3b0d988194d5eea13a199d8abfb9fc824a21294d88f7625ae5f00c4c30f8f188"
+    },
+    {
+      "id": "card/grid__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：固定宽卡片的标题、四列网格、六个 Content、边框与第二行位置一致，窄屏无裁切；仅标题约 5 个栅格差异像素，没有几何或内容变化。",
+      "previousSha256": "f7a4987e1ac96fb1c021f119acadd378aab983e8869dfcb4433716a01f411efb",
+      "candidateSha256": "495b394b61d1d6a6e751120479f44de144452e010f1718fa7d978149f407f11f"
+    },
+    {
+      "id": "card/grid__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：固定宽卡片的标题、四列网格、六个 Content、边框与第二行位置一致，窄屏无裁切；仅标题约 5 个栅格差异像素，没有几何或内容变化。",
+      "previousSha256": "ddabbdb10e34956d2b003eab84921de185a0c3476e184f123d8bfe342c5b3557",
+      "candidateSha256": "3840278f54ab12c3d237290b4b1c97ae453ce10e34fa7a922c9475c4407273bf"
+    },
+    {
+      "id": "masonry/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：三列瀑布流六个项目顺序、高度、16px 间隙及蓝色边框一致；差异仅数字字形局部栅格，候选无内容缺失、重叠或横溢。",
+      "previousSha256": "503c583e4e56d8d82247d988a53d2b0ec682fa47992ce2ed6cebdd1d86fe1351",
+      "candidateSha256": "f9a05b64c4437323f48f4ad8905d0558fa535ed1516701e228ed4681c1feb96c"
+    },
+    {
+      "id": "masonry/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：三列瀑布流六个项目顺序、高度、16px 间隙及蓝色边框一致；差异仅数字字形局部栅格，候选无内容缺失、重叠或横溢。",
+      "previousSha256": "3552a437a3456244d9053ca7ab74f28acb6f5d10b4d6344242b382e05dbc6127",
+      "candidateSha256": "8c0c9aafba0d392d53ea976f2892011a44bd552e7b27314a2cdb2c60466dca6a"
+    },
+    {
+      "id": "masonry/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：三列瀑布流六个项目顺序、高度、16px 间隙及蓝色边框一致；差异仅数字字形局部栅格，候选无内容缺失、重叠或横溢。",
+      "previousSha256": "643eac5650e497b276be155e07ea4dd514258c3e43a6e91b75335d531dd2df74",
+      "candidateSha256": "4d548985a9f879425e30716895e09f22ad5f1406e81a5be11b734d82633a67c3"
+    },
+    {
+      "id": "masonry/gutter__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：三列项目与水平 8px、垂直 24px 间隙保持，六项均可见，边框和高度一致；仅数字字形栅格差异，候选没有遮挡或溢出。",
+      "previousSha256": "e6e63685c97cf65a991f87004db76e887e64bca95620fbc14fd019f090a10b14",
+      "candidateSha256": "1d35f95562df36764d12abdd05459ce03fd1b7116f85c33c87393135bc422ca1"
+    },
+    {
+      "id": "masonry/gutter__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：三列项目与水平 8px、垂直 24px 间隙保持，六项均可见，边框和高度一致；仅数字字形栅格差异，候选没有遮挡或溢出。",
+      "previousSha256": "e83f0aaee667c0a4756269c8e086de7af221bf86087e3fbf295cc50aa49f3f76",
+      "candidateSha256": "3dc73db884119ad21212777d4f90f2847ff5fc21269cb9497fae98b0cd6e083b"
+    },
+    {
+      "id": "masonry/gutter__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：三列项目与水平 8px、垂直 24px 间隙保持，六项均可见，边框和高度一致；仅数字字形栅格差异，候选没有遮挡或溢出。",
+      "previousSha256": "17c1eefd0bc1e02d8cd5b02c2ba6b8064840d2ea422654ce99b95b97c4a384b3",
+      "candidateSha256": "82e901d43eaa1a3b6620f3d33fcf79dbe31a808b4c771abced62853aaa2eba6b"
+    },
+    {
+      "id": "masonry/columns__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：四列布局及六个不同高度项目位置、16px 间隙与蓝色边框一致，内容未裁切；差异只落在数字字形，候选没有排列或几何回归。",
+      "previousSha256": "b90131fb868447126ba1d9f45ee2a8c9845a48abd02ebab0c2fe8ab6b56a65ea",
+      "candidateSha256": "19244987eb32b70f1156258d80407e378d7e39710480e375001e1318d49bbc1e"
+    },
+    {
+      "id": "masonry/columns__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：四列布局及六个不同高度项目位置、16px 间隙与蓝色边框一致，内容未裁切；差异只落在数字字形，候选没有排列或几何回归。",
+      "previousSha256": "824f4ff8dd575707cf6881d38182dc63851db535d4efc126f6b54341e2da5dc5",
+      "candidateSha256": "23d1973a2125447a8b0a6db46be412a0f5c3aecb6255862c7904758dc68b7870"
+    },
+    {
+      "id": "masonry/columns__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：四列布局及六个不同高度项目位置、16px 间隙与蓝色边框一致，内容未裁切；差异只落在数字字形，候选没有排列或几何回归。",
+      "previousSha256": "67237f918da7b49796c34b9cad6627dbf849291a56eeb8288d8d2ae73a2eca54",
+      "candidateSha256": "95b237862005244abe998e896ede5a0df25cd7a3ace6022edbc9450bb709d71b"
+    },
+    {
+      "id": "masonry/responsive__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：375px 场景响应为单列，六个项目按 1–6 排序，高度、16px 间隙和总高 692px 均正确；蓝色边框完整、无重叠。差异仅数字栅格。",
+      "previousSha256": "d9d59d6abe2df646b3c359d9ebdd52ccdada3392ea9bb4040475ce71583349de",
+      "candidateSha256": "2f5f3d249519054b01669c942db725f2542d77ca68ef30ee9d81a8941af5516a"
+    },
+    {
+      "id": "masonry/responsive__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：768px 场景为三列，六项顺序、高度、16px 间隙和 294px 总高保持，响应式切换符合场景；差异仅数字字形栅格，无裁切或布局变化。",
+      "previousSha256": "3552a437a3456244d9053ca7ab74f28acb6f5d10b4d6344242b382e05dbc6127",
+      "candidateSha256": "8c0c9aafba0d392d53ea976f2892011a44bd552e7b27314a2cdb2c60466dca6a"
+    },
+    {
+      "id": "masonry/responsive__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：1440px 场景为三列，六项顺序、高度、16px 间隙和 294px 总高保持，响应式切换符合场景；差异仅数字字形栅格，无裁切或布局变化。",
+      "previousSha256": "643eac5650e497b276be155e07ea4dd514258c3e43a6e91b75335d531dd2df74",
+      "candidateSha256": "4d548985a9f879425e30716895e09f22ad5f1406e81a5be11b734d82633a67c3"
+    },
+    {
+      "id": "masonry/fresh__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：fresh 场景六项均已排布为三列、不同高度与间隙完整，候选无跳位或内容缺失；差异只落在数字字形的局部像素，边框和几何不变。",
+      "previousSha256": "503c583e4e56d8d82247d988a53d2b0ec682fa47992ce2ed6cebdd1d86fe1351",
+      "candidateSha256": "f9a05b64c4437323f48f4ad8905d0558fa535ed1516701e228ed4681c1feb96c"
+    },
+    {
+      "id": "masonry/fresh__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：fresh 场景六项均已排布为三列、不同高度与间隙完整，候选无跳位或内容缺失；差异只落在数字字形的局部像素，边框和几何不变。",
+      "previousSha256": "3552a437a3456244d9053ca7ab74f28acb6f5d10b4d6344242b382e05dbc6127",
+      "candidateSha256": "8c0c9aafba0d392d53ea976f2892011a44bd552e7b27314a2cdb2c60466dca6a"
+    },
+    {
+      "id": "masonry/fresh__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：fresh 场景六项均已排布为三列、不同高度与间隙完整，候选无跳位或内容缺失；差异只落在数字字形的局部像素，边框和几何不变。",
+      "previousSha256": "643eac5650e497b276be155e07ea4dd514258c3e43a6e91b75335d531dd2df74",
+      "candidateSha256": "4d548985a9f879425e30716895e09f22ad5f1406e81a5be11b734d82633a67c3"
+    },
+    {
+      "id": "masonry/semantic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对场景：语义样式的 #fafafa 容器背景与 opacity 0.8 项目生效，六项三列位置、边框和尺寸保持；仅数字字形像素差异，无颜色块、遮挡或溢出回归。",
+      "previousSha256": "f600332d9d1412c2f38be61cd12d98ff6634e5850d3cfeba5978e25f1d9d142e",
+      "candidateSha256": "48a364837d6dc3b380d379b716fabf76f06e32949c69e52b83afd71a83931f35"
+    },
+    {
+      "id": "masonry/semantic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对场景：语义样式的 #fafafa 容器背景与 opacity 0.8 项目生效，六项三列位置、边框和尺寸保持；仅数字字形像素差异，无颜色块、遮挡或溢出回归。",
+      "previousSha256": "86f7b8fed4fb877bf0fe9f143c1c1705f644bea368ccda50331e92c610cc381b",
+      "candidateSha256": "10c69581705e10ef5b434db2f6b691ea8912d476619c1c70a4f7ece28ebe6e6f"
+    },
+    {
+      "id": "masonry/semantic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对场景：语义样式的 #fafafa 容器背景与 opacity 0.8 项目生效，六项三列位置、边框和尺寸保持；仅数字字形像素差异，无颜色块、遮挡或溢出回归。",
+      "previousSha256": "f9632ab217cb9513093b46421171f5822b62b7bfaa903ff6b592e5b38b61ed9d",
+      "candidateSha256": "65f5c057ad9950e5106efda12f7badfc1abcb24abe447d70f590957cf3894c4b"
+    },
+    {
+      "id": "masonry/rtl__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：RTL 由右侧项目 1 开始、列顺序镜像正确，六项高度、间隙与容器宽度保持；差异仅数字字形局部栅格，候选内容完整且无重叠。",
+      "previousSha256": "25a898b38a3eb9651bc46cb0398d4001cf784fff8223e4e156e75e3def989644",
+      "candidateSha256": "79d17a2d79ee67dc95503277fd31917c9a7ab8a6ad0850a694162ff2d2b8f652"
+    },
+    {
+      "id": "masonry/rtl__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：RTL 由右侧项目 1 开始、列顺序镜像正确，六项高度、间隙与容器宽度保持；差异仅数字字形局部栅格，候选内容完整且无重叠。",
+      "previousSha256": "04ac41ad9db616c39b0d779fc015b4288d436ad680ba99a3df1a72f25589f8ee",
+      "candidateSha256": "a13981ab5f14b5349038c81cf2c1ae1c95ee2c01174a8478bc698d23237a2f08"
+    },
+    {
+      "id": "masonry/rtl__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图：RTL 由右侧项目 1 开始、列顺序镜像正确，六项高度、间隙与容器宽度保持；差异仅数字字形局部栅格，候选内容完整且无重叠。",
+      "previousSha256": "542c41ecf12fba4a82b040e65bbde76ba139764a25f5b056ba26e55654f8bd3f",
+      "candidateSha256": "ba02ffa18e8dbafb82ca761dae3e08f70e6c8b1f2d460f4c935f17f3a2cbd2fc"
+    },
+    {
+      "id": "time-picker/variants__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对 TIME_PICKER_VARIANTS：12 行触发器均为 12:30:45，四种外观、大小、错误/警告、禁用、¥ 前缀及无后缀均正确且在窄屏内完整；2502 像素差异仅左侧普通标签字体度量/栅格，控件几何、图标与状态无差异。",
+      "previousSha256": "014b2e1e36d4039a089cd58dc83a2c3b0c09b673610092218558398c88522b40",
+      "candidateSha256": "f696fd00863ec5055b50987e1086c9c8cfca83e2c5ae3f6171fbb16f4793dc0d"
+    },
+    {
+      "id": "time-picker/variants__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对 TIME_PICKER_VARIANTS：12 行触发器均为 12:30:45，四种外观、大小、错误/警告、禁用、¥ 前缀及无后缀均正确且在窄屏内完整；2502 像素差异仅左侧普通标签字体度量/栅格，控件几何、图标与状态无差异。",
+      "previousSha256": "70f01ad8763656adc699450d31577350376fd84263151d1823106091b3ce3ed6",
+      "candidateSha256": "c2b511223ce878e5698686c1aa64b219b00a7f09f047a306447dd9f7fe485489"
+    },
+    {
+      "id": "time-picker/variants__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对 TIME_PICKER_VARIANTS：12 行触发器均为 12:30:45，四种外观、大小、错误/警告、禁用、¥ 前缀及无后缀均正确且在窄屏内完整；2502 像素差异仅左侧普通标签字体度量/栅格，控件几何、图标与状态无差异。",
+      "previousSha256": "91dd4599b63cf1ca55649eceb8f4f8b1480252f675cb0ac7180c563080073440",
+      "candidateSha256": "3dde725a296283038d89342db403f5fc4f768e3feb2d3a7f41c8a05198cda822"
+    },
+    {
+      "id": "float-button/badge-tooltip__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对场景：三个圆形按钮、投影、红点与计数 5 均位置正确，tooltip 按钮处于未展开静态帧；27 个差异像素局限三个相同文档图标内部的栅格，形状、徽标、间距和窄屏内容完整。",
+      "previousSha256": "6029a511b8d0169f279b947e4641062bc832b2c245e90564e9d216b2e5612448",
+      "candidateSha256": "2fda47e5f6cef975faef80962ec1cd8b6ad36594c70bddbd5a18f4a2f6a2c3f7"
+    },
+    {
+      "id": "float-button/badge-tooltip__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对场景：三个圆形按钮、投影、红点与计数 5 均位置正确，tooltip 按钮处于未展开静态帧；27 个差异像素局限三个相同文档图标内部的栅格，形状、徽标、间距和窄屏内容完整。",
+      "previousSha256": "fd59fb55d5bfbf92b32f4a7c3ac74fb5e0dab4d348c9c8f4a1d6351f6cbb4b95",
+      "candidateSha256": "42d101cf092b689f43ec8df05a1cf253d89f4667e787578afd08b284e80254f1"
+    },
+    {
+      "id": "float-button/badge-tooltip__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对场景：三个圆形按钮、投影、红点与计数 5 均位置正确，tooltip 按钮处于未展开静态帧；27 个差异像素局限三个相同文档图标内部的栅格，形状、徽标、间距和窄屏内容完整。",
+      "previousSha256": "4d66e24199c52246fc6192a53a27d995d109ae3a6c7fe9532f255323f39d8539",
+      "candidateSha256": "a1843df1e8ebecfa1b4833bfadb8d3c610e8f4afa0f79c299e0e106942a7293f"
+    },
+    {
+      "id": "modal/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对基本弹窗场景：遮罩、标题、两段正文、关闭图标、Cancel/OK 与阴影完整，桌面居中、移动端保留两侧间距且按钮不重叠；仅标题 5 个局部栅格差异像素，尺寸与布局无变化。",
+      "previousSha256": "9d830fdb2979da6cf181cb21d1380b1a90ff9f6fe790e955992de2964d095504",
+      "candidateSha256": "89dcffa994ce094b8d5284b866751f5c2d2072d4ad6246677027b7259757c8a0"
+    },
+    {
+      "id": "modal/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对基本弹窗场景：遮罩、标题、两段正文、关闭图标、Cancel/OK 与阴影完整，桌面居中、移动端保留两侧间距且按钮不重叠；仅标题 5 个局部栅格差异像素，尺寸与布局无变化。",
+      "previousSha256": "95b08a2a2b0ac5abbb3cca0c76a35b3e9585aaab35d3e726183b23ec9401cbf6",
+      "candidateSha256": "5baaae4387d03d16d2b1bfd9a2a841eac9c7a8f725f88e4182f4656d6441ad04"
+    },
+    {
+      "id": "modal/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三图并核对基本弹窗场景：遮罩、标题、两段正文、关闭图标、Cancel/OK 与阴影完整，桌面居中、移动端保留两侧间距且按钮不重叠；仅标题 5 个局部栅格差异像素，尺寸与布局无变化。",
+      "previousSha256": "afd9377c665ff58f7746d9a15ca6b35531ab704f32a5422515787047348b24cf",
+      "candidateSha256": "d7f57860bb8415330acb4c0e0488193d6aa9e12f6d2d2c931384bd34556d7ba6"
+    },
+    {
+      "id": "back-top/basic__light__mobile",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三张 2032px 长图并核对场景：说明文字完整且未换行/越界，右下视口固定的灰色返回顶部按钮及白色箭头位置、大小正确；差异仅 sans-serif 说明文字度量/栅格，按钮与空白长页无差异。",
+      "previousSha256": "4b171cd28e40945d80cb8ae5acf2d67f095b34ea83c07159e4167f08f1883f82",
+      "candidateSha256": "9aedc15f908d962b6e9b71b0595f129a571f25d95925a6ab4e17ad7357bb6cca"
+    },
+    {
+      "id": "back-top/basic__light__tablet",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三张 2032px 长图并核对场景：说明文字完整且未换行/越界，右下视口固定的灰色返回顶部按钮及白色箭头位置、大小正确；差异仅 sans-serif 说明文字度量/栅格，按钮与空白长页无差异。",
+      "previousSha256": "c33879d9bf3c8b0a868fc5564ccbd3723f12f812b6ecac7253b7e0a82de47c4e",
+      "candidateSha256": "7f670cdc931fba62cadb7174f44f608716828db4f78e7550b8b09edd9c8ad635"
+    },
+    {
+      "id": "back-top/basic__light__desktop",
+      "classification": "PLATFORM",
+      "reason": "逐一查看三张 2032px 长图并核对场景：说明文字完整且未换行/越界，右下视口固定的灰色返回顶部按钮及白色箭头位置、大小正确；差异仅 sans-serif 说明文字度量/栅格，按钮与空白长页无差异。",
+      "previousSha256": "13e4557c9ca5a2230ef378b94620c9232247301190ae9ff37549a21eb5fd3c4b",
+      "candidateSha256": "600d8c6013f79977b534a7dd1f131b1d20ee616575007aaff01cd883ea615cf9"
+    }
+  ],
+  "captureRuns": [
+    {
+      "runId": 41376291926,
+      "sourceCommit": "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
+      "notes": "Group1 initial upload ENOTFOUND; rerun recovered374, with1 copy feedback render timeout.372 unaffected scenes retained."
+    },
+    {
+      "runId": 41384885655,
+      "sourceCommit": "1cc8f37301fbc945602d93024228977d708f5a2a",
+      "notes": "Same SDK/fixture, only3 affected copy-feedback views recaptured. All3 compare pixel-exact to existing baselines."
+    }
+  ],
+  "clockFix": {
+    "commit": "0fe59dec",
+    "proved": "Conflicting Date and Playwright clock initialization can cause pauseAt in the past; single owner verified.",
+    "originalTooltipTimeout": "Precise causality remains unproven. Original failure retained; no assertion removed, no forced close or automatic scene retries."
+  },
+  "finalAcceptance": "pending"
+}
