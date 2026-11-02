@@ -1,0 +1,179 @@
+name: v0.1.8 typography feedback candidates
+
+on:
+  push:
+    branches: [ci/v018-typography-feedback]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  SDK_SOURCE_COMMIT: d30f88d8ee9c16238a78dd538b8254cc3cbcc713
+  SDK_ARTIFACT: v018-visual-frozen-d30f88d8ee9c16238a78dd538b8254cc3cbcc713
+
+jobs:
+  feedback:
+    name: Only copy-feedback mobile, tablet and desktop
+    runs-on: macos-15-intel
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: ./.github/actions/setup
+      - name: Prepare canonical native settings and logs
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-feedback-logs"
+          defaults write -g AppleShowScrollBars -string WhenScrolling
+          defaults write -g AppleLanguages -array zh-Hans-CN
+          defaults write -g AppleLocale -string zh_CN
+          node --version
+      - name: Download the existing SDK and fixture from its original run
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ env.SDK_ARTIFACT }}
+          run-id: '41376291926'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/apollo-feedback-frozen
+      - name: Verify and restore the frozen inputs without rebuilding
+        id: restore
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/apollo-feedback-frozen"
+          shasum -a 256 -c apollo-visual-frozen.tar.gz.sha256
+          tar -xzf apollo-visual-frozen.tar.gz -C "$GITHUB_WORKSPACE"
+          cd "$GITHUB_WORKSPACE"
+          shasum -a 256 -c tests/visual/.artifacts/candidate-freeze/files.sha256 > "$RUNNER_TEMP/apollo-feedback-logs/input-checksums-before.log"
+          node --input-type=module <<'NODE' 2>&1 | tee "$RUNNER_TEMP/apollo-feedback-logs/capture-origin.log"
+          import assert from 'node:assert/strict';
+          import { execFileSync } from 'node:child_process';
+          import fs from 'node:fs';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          import { buildCases } from './tests/visual/matrix.mjs';
+          const metadata = JSON.parse(fs.readFileSync('tests/visual/.artifacts/candidate-freeze/groups.json', 'utf8'));
+          assert.equal(metadata.sourceCommit, process.env.SDK_SOURCE_COMMIT);
+          assert.equal(artifactDigest(process.cwd()), metadata.sdkDigest);
+          const harnessCommit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+          assert.equal(harnessCommit, process.env.GITHUB_SHA);
+          assertFrozenSource(process.cwd(), harnessCommit);
+          const cases = buildCases({ apollo: true, component: 'typography', variants: ['copy-feedback'] });
+          assert.equal(cases.length, 3);
+          assert.deepEqual(cases.map(item => item.viewport).sort(), ['desktop', 'mobile', 'tablet']);
+          const directory = 'tests/visual/candidates/v018/typography-feedback';
+          fs.mkdirSync(directory, { recursive: true });
+          const origin = { sdkRunId: '41376291926', sdkArtifact: process.env.SDK_ARTIFACT, sdkSourceCommit: metadata.sourceCommit, sdkDigest: metadata.sdkDigest, harnessCommit, nodeVersion: process.version, affectedIds: cases.map(item => item.id).sort() };
+          fs.writeFileSync(`${directory}/capture-origin.json`, `${JSON.stringify(origin, null, 2)}\n`);
+          console.log(JSON.stringify(origin, null, 2));
+          NODE
+          chmod -R a-w packages/*/dist tests/visual/.artifacts/vue tests/visual/.artifacts/candidate-freeze
+      - name: Prove all SDK and fixture compilation inputs are unchanged
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$SDK_SOURCE_COMMIT" 2>&1 | tee "$RUNNER_TEMP/apollo-feedback-logs/sdk-source-fetch.log"
+          git diff --exit-code "$SDK_SOURCE_COMMIT" HEAD -- packages package.json pnpm-lock.yaml pnpm-workspace.yaml 'tsconfig*.json' tests/visual/build.mjs tests/visual/matrix.mjs tests/visual/render 2>&1 | tee "$RUNNER_TEMP/apollo-feedback-logs/compiled-input-diff.log"
+      - name: Install the exact canonical Chrome for Testing
+        id: visual_chrome
+        env:
+          APOLLO_BASELINE_CHROME_VERSION: '150.0.7871.125'
+        run: |
+          set -euo pipefail
+          curl --fail --location "https://storage.googleapis.com/chrome-for-testing-public/$APOLLO_BASELINE_CHROME_VERSION/mac-x64/chrome-mac-x64.zip" --output "$RUNNER_TEMP/apollo-feedback-chrome.zip"
+          ditto -x -k "$RUNNER_TEMP/apollo-feedback-chrome.zip" "$RUNNER_TEMP/apollo-feedback-chrome"
+          apollo_chrome_binary="$RUNNER_TEMP/apollo-feedback-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+          "$apollo_chrome_binary" --version | grep -F "$APOLLO_BASELINE_CHROME_VERSION"
+          printf 'executable=%s\n' "$apollo_chrome_binary" >> "$GITHUB_OUTPUT"
+      - name: Capture only the three affected feedback views
+        env:
+          APOLLO_CHROME_EXECUTABLE: ${{ steps.visual_chrome.outputs.executable }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' 2>&1 | tee "$RUNNER_TEMP/apollo-feedback-logs/capture.log"
+          import assert from 'node:assert/strict';
+          import { spawnSync } from 'node:child_process';
+          import fs from 'node:fs';
+          const directory = 'tests/visual/candidates/v018/typography-feedback';
+          const report = 'tests/visual/report-v018-typography-feedback.json';
+          const origin = JSON.parse(fs.readFileSync(`${directory}/capture-origin.json`, 'utf8'));
+          const args = ['tests/visual/apollo.mjs', '--candidate', '--no-build', '--component', 'typography', '--variant', 'copy-feedback', '--candidate-dir', directory, '--report-file', report];
+          const started = performance.now();
+          const result = spawnSync(process.execPath, args, { stdio: 'inherit', env: process.env });
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/apollo-feedback-logs/capture-status.json`, `${JSON.stringify({ ...origin, command: [process.execPath, ...args], exitCode: result.status, signal: result.signal, durationMs: Math.round(performance.now() - started) }, null, 2)}\n`);
+          if (result.error) throw result.error;
+          assert.equal(result.signal, null);
+          assert.equal(result.status, 0);
+          const manifest = JSON.parse(fs.readFileSync(`${directory}/manifest.json`, 'utf8'));
+          const summary = JSON.parse(fs.readFileSync(report, 'utf8'));
+          assert.equal(manifest.complete, true);
+          assert.deepEqual(Object.keys(manifest.entries).sort(), origin.affectedIds);
+          assert.equal(summary.expected, 3);
+          assert.deepEqual(summary.results.map(item => item.id).sort(), origin.affectedIds);
+          assert.ok(summary.results.every(item => item.verdict === 'CANDIDATE'));
+          assert.ok(Object.values(manifest.entries).every(item => item.sourceCommit === origin.harnessCommit && item.dirty === false));
+          NODE
+      - name: Verify SDK, fixture and current source remain frozen
+        if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          shasum -a 256 -c tests/visual/.artifacts/candidate-freeze/files.sha256 > "$RUNNER_TEMP/apollo-feedback-logs/input-checksums-after.log"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { artifactDigest, assertFrozenSource } from './scripts/verification.mjs';
+          const metadata = JSON.parse(fs.readFileSync('tests/visual/.artifacts/candidate-freeze/groups.json', 'utf8'));
+          const origin = JSON.parse(fs.readFileSync('tests/visual/candidates/v018/typography-feedback/capture-origin.json', 'utf8'));
+          assert.equal(metadata.sourceCommit, process.env.SDK_SOURCE_COMMIT);
+          assert.equal(metadata.sdkDigest, origin.sdkDigest);
+          assert.equal(artifactDigest(process.cwd()), metadata.sdkDigest);
+          assert.equal(origin.harnessCommit, process.env.GITHUB_SHA);
+          assertFrozenSource(process.cwd(), origin.harnessCommit);
+          NODE
+      - name: Upload feedback candidates and original failures
+        id: upload_primary
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: v018-typography-feedback-${{ github.sha }}
+          path: |
+            tests/visual/candidates/v018/typography-feedback/
+            tests/visual/report-v018-typography-feedback.json
+            ${{ runner.temp }}/apollo-feedback-logs/
+          compression-level: 0
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Preserve the first upload failure before its sole recovery attempt
+        if: ${{ always() && steps.upload_primary.outcome == 'failure' }}
+        env:
+          ORIGINAL_UPLOAD_OUTCOME: ${{ steps.upload_primary.outcome }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/apollo-feedback-logs"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const failure = { originalUploadOutcome: process.env.ORIGINAL_UPLOAD_OUTCOME, recoveryAttempt: 1, originalArtifact: `v018-typography-feedback-${process.env.GITHUB_SHA}`, recoveryArtifact: `v018-typography-feedback-${process.env.GITHUB_SHA}-upload-retry-1`, originalJobLog: `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`, note: 'Original upload failure remains in the workflow log. A failed recovery must fail this job.' };
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/apollo-feedback-logs/upload-original-failure.json`, `${JSON.stringify(failure, null, 2)}\n`);
+          console.error(JSON.stringify(failure));
+          NODE
+      - name: Retry upload once under a different artifact name
+        if: ${{ always() && steps.upload_primary.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: v018-typography-feedback-${{ github.sha }}-upload-retry-1
+          path: |
+            tests/visual/candidates/v018/typography-feedback/
+            tests/visual/report-v018-typography-feedback.json
+            ${{ runner.temp }}/apollo-feedback-logs/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
