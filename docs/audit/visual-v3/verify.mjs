@@ -1,7 +1,7 @@
 /**
  * V3 Phase 4 浏览器门禁（PR 阻塞用，不依赖截图基线）。
  *
- * 判据（全部来自报告 §6 的可量化门槛）：
+ * 判据（布局门槛来自报告 §6；Header 对比度来自 WCAG 2.2 AA）：
  * 1. shell 利用率：1920 组件内容 ≥1300、2560 ≥1900；正文实际行长 ≤960。
  * 2. 稳定顺序：Button 页展开首个源码后，所有卡片 x 坐标不变。
  * 3. 宽内容：Form/Table 首卡宽度 ≥ 内容栏 90%（full 档）。
@@ -9,14 +9,21 @@
  * 5. Token：:root 的 --site-brand 是 --apollo-color-primary 的别名，不是硬编码色。
  * 6. 响应式：390 无横向溢出；顶栏 GitHub 入口隐藏。
  * 7. 暗色：页面背景不是白色，卡片表面来自暗色 token。
+ * 8. Header：三个预设 × 亮暗的活动文字 ≥4.5:1，下划线与键盘焦点 ≥3:1。
  *
  * 运行（preview 已启动）：
  *   DOCS_URL=http://127.0.0.1:4477/apollo-design-ui node docs/audit/visual-v3/verify.mjs
  */
-import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { launchBrowser } from '../../../tests/visual/stabilize.mjs';
 
 const BASE = process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui';
+const HEADER_EVIDENCE =
+  process.env.DOCS_HEADER_EVIDENCE ?? path.resolve('docs/audit/evidence/header-contrast');
 const results = [];
+const headerMeasurements = [];
 const check = (name, ok, detail = '') => {
   results.push({ name, ok, detail });
   console.log(`${ok ? '✅' : '❌'} ${name}${detail ? ` — ${detail}` : ''}`);
@@ -25,7 +32,7 @@ const check = (name, ok, detail = '') => {
 const url = (path, lang = true) =>
   `${BASE}${path}${lang ? `${path.includes('?') ? '&' : '?'}lang=en-US` : ''}`;
 
-async function newContext(browser, width, { dark = false } = {}) {
+async function newContext(browser, width, { dark = false, preset = 'default' } = {}) {
   const context = await browser.newContext({
     viewport: { width, height: width >= 1920 ? 1080 : width === 390 ? 844 : 900 },
     locale: 'en-US',
@@ -33,11 +40,12 @@ async function newContext(browser, width, { dark = false } = {}) {
     reducedMotion: 'reduce',
   });
   await context.addInitScript(
-    (theme) => {
+    ({ theme, preset }) => {
       localStorage.setItem('apollo-site-locale', 'en-US');
       localStorage.setItem('apollo-site-theme', theme);
+      localStorage.setItem('apollo-site-preset', preset);
     },
-    dark ? 'dark' : 'light',
+    { theme: dark ? 'dark' : 'light', preset },
   );
   return context;
 }
@@ -46,6 +54,153 @@ async function open(page, path) {
   await page.goto(url(path), { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {});
   await page.waitForTimeout(500);
+}
+
+// Compute the painted colors from the browser, including translucent hover surfaces.
+// Token generation is deliberately not the oracle for these contrast checks.
+function rgba(value) {
+  const match = /^rgba?\(([^)]+)\)$/.exec(value);
+  assert.ok(match, `Expected a computed RGB color, received ${value}`);
+  const channels = match[1].split(',').map(Number);
+  return [...channels.slice(0, 3), channels[3] ?? 1];
+}
+
+function over(foreground, background) {
+  return [
+    ...foreground
+      .slice(0, 3)
+      .map((value, i) => value * foreground[3] + background[i] * (1 - foreground[3])),
+    1,
+  ];
+}
+
+function contrast(foreground, background) {
+  const luminance = (color) =>
+    color
+      .slice(0, 3)
+      .map((value) => value / 255)
+      .map((value) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, value, i) => sum + value * [0.2126, 0.7152, 0.0722][i], 0);
+  const a = luminance(foreground);
+  const b = luminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
+async function measureHeader(nav) {
+  const measured = await nav.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const underline = getComputedStyle(element, '::after');
+    const ancestors = [];
+    for (let node = element; node; node = node.parentElement) {
+      const current = getComputedStyle(node);
+      ancestors.push({
+        background: current.backgroundColor,
+        image: current.backgroundImage,
+        opacity: current.opacity,
+      });
+    }
+    return {
+      color: style.color,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight,
+      fontFamily: style.fontFamily,
+      underline: {
+        color: underline.backgroundColor,
+        height: underline.height,
+        content: underline.content,
+      },
+      outline: { color: style.outlineColor, width: style.outlineWidth, style: style.outlineStyle },
+      active: element.classList.contains('router-link-active'),
+      hover: element.matches(':hover'),
+      pressed: element.matches(':active'),
+      focused: document.activeElement === element,
+      focusVisible: element.matches(':focus-visible'),
+      selectedText: window.getSelection()?.toString(),
+      preset: document.documentElement.dataset.apolloPreset,
+      theme: document.documentElement.dataset.apolloTheme,
+      ancestors,
+    };
+  });
+  // Header surfaces are flat and opaque as a group; fail if that measurement boundary changes.
+  assert.ok(measured.ancestors.every((node) => node.image === 'none' && node.opacity === '1'));
+  let surrounding = [255, 255, 255, 1];
+  for (const node of measured.ancestors.slice(1).reverse())
+    surrounding = over(rgba(node.background), surrounding);
+  const background = over(rgba(measured.ancestors[0].background), surrounding);
+  return {
+    ...measured,
+    background,
+    surrounding,
+    textContrast: contrast(over(rgba(measured.color), background), background),
+    underlineContrast: contrast(over(rgba(measured.underline.color), background), background),
+    focusContrast: contrast(over(rgba(measured.outline.color), surrounding), surrounding),
+  };
+}
+
+async function verifyHeaderContrast(browser) {
+  fs.mkdirSync(HEADER_EVIDENCE, { recursive: true });
+  for (const preset of ['default', 'mono', 'material3']) {
+    for (const mode of ['light', 'dark']) {
+      const context = await newContext(browser, 1440, { dark: mode === 'dark', preset });
+      try {
+        const page = await context.newPage();
+        await open(page, '/components/input');
+        const nav = page.locator('.site-topbar-nav a.router-link-active').first();
+        await nav.waitFor({ state: 'visible' });
+        await page.evaluate(async () => document.fonts.ready);
+        const capture = async (state) => {
+          await page.evaluate(
+            () =>
+              new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+          );
+          const measured = await measureHeader(nav);
+          headerMeasurements.push({ preset, mode, state, ...measured });
+          const interaction =
+            state === 'keyboard-focus'
+              ? measured.focused && measured.focusVisible && !measured.hover && !measured.pressed
+              : state === 'pointer-pressed'
+                ? measured.pressed && measured.hover && !measured.focusVisible
+                : !measured.focused && measured.hover === (state === 'hover');
+          check(
+            `Header ${preset}/${mode} ${state} 对比度`,
+            measured.preset === preset &&
+              measured.theme === mode &&
+              measured.active &&
+              interaction &&
+              measured.selectedText === '' &&
+              measured.textContrast >= 4.5 &&
+              measured.underlineContrast >= 3 &&
+              Number.parseFloat(measured.underline.height) > 0 &&
+              measured.underline.content === '""' &&
+              (state !== 'keyboard-focus' ||
+                (measured.outline.style === 'solid' &&
+                  Number.parseFloat(measured.outline.width) > 0 &&
+                  measured.focusContrast >= 3)),
+            `text=${measured.textContrast.toFixed(3)}, underline=${measured.underlineContrast.toFixed(3)}, focus=${measured.focusContrast.toFixed(3)}`,
+          );
+          await page.locator('.site-topbar').screenshot({
+            path: path.join(HEADER_EVIDENCE, `${preset}-${mode}-${state}.png`),
+          });
+        };
+        await page.mouse.move(0, 400);
+        await capture('active');
+        await nav.hover();
+        await capture('hover');
+        await page.mouse.move(0, 400);
+        await nav.focus();
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('Tab');
+        await capture('keyboard-focus');
+        await nav.evaluate((node) => node.blur());
+        await nav.hover();
+        await page.mouse.down();
+        await capture('pointer-pressed');
+        await page.mouse.up();
+      } finally {
+        await context.close();
+      }
+    }
+  }
 }
 
 const measure = (page) =>
@@ -119,7 +274,7 @@ const measure = (page) =>
   });
 
 const main = async () => {
-  const browser = await chromium.launch();
+  const { browser } = await launchBrowser();
   try {
     // ── 1440：稳定 Grid + 自举 + Token ────────────────────────────────
     {
@@ -240,7 +395,13 @@ const main = async () => {
       check('暗色 token 存在', m.colorPrimary.length > 0, m.colorPrimary);
       await ctx.close();
     }
+    await verifyHeaderContrast(browser);
   } finally {
+    fs.mkdirSync(HEADER_EVIDENCE, { recursive: true });
+    fs.writeFileSync(
+      path.join(HEADER_EVIDENCE, 'measurements.json'),
+      `${JSON.stringify({ base: BASE, browser: browser.version(), headerMeasurements, results }, null, 2)}\n`,
+    );
     await browser.close();
   }
 

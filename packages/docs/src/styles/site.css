@@ -215,8 +215,13 @@ a:hover {
 }
 
 .site-topbar-nav a.router-link-active {
-  color: var(--site-brand);
+  color: var(--site-text);
   font-weight: 500;
+}
+
+.site-topbar-nav a:focus-visible {
+  outline: var(--apollo-line-width-focus) solid var(--site-text);
+  outline-offset: 1px;
 }
 
 .site-topbar-nav a.router-link-active::after {
@@ -224,7 +229,7 @@ a:hover {
   position: absolute;
   inset: auto var(--apollo-padding) 0;
   height: var(--apollo-line-width-bold);
-  background: var(--site-brand);
+  background: currentColor;
 }
 
 .site-topbar-actions {

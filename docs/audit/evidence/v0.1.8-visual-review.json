@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "0.1.8",
-  "stage": "reviewed-baselines-motion-test-clock-corrected-awaiting-new-final-acceptance",
+  "stage": "reviewed-baselines-header-contrast-fixed-final-freeze-pending",
   "expectedScenes": 1875,
   "candidateSources": [
     "d30f88d8ee9c16238a78dd538b8254cc3cbcc713",
@@ -1752,7 +1752,7 @@
     "proved": "Conflicting Date and Playwright clock initialization can cause pauseAt in the past; single owner verified.",
     "originalTooltipTimeout": "Precise causality remains unproven. Original failure retained; no assertion removed, no forced close or automatic scene retries."
   },
-  "finalAcceptance": "pending-new-frozen-commit",
+  "finalAcceptance": "pending-final-source-with-header-contrast-fix",
   "finalAcceptanceAttempts": [
     {
       "runId": 41387164563,
@@ -1818,5 +1818,13 @@
       "mainIntegrationHydrationTests": 4
     },
     "initialFocusedAttempt": "New immediate leave assertion needed a second Vue nextTick; original failure preserved, affected file rerun passed."
+  },
+  "headerContrastEvidence": "docs/audit/evidence/v0.1.8-header-contrast.json",
+  "manualPages": {
+    "runId": 41403959686,
+    "sourceCommit": "d6db136aae91484233e1438dde7e46b41b34d6f7",
+    "status": "success",
+    "onlineBehaviorChecks": 20,
+    "versionTagCreated": false
   }
 }

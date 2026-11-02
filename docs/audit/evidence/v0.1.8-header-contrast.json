@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.8",
+  "sourceBase": "d6db136aae91484233e1438dde7e46b41b34d6f7",
+  "scope": "Docs Header navigation active text, underline, focus only; no preset/global palette/API changes",
+  "status": "implemented-and-targeted-verified-full-SSG-and-final-acceptance-pending",
+  "manualPages": {
+    "runId": 41403959686,
+    "sourceCommit": "d6db136aae91484233e1438dde7e46b41b34d6f7",
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41403959686",
+    "status": "success",
+    "deployedAt": "2026-11-02T07:11:08Z",
+    "onlineVersion": "v0.1.8",
+    "behaviorChecks": 20,
+    "behaviorPassed": true,
+    "headerContrastFixIncluded": false
+  },
+  "productionSourceReuse": {
+    "producerCommit": "7f4196dfc5ba303a033e606554fa0b1b2d80a24c",
+    "docsAndPresetSourcesIdenticalToBase": true,
+    "verification": "git diff --name-only producer..sourceBase -- packages/docs packages/theme/src/presets returned no paths; targeted overlay changed only3 Header selectors.",
+    "limitation": "Targeted browser validation over an isolated copy of an existing Docs product. No new SSG build, complete final-source gate, deployment, commit, push or tag."
+  },
+  "targeted": {
+    "before": {
+      "exitCode": 1,
+      "checks": 46,
+      "failures": 17,
+      "report": "/tmp/apollo-v018-docs-nav-validation/before/measurements.json"
+    },
+    "after": {
+      "exitCode": 0,
+      "checks": 46,
+      "failures": 0,
+      "report": "/tmp/apollo-v018-docs-nav-validation/after/measurements.json",
+      "minimumText": 8.548541171336243,
+      "minimumUnderline": 8.548541171336243,
+      "minimumKeyboardFocus": 9.307923648735162
+    },
+    "retainedChecks": {
+      "passed": true,
+      "checks": 20,
+      "exitCode": 0,
+      "report": "/tmp/apollo-v018-docs-nav-validation/existing-theme-tag-frame/result.json"
+    },
+    "rootReviewedFocusImages": 6,
+    "thresholds": {
+      "text": 4.5,
+      "underline": 3,
+      "keyboardFocus": 3
+    }
+  },
+  "diagnostics": {
+    "firstOnlineBehaviorChecks": 20,
+    "firstOverallPassed": false,
+    "reason": "An old-page stylesheet aborted during explicitly recorded hard navigation was misclassified; the corrected driver classifies only same-origin asset script/stylesheet ERR_ABORTED belonging to the departed document during that navigation. All original requests remain recorded.",
+    "correctedOnlinePassed": true,
+    "expectedDemoFallback404": true,
+    "unexpectedRequests": 0,
+    "pageErrors": 0
+  },
+  "standards": [
+    "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+    "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+  ],
+  "images": [
+    {
+      "state": "before",
+      "path": "docs/audit/evidence/v0.1.8-header-before.png",
+      "sha256": "cef0b642a582a7684ffc146c8a058d21ff10fd893abb413bb4ca9c50c871aa6a",
+      "kind": "targeted CSS overlay evidence, not visual baseline acceptance"
+    },
+    {
+      "state": "after",
+      "path": "docs/audit/evidence/v0.1.8-header-after.png",
+      "sha256": "e825d8197eccc038f1a70ea4a646fa404bd7b9b88a4d91f3de34e38545c5e7e8",
+      "kind": "targeted CSS overlay evidence, not visual baseline acceptance"
+    }
+  ]
+}
