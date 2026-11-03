@@ -67,7 +67,8 @@ html {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    /* A positive duration would animate otherwise immediate layout measurements. */
+    transition-duration: 0s !important;
   }
 }
 

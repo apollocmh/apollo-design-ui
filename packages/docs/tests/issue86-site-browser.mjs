@@ -328,6 +328,32 @@ try {
     await page.locator('#demo-basic').scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(evidenceDir, `layout-${mode}.png`) });
     await noOverflow(page, `${mode}: iframe Layout stays within documentation`);
+
+    // Issue #86: a positive global transition duration animated temporary
+    // measurement coordinates and left popups thousands of pixels offscreen.
+    await page.setViewportSize({ width: 390, height: 960 });
+    for (const [component, demo, selector] of [
+      ['cascader', 'style-class', '.apollo-cascader-dropdown'],
+      ['select', 'basic', '.apollo-select-dropdown'],
+      ['tree-select', 'basic', '.apollo-tree-select-dropdown'],
+    ]) {
+      await page.goto(`${base}/components/${component}/demo/${demo}?theme=${mode}`, {
+        waitUntil: 'networkidle',
+      });
+      await page.getByRole('combobox').first().click();
+      const popup = page.locator(selector).first();
+      await popup.waitFor({ state: 'visible' });
+      await page.waitForTimeout(240);
+      check(
+        `${mode}: reduced-motion ${component} popup remains in its viewport`,
+        await popup.evaluate((element) => {
+          const rect = element.getBoundingClientRect();
+          return rect.left >= 0 && rect.right <= innerWidth + 1 && rect.top >= 0;
+        }),
+      );
+      await noOverflow(page, `${mode}: reduced-motion ${component} has no page overflow`);
+      await page.keyboard.press('Escape');
+    }
     await context.close();
   }
   const noJsContext = await browser.newContext({
