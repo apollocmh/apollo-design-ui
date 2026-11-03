@@ -39,6 +39,14 @@ async function hoverTitle(scope, index = 0) {
   // 屏外示例尚未挂载，先激活卡片，再定位其菜单内容。
   await page.locator(scope).scrollIntoViewIfNeeded();
   const title = page.locator(`${scope} .apollo-menu-submenu-title`).nth(index);
+  // 默认 placement 的断言需要足够的下方空间；仅滚到可见会把瀑布流卡片留在视口底边。
+  // 碰撞翻转仍由组件处理，后续仍严格核对 bottomLeft / rightTop 及实际贴合几何。
+  await title.evaluate((element) => {
+    window.scrollBy({
+      top: element.getBoundingClientRect().top - window.innerHeight / 4,
+      behavior: 'instant',
+    });
+  });
   // hover 的 actionability 等待真实标题布局稳定，避免懒挂载/滚动锚定后的旧坐标。
   await title.hover();
   return { title, controls: await title.getAttribute('aria-controls') };

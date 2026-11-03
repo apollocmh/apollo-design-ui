@@ -299,12 +299,25 @@ try {
     );
 
     await page.goto(`${base}/components/collapse`, { waitUntil: 'networkidle' });
-    await page.locator('#demo-basic .apollo-collapse-header').first().waitFor();
+    // DemoRenderer activates near the viewport; Collapse's long introduction
+    // leaves this card below the fold, so activate the card before its controls.
+    const collapseCard = page.locator('#demo-basic');
+    await collapseCard.scrollIntoViewIfNeeded();
+    const collapseTrigger = collapseCard.getByRole('button', {
+      name: 'This is panel header 1',
+      exact: true,
+    });
+    await collapseTrigger.waitFor();
     await settle(page);
     const collapseBefore = await geometry(page);
-    await page.locator('#demo-basic .apollo-collapse-header').first().click();
+    await collapseTrigger.click();
     await page.waitForTimeout(400);
     const collapseAfter = await geometry(page);
+    check(
+      `${mode}: dynamic disclosure expanded`,
+      await collapseTrigger.getAttribute('aria-expanded'),
+      'true',
+    );
     check(
       `${mode}: dynamic content updates its independent column`,
       Math.abs(collapseAfter[0].h - collapseBefore[0].h) > 2 &&

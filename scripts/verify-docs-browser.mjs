@@ -65,11 +65,20 @@ export async function withDocsPreview(run, start = startPreview) {
   }
 }
 function runScript(file, base, outputRoot) {
+  const evidenceDir = path.join(outputRoot, 'docs/audit/evidence', path.basename(file, '.mjs'));
+  fs.mkdirSync(evidenceDir, { recursive: true });
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [path.resolve(root, file)], {
       cwd: outputRoot,
       stdio: 'inherit',
-      env: { ...process.env, DOCS_URL: base },
+      env: {
+        ...process.env,
+        DOCS_URL: base,
+        DOCS_EVIDENCE_DIR: evidenceDir,
+        DOCS_GENERAL_REPORT: path.join(evidenceDir, 'general.json'),
+        CONTROLS_REPORT: path.join(evidenceDir, 'controls.json'),
+        FEEDBACK_DEMOS_EVIDENCE: path.join(evidenceDir, 'feedback.json'),
+      },
     });
     child.on('error', reject);
     child.on('exit', (code, signal) => {

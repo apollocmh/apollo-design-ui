@@ -897,6 +897,12 @@ const root = ${JSON.stringify(root)};
 assert.notEqual(fs.realpathSync(process.cwd()), fs.realpathSync(root), 'Evidence must not be written into frozen source');
 for (const entry of ['node_modules', 'packages', 'tests'])
   assert.equal(fs.realpathSync(entry), fs.realpathSync(path.join(root, entry)));
+assert.ok(fs.realpathSync(process.env.DOCS_EVIDENCE_DIR).startsWith(path.join(fs.realpathSync(process.cwd()), 'docs/audit/evidence/')));
+assert.ok(fs.statSync(process.env.DOCS_EVIDENCE_DIR).isDirectory());
+for (const key of ['DOCS_GENERAL_REPORT', 'CONTROLS_REPORT', 'FEEDBACK_DEMOS_EVIDENCE']) {
+  assert.equal(path.dirname(process.env[key]), process.env.DOCS_EVIDENCE_DIR);
+  fs.writeFileSync(process.env[key], JSON.stringify({ exitCode: ${exitCode} }));
+}
 const result = { outputRoot: process.cwd(), base: process.env.DOCS_URL };
 fs.writeFileSync(${JSON.stringify(capture)}, JSON.stringify(result));
 fs.mkdirSync('docs/audit/evidence', { recursive: true });
@@ -945,6 +951,16 @@ process.exitCode = ${exitCode};
   );
   assert.equal(failedReport.checks[0].exitCode, 23);
   assert.ok(failedReport.checks.every((check) => check.durationMs >= 0));
+  for (const file of ['general.json', 'controls.json', 'feedback.json'])
+    assert.deepEqual(
+      JSON.parse(
+        fs.readFileSync(
+          path.join(failedOutput.outputRoot, 'docs/audit/evidence/failure', file),
+          'utf8',
+        ),
+      ),
+      { exitCode: 23 },
+    );
   for (const file of evidence)
     assert.deepEqual(
       JSON.parse(fs.readFileSync(path.join(failedOutput.outputRoot, file), 'utf8')),

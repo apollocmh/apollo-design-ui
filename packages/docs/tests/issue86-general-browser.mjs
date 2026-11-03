@@ -3,10 +3,7 @@ import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { launchBrowser } from '../../../tests/visual/stabilize.mjs';
 
-const base = (process.env.DOCS_BASE_URL ?? 'http://127.0.0.1:4175/apollo-design-ui').replace(
-  /\/$/,
-  '',
-);
+const base = (process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui').replace(/\/$/, '');
 const reportPath =
   process.env.DOCS_GENERAL_REPORT ?? '/tmp/apollo-issue86-general-interactions.json';
 const results = [];
