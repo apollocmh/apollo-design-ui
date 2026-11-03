@@ -21,6 +21,10 @@ const oldScanPath = 'docs/history/vue-native-audit-2026-10-23.json';
 // Immutable evidence from 4bac25ce, independent of whether CI fetches Git history.
 const oldScanSha256 = '57e84a3aee2fe30c60adfc4e8effb726975435dce395e3ea7ec87f039f3b8d98';
 const archived = readJson(oldScanPath);
+// The next round retains the completed v0.1.8 release as historical evidence too.
+// Pin its bytes so a new task cannot invent a historical pass by writing a report.
+const releasedAcceptance = 'docs/audit/evidence/v0.1.8-final-acceptance.json';
+const releasedAcceptanceSha256 = 'aad9c909938b2aad9563f37a217e346cc2f2beac3da2500941fc3306749013c6';
 
 function historicalDeliveries() {
   const text = fs.readFileSync(path.join(root, state.legacyEvidence.completedBaseline), 'utf8');
@@ -83,8 +87,26 @@ test('dated deliveries keep their evidence and meaning without inheriting the ol
         `${entry.id}: retained historical ${file}`,
       );
   }
+  assert.equal(
+    createHash('sha256')
+      .update(fs.readFileSync(path.join(root, releasedAcceptance)))
+      .digest('hex'),
+    releasedAcceptanceSha256,
+    'The later completed release remains immutable historical evidence',
+  );
+  const release = readJson(releasedAcceptance);
+  assert.equal(release.sourceCommit, '479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5');
+  assert.equal(release.passed, true);
+  assert.equal(release.fullAcceptance.checks.length, 14);
+  assert.ok(
+    release.fullAcceptance.checks.every((check) => check.exitCode === 0 && check.signal === null),
+  );
   for (const task of state.tasks.filter((task) => task.acceptanceStatus === 'historical_passed'))
-    assert.ok(historicalIds.has(task.id), `No new historical pass may be invented: ${task.id}`);
+    assert.ok(
+      historicalIds.has(task.id) ||
+        (task.kind !== 'shared' && task.historicalAcceptance.includes(releasedAcceptance)),
+      `No new historical pass may be invented: ${task.id}`,
+    );
 
   const oldComponents = readJson(state.legacyEvidence.implementationComponents).components;
   const oldFoundations = readJson(state.legacyEvidence.implementationFoundation).packages;
