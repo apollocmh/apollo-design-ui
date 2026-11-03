@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider, Mentions } from '@apollo-design/ui';
+import { Button, ConfigProvider, Flex, Mentions } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const InternalMentions = Mentions._InternalPanelDoNotUseOrYouWillBeFired;
@@ -21,8 +21,10 @@ const theme = computed(() => ({
 </script>
 
 <template>
-  <button type="button" :aria-pressed="compact" @click="compact = !compact">Toggle component tokens</button>
+  <Flex vertical gap="small">
+    <Button style="align-self: flex-start" :aria-pressed="compact" @click="compact = !compact">Toggle component tokens</Button>
   <ConfigProvider :theme="theme">
     <InternalMentions style="width: 100%" value="@" :options="options" aria-label="Custom token mention preview" />
   </ConfigProvider>
+  </Flex>
 </template>

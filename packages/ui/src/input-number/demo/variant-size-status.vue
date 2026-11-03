@@ -57,16 +57,16 @@ import { InputNumber } from '@apollo-design/ui';
 <style>
 .demo-input-number-matrix {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 16px;
-  width: 520px;
+  width: min(100%, 520px);
 }
 
 .demo-input-number-matrix__item {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #595959;
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

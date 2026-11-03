@@ -7,15 +7,15 @@ const options = ['Daily', 'Weekly', 'Monthly'];
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px">
-    <div style="display: flex; align-items: center; gap: 12px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
       <Segmented size="large" :options="options" />
       <Button size="large">Large Button</Button>
     </div>
-    <div style="display: flex; align-items: center; gap: 12px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
       <Segmented size="middle" :options="options" />
       <Button size="middle">Middle Button</Button>
     </div>
-    <div style="display: flex; align-items: center; gap: 12px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
       <Segmented size="small" :options="options" />
       <Button size="small">Small Button</Button>
     </div>

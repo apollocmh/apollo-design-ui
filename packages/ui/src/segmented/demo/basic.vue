@@ -9,6 +9,8 @@ const handleChange = (value: unknown) => {
 
 <template>
   <Segmented
+    aria-label="周期"
+    style="max-width: 100%; overflow-x: auto"
     :options="['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']"
     @change="handleChange"
   />

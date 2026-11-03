@@ -5,6 +5,7 @@ import { AutoComplete, Button, Divider, Text } from '@apollo-design/ui';
 import { defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
 
 const value = ref('');
+const open = ref(false);
 const options = ref<DefaultOptionType[]>([]);
 
 const onSearch = (text: string) => {
@@ -22,6 +23,7 @@ const RenderVNode = defineComponent({
   <div>
     <AutoComplete
       v-model:value="value"
+      v-model:open="open"
       aria-label="自定义候选面板的自动补全"
       :options="options"
       placeholder="输入以生成候选"
@@ -33,7 +35,7 @@ const RenderVNode = defineComponent({
           <div style="padding: 8px">Render Panel</div>
           <RenderVNode :node="menu" />
           <Divider style="margin: 0" />
-          <Button type="text" block @click="value = ''">Close</Button>
+          <Button type="text" block @mousedown.prevent @click="open = false">Close</Button>
         </div>
       </template>
     </AutoComplete>

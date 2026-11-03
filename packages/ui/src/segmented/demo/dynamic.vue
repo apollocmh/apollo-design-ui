@@ -15,7 +15,7 @@ const handleLoadOptions = () => {
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px">
-    <Segmented :options="options" />
+    <Segmented aria-label="周期" style="max-width: 100%; overflow-x: auto" :options="options" />
     <Button type="primary" :disabled="moreLoaded" @click="handleLoadOptions">
       Load more options
     </Button>

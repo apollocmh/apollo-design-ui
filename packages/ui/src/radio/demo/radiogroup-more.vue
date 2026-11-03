@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 radiogroup-more demo（垂直组合 + 额外输入项）
-import { Flex, Radio } from '@apollo-design/ui';
+import { Flex, Input, Radio } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const value = ref(1);
@@ -16,7 +16,7 @@ const buttonOptions = [
 </script>
 
 <template>
-  <Flex align="start" gap="large">
+  <Flex align="start" gap="large" wrap>
     <div :style="{ flex: 1 }">
       <Radio.Group v-model:value="value" vertical>
         <Radio :value="1" :style="labelStyle">Option A</Radio>
@@ -24,9 +24,7 @@ const buttonOptions = [
         <Radio :value="3" :style="labelStyle">Option C</Radio>
         <Radio :value="4" :style="labelStyle">
           More...
-          <!-- ⚠️ PLATFORM 替换：antd 用 Input variant="filled"；Input 组件尚未落地，
-               这里用原生 input + 等价外观（README §2 登记）。 -->
-          <input v-if="value === 4" class="demo-radio-filled-input" placeholder="please input" />
+          <Input v-if="value === 4" variant="filled" class="demo-radio-filled-input" aria-label="更多选项内容" placeholder="please input" />
         </Radio>
       </Radio.Group>
     </div>
@@ -39,12 +37,7 @@ const buttonOptions = [
 <style>
 .demo-radio-filled-input {
   width: 120px;
-  height: 32px;
   margin-inline-start: 12px;
-  padding: 4px 11px;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid transparent;
-  border-radius: 6px;
-  font-size: 14px;
+
 }
 </style>

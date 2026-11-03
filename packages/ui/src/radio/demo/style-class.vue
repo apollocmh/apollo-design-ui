@@ -10,7 +10,7 @@ const value = ref<'styles' | 'classNames'>('styles');
 /** 对象形态的 `styles`。 */
 const styles = {
   icon: { borderRadius: '6px' },
-  label: { color: 'blue' },
+  label: { color: 'var(--apollo-color-primary-text)' },
 };
 
 /** 函数形态的 `classNames` —— 按选中态动态返回（antd 同 demo 的写法）。 */
@@ -52,19 +52,19 @@ const classNamesFn = (info: { props: { checked?: boolean } }) =>
 <style>
 .demo-radio-style-root {
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--apollo-color-bg-container);
 }
 .demo-radio-style-icon {
   border-color: #faad14;
 }
 .demo-radio-style-label {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--apollo-color-text-secondary);
   font-weight: bold;
 }
 .demo-radio-style-icon-checked {
   background-color: #faad14;
 }
 .demo-radio-style-label-checked {
-  color: #faad14;
+  color: var(--apollo-color-warning-text);
 }
 </style>

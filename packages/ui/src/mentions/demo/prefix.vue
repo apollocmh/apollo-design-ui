@@ -8,10 +8,10 @@ const MOCK_DATA: Record<string, string[]> = {
   '#': ['1.0', '2.0', '3.0'],
 };
 
-const prefix = ref<'@' | '#'>('@');
+const prefix = ref('@');
 
 const onSearch = (_: string, newPrefix: string) => {
-  prefix.value = newPrefix as '@' | '#';
+  prefix.value = newPrefix;
 };
 </script>
 

@@ -9,6 +9,7 @@ import { InputNumber } from '@apollo-design/ui';
       <span>大号拨轮</span>
       <InputNumber
         aria-label="大号拨轮数字输入框"
+        style="width: 180px"
         mode="spinner"
         size="large"
         :default-value="3"
@@ -20,6 +21,7 @@ import { InputNumber } from '@apollo-design/ui';
       <span>中号拨轮</span>
       <InputNumber
         aria-label="中号拨轮数字输入框"
+        style="width: 180px"
         mode="spinner"
         size="medium"
         :default-value="5"
@@ -31,6 +33,7 @@ import { InputNumber } from '@apollo-design/ui';
       <span>小号拨轮</span>
       <InputNumber
         aria-label="小号拨轮数字输入框"
+        style="width: 180px"
         mode="spinner"
         size="small"
         :default-value="7"
@@ -46,7 +49,7 @@ import { InputNumber } from '@apollo-design/ui';
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 280px;
+  width: min(100%, 280px);
 }
 
 .demo-input-number-spinner__item {
@@ -54,7 +57,7 @@ import { InputNumber } from '@apollo-design/ui';
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: #595959;
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

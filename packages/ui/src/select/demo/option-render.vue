@@ -13,7 +13,7 @@ const options = [
     <template #optionRender="{ option }">
       <div style="display: flex; justify-content: space-between">
         <span>{{ option.label }}</span>
-        <span style="color: #999">custom</span>
+        <span style="color: var(--apollo-color-text-secondary)">custom</span>
       </div>
     </template>
   </Select>

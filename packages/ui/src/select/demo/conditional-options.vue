@@ -27,7 +27,7 @@ const update = () => {
 
 <template>
   <Flex vertical gap="small" align="flex-start">
-    <Flex gap="small">
+    <Flex gap="small" wrap>
       <Button @click="show = !show">显示/隐藏选项 / Toggle options</Button>
       <Button :disabled="!show" @click="update">更新选项 / Update options</Button>
     </Flex>

@@ -19,7 +19,7 @@ function blurNumber(): void {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px; width: 320px">
+  <div style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 320px)">
     <InputNumber
       ref="numberRef"
       aria-label="可聚焦的数字输入框"
@@ -32,6 +32,6 @@ function blurNumber(): void {
       <Button @click="focusNumber">聚焦</Button>
       <Button @click="blurNumber">失焦</Button>
     </Space>
-    <p aria-live="polite" style="margin: 0; color: #999; font-size: 12px">状态：{{ status }}</p>
+    <p aria-live="polite" style="margin: 0; color: var(--apollo-color-text-secondary); font-size: 12px">状态：{{ status }}</p>
   </div>
 </template>

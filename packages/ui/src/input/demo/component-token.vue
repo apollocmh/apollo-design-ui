@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { compactAlgorithm, type ThemeConfig } from '@apollo-design/theme';
-import { ConfigProvider, Input, InputSearch, TextArea } from '@apollo-design/ui';
+import { Button, ConfigProvider, Input, InputSearch, TextArea } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const compact = ref(false);
@@ -23,13 +23,13 @@ const theme = computed<ThemeConfig>(() => {
   <ConfigProvider :theme="theme">
     <div class="demo-input-token" :class="{ 'demo-input-token--ancestor': ancestorStyle }">
       <div class="demo-input-token__controls">
-        <button type="button" :aria-pressed="compact" @click="compact = !compact">紧凑主题</button>
-        <button type="button" :aria-pressed="roomy" @click="roomy = !roomy">
+        <Button :aria-pressed="compact" @click="compact = !compact">紧凑主题</Button>
+        <Button :aria-pressed="roomy" @click="roomy = !roomy">
           增大内边距与前缀间距
-        </button>
-        <button type="button" :aria-pressed="ancestorStyle" @click="ancestorStyle = !ancestorStyle">
+        </Button>
+        <Button :aria-pressed="ancestorStyle" @click="ancestorStyle = !ancestorStyle">
           祖先样式切换
-        </button>
+        </Button>
       </div>
       <div class="demo-input-token__field">
         <span class="demo-input-token__label">内边距与紫色聚焦态</span>
@@ -74,14 +74,6 @@ const theme = computed<ThemeConfig>(() => {
   gap: 8px;
 }
 
-.demo-input-token__controls button {
-  padding: 4px 8px;
-  color: var(--apollo-color-text);
-  background: var(--apollo-color-bg-container);
-  border: 1px solid var(--apollo-color-border);
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 .demo-input-token__field {
   display: flex;

@@ -14,10 +14,10 @@ function submit(): void {
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 12px; width: 420px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 420px); font-family: sans-serif"
   >
-    <SpaceCompact>
-      <Input v-model:value="keyword" aria-label="关键词" style="width: 200px" placeholder="关键词" />
+    <SpaceCompact block>
+      <Input v-model:value="keyword" aria-label="关键词" style="flex: 1; min-width: 0" placeholder="关键词" />
       <InputNumber
         v-model:value="number"
         aria-label="数量"
@@ -27,8 +27,8 @@ function submit(): void {
       />
       <Button type="primary" @click="submit">提交</Button>
     </SpaceCompact>
-    <SpaceCompact>
-      <Input aria-label="另一种紧凑组合" style="width: 300px" placeholder="另一种紧凑组合" />
+    <SpaceCompact block>
+      <Input aria-label="另一种紧凑组合" style="flex: 1; min-width: 0" placeholder="另一种紧凑组合" />
       <Button>查询</Button>
     </SpaceCompact>
     <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">{{ message }}</div>

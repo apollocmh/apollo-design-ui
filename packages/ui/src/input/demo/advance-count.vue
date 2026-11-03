@@ -32,7 +32,7 @@ function cutAtMax(value: string, info: { max: number }): string {
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 16px; width: 320px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 16px; width: min(100%, 320px); font-family: sans-serif"
   >
     <div>
       <div style="margin-bottom: 6px; font-size: 13px; color: var(--apollo-color-text-secondary)">count.show + max</div>

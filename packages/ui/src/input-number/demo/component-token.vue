@@ -8,7 +8,7 @@ import { ConfigProvider, InputNumber } from '@apollo-design/ui';
     <ConfigProvider
       :theme="{
         token: { colorPrimary: '#722ed1', colorPrimaryHover: '#9254de', controlOutline: 'rgba(114,46,209,0.18)' },
-        components: { InputNumber: { controlWidth: 200, handleWidth: 28, handleFontSize: 14, handleVisible: true, paddingInline: 18, handleBg: '#f9f0ff', handleHoverColor: '#722ed1' } },
+        components: { InputNumber: { controlWidth: 200, handleWidth: 28, handleFontSize: 14, handleVisible: true, paddingInline: 18, handleBg: 'color-mix(in srgb, #722ed1 10%, var(--apollo-color-bg-container))', handleHoverColor: 'var(--apollo-color-primary-text)' } },
       }"
     >
       <InputNumber
@@ -29,17 +29,17 @@ import { ConfigProvider, InputNumber } from '@apollo-design/ui';
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 360px;
+  width: min(100%, 360px);
 }
 
 .demo-input-number-token__label {
-  color: #595959;
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 
 .demo-input-number-token__hint {
   margin: 0;
-  color: #999;
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

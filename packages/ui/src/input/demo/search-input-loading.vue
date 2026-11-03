@@ -44,7 +44,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 12px; width: 380px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 380px); font-family: sans-serif"
   >
     <InputSearch
       v-model:value="value"

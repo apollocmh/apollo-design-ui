@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider, Rate } from '@apollo-design/ui';
+import { ConfigProvider, Flex, Rate } from '@apollo-design/ui';
 </script>
 
 <template>
@@ -17,8 +17,10 @@ import { ConfigProvider, Rate } from '@apollo-design/ui';
       },
     }"
   >
-    <div><Rate :default-value="2.5" allow-half aria-label="Standard token rating" /></div>
-    <div><Rate size="small" :default-value="2.5" allow-half aria-label="Small token rating" /></div>
-    <div><Rate size="large" :default-value="2.5" allow-half aria-label="Large token rating" /></div>
+    <Flex vertical gap="small">
+      <Rate :default-value="2.5" allow-half aria-label="Standard token rating" />
+      <Rate size="small" :default-value="2.5" allow-half aria-label="Small token rating" />
+      <Rate size="large" :default-value="2.5" allow-half aria-label="Large token rating" />
+    </Flex>
   </ConfigProvider>
 </template>

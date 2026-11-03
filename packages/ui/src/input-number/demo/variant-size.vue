@@ -14,6 +14,6 @@ const value = ref<number | null>(6);
     <InputNumber v-model:value="value" size="medium" variant="outlined" :min="0" :max="10" />
     <InputNumber v-model:value="value" size="small" variant="borderless" :min="0" :max="10" />
     <InputNumber v-model:value="value" size="middle" variant="underlined" :min="0" :max="10" />
-    <div style="font-size: 12px; color: #999">当前值：{{ value ?? '空' }}</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">当前值：{{ value ?? '空' }}</div>
   </div>
 </template>

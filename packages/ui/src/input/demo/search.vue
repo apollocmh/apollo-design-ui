@@ -12,7 +12,7 @@ function onSearch(next: string): void {
 </script>
 
 <template>
-  <div style="width: 360px; display: flex; flex-direction: column; gap: 12px">
+  <div style="width: min(100%, 360px); display: flex; flex-direction: column; gap: 12px">
     <InputSearch
       v-model:value="value"
       allow-clear

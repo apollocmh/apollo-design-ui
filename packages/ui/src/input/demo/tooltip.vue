@@ -4,7 +4,7 @@ import { Input, Tooltip } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 360px">
+  <div style="display: flex; flex-direction: column; gap: 16px; width: min(100%, 360px)">
     <Tooltip title="用户名支持 4–16 位字母、数字和下划线" trigger="focus">
       <Input aria-label="用户名" placeholder="聚焦查看输入规则" />
     </Tooltip>

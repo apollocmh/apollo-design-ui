@@ -8,16 +8,16 @@ import { ConfigProvider, Segmented } from '@apollo-design/ui';
     :theme="{
       components: {
         Segmented: {
-          itemColor: '#222',
-          itemHoverColor: '#333',
-          itemHoverBg: 'rgba(0, 0, 0, 0.06)',
-          itemSelectedBg: 'linear-gradient(225deg, #c200ff 0%, #00ffff 100%)',
-          itemActiveBg: '#ccc',
+          itemColor: 'var(--apollo-color-text)',
+          itemHoverColor: 'var(--apollo-color-text)',
+          itemHoverBg: 'var(--apollo-color-fill-secondary)',
+          itemSelectedBg: 'linear-gradient(225deg, #722ed1 0%, #0958d9 100%)',
+          itemActiveBg: 'var(--apollo-color-fill)',
           itemSelectedColor: '#fff',
         },
       },
     }"
   >
-    <Segmented :options="['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']" />
+    <Segmented aria-label="周期" style="max-width: 100%; overflow-x: auto" :options="['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']" />
   </ConfigProvider>
 </template>

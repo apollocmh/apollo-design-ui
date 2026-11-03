@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Divider, Mentions, type MentionsOptionProps } from '@apollo-design/ui';
+import { Button, Divider, Flex, Mentions, type MentionsOptionProps } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const show = ref(true);
@@ -18,12 +18,12 @@ const updateOptions = () => {
 
 <template>
   <div>
-    <p>
-      <button @mousedown.prevent @click="show = !show">Toggle mention popup slot</button>
-      <button @mousedown.prevent @click="empty = !empty">Empty mention popup slot</button>
-      <button @mousedown.prevent @click="revision++">Update mention header</button>
-      <button @mousedown.prevent @click="updateOptions">Update mention options</button>
-    </p>
+    <Flex wrap gap="small" style="margin-bottom: 12px">
+      <Button @mousedown.prevent @click="show = !show">Toggle mention popup slot</Button>
+      <Button @mousedown.prevent @click="empty = !empty">Empty mention popup slot</Button>
+      <Button @mousedown.prevent @click="revision++">Update mention header</Button>
+      <Button @mousedown.prevent @click="updateOptions">Update mention options</Button>
+    </Flex>
     <Mentions v-model:value="value" aria-label="Custom mention editor" style="width: 100%" :options="options" allow-clear>
       <template v-if="show" #popupRender="{ originNode }">
         <section v-if="!empty" data-native-mentions-popup>

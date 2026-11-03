@@ -11,5 +11,7 @@ const marks = {
 </script>
 
 <template>
-  <Slider :default-value="37" :marks="marks" />
+  <div style="padding-inline: 16px">
+    <Slider :default-value="37" :marks="marks" />
+  </div>
 </template>

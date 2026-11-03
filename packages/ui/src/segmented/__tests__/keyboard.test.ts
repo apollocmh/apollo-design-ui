@@ -49,6 +49,26 @@ describe('Segmented · 键盘导航', () => {
     expect(onChange).toHaveBeenCalledWith('Weekly');
   });
 
+  it('Issue #86: reveals the accepted keyboard option label rather than its zero-area radio', async () => {
+    const reveal = vi.spyOn(Element.prototype, 'scrollIntoView');
+    const w = mount(Segmented, { props: { options: OPTIONS }, attachTo: document.body });
+    await keydown(at(findInputs(w), 0), 'ArrowRight');
+    expect(document.activeElement).toBe(at(findInputs(w), 1).element);
+    expect(reveal).toHaveBeenCalledOnce();
+    expect(reveal.mock.instances[0]).toBe(at(w.findAll('label'), 1).element);
+    expect(reveal).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
+    w.unmount();
+  });
+
+  it('does not reveal a keyboard proposal rejected by the controlled parent', async () => {
+    const reveal = vi.spyOn(Element.prototype, 'scrollIntoView');
+    const w = mount(Segmented, { props: { options: OPTIONS, value: 'Daily' } });
+    await keydown(at(findInputs(w), 0), 'ArrowRight');
+    expect(w.emitted('update:value')).toEqual([['Weekly']]);
+    expect(reveal).not.toHaveBeenCalled();
+    w.unmount();
+  });
+
   // rc：ArrowLeft -1（第一项环绕到最后一项）
   it('ArrowLeft：第一项环绕到最后一项', async () => {
     const onChange = vi.fn();

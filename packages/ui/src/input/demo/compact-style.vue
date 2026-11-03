@@ -13,14 +13,14 @@ function submit(): void {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 460px">
+  <div style="display: flex; flex-direction: column; gap: 16px; width: min(100%, 460px)">
     <div role="group" aria-label="订阅表单">
-      <SpaceCompact>
+      <SpaceCompact block>
         <Input
           v-model:value="email"
           aria-label="订阅邮箱"
           placeholder="name@example.com"
-          style="width: 240px"
+          style="flex: 1; min-width: 0"
         />
         <InputNumber
           v-model:value="quantity"
@@ -34,8 +34,8 @@ function submit(): void {
     </div>
 
     <div role="group" aria-label="关键词搜索">
-      <SpaceCompact>
-        <Input aria-label="搜索关键词" placeholder="搜索组件" style="width: 320px" />
+      <SpaceCompact block>
+        <Input aria-label="搜索关键词" placeholder="搜索组件" style="flex: 1; min-width: 0" />
         <Button>搜索</Button>
       </SpaceCompact>
     </div>

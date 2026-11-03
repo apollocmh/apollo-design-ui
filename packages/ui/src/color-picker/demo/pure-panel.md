@@ -17,7 +17,7 @@ const color = ref<ColorValueType>('#1677ff');
 </script>
 
 <template>
-  <div :style="{ paddingInlineStart: '100px' }">
+  <div>
     <ColorPickerPurePanel :color-picker-props="{ value: color }" @change="value => color = value" />
   </div>
 </template>

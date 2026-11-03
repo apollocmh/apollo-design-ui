@@ -8,7 +8,7 @@ const amount = ref('');
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px; width: 320px">
+  <div style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 320px)">
     <SpaceCompact>
       <SpaceAddon>https://</SpaceAddon>
       <Input v-model:value="site" aria-label="站点前缀" />

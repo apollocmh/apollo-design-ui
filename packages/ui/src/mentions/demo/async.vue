@@ -5,7 +5,7 @@
 //    2. antd 用 `lodash/debounce` ⇒ 本仓用 setTimeout 等价实现；
 //    3. antd 拉 GitHub 真实头像（外网图片会污染视觉基线）⇒ 本仓用本地 data URI；
 //    4. antd 的 label 是 JSX fragment ⇒ 本仓用渲染函数 `h`（`label` 收 VNode）。
-import { Mentions } from '@apollo-design/ui';
+import { Button, Flex, Mentions } from '@apollo-design/ui';
 import { computed, h, onBeforeUnmount, ref } from 'vue';
 
 const AVATAR =
@@ -72,11 +72,11 @@ const options = computed(() =>
 
 <template>
   <div>
-    <p>
-      <button type="button" @mousedown.prevent @click="showEmpty = !showEmpty">Toggle custom empty message</button>
-      <button type="button" @mousedown.prevent @click="empty = !empty">Empty custom message</button>
-      <button type="button" @mousedown.prevent @click="revision++">Update empty message</button>
-    </p>
+    <Flex wrap gap="small" style="margin-bottom: 12px">
+      <Button @mousedown.prevent @click="showEmpty = !showEmpty">Toggle custom empty message</Button>
+      <Button @mousedown.prevent @click="empty = !empty">Empty custom message</Button>
+      <Button @mousedown.prevent @click="revision++">Update empty message</Button>
+    </Flex>
     <Mentions v-model:value="value" aria-label="Search mention users" style="width: 100%"
       :loading="loading" :options="options" :not-found-content="fallback" allow-clear
       @search="onSearch" @select="selections++">

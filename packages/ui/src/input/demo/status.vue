@@ -4,7 +4,7 @@ import { Input, TextArea } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 360px">
+  <div style="display: flex; flex-direction: column; gap: 16px; width: min(100%, 360px)">
     <div style="display: flex; flex-direction: column; gap: 6px">
       <span style="color: var(--apollo-color-text-secondary); font-size: 12px">错误状态</span>
       <Input status="error" aria-label="错误状态输入框" placeholder="请输入有效邮箱" />

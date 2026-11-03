@@ -28,13 +28,13 @@ const options = [
     :model="formState"
     :form="formRef"
     layout="horizontal"
-    :label-col="{ span: 6 }"
-    :wrapper-col="{ span: 16 }"
+    :label-col="{ xs: { span: 24 }, sm: { span: 6 } }"
+    :wrapper-col="{ xs: { span: 24 }, sm: { span: 16 } }"
   >
     <FormItem name="coders" label="Top coders" :rules="[{ validator: checkMention }]">
       <Mentions v-model:value="formState.coders" :rows="1" :options="options" />
     </FormItem>
-    <FormItem :wrapper-col="{ span: 14, offset: 6 }">
+    <FormItem :wrapper-col="{ xs: { span: 24, offset: 0 }, sm: { span: 14, offset: 6 } }">
       <Space>
         <Button type="primary" html-type="submit">Submit</Button>
         <Button html-type="reset">Reset</Button>

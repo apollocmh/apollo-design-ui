@@ -22,7 +22,7 @@ const customControls = {
       :controls="customControls"
       placeholder="自定义箭头"
     />
-    <div style="font-size: 12px; color: #999">
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">
       controls=false：{{ noControls ?? '空' }}；自定义箭头：{{ customControlsValue ?? '空' }}
     </div>
   </div>

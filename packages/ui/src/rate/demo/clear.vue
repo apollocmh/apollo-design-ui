@@ -5,11 +5,11 @@ import { Flex, Rate } from '@apollo-design/ui';
 
 <template>
   <Flex vertical gap="medium">
-    <Flex gap="medium">
+    <Flex gap="medium" wrap align="center">
       <Rate :default-value="3" />
       <span>allowClear: true</span>
     </Flex>
-    <Flex gap="medium">
+    <Flex gap="medium" wrap align="center">
       <Rate :default-value="3" :allow-clear="false" />
       <span>allowClear: false</span>
     </Flex>

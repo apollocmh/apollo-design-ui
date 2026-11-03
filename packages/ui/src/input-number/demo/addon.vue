@@ -9,7 +9,7 @@ const weight = ref<number | null>(2.5);
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 12px; width: 340px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 340px); font-family: sans-serif"
   >
     <SpaceCompact>
       <SpaceAddon>￥</SpaceAddon>
@@ -20,7 +20,7 @@ const weight = ref<number | null>(2.5);
       <InputNumber v-model:value="weight" :min="0" :step="0.5" style="width: 150px" />
       <SpaceAddon>kg</SpaceAddon>
     </SpaceCompact>
-    <div style="font-size: 12px; color: #999">
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">
       价格：{{ price ?? '空' }}；重量：{{ weight ?? '空' }}
     </div>
   </div>

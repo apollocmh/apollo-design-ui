@@ -169,7 +169,12 @@ export const SegmentedComponent = defineComponent({
       if (!next) return;
       triggerChange(next.value);
       void nextTick(() => {
-        if (value.value === next.value && !disabled.value) inputRefs.get(next.value)?.focus();
+        if (value.value === next.value && !disabled.value) {
+          const input = inputRefs.get(next.value);
+          input?.focus({ preventScroll: true });
+          // The native radio has no area; reveal the visible label in constrained groups.
+          input?.parentElement?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
       });
     };
     const thumbShow = shallowRef(false);

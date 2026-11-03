@@ -25,7 +25,7 @@ const textAreaStyles: TextAreaProps['styles'] = {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 360px">
+  <div style="display: flex; flex-direction: column; gap: 16px; width: min(100%, 360px)">
     <Input
       :class-names="inputClassNames"
       :styles="inputStyles"

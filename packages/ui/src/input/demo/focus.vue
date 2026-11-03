@@ -24,7 +24,7 @@ function blurInput(): void {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px; width: 320px; font-family: sans-serif">
+  <div style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 320px); font-family: sans-serif">
     <Input ref="inputRef" aria-label="可聚焦输入框" default-value="Apollo Design" />
     <Space wrap>
       <Button @click="focusStart">聚焦到开头</Button>

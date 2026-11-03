@@ -14,7 +14,7 @@ function onStep(_value: ValueType, info: InputNumberStepInfo): void {
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 12px; width: 300px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 12px; width: min(100%, 300px); font-family: sans-serif"
   >
     <InputNumber
       v-model:value="value"
@@ -24,9 +24,9 @@ function onStep(_value: ValueType, info: InputNumberStepInfo): void {
       style="width: 140px"
       @step="onStep"
     />
-    <div style="font-size: 12px; color: #999">
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">
       当前值：{{ value ?? '空' }}；最近一次步进来源：{{ lastEmitter || '-' }}
     </div>
-    <div style="font-size: 12px; color: #999">先聚焦输入框，再滚动鼠标滚轮试试</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">先聚焦输入框，再滚动鼠标滚轮试试</div>
   </div>
 </template>
