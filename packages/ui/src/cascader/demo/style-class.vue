@@ -38,22 +38,32 @@ const classNames = computed<Record<string, unknown>>(() => ({
 const styles = computed<Record<string, unknown>>(() => ({
   root: {
     borderRadius: emphasize.value ? '14px' : '8px',
-    borderColor: emphasize.value ? 'var(--apollo-color-success-border)' : 'var(--apollo-color-border)',
-    background: emphasize.value ? 'var(--apollo-color-success-bg)' : 'var(--apollo-color-bg-container)',
+    borderColor: emphasize.value
+      ? 'var(--apollo-color-success-border)'
+      : 'var(--apollo-color-border)',
+    background: emphasize.value
+      ? 'var(--apollo-color-success-bg)'
+      : 'var(--apollo-color-bg-container)',
   },
   suffix: {
-    color: emphasize.value ? 'var(--apollo-color-success-text)' : 'var(--apollo-color-text-tertiary)',
+    color: emphasize.value
+      ? 'var(--apollo-color-success-text)'
+      : 'var(--apollo-color-text-tertiary)',
   },
   content: {
     fontWeight: emphasize.value ? '600' : '400',
     color: emphasize.value ? 'var(--apollo-color-success-text)' : 'var(--apollo-color-text)',
   },
   placeholder: {
-    color: emphasize.value ? 'var(--apollo-color-success-text)' : 'var(--apollo-color-text-secondary)',
+    color: emphasize.value
+      ? 'var(--apollo-color-success-text)'
+      : 'var(--apollo-color-text-secondary)',
   },
   popup: {
     list: {
-      backgroundColor: emphasize.value ? 'var(--apollo-color-success-bg)' : 'var(--apollo-color-bg-elevated)',
+      backgroundColor: emphasize.value
+        ? 'var(--apollo-color-success-bg)'
+        : 'var(--apollo-color-bg-elevated)',
       padding: '6px',
     },
     listItem: {
