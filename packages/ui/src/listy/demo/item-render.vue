@@ -18,7 +18,7 @@ const onScroll = (event: Event) => {
 
 <template>
   <div>
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px">
       <Button size="small" @click="listyRef?.scrollTo({ key: 40, align: 'top' })">
         滚动到 Item 40
       </Button>
@@ -32,7 +32,7 @@ const onScroll = (event: Event) => {
       @scroll="onScroll"
     >
       <template #default="{ item, index }">
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
           <Text :delete="item.done">{{ index + 1 }}. {{ item.content }}</Text>
           <Button size="small" :type="item.done ? 'default' : 'primary'" @click="item.done = !item.done">
             {{ item.done ? 'Undo' : 'Done' }}

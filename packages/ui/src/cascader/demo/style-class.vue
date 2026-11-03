@@ -62,7 +62,7 @@ const styles = computed<Record<string, unknown>>(() => ({
 
 <template>
   <div>
-    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px">
       <Switch v-model:checked="emphasize" aria-label="启用强调样式" />
       <span>强调样式</span>
       <Tag color="green">{{ emphasize ? '强调' : '素雅' }}</Tag>

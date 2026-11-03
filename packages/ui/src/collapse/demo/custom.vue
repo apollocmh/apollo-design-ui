@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Collapse, CollapsePanel, Tag } from '@apollo-design/ui';
+import { Button, Collapse, CollapsePanel, Input, Tag } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const notifyCount = ref(0);
@@ -19,9 +19,9 @@ const draft = ref('');
           <Tag color="blue" style="margin-inline-start: 8px">推荐</Tag>
         </template>
         <template #extra>
-          <button type="button" @click="notifyCount += 1">发送通知</button>
+          <Button size="small" @click="notifyCount += 1">发送通知</Button>
         </template>
-        <label>部署备注 <input v-model="draft" placeholder="折叠后保留草稿" /></label>
+        <label style="display: grid; gap: 8px">部署备注 <Input v-model:value="draft" placeholder="折叠后保留草稿" /></label>
         <p>草稿：{{ draft || '尚未填写' }}</p>
       </CollapsePanel>
       <CollapsePanel key="staging" header="预发环境部署">

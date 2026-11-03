@@ -14,7 +14,7 @@ const targetKeys = ref<string[]>(['2', '4']);
 <template>
   <Transfer
     :data-source="mockData"
-    :target-keys="targetKeys"
+    v-model:target-keys="targetKeys"
   >
     <template #selectAllLabel="{ direction, selectedCount, totalCount }">
       {{ direction === 'left' ? `${selectedCount}/${totalCount} 条` : '已选列表' }}

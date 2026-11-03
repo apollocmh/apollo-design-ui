@@ -25,7 +25,13 @@ function selectMode(next: RadioValue, change: (mode: CalendarMode) => void) {
 }
 const onPanelChange = (value: CalendarDate, mode: CalendarMode) =>
   console.log(value.format('YYYY-MM-DD'), mode);
-const wrapperStyle = { width: '300px', border: '1px solid #f0f0f0', borderRadius: '8px' };
+const wrapperStyle = {
+  width: '300px',
+  maxWidth: '100%',
+  boxSizing: 'border-box' as const,
+  border: '1px solid var(--apollo-color-border-secondary)',
+  borderRadius: 'var(--apollo-border-radius-lg)',
+};
 </script>
 
 <template>
@@ -34,7 +40,7 @@ const wrapperStyle = { width: '300px', border: '1px solid #f0f0f0', borderRadius
       <template #headerRender="{ value, type, onChange, onTypeChange }">
         <div style="padding: 8px">
           <h4 style="margin: 0 0 8px">Custom header</h4>
-          <Flex :gap="8">
+          <Flex :gap="8" wrap>
             <RadioGroup size="small" :value="type" @update:value="next => selectMode(next, onTypeChange)">
               <RadioButton value="month">Month</RadioButton>
               <RadioButton value="year">Year</RadioButton>

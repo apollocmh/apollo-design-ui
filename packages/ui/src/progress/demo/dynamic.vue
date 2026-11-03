@@ -21,8 +21,8 @@ const decline = () => {
       <Progress :percent="percent" type="circle" />
     </Flex>
     <SpaceCompact>
-      <Button @click="decline"><MinusOutlined /></Button>
-      <Button @click="increase"><PlusOutlined /></Button>
+      <Button aria-label="减少进度" @click="decline"><MinusOutlined /></Button>
+      <Button aria-label="增加进度" @click="increase"><PlusOutlined /></Button>
     </SpaceCompact>
   </Flex>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 `basic` demo。
-import { List, ListItem, ListItemMeta } from '@apollo-design/ui';
+import { Avatar, List, ListItem, ListItemMeta } from '@apollo-design/ui';
 
 const data = [
   { title: 'Ant Design Title 1' },
@@ -16,9 +16,9 @@ const data = [
       <ListItem>
         <ListItemMeta description="Ant Design, a design language for background applications.">
           <template #avatar>
-            <span style="display: inline-block; width: 32px; height: 32px; background: #999; border-radius: 50%" />
+            <Avatar>{{ item.title.slice(-1) }}</Avatar>
           </template>
-          <template #title><a href="#title">{{ item.title }}</a></template>
+          <template #title><a href="#demo-basic">{{ item.title }}</a></template>
         </ListItemMeta>
       </ListItem>
     </template>

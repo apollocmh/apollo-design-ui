@@ -14,7 +14,9 @@ const classNames: ListyClassNames = {
 };
 
 const styles = computed<ListyStyles>(() =>
-  highlight.value ? { item: { background: '#e6f4ff', borderRadius: '6px' } } : {},
+  highlight.value
+    ? { item: { background: 'var(--apollo-color-primary-bg)', borderRadius: '6px' } }
+    : {},
 );
 </script>
 
@@ -33,7 +35,7 @@ const styles = computed<ListyStyles>(() =>
 <style>
 .demo-listy-style-root {
   padding: 4px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--apollo-color-border-secondary);
   border-radius: 8px;
 }
 

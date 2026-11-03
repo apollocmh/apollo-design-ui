@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Tree, type TreeRef } from '@apollo-design/ui';
+import { Button, Space, Tree, type TreeRef } from '@apollo-design/ui';
 import { nextTick, ref } from 'vue';
 import type { DataNode, TreeKey } from '../interface';
 
@@ -34,7 +34,7 @@ const reset = async () => {
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 8px">
-    <div><Button @click="scrollTo">展开并定位到目标节点</Button> <Button @click="reset">复位</Button></div>
+    <Space wrap><Button @click="scrollTo">展开并定位到目标节点</Button><Button @click="reset">复位</Button></Space>
     <Tree ref="treeRef" v-model:expanded-keys="expandedKeys" :height="200" :tree-data="treeData" />
   </div>
 </template>

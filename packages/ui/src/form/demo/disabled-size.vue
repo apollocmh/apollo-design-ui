@@ -9,7 +9,7 @@ const size = ref<'small' | 'middle' | 'large'>('middle');
 
 <template>
   <div>
-    <div style="display: flex; gap: 16px; margin-bottom: 16px; align-items: center">
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; align-items: center">
       <span>disabled</span>
       <Switch v-model:checked="disabled" aria-label="禁用表单" />
       <RadioGroup v-model:value="size" size="small" aria-label="表单尺寸">

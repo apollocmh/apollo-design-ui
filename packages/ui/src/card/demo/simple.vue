@@ -4,7 +4,7 @@ import { Card } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Card :style="{ width: '300px' }">
+  <Card :style="{ width: '300px', maxWidth: '100%' }">
     <p>Card content</p>
     <p>Card content</p>
     <p>Card content</p>

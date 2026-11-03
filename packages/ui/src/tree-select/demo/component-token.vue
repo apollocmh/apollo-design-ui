@@ -99,7 +99,7 @@ function onPresetChange(next: unknown): void {
       :class-names="{ popup: { root: 'tree-select-token-demo-popup' } }"
       tree-default-expand-all
       placeholder="打开下拉查看节点样式"
-      style="width: 280px"
+      style="width: 280px; max-width: 100%"
     />
   </div>
 </template>

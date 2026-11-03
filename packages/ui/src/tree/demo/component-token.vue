@@ -27,7 +27,7 @@ const tokens = {
 </script>
 
 <template>
-  <Button @click="custom = !custom">{{ custom ? '恢复默认 Token' : '使用自定义 Token' }}</Button>
+  <Button style="margin-bottom: 16px" @click="custom = !custom">{{ custom ? '恢复默认 Token' : '使用自定义 Token' }}</Button>
   <ConfigProvider :theme="{ components: { Tree: custom ? tokens : {} } }">
     <Tree :tree-data="treeData" default-expand-all block-node :selected-keys="['file']" />
     <DirectoryTree :tree-data="treeData" default-expand-all :selected-keys="['file']" />

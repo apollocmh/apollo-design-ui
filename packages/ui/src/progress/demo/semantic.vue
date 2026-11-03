@@ -20,7 +20,7 @@ const stylesFn: ProgressProps['styles'] = (info) => {
       transition: 'all 0.3s ease',
     },
     rail: {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      backgroundColor: 'var(--apollo-color-fill-secondary)',
       borderRadius: '8px',
     },
   };
@@ -28,7 +28,7 @@ const stylesFn: ProgressProps['styles'] = (info) => {
 </script>
 
 <template>
-  <Flex gap="small" vertical style="width: 300px">
+  <Flex gap="small" vertical style="width: 300px; max-width: 100%">
     <Progress :percent="50" :class-names="classNames" :styles="stylesFn" />
     <Progress :percent="80" :class-names="classNames" :styles="stylesFn" />
     <Progress :percent="100" :class-names="classNames" :styles="stylesFn" />

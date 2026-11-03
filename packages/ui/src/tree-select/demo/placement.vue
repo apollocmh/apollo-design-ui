@@ -63,7 +63,7 @@ function onPlacementChange(next: unknown): void {
       :tree-data="treeData"
       tree-default-expand-all
       placeholder="切换浮层方位"
-      style="width: 280px"
+      style="width: 280px; max-width: 100%"
     />
   </div>
 </template>

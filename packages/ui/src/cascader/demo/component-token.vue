@@ -32,7 +32,7 @@ const options = [
 
 <template>
   <div class="cascader-component-token-demo" :class="{ 'is-custom': custom }">
-    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px">
       <Switch v-model:checked="custom" aria-label="启用自定义组件 Token" />
       <span>自定义 Token</span>
       <Tag color="blue">

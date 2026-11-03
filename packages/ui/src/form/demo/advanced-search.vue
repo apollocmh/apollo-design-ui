@@ -31,12 +31,12 @@ const onReset = () => {
 <template>
   <Form :form="form" layout="vertical" @finish="onFinish">
     <Row :gutter="16">
-      <Col :span="8">
+      <Col :xs="24" :sm="12" :lg="8">
         <FormItem label="项目名称" name="keyword">
           <Input aria-label="项目名称" placeholder="请输入项目名称" allow-clear />
         </FormItem>
       </Col>
-      <Col :span="8">
+      <Col :xs="24" :sm="12" :lg="8">
         <FormItem label="负责人" name="owner">
           <Select
             aria-label="负责人"
@@ -46,7 +46,7 @@ const onReset = () => {
           />
         </FormItem>
       </Col>
-      <Col :span="8">
+      <Col :xs="24" :sm="12" :lg="8">
         <FormItem label="状态" name="status">
           <Select
             aria-label="项目状态"
@@ -56,12 +56,12 @@ const onReset = () => {
           />
         </FormItem>
       </Col>
-      <Col v-show="expanded" :span="8">
+      <Col v-show="expanded" :xs="24" :sm="12" :lg="8">
         <FormItem label="创建人" name="creator">
           <Input aria-label="创建人" placeholder="请输入创建人" allow-clear />
         </FormItem>
       </Col>
-      <Col v-show="expanded" :span="8">
+      <Col v-show="expanded" :xs="24" :sm="12" :lg="8">
         <FormItem label="备注" name="remark">
           <Input aria-label="备注" placeholder="请输入备注" allow-clear />
         </FormItem>
@@ -83,6 +83,7 @@ const onReset = () => {
 <style scoped>
 .demo-search-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
 }

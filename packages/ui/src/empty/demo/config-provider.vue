@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ConfigProvider, Empty, type EmptyConfig, PRESENTED_IMAGE_SIMPLE } from '@apollo-design/ui';
+import {
+  Checkbox,
+  ConfigProvider,
+  Empty,
+  type EmptyConfig,
+  PRESENTED_IMAGE_SIMPLE,
+} from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const custom = ref(false);
@@ -13,7 +19,7 @@ const empty = computed<EmptyConfig>(() => ({
 </script>
 
 <template>
-  <label><input v-model="custom" type="checkbox" /> Change Provider configuration</label>
+  <Checkbox v-model:checked="custom">Change Provider configuration</Checkbox>
   <ConfigProvider :components="{ empty }">
     <Empty description="Current illustration from ConfigProvider" />
   </ConfigProvider>

@@ -39,7 +39,7 @@ const popupStyle = computed<CSSProperties | undefined>(() =>
 );
 
 const columnStyle = computed<CSSProperties | undefined>(() =>
-  enhanced.value ? { backgroundColor: '#f6ffed' } : undefined,
+  enhanced.value ? { backgroundColor: 'var(--apollo-color-success-bg)' } : undefined,
 );
 
 const selectedText = computed(() => (value.value.length ? value.value.join(' / ') : '尚未选择'));
@@ -47,7 +47,7 @@ const selectedText = computed(() => (value.value.length ? value.value.join(' / '
 
 <template>
   <div>
-    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px">
       <Switch v-model:checked="enhanced" aria-label="启用自定义浮层样式" />
       <span>自定义浮层</span>
       <Tag color="green">{{ enhanced ? '圆角 / 阴影 / 列背景' : '默认浮层' }}</Tag>

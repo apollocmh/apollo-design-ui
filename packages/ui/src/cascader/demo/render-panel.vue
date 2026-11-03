@@ -71,32 +71,36 @@ const display = computed(() =>
 
 <style>
 .cascader-render-panel {
-  min-width: 320px;
-  background: #ffffff;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: var(--apollo-color-bg-elevated);
+  color: var(--apollo-color-text);
 }
 
 .cascader-render-panel-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
   padding: 10px 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--apollo-color-border-secondary);
 }
 
 .cascader-render-panel-header span {
-  color: #8c8c8c;
+  color: var(--apollo-color-text-tertiary);
   font-size: 12px;
 }
 
 .cascader-render-panel-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 8px 12px;
-  border-top: 1px solid #f0f0f0;
-  color: #595959;
+  border-top: 1px solid var(--apollo-color-border-secondary);
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

@@ -37,7 +37,7 @@ const readNested = () => {
       <Input aria-label="邮箱" placeholder="name@example.com" />
     </FormItem>
     <FormItem>
-      <Space>
+      <Space wrap>
         <Button @click="fillNested">setFieldsValue 嵌套对象</Button>
         <Button type="primary" @click="readNested">读取整棵值树</Button>
       </Space>

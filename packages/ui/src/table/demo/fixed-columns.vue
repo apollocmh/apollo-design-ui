@@ -18,5 +18,5 @@ const data = [
 </script>
 
 <template>
-  <Table :columns="columns" :data-source="data" :scroll="{ x: 790 }" style="width: 480px" />
+  <Table :columns="columns" :data-source="data" :scroll="{ x: 790 }" style="width: 480px; max-width: 100%" />
 </template>

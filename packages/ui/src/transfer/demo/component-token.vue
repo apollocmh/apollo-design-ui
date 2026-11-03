@@ -31,7 +31,7 @@ const theme = computed((): ThemeConfig => {
 </script>
 
 <template>
-  <Button @click="customized = !customized">{{ customized ? 'Restore defaults' : 'Apply tokens' }}</Button>
+  <Button style="margin-bottom: 16px" @click="customized = !customized">{{ customized ? 'Restore defaults' : 'Apply tokens' }}</Button>
   <ConfigProvider :theme="theme">
     <Transfer
       :data-source="dataSource"

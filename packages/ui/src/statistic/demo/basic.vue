@@ -4,14 +4,14 @@ import { Col, Row, Statistic } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Row :gutter="16">
-    <Col :span="12">
+  <Row :gutter="[16, 16]">
+    <Col :xs="24" :sm="12">
       <Statistic title="Active Users" :value="112893" />
     </Col>
-    <Col :span="12">
+    <Col :xs="24" :sm="12">
       <Statistic title="Account Balance (CNY)" :value="112893" :precision="2" />
     </Col>
-    <Col :span="12">
+    <Col :xs="24" :sm="12">
       <Statistic title="Active Users" :value="112893" loading />
     </Col>
   </Row>

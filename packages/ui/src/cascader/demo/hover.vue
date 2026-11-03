@@ -35,7 +35,7 @@ function onTriggerChange(value: unknown): void {
 
 <template>
   <div>
-    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px">
       <span>展开方式</span>
       <Select
         aria-label="展开触发方式"

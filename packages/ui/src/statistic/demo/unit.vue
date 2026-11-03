@@ -5,15 +5,15 @@ import { Col, Row, Statistic } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Row :gutter="16">
-    <Col :span="12">
+  <Row :gutter="[16, 16]">
+    <Col :xs="24" :sm="12">
       <Statistic title="Feedback" :value="1128">
         <template #prefix>
           <LikeOutlined />
         </template>
       </Statistic>
     </Col>
-    <Col :span="12">
+    <Col :xs="24" :sm="12">
       <Statistic title="Unmerged" :value="93" suffix="/ 100" />
     </Col>
   </Row>

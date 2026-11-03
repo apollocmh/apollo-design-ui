@@ -63,6 +63,7 @@ const styles = computed<TableSemanticStyles>(() => ({
   body: {
     row: {
       background: theme.value === 'blue' ? '#fbfdff' : '#fffdf7',
+      color: '#1f1f1f',
     },
   },
   footer: {

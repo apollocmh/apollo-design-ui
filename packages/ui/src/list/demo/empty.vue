@@ -19,7 +19,7 @@ const locale = computed<ListLocale>(() => ({
   <div>
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px">
       <Text>显示数据</Text>
-      <Switch v-model:checked="showData" />
+      <Switch v-model:checked="showData" aria-label="显示列表数据" />
     </div>
     <List :data-source="data" :locale="locale">
       <template #item="{ item }"><ListItem>{{ item }}</ListItem></template>

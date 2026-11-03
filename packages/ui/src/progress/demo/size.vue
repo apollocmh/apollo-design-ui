@@ -5,7 +5,7 @@ import { Flex, Progress } from '@apollo-design/ui';
 
 <template>
   <Flex vertical gap="medium">
-    <Flex vertical gap="small" style="width: 300px">
+    <Flex vertical gap="small" style="width: 300px; max-width: 100%">
       <Progress :percent="50" />
       <Progress :percent="50" size="small" />
       <Progress :percent="50" :size="[300, 20]" />

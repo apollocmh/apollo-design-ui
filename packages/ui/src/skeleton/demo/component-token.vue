@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import {
+  Button,
+  Checkbox,
   ConfigProvider,
+  Input,
   Skeleton,
   SkeletonAvatar,
   SkeletonButton,
@@ -33,9 +36,9 @@ const theme = computed(() =>
 </script>
 <template>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
-    <button type="button" @click="themed = !themed">Toggle Skeleton theme</button>
-    <button type="button" @click="native = !native">Toggle native Skeleton variable</button>
-    <label><input v-model="active" type="checkbox" /> Active</label>
+    <Button @click="themed = !themed">Toggle Skeleton theme</Button>
+    <Button @click="native = !native">Toggle native Skeleton variable</Button>
+    <Checkbox v-model:checked="active">Active</Checkbox>
   </div>
   <ConfigProvider :theme="theme">
     <Skeleton avatar :active="active" :style="native ? { '--apollo-skeleton-title-height': '30px' } : undefined" />
@@ -46,7 +49,7 @@ const theme = computed(() =>
       <SkeletonImage :active="active" />
     </div>
     <SkeletonNode :styles="{ root: { display: 'block', marginTop: '16px' }, content: { width: '100%', minHeight: '70px', padding: '16px', color: themed ? '#172b4d' : undefined } }">
-      <label style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">Persistent draft<input v-model="draft" aria-label="Skeleton token draft" style="max-width:100%;width:180px" /></label>
+      <label style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">Persistent draft<Input v-model:value="draft" aria-label="Skeleton token draft" style="max-width:100%;width:180px" /></label>
     </SkeletonNode>
   </ConfigProvider>
 </template>

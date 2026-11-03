@@ -47,7 +47,7 @@ function onIconChange(value: unknown): void {
 
 <template>
   <div>
-    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px">
       <span>后缀图标</span>
       <Select
         aria-label="后缀图标"

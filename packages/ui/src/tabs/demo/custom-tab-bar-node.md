@@ -5,4 +5,4 @@ title:
   en-US: Custom Tab Bar Node
 ---
 
-`#tabBar` 插槽可以直接渲染自定义页签节点。示例补齐了 `tablist` / `tab` 角色、`aria-selected`、`aria-controls` 与 id 关联，并实现左右方向键、Home、End 的焦点移动与切换。
+`#tabBar` 插槽可以直接渲染自定义页签节点。本例刻意保留原生按钮，展示自行构建导航时的语义与焦点职责；常规按钮用法见「自定义页签栏」。示例补齐了 `tablist` / `tab` 角色、`aria-selected`、`aria-controls` 与 id 关联，并实现左右方向键、Home、End 的焦点移动与切换。

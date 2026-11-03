@@ -33,7 +33,7 @@ function onSizeChange(value: unknown): void {
 
 <template>
   <div>
-    <Space :size="12" style="margin-bottom: 16px">
+    <Space :size="12" wrap style="margin-bottom: 16px">
       <span>size</span>
       <Select
         aria-label="面板尺寸"

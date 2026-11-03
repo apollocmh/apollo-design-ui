@@ -13,9 +13,10 @@ const classNames = {
 
 const styles = {
   body: {
-    background: 'linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%)',
+    background:
+      'linear-gradient(180deg, var(--apollo-color-primary-bg) 0%, var(--apollo-color-bg-container) 100%)',
   },
-  title: { color: '#0958d9' },
+  title: { color: 'var(--apollo-color-primary-text)' },
   extra: { fontSize: '14px' },
 };
 
@@ -39,6 +40,7 @@ const actions = ['Edit', 'More'];
 <style>
 .demo-card-style-root {
   width: 360px;
+  max-width: 100%;
   border: 1px solid var(--apollo-color-border);
 }
 

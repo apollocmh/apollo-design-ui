@@ -51,7 +51,7 @@ const treeData: TreeSelectDataNode[] = [
       :tree-data="treeData"
       tree-default-expand-all
       placeholder="所有节点默认展开"
-      style="width: 280px"
+      style="width: 280px; max-width: 100%"
     />
   </div>
 </template>

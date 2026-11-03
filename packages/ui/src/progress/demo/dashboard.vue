@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// 对齐 antd demo/dashboard.tsx（antd 用 Segmented —— 本仓未落地，InputNumber 等价替换，
-// segmented 落地后换回；README §2 登记）
-import { Flex, InputNumber, Progress } from '@apollo-design/ui';
+// 用本库的 InputNumber 与 Segmented 调整仪表盘缺口。
+import { Flex, InputNumber, Progress, Segmented } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const gapDegree = ref<number>(50);
@@ -16,12 +15,7 @@ const gapPlacement = ref<'start' | 'end' | 'top' | 'bottom'>('bottom');
     </div>
     <div>
       gapPlacement:
-      <select v-model="gapPlacement" aria-label="gapPlacement" style="width: 120px">
-        <option value="start">start</option>
-        <option value="end">end</option>
-        <option value="top">top</option>
-        <option value="bottom">bottom</option>
-      </select>
+      <Segmented :value="gapPlacement" :options="['start', 'end', 'top', 'bottom']" aria-label="gapPlacement" @update:value="next => { if (next === 'start' || next === 'end' || next === 'top' || next === 'bottom') gapPlacement = next; }" />
     </div>
     <Progress type="dashboard" :gap-degree="gapDegree" :percent="30" :gap-placement="gapPlacement" />
   </Flex>

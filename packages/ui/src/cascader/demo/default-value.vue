@@ -47,7 +47,7 @@ const reset = () => {
       :default-value="['zhejiang', 'hangzhou', 'xihu']"
       @change="onChange"
     />
-    <Space>
+    <Space wrap>
       <Button @click="reset">恢复默认值</Button>
       <span>当前：{{ selected }}</span>
     </Space>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Empty } from '@apollo-design/ui';
+import { Empty, Input } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const draft = ref('');
@@ -14,7 +14,7 @@ const draft = ref('');
       </svg>
       <label class="empty-draft">
         Draft name
-        <input v-model="draft" placeholder="Keep editing while configuration changes" />
+        <Input v-model:value="draft" placeholder="Keep editing while configuration changes" />
       </label>
       <span>Complete image content</span>
     </template>
@@ -23,5 +23,5 @@ const draft = ref('');
 
 <style scoped>
 .empty-draft { display: block; margin-block: 8px; }
-.empty-draft input { max-width: 100%; }
+.empty-draft :deep(.apollo-input) { max-width: 100%; }
 </style>

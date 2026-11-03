@@ -43,7 +43,7 @@ const treeData = [
 
 <template>
   <div>
-    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px">
       <Text>blockNode</Text>
       <Switch v-model:checked="blockNode" aria-label="整行节点" />
       <Text type="secondary">selected: {{ selectedKeys.join(', ') || '（未选中）' }}</Text>
@@ -53,7 +53,7 @@ const treeData = [
       :tree-data="treeData"
       :block-node="blockNode"
       default-expand-all
-      style="width: 320px"
+      style="width: 320px; max-width: 100%"
     />
   </div>
 </template>

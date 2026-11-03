@@ -4,15 +4,16 @@ import { Card, ConfigProvider } from '@apollo-design/ui';
 
 const tokenStyle = {
   width: '360px',
+  maxWidth: '100%',
 };
 const theme: ThemeConfig = {
   components: {
     Card: {
-      headerBg: '#e6f4ff',
+      headerBg: 'var(--apollo-color-primary-bg)',
       headerFontSize: 18,
       headerPadding: 24,
       bodyPadding: 20,
-      actionsBg: '#f0f5ff',
+      actionsBg: 'var(--apollo-color-primary-bg)',
     },
   },
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Empty, type EmptyProps } from '@apollo-design/ui';
+import { Button, Checkbox, Empty, type EmptyProps } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const highlighted = ref(false);
@@ -22,12 +22,12 @@ const styles: EmptyProps['styles'] = ({ props }) => ({
 </script>
 
 <template>
-  <label><input v-model="highlighted" type="checkbox" /> Highlight description</label>
+  <Checkbox v-model:checked="highlighted">Highlight description</Checkbox>
   <Empty
     :class-names="classNames"
     :styles="styles"
     :description="highlighted ? 'Highlighted description' : '带语义化类名与样式'"
   >
-    <button type="button">Create</button><span> — complete footer content</span>
+    <Button type="primary">Create</Button><span> — complete footer content</span>
   </Empty>
 </template>

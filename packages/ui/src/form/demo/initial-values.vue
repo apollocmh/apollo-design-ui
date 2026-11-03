@@ -24,7 +24,7 @@ const reset = () => {
       <Input placeholder="Email" />
     </FormItem>
     <FormItem>
-      <Space>
+      <Space wrap>
         <Button type="primary" html-type="submit">Submit</Button>
         <Button @click="fill">setFieldsValue</Button>
         <Button @click="reset">resetFields</Button>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 custom-label demo：items[].label 接受 VNode
 import { QuestionCircleOutlined } from '@apollo-design/icons';
-import { Descriptions, Tooltip } from '@apollo-design/ui';
+import { Button, Descriptions, Tooltip } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const label = (text: string, tip: string) =>
@@ -9,9 +9,10 @@ const label = (text: string, tip: string) =>
     text,
     h(Tooltip, { title: tip, trigger: ['hover', 'focus'] }, () =>
       h(
-        'button',
+        Button,
         {
-          type: 'button',
+          type: 'text',
+          size: 'small',
           'aria-label': `${text}说明`,
           style: {
             display: 'inline-flex',
@@ -22,7 +23,7 @@ const label = (text: string, tip: string) =>
             cursor: 'help',
           },
         },
-        h(QuestionCircleOutlined, { 'aria-hidden': 'true' }),
+        { icon: () => h(QuestionCircleOutlined, { 'aria-hidden': 'true' }) },
       ),
     ),
   ]);

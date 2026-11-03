@@ -10,15 +10,18 @@ title:
 由调用者维护loading状态；业务正文切换时会卸载，需持久的输入数据放在父级响应状态中。
 ```vue
 <script setup lang="ts">
+import { Button, Skeleton } from '@apollo-design/ui';
 import { ref } from 'vue';
-import { Skeleton } from '@apollo-design/ui';
 
 const loading = ref(true);
 </script>
 
 <template>
-  <Skeleton :loading="loading">
-    <div>真实内容</div>
-  </Skeleton>
+  <div>
+    <Button style="margin-bottom: 16px" @click="loading = !loading">切换（当前 {{ loading ? '骨架' : '内容' }}）</Button>
+    <Skeleton :loading="loading">
+      <div>这是真实内容。</div>
+    </Skeleton>
+  </div>
 </template>
 ```

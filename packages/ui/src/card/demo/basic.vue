@@ -7,13 +7,13 @@ const more = () => h('a', { href: '#' }, 'More');
 </script>
 
 <template>
-  <Space vertical :size="16">
-    <Card title="Default size card" :extra="more()" :style="{ width: '300px' }">
+  <Space vertical :size="16" style="width: 100%">
+    <Card title="Default size card" :extra="more()" :style="{ width: '300px', maxWidth: '100%' }">
       <p>Card content</p>
       <p>Card content</p>
       <p>Card content</p>
     </Card>
-    <Card size="small" title="Small size card" :extra="more()" :style="{ width: '300px' }">
+    <Card size="small" title="Small size card" :extra="more()" :style="{ width: '300px', maxWidth: '100%' }">
       <p>Card content</p>
       <p>Card content</p>
       <p>Card content</p>

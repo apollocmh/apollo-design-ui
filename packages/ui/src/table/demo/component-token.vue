@@ -59,8 +59,8 @@ function onModeChange(value: unknown): void {
 .table-component-token-demo.is-custom .apollo-table.apollo-table {
   --apollo-table-header-bg: #e6f4ff;
   --apollo-table-header-color: #0958d9;
-  --apollo-table-row-hover-bg: #f0f7ff;
-  --apollo-table-row-selected-bg: #bae0ff;
+  --apollo-table-row-hover-bg: var(--apollo-color-primary-bg);
+  --apollo-table-row-selected-bg: var(--apollo-color-primary-bg-hover);
   --apollo-table-cell-padding-block: 12px;
   --apollo-table-cell-padding-inline: 20px;
   --apollo-table-border-color: #91caff;

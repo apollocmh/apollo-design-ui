@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { ConfigProvider, Slider, Statistic } from '@apollo-design/ui';
+import {
+  Button,
+  Checkbox,
+  ConfigProvider,
+  Input,
+  Slider,
+  Space,
+  Statistic,
+} from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const contentFontSize = ref(36),
@@ -23,13 +31,15 @@ const tokenStyle = computed(() =>
 
 <template>
   <div>
-    <button type="button" @click="source = !source">Toggle Statistic theme</button>
-    <label><input v-model="native" type="checkbox" aria-label="Native Statistic token override" /> Native override</label>
+    <Space wrap style="margin-bottom: 16px">
+      <Button @click="source = !source">Toggle Statistic theme</Button>
+    <Checkbox v-model:checked="native" aria-label="Native Statistic token override">Native override</Checkbox>
+    </Space>
     <ConfigProvider :theme="theme">
       <Statistic title="Active Users" :value="112893" :style="tokenStyle">
         <template #value="{ text }">
           <span data-token-value>{{ text }}</span>
-          <input v-model="draft" aria-label="Statistic token draft" style="display:block;width:160px;font-size:14px" />
+          <Input v-model:value="draft" aria-label="Statistic token draft" style="display:block;width:160px;max-width:100%;font-size:14px" />
         </template>
       </Statistic>
     </ConfigProvider>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from '@apollo-design/theme';
 import type { CollapseItemType } from '@apollo-design/ui';
-import { Collapse, ConfigProvider } from '@apollo-design/ui';
+import { Checkbox, Collapse, ConfigProvider } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const source = useTheme();
@@ -38,7 +38,7 @@ const items: CollapseItemType[] = [
 
 <template>
   <div>
-    <label><input v-model="spacious" type="checkbox" /> 宽松间距</label>
+    <Checkbox v-model:checked="spacious">宽松间距</Checkbox>
     <ConfigProvider :theme="theme">
       <Collapse :items="items" default-active-key="1" style="margin-block: 16px" />
       <Collapse :items="items" :bordered="false" size="small" default-active-key="2" />

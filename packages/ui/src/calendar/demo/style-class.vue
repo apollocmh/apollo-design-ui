@@ -13,6 +13,8 @@ const stylesObject: CalendarProps['styles'] = {
   root: {
     borderRadius: 8,
     width: 600,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
   },
 };
 
@@ -25,9 +27,9 @@ const stylesFunction: CalendarProps['styles'] = (info) => {
   if (info.props.fullscreen) {
     return {
       root: {
-        border: '2px solid #BDE3C3',
+        border: '2px solid var(--apollo-color-success-border)',
         borderRadius: 10,
-        backgroundColor: 'rgba(189,227,195, 0.3)',
+        backgroundColor: 'var(--apollo-color-success-bg)',
       },
     };
   }
@@ -45,6 +47,6 @@ const stylesFunction: CalendarProps['styles'] = (info) => {
 <style>
 .calendar-root {
   padding: 10px;
-  background-color: #e6f4ff;
+  background-color: var(--apollo-color-primary-bg);
 }
 </style>

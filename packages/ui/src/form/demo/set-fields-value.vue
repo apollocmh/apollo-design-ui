@@ -27,7 +27,7 @@ const output = computed(() => snapshot.value || '（点击按钮读取表单值�
       <Input placeholder="Email" />
     </FormItem>
     <FormItem>
-      <Space>
+      <Space wrap>
         <Button type="primary" @click="read">getFieldsValue</Button>
         <Button @click="write">setFieldsValue</Button>
       </Space>

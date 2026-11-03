@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/without-form-create.tsx：
 // 不调用 useForm，Form 自己创建内部 store；通过 key 重新挂载来重置。
-import { Alert, Button, Form, FormItem, Input, Select } from '@apollo-design/ui';
+import { Alert, Button, Form, FormItem, Input, Select, Space } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const formKey = ref(0);
@@ -35,8 +35,10 @@ const reset = () => {
       <Select aria-label="部门" placeholder="请选择部门" :options="departmentOptions" />
     </FormItem>
     <FormItem>
-      <Button type="primary" html-type="submit">提交</Button>
-      <Button style="margin-inline-start: 8px" @click="reset">重置（重新挂载）</Button>
+      <Space wrap>
+        <Button type="primary" html-type="submit">提交</Button>
+        <Button @click="reset">重置（重新挂载）</Button>
+      </Space>
     </FormItem>
     <Alert
       v-if="submitted"

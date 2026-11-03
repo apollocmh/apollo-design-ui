@@ -47,7 +47,7 @@ const selectedInfo = computed(() => {
       tree-default-expand-all
       allow-clear
       placeholder="请选择节点"
-      style="width: 280px"
+      style="width: 280px; max-width: 100%"
     />
   </div>
 </template>

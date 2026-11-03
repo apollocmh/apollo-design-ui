@@ -8,9 +8,9 @@ const value = ref<CalendarDate>(dayjs('2026-10-15'));
 const theme = {
   components: {
     Calendar: {
-      fullBg: '#f6ffed',
-      fullPanelBg: '#f6ffed',
-      itemActiveBg: '#b7eb8f',
+      fullBg: 'var(--apollo-color-success-bg)',
+      fullPanelBg: 'var(--apollo-color-success-bg)',
+      itemActiveBg: 'var(--apollo-color-success-bg-hover)',
       yearControlWidth: 96,
       monthControlWidth: '80px',
       miniContentHeight: 288,

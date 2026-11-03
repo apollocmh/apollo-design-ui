@@ -44,7 +44,7 @@ function onAlignChange(value: unknown): void {
 
 <template>
   <div>
-    <Space :size="12" style="margin-bottom: 16px">
+    <Space :size="12" wrap style="margin-bottom: 16px">
       <span>column.align</span>
       <Select
         aria-label="列对齐方式"

@@ -10,11 +10,13 @@ title:
 
 ```vue
 <script setup lang="ts">
-import { Skeleton } from '@apollo-design/ui';
+import { Flex, Skeleton } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Skeleton active />
-  <Skeleton active round />
+  <Flex vertical gap="large">
+    <Skeleton active />
+    <Skeleton active round />
+  </Flex>
 </template>
 ```

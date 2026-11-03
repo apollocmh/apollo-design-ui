@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // 对齐 antd 的 `vertical` demo。
-import { List, ListItem, ListItemMeta, Space } from '@apollo-design/ui';
+import { Avatar, List, ListItem, ListItemMeta, Space } from '@apollo-design/ui';
 
 const data = Array.from({ length: 6 }).map((_, i) => ({
-  href: '#title',
+  href: '#demo-vertical',
   title: `ant design part ${i}`,
   description: 'Ant Design, a design language for background applications.',
   content:
@@ -22,7 +22,7 @@ const data = Array.from({ length: 6 }).map((_, i) => ({
       <ListItem>
         <ListItemMeta :description="item.description">
           <template #avatar>
-            <span style="display: inline-block; width: 32px; height: 32px; background: #999; border-radius: 50%" />
+            <Avatar>{{ item.title.slice(-1) }}</Avatar>
           </template>
           <template #title><a :href="item.href">{{ item.title }}</a></template>
         </ListItemMeta>
@@ -34,7 +34,7 @@ const data = Array.from({ length: 6 }).map((_, i) => ({
           </Space>
         </template>
         <template #extra>
-          <span style="display: inline-block; width: 272px; height: 120px; background: #eee" />
+          <span style="display: inline-block; width: 272px; max-width: 100%; height: 120px; background: #eee" />
         </template>
       </ListItem>
     </template>

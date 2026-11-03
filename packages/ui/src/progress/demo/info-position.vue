@@ -4,7 +4,7 @@ import { Flex, Progress } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Flex gap="small" vertical>
+  <Flex gap="small" vertical class="demo-progress-info-position">
     <Progress :percent="0" :percent-position="{ align: 'center', type: 'inner' }" :size="[200, 20]" stroke-color="#E6F4FF" />
     <Progress :percent="10" :percent-position="{ align: 'center', type: 'inner' }" :size="[300, 20]" />
     <Progress :percent="50" :percent-position="{ align: 'start', type: 'inner' }" :size="[300, 20]" stroke-color="#B7EB8F" />
@@ -16,3 +16,7 @@ import { Flex, Progress } from '@apollo-design/ui';
     <Progress :percent="100" :percent-position="{ align: 'center', type: 'outer' }" />
   </Flex>
 </template>
+
+<style scoped>
+.demo-progress-info-position :deep(.apollo-progress-line) { max-width: 100%; }
+</style>

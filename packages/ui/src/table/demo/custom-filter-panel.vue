@@ -21,7 +21,10 @@ const columns: TableColumnsType = [
           'onUpdate:value': (v: string) => {
             searchInput.value = v;
           },
-          onPressEnter: () => props.confirm({ closeDropdown: true }),
+          onPressEnter: () => {
+            props.setSelectedKeys(searchInput.value ? [searchInput.value] : []);
+            props.confirm({ closeDropdown: true });
+          },
         }),
         h(
           Button,
@@ -43,7 +46,7 @@ const columns: TableColumnsType = [
             style: { width: '90px' },
             onClick: () => {
               searchInput.value = '';
-              props.clearFilters?.({ closeDropdown: true });
+              props.clearFilters?.({ confirm: true, closeDropdown: true });
             },
           },
           { default: () => 'Reset' },

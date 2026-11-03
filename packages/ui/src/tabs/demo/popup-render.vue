@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Tabs } from '@apollo-design/ui';
+import { Button, Tabs } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const custom = ref(false);
@@ -14,17 +14,17 @@ const items = Array.from({ length: 12 }, (_, index) => ({
 </script>
 
 <template>
-  <div style="display: flex; gap: 8px; margin-bottom: 12px">
-    <button @click="custom = !custom">Toggle popup slot</button>
-    <button @click="empty = !empty">Toggle empty popup</button>
-    <button @click="label = label === 'Hidden tabs' ? 'More tabs' : 'Hidden tabs'">Update popup label</button>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px">
+    <Button @click="custom = !custom">Toggle popup slot</Button>
+    <Button @click="empty = !empty">Toggle empty popup</Button>
+    <Button @click="label = label === 'Hidden tabs' ? 'More tabs' : 'Hidden tabs'">Update popup label</Button>
   </div>
-  <Tabs v-model:activeKey="activeKey" :items="items" style="width: 280px">
+  <Tabs v-model:activeKey="activeKey" :items="items" style="width: 280px; max-width: 100%">
     <template v-if="custom" #popupRender="{ originNode, restTabs, onClose }">
-      <section v-if="!empty" data-tabs-popup style="padding: 8px; background: white">
+      <section v-if="!empty" data-tabs-popup style="padding: 8px; background: var(--apollo-color-bg-elevated); color: var(--apollo-color-text)">
         <p data-tabs-popup-summary>{{ label }}: {{ restTabs.length }}</p>
         <component :is="originNode" />
-        <button @click="onClose">Close tabs popup</button>
+        <Button @click="onClose">Close tabs popup</Button>
       </section>
     </template>
   </Tabs>

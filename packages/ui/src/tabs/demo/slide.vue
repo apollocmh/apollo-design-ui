@@ -10,13 +10,13 @@ const items = [
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px; width: 440px">
+  <div style="display: flex; flex-direction: column; gap: 12px; width: 440px; max-width: 100%">
     <Tabs
       default-active-key="1"
       :items="items"
       :animated="{ inkBar: true, tabPane: true }"
     />
-    <p style="margin: 0; color: #999; font-size: 12px">
+    <p style="margin: 0; color: var(--apollo-color-text-secondary); font-size: 12px">
       animated.tabPane 为 true 时启用面板切换动效；默认值为 { inkBar: true, tabPane: false }。
     </p>
   </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Timeline } from '@apollo-design/ui';
+import { Button, Input, Timeline } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const custom = ref(true);
@@ -28,7 +28,7 @@ const update = () => {
     <template v-if="custom" #itemContent="{ item, index }">
       <div v-if="!empty">
         <strong>{{ item.content }} · {{ index }}</strong>
-        <input :aria-label="`Note ${item.key}`" placeholder="Type, then reverse or update" />
+        <Input :aria-label="`Note ${item.key}`" placeholder="Type, then reverse or update" />
       </div>
     </template>
     <template v-if="custom" #itemIcon="{ index }">

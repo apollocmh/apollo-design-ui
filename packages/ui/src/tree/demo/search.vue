@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 search demo。⚠️ 用**公开的 `DataNode`** 标注，别让 TS 推断成
 // `children?: unknown[]` —— 那样传给 `:tree-data` 会报「不可赋值给 DataNode[]」。
-import { Tree } from '@apollo-design/ui';
+import { Input, Tree } from '@apollo-design/ui';
 import { ref } from 'vue';
 // ⚠️ `DataNode` / `EventDataNode` **不在包根导出**（根 barrel 只导 `Tree*` 前缀的类型）
 //    ⇒ 从组件的本地模块导入；写成 `from '@apollo-design/ui'` 会报 TS2305。
@@ -57,8 +57,7 @@ const expandedKeys = ref<(string | number)[]>([]);
 const searchValue = ref('');
 const autoExpandParent = ref(true);
 
-const onChange = (e: Event): void => {
-  const value = (e.target as HTMLInputElement).value;
+const onChange = (value: string): void => {
   // ⚠️ 去重 + 收紧类型：`filter(Boolean)` 会留下 `undefined`（`(string|undefined)[]`
   //    赋不给 `(string|number)[]`），用 Set + 类型守卫表达同一语义。
   const newExpandedKeys = Array.from(
@@ -78,8 +77,7 @@ const onChange = (e: Event): void => {
 
 <template>
   <div>
-    <!-- antd 用 Input.Search（未落地）⇒ 原生 input 等价替换（README §7 登记） -->
-    <input class="tree-demo-search" placeholder="Search" @input="onChange" />
+    <Input :value="searchValue" class="tree-demo-search" aria-label="Search tree nodes" placeholder="Search" allow-clear style="margin-bottom: 8px" @update:value="onChange" />
     <Tree
       :expanded-keys="expandedKeys"
       :auto-expand-parent="autoExpandParent"

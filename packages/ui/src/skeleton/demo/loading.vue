@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Skeleton } from '@apollo-design/ui';
+import { Button, Skeleton } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const loading = ref(true);
@@ -7,7 +7,7 @@ const loading = ref(true);
 
 <template>
   <div>
-    <button type="button" @click="loading = !loading">切换（当前 {{ loading ? '骨架' : '内容' }}）</button>
+    <Button style="margin-bottom: 16px" @click="loading = !loading">切换（当前 {{ loading ? '骨架' : '内容' }}）</Button>
     <Skeleton :loading="loading">
       <div>这是真实内容。</div>
     </Skeleton>

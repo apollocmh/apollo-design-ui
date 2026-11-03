@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Statistic, type TimerType } from '@apollo-design/ui';
+import { Button, Input, Space, Statistic, type TimerType } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // 两天后
@@ -22,11 +22,11 @@ const switchDirection = () => {
 </script>
 
 <template>
-  <div style="margin-bottom:16px">
-    <button type="button" @click="restart">Restart short countdown</button>
-    <button type="button" @click="switchDirection">Switch clock direction</button>
+  <Space wrap style="margin-bottom:16px">
+    <Button @click="restart">Restart short countdown</Button>
+    <Button @click="switchDirection">Switch clock direction</Button>
     <output aria-label="Completed countdowns">{{ finishes }}</output>
-  </div>
+  </Space>
   <div class="demo-statistic-timer">
     <Statistic.Timer
       type="countdown"
@@ -50,7 +50,7 @@ const switchDirection = () => {
     >
       <template #value="{ text, duration }">
         <span data-clock-text>{{ text }}</span>
-        <input v-model="draft" aria-label="Clock draft" style="display:block;width:150px;font-size:14px" />
+        <Input v-model:value="draft" aria-label="Clock draft" style="display:block;width:150px;max-width:100%;font-size:14px" />
         <small data-clock-duration style="font-size:12px">{{ duration === null ? 'Starting' : 'Running' }}</small>
       </template>
     </Statistic.Timer>

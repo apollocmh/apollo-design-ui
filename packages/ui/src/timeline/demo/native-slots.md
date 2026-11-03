@@ -9,7 +9,7 @@ itemTitle / itemContent / itemIcon 使用单个 { item, index } 对象。显式�
 
 ```vue
 <script setup lang="ts">
-import { Button, Timeline } from '@apollo-design/ui';
+import { Button, Input, Timeline } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const custom = ref(true);
@@ -19,7 +19,9 @@ const items = ref([
   { key: 'created', title: '2026-10-24', content: 'Created' },
   { key: 'reviewed', title: '2026-10-25', content: 'Reviewed' },
 ]);
-const update = () => { items.value = items.value.map(item => ({ ...item, content: `${item.content}!` })); };
+const update = () => {
+  items.value = items.value.map((item) => ({ ...item, content: `${item.content}!` }));
+};
 </script>
 
 <template>
@@ -36,7 +38,7 @@ const update = () => { items.value = items.value.map(item => ({ ...item, content
     <template v-if="custom" #itemContent="{ item, index }">
       <div v-if="!empty">
         <strong>{{ item.content }} · {{ index }}</strong>
-        <input :aria-label="`Note ${item.key}`" placeholder="Type, then reverse or update" />
+        <Input :aria-label="`Note ${item.key}`" placeholder="Type, then reverse or update" />
       </div>
     </template>
     <template v-if="custom" #itemIcon="{ index }">
@@ -44,5 +46,4 @@ const update = () => { items.value = items.value.map(item => ({ ...item, content
     </template>
   </Timeline>
 </template>
-
 ```

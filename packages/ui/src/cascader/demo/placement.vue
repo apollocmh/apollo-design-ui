@@ -36,7 +36,7 @@ const onPlacementChange = (value: unknown) => {
 </script>
 
 <template>
-  <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px">
+  <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px">
     <span>placement：</span>
     <Select
       :value="placement"

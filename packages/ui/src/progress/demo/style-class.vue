@@ -10,13 +10,13 @@ const classNames: ProgressProps['classNames'] = {
 };
 
 const styles: ProgressProps['styles'] = {
-  rail: { backgroundColor: '#f5f5f5' },
+  rail: { backgroundColor: 'var(--apollo-color-fill-secondary)' },
   track: { borderRadius: '8px' },
 };
 </script>
 
 <template>
-  <Flex gap="small" vertical style="width: 300px">
+  <Flex gap="small" vertical style="width: 300px; max-width: 100%">
     <Progress :percent="50" :class-names="classNames" :styles="styles" />
   </Flex>
 </template>

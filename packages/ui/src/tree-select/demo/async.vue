@@ -17,7 +17,7 @@ const onLoadData = (treeNode: TreeSelectDataNode) =>
         {
           title: 'Expand to load',
           value: '0',
-          children: [{ title: 'Child Node', value: `${treeNode.value}-0` }],
+          children: [{ title: 'Child Node', value: `${treeNode.value}-0`, isLeaf: true }],
         },
       ];
       resolve();

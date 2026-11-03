@@ -21,7 +21,7 @@ const items: CollapseItemType[] = [
 
 <template>
   <div>
-    <Space :size="12" style="margin-bottom: 16px">
+    <Space :size="12" wrap style="margin-bottom: 16px">
       <span>ghost</span>
       <Switch
         v-model:checked="ghost"

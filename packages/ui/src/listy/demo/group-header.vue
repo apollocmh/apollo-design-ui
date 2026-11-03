@@ -23,14 +23,14 @@ const scrollToGroup = (key: string) => {
 
 <template>
   <div>
-    <div style="display: flex; gap: 8px; margin-bottom: 12px">
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px">
       <Button v-for="name in groupNames" :key="name" size="small" @click="scrollToGroup(name)">
         {{ name }}
       </Button>
     </div>
     <Listy ref="listyRef" :items="items" row-key="key" :group="group" sticky :height="280">
       <template #groupHeader="{ groupKey, items: groupItems }">
-        <div style="display: flex; align-items: center; gap: 8px">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
           <Tag color="blue">{{ groupKey }}</Tag>
           <Text type="secondary">{{ groupItems.length }} items</Text>
         </div>

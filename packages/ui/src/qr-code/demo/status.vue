@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { QrcodeStatusType } from '@apollo-design/ui';
+import { Button, Checkbox, Input, QrCode } from '@apollo-design/ui';
 import { onMounted, onUnmounted, ref } from 'vue';
-import type { QrcodeStatusType } from '../../index';
-import { QrCode } from '../../index';
 
 const status = ref<QrcodeStatusType>('loading');
 const custom = ref(true),
@@ -26,12 +26,12 @@ onUnmounted(() => clearTimeout(timer));
 
 <template>
   <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px">
-    <button type="button" @click="select('active')">Active</button>
-    <button type="button" @click="select('loading')">Loading</button>
-    <button type="button" @click="select('expired')">Expired</button>
-    <button type="button" @click="select('scanned')">Scanned</button>
-    <label><input v-model="custom" type="checkbox" /> Custom status</label>
-    <label><input v-model="empty" type="checkbox" /> Empty status</label>
+    <Button @click="select('active')">Active</Button>
+    <Button @click="select('loading')">Loading</Button>
+    <Button @click="select('expired')">Expired</Button>
+    <Button @click="select('scanned')">Scanned</Button>
+    <Checkbox v-model:checked="custom">Custom status</Checkbox>
+    <Checkbox v-model:checked="empty">Empty status</Checkbox>
   </div>
   <div style="display: flex; flex-wrap: wrap; gap: 24px">
     <QrCode value="https://apollo.design" title="Default status access" :status="status" @refresh="refresh" />
@@ -39,9 +39,9 @@ onUnmounted(() => clearTimeout(timer));
       <template v-if="custom" #status="{ status: current, locale, refresh: requestRefresh }">
         <template v-if="!empty">
           <span v-if="false">Conditional first node</span>
-          <input v-model="draft" aria-label="QR status draft" style="width: 112px; max-width: 100%" />
+          <Input v-model:value="draft" aria-label="QR status draft" style="width: 112px; max-width: 100%" />
           <output aria-label="QR current status">{{ current }}</output>
-          <button v-if="requestRefresh" type="button" @click="requestRefresh">{{ locale.refresh }}</button>
+          <Button v-if="requestRefresh" size="small" @click="requestRefresh">{{ locale.refresh }}</Button>
         </template>
       </template>
     </QrCode>

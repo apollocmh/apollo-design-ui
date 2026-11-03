@@ -5,8 +5,8 @@ import { Col, Row, Statistic } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Row :gutter="16">
-    <Col :span="12">
+  <Row :gutter="[16, 16]">
+    <Col :xs="24" :sm="12">
       <div class="demo-statistic-card">
         <Statistic
           title="Active"
@@ -21,7 +21,7 @@ import { Col, Row, Statistic } from '@apollo-design/ui';
         </Statistic>
       </div>
     </Col>
-    <Col :span="12">
+    <Col :xs="24" :sm="12">
       <div class="demo-statistic-card">
         <Statistic
           title="Idle"

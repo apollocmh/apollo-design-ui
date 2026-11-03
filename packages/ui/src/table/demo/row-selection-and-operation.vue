@@ -20,7 +20,11 @@ const columns: TableColumnsType = [
     title: 'Action',
     key: 'action',
     render: (_value: unknown, record: Record<string, unknown>) =>
-      h('a', { onClick: () => remove(record.key as string) }, 'Delete'),
+      h(
+        Button,
+        { type: 'link', size: 'small', onClick: () => remove(String(record.key)) },
+        () => 'Delete',
+      ),
   },
 ];
 
@@ -58,9 +62,9 @@ function batchDelete(): void {
 
 <template>
   <div>
-    <div style="margin-bottom: 16px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px">
       <Button type="primary" :disabled="!hasSelected" @click="batchDelete"> 批量删除 </Button>
-      <span style="margin-left: 8px">
+      <span>
         {{ hasSelected ? `已选择 ${selectedRowKeys.length} 项` : '未选择' }}
       </span>
     </div>

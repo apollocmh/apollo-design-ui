@@ -6,7 +6,7 @@ const data = Array.from({ length: 6 }).map((_, i) => ({ title: `Title ${i + 1}` 
 </script>
 
 <template>
-  <List :grid="{ gutter: 16, column: 3 }" :data-source="data">
+  <List :grid="{ gutter: 16, xs: 1, sm: 2, lg: 3 }" :data-source="data">
     <template #item="{ item }">
       <ListItem><Card :title="item.title">Card content</Card></ListItem>
     </template>

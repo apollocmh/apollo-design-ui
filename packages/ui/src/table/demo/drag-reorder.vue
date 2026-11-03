@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Flex, Table, type TableColumnsType } from '@apollo-design/ui';
+import { Button, Flex, Select, Table, type TableColumnsType } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 type Row = { key: string; name: string; age: number; city: string };
@@ -85,10 +85,10 @@ const reset = () => {
   <Flex vertical gap="small">
     <p>拖动行或列头调整顺序，也可选择条目后使用按钮。Drag rows or headers, or use the controls.</p>
     <Flex wrap gap="small" align="center">
-      <label>Row <select v-model="selectedRow" aria-label="Row to move"><option v-for="row in rows" :key="row.key" :value="row.key">{{ row.name }}</option></select></label>
+      <label>Row <Select v-model:value="selectedRow" aria-label="Row to move" :options="rows.map(row => ({ value: row.key, label: row.name }))" style="width: 120px" /></label>
       <Button :disabled="rowOrder.indexOf(selectedRow) === 0" @click="moveSelected('row', -1)">Move row up</Button>
       <Button :disabled="rowOrder.indexOf(selectedRow) === rowOrder.length - 1" @click="moveSelected('row', 1)">Move row down</Button>
-      <label>Column <select v-model="selectedColumn" aria-label="Column to move"><option v-for="column in definitions" :key="column.key" :value="column.key">{{ column.title }}</option></select></label>
+      <label>Column <Select v-model:value="selectedColumn" aria-label="Column to move" :options="definitions.map(column => ({ value: column.key, label: column.title }))" style="width: 120px" /></label>
       <Button :disabled="columnOrder.indexOf(selectedColumn) === 0" @click="moveSelected('column', -1)">Move column left</Button>
       <Button :disabled="columnOrder.indexOf(selectedColumn) === columnOrder.length - 1" @click="moveSelected('column', 1)">Move column right</Button>
       <Button @click="reset">Reset order</Button>

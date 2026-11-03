@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Empty } from '@apollo-design/ui';
+import { Checkbox, Empty } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const showDescription = ref(true);
@@ -9,11 +9,11 @@ const showDescription = ref(true);
   <div style="display: flex; flex-direction: column; gap: 16px">
     <Empty description="Nothing to show" />
     <Empty :description="false" />
-    <label><input v-model="showDescription" type="checkbox" /> Show description slot</label>
+    <Checkbox v-model:checked="showDescription">Show description slot</Checkbox>
     <Empty description="The slot suppresses this fallback even when empty">
       <template #description>
         <template v-if="showDescription">
-          <span>描述可以是任意节点，例如 </span><a class="empty-description-link" href="#demo">这段链接</a><strong>，以及后续内容。</strong>
+          <span>描述可以是任意节点，例如 </span><a class="empty-description-link" href="#demo-description">这段链接</a><strong>，以及后续内容。</strong>
         </template>
       </template>
     </Empty>

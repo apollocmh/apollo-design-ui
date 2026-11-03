@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 自定义页签节点：通过 #tabBar 插槽渲染带完整 ARIA 语义的按钮组
+// 自定义页签节点：刻意保留原生 button，演示自建 tablist 的 ARIA 与焦点职责。
 import { Tabs } from '@apollo-design/ui';
 
 const items = [
@@ -74,10 +74,11 @@ function onTabKeydown(
 <style>
 .demo-tab-bar-node {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 6px;
   border-radius: 999px;
-  background: #f5f5f5;
+  background: var(--apollo-color-fill-secondary);
 }
 
 .demo-tab-bar-node__tab {
@@ -88,24 +89,24 @@ function onTabKeydown(
   border: 1px solid transparent;
   border-radius: 999px;
   background: transparent;
-  color: #595959;
+  color: var(--apollo-color-text-secondary);
   font: inherit;
   cursor: pointer;
 }
 
 .demo-tab-bar-node__tab:hover {
-  color: #722ed1;
+  color: var(--apollo-color-primary);
 }
 
 .demo-tab-bar-node__tab--active {
-  border-color: #d3adf7;
-  background: #fff;
-  color: #531dab;
+  border-color: var(--apollo-color-primary-border);
+  background: var(--apollo-color-bg-container);
+  color: var(--apollo-color-primary-text);
   box-shadow: 0 2px 6px rgb(114 46 209 / 16%);
 }
 
 .demo-tab-bar-node__tab:focus-visible {
-  outline: 2px solid #722ed1;
+  outline: 2px solid var(--apollo-color-primary);
   outline-offset: 2px;
 }
 
