@@ -49,9 +49,9 @@ export const material3Preset: ThemePreset = Object.freeze({
   light: Object.freeze({
     algorithm: light,
     token: Object.freeze({
-      colorPrimary: '#6750a4',
-      colorInfo: '#6750a4',
-      colorLink: '#6750a4',
+      colorPrimary: '#0073e6',
+      colorInfo: '#0073e6',
+      colorLink: '#0073e6',
       colorBgBase: '#fffbfe',
       colorTextBase: '#1d1b20',
       colorSuccess: '#226b3b',
@@ -62,9 +62,10 @@ export const material3Preset: ThemePreset = Object.freeze({
   dark: Object.freeze({
     algorithm: dark,
     token: Object.freeze({
-      colorPrimary: '#4f378b',
-      colorInfo: '#715f98',
-      colorLink: '#d0bcff',
+      colorPrimary: '#0073e6',
+      colorInfo: '#0073e6',
+      // Links use a lighter blue on dark surfaces while actions keep the brand color.
+      colorLink: '#80bfff',
       colorBgBase: '#121015',
       colorTextBase: '#e6e0e9',
       colorSuccess: '#91d5a7',

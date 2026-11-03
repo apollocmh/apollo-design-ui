@@ -56,6 +56,28 @@ describe('Built-in presets use public configuration', () => {
     ).toMatchObject({ fontSizeHeading1: 72, boxShadow: 'none' });
   });
 
+  it('uses the Material blue brand in both appearances and derives its interactive palette', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const token = getDesignToken({ preset: material3Preset, mode });
+      const expected = getDesignToken({
+        mode,
+        token: { colorPrimary: '#0073e6' },
+      });
+      expect(material3Preset[mode]?.token?.colorPrimary).toBe('#0073e6');
+      expect(token.colorPrimary).toBe(expected.colorPrimary);
+      expect(token.colorInfo).toBe(
+        getDesignToken({ mode, token: { colorInfo: '#0073e6' } }).colorInfo,
+      );
+      expect(token.colorPrimaryHover).toBe(expected.colorPrimaryHover);
+      expect(token.colorPrimaryActive).toBe(expected.colorPrimaryActive);
+      expect(token.colorPrimaryText).toBe(expected.colorPrimaryText);
+    }
+    expect(getDesignToken({ preset: material3Preset }).colorLink).toBe('#0073e6');
+    expect(getDesignToken({ preset: material3Preset, mode: 'dark' }).colorLink).toBe(
+      getDesignToken({ mode: 'dark', token: { colorLink: '#80bfff' } }).colorLink,
+    );
+  });
+
   it('inherits raw user overrides and keeps local legacy algorithms and reset semantics', () => {
     const parent: ThemeConfig = {
       preset: monoPreset,
