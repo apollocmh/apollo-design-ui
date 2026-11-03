@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 261,
+  "revision": 262,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -23,14 +23,15 @@
       "ref": "affix",
       "title": "Affix",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/affix"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -222,7 +223,7 @@
       "ref": "alert",
       "title": "Alert",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/alert"
@@ -230,7 +231,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-29-alert-contract-audit.md"
+        "docs/audit/2026-10-29-alert-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -249,14 +251,15 @@
       "ref": "anchor",
       "title": "Anchor",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/anchor"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -448,14 +451,15 @@
       "ref": "app",
       "title": "App",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/app"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -676,7 +680,7 @@
       "ref": "auto-complete",
       "title": "AutoComplete",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/auto-complete",
@@ -686,7 +690,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -770,14 +775,15 @@
       "ref": "avatar",
       "title": "Avatar",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/avatar"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-avatar-contract-audit.md"
+        "docs/audit/2026-10-27-avatar-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -795,14 +801,15 @@
       "ref": "back-top",
       "title": "BackTop",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/back-top"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -869,14 +876,15 @@
       "ref": "badge",
       "title": "Badge",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/badge"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-28-badge-contract-audit.md"
+        "docs/audit/2026-10-28-badge-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -894,13 +902,15 @@
       "ref": "border-beam",
       "title": "BorderBeam",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/border-beam"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -1106,14 +1116,15 @@
       "ref": "breadcrumb",
       "title": "Breadcrumb",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/breadcrumb"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1131,7 +1142,7 @@
       "ref": "button",
       "title": "Button",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/button"
@@ -1140,7 +1151,8 @@
       "evidence": [
         "docs/audit/2026-10-27-button-contract-audit.md",
         "docs/audit/evidence/button-foreground-acceptance.json",
-        "docs/audit/evidence/button-foreground-publication.json"
+        "docs/audit/evidence/button-foreground-publication.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1160,7 +1172,7 @@
       "ref": "calendar",
       "title": "Calendar",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -1169,7 +1181,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1449,14 +1462,15 @@
       "ref": "card",
       "title": "Card",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/card"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1750,14 +1764,15 @@
       "ref": "carousel",
       "title": "Carousel",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/carousel"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1994,14 +2009,15 @@
       "ref": "cascader",
       "title": "Cascader",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/cascader"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2133,7 +2149,7 @@
       "ref": "checkbox",
       "title": "Checkbox",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/checkbox",
@@ -2146,7 +2162,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2278,7 +2295,7 @@
       "ref": "collapse",
       "title": "Collapse",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/collapse"
@@ -2286,7 +2303,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
-        "docs/audit/2026-10-29-current-batch-integration.md"
+        "docs/audit/2026-10-29-current-batch-integration.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2305,14 +2323,15 @@
       "ref": "color-picker",
       "title": "ColorPicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/color-picker"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2440,7 +2459,7 @@
       "ref": "config-provider",
       "title": "ConfigProvider",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/config-provider"
@@ -2448,7 +2467,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
-        "docs/audit/2026-10-29-current-batch-integration.md"
+        "docs/audit/2026-10-29-current-batch-integration.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2476,7 +2496,7 @@
       "ref": "date-picker",
       "title": "DatePicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -2487,7 +2507,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2719,14 +2740,15 @@
       "ref": "descriptions",
       "title": "Descriptions",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/descriptions"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2744,7 +2766,7 @@
       "ref": "divider",
       "title": "Divider",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/divider"
@@ -2752,7 +2774,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
-        "docs/audit/2026-10-29-current-batch-integration.md"
+        "docs/audit/2026-10-29-current-batch-integration.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2771,14 +2794,15 @@
       "ref": "drawer",
       "title": "Drawer",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/drawer"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2846,7 +2870,7 @@
       "ref": "dropdown",
       "title": "Dropdown",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/dropdown",
@@ -2858,7 +2882,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2959,14 +2984,15 @@
       "ref": "empty",
       "title": "Empty",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/empty"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-empty-contract-audit.md"
+        "docs/audit/2026-10-27-empty-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2984,7 +3010,7 @@
       "ref": "flex",
       "title": "Flex",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/flex"
@@ -2992,7 +3018,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-29-flex-contract-audit.md"
+        "docs/audit/2026-10-29-flex-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3011,14 +3038,15 @@
       "ref": "float-button",
       "title": "FloatButton",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/float-button"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3091,7 +3119,7 @@
       "ref": "form",
       "title": "Form",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:form-core"
       ],
@@ -3100,7 +3128,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3354,14 +3383,15 @@
       "ref": "grid",
       "title": "Grid",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/grid"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3379,14 +3409,15 @@
       "ref": "image",
       "title": "Image",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/image"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-25-image-contract-audit.md"
+        "docs/audit/2026-10-25-image-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3404,7 +3435,7 @@
       "ref": "input",
       "title": "Input",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input"
@@ -3413,7 +3444,8 @@
       "evidence": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
         "docs/audit/2026-10-29-current-batch-integration.md",
-        "docs/audit/evidence/button-search-demo-events.json"
+        "docs/audit/evidence/button-search-demo-events.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3433,14 +3465,15 @@
       "ref": "input-number",
       "title": "InputNumber",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input-number"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3510,7 +3543,7 @@
       "ref": "layout",
       "title": "Layout",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/layout"
@@ -3518,7 +3551,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-29-layout-contract-audit.md"
+        "docs/audit/2026-10-29-layout-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3537,14 +3571,15 @@
       "ref": "list",
       "title": "List",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/list"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-26-list-contract-audit.md"
+        "docs/audit/2026-10-26-list-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3562,14 +3597,15 @@
       "ref": "listy",
       "title": "Listy",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/listy"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3828,14 +3864,15 @@
       "ref": "masonry",
       "title": "Masonry",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/masonry"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3903,14 +3940,15 @@
       "ref": "mentions",
       "title": "Mentions",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/mentions"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3993,7 +4031,7 @@
       "ref": "menu",
       "title": "Menu",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/menu",
@@ -4001,7 +4039,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -4100,14 +4139,15 @@
       "ref": "message",
       "title": "Message",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/message"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -4506,14 +4546,15 @@
       "ref": "modal",
       "title": "Modal",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/modal"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -4964,14 +5005,15 @@
       "ref": "notification",
       "title": "Notification",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/notification"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -5370,14 +5412,15 @@
       "ref": "pagination",
       "title": "Pagination",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/pagination"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -5445,14 +5488,15 @@
       "ref": "popconfirm",
       "title": "Popconfirm",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popconfirm"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -5546,14 +5590,15 @@
       "ref": "popover",
       "title": "Popover",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popover"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -5660,14 +5705,15 @@
       "ref": "progress",
       "title": "Progress",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/progress"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -5746,14 +5792,15 @@
       "ref": "qr-code",
       "title": "QRCode",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/qr-code"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-26-qrcode-contract-audit.md"
+        "docs/audit/2026-10-26-qrcode-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -5771,14 +5818,15 @@
       "ref": "radio",
       "title": "Radio",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/radio"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6047,14 +6095,15 @@
       "ref": "rate",
       "title": "Rate",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6155,14 +6204,15 @@
       "ref": "result",
       "title": "Result",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/result"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-result-contract-audit.md"
+        "docs/audit/2026-10-27-result-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6180,14 +6230,15 @@
       "ref": "segmented",
       "title": "Segmented",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/segmented"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6362,14 +6413,15 @@
       "ref": "select",
       "title": "Select",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/select"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6484,14 +6536,15 @@
       "ref": "skeleton",
       "title": "Skeleton",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/skeleton"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-skeleton-contract-audit.md"
+        "docs/audit/2026-10-27-skeleton-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6509,14 +6562,15 @@
       "ref": "slider",
       "title": "Slider",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/slider"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6934,7 +6988,7 @@
       "ref": "space",
       "title": "Space",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/space"
@@ -6942,7 +6996,8 @@
       "assignment": null,
       "evidence": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-28-space-contract-audit.md"
+        "docs/audit/2026-10-28-space-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6961,14 +7016,15 @@
       "ref": "spin",
       "title": "Spin",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/spin"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-26-spin-contract-audit.md"
+        "docs/audit/2026-10-26-spin-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -6986,14 +7042,15 @@
       "ref": "splitter",
       "title": "Splitter",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/splitter"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7333,14 +7390,15 @@
       "ref": "statistic",
       "title": "Statistic",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/statistic"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-statistic-contract-audit.md"
+        "docs/audit/2026-10-27-statistic-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7358,14 +7416,15 @@
       "ref": "steps",
       "title": "Steps",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/steps"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7453,14 +7512,15 @@
       "ref": "switch",
       "title": "Switch",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7542,7 +7602,7 @@
       "ref": "table",
       "title": "Table",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/table",
@@ -7550,7 +7610,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7788,14 +7849,15 @@
       "ref": "tabs",
       "title": "Tabs",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tabs"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7868,14 +7930,15 @@
       "ref": "tag",
       "title": "Tag",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tag"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-tag-contract-audit.md"
+        "docs/audit/2026-10-27-tag-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -7922,7 +7985,7 @@
       "ref": "time-picker",
       "title": "TimePicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -7933,7 +7996,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -8063,14 +8127,15 @@
       "ref": "timeline",
       "title": "Timeline",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/timeline"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -8088,14 +8153,15 @@
       "ref": "tooltip",
       "title": "Tooltip",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tooltip"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -8227,14 +8293,15 @@
       "ref": "tour",
       "title": "Tour",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tour"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -8547,14 +8614,15 @@
       "ref": "transfer",
       "title": "Transfer",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/transfer"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -8712,7 +8780,7 @@
       "ref": "tree",
       "title": "Tree",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree",
@@ -8720,7 +8788,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -8835,7 +8904,7 @@
       "ref": "tree-select",
       "title": "TreeSelect",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree-select",
@@ -8846,7 +8915,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9000,14 +9070,15 @@
       "ref": "typography",
       "title": "Typography",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/typography"
       ],
       "assignment": null,
       "evidence": [
-        "docs/audit/2026-10-27-typography-contract-audit.md"
+        "docs/audit/2026-10-27-typography-contract-audit.md",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9070,14 +9141,15 @@
       "ref": "upload",
       "title": "Upload",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/upload"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9150,14 +9222,15 @@
       "ref": "watermark",
       "title": "Watermark",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/watermark"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9346,7 +9419,7 @@
       "ref": "a11y",
       "title": "@apollo-design/a11y",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/a11y",
@@ -9354,7 +9427,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9455,7 +9529,7 @@
       "ref": "form-core",
       "title": "@apollo-design/form-core",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/form-core",
@@ -9472,7 +9546,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9601,7 +9676,7 @@
       "ref": "icons",
       "title": "@apollo-design/icons",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/icons",
@@ -9609,7 +9684,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9715,7 +9791,7 @@
       "ref": "locale",
       "title": "@apollo-design/locale",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/locale",
@@ -9726,7 +9802,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9810,7 +9887,7 @@
       "ref": "motion",
       "title": "@apollo-design/motion",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/motion",
@@ -9820,7 +9897,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -10046,7 +10124,7 @@
       "ref": "overlay",
       "title": "@apollo-design/overlay",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/overlay",
@@ -10054,7 +10132,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -10128,7 +10207,7 @@
       "ref": "picker",
       "title": "@apollo-design/picker",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/picker",
@@ -10141,7 +10220,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -10282,7 +10362,7 @@
       "ref": "portal",
       "title": "@apollo-design/portal",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/portal",
@@ -10304,7 +10384,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -10448,13 +10529,15 @@
       "ref": "position",
       "title": "@apollo-design/position",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/position/src"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -11026,7 +11109,7 @@
       "ref": "test-utils",
       "title": "@apollo-design/test-utils",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/test-utils",
@@ -11034,7 +11117,8 @@
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -11285,7 +11369,7 @@
       "ref": "theme",
       "title": "@apollo-design/theme",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/theme/src"
@@ -11294,7 +11378,8 @@
       "evidence": [
         "docs/audit/2026-10-29-theme-foundation-contract-audit.md",
         "docs/audit/evidence/theme-foundation-source-acceptance.json",
-        "docs/audit/evidence/current-batch-final-acceptance.json"
+        "docs/audit/evidence/current-batch-final-acceptance.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -11312,14 +11397,15 @@
       "ref": "utils",
       "title": "@apollo-design/utils",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -11755,14 +11841,15 @@
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
       "architectureStatus": "done",
-      "acceptanceStatus": "historical_passed",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
       ],
       "assignment": null,
       "evidence": [
-        "registry/vue-native-audit.json"
+        "registry/vue-native-audit.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -12353,7 +12440,7 @@
       "ref": "docs-demo-general",
       "title": "Issue 86: general Demo review",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/affix",
@@ -12382,7 +12469,8 @@
       "evidence": [
         "docs/audit/2026-11-03-docs-demo-polish.md",
         "docs/audit/evidence/issue-86-demo-review.json",
-        "docs/audit/evidence/issue-86-focused-checks.json"
+        "docs/audit/evidence/issue-86-focused-checks.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [],
       "issues": [],
@@ -12438,7 +12526,7 @@
       "ref": "docs-demo-controls",
       "title": "Issue 86: controls Demo review",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/auto-complete",
@@ -12458,7 +12546,8 @@
       "evidence": [
         "docs/audit/2026-11-03-docs-demo-polish.md",
         "docs/audit/evidence/issue-86-demo-review.json",
-        "docs/audit/evidence/issue-86-focused-checks.json"
+        "docs/audit/evidence/issue-86-focused-checks.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [],
       "issues": [],
@@ -12505,7 +12594,7 @@
       "ref": "docs-demo-data",
       "title": "Issue 86: data Demo review",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/calendar",
@@ -12532,7 +12621,8 @@
       "evidence": [
         "docs/audit/2026-11-03-docs-demo-polish.md",
         "docs/audit/evidence/issue-86-demo-review.json",
-        "docs/audit/evidence/issue-86-focused-checks.json"
+        "docs/audit/evidence/issue-86-focused-checks.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [],
       "issues": [],
@@ -12586,7 +12676,7 @@
       "ref": "docs-demo-feedback",
       "title": "Issue 86: feedback Demo review",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/alert",
@@ -12614,7 +12704,8 @@
       "evidence": [
         "docs/audit/2026-11-03-docs-demo-polish.md",
         "docs/audit/evidence/issue-86-demo-review.json",
-        "docs/audit/evidence/issue-86-focused-checks.json"
+        "docs/audit/evidence/issue-86-focused-checks.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [],
       "issues": [],
@@ -12669,7 +12760,7 @@
       "ref": "docs-site-polish",
       "title": "Issues 86/87: navigation, themes, masonry and preview shell",
       "architectureStatus": "done",
-      "acceptanceStatus": "not_started",
+      "acceptanceStatus": "passed",
       "workDependencies": [],
       "owns": [
         "packages/docs/src",
@@ -12688,7 +12779,8 @@
       "evidence": [
         "docs/audit/2026-11-03-docs-demo-polish.md",
         "docs/audit/evidence/issue-86-site-review.json",
-        "docs/audit/evidence/issue-86-focused-checks.json"
+        "docs/audit/evidence/issue-86-focused-checks.json",
+        "docs/audit/evidence/v0.1.9-final-acceptance.json"
       ],
       "existingWork": [],
       "issues": [],
@@ -12730,8 +12822,132 @@
     }
   ],
   "finalAcceptance": {
-    "status": "in_progress",
-    "sourceCommit": null,
-    "gates": []
+    "status": "passed",
+    "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+    "gates": [
+      {
+        "dimension": "api",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "types",
+          "coverage",
+          "build",
+          "consumer"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "tokens",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "coverage",
+          "visual",
+          "consumer-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "styles",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "build",
+          "visual",
+          "consumer",
+          "consumer-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "unit",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "coverage"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "interaction",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "coverage",
+          "consumer-browser",
+          "docs-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "types",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "types",
+          "docs-types"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "a11y",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "coverage",
+          "docs-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "visual",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "visual"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      },
+      {
+        "dimension": "docs",
+        "status": "passed",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "checks": [
+          "build",
+          "docs-types",
+          "docs-tests",
+          "docs-browser"
+        ],
+        "evidence": [
+          "docs/audit/evidence/v0.1.9-final-acceptance.json",
+          "docs/audit/2026-11-03-docs-demo-polish.md"
+        ]
+      }
+    ]
   }
 }

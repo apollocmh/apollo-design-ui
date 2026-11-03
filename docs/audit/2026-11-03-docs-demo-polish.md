@@ -1,5 +1,7 @@
 # v0.1.9 文档站与 Demo 打磨
 
+当前状态：正式发布已完成。冻结提交 `787263166be2bcdf3212ec4dd614b78c06fd6672` 的 14 项完整验收通过，`v0.1.9` 精确指向该提交；tag CI、正式文档部署与线上 18 项关键检查均通过。以下保留排查过程及原始失败，不把历史局部检查当作当前完整验收。
+
 本次按 [Issue #86](https://github.com/apollocmh/apollo-design-ui/issues/86) 和 [#87](https://github.com/apollocmh/apollo-design-ui/issues/87) 检查全站，不限于 Issue 列出的例子。用户随后要求加快收口，因此复用有效结果，只补改动、失败和缺口，不重复整套浏览矩阵；最终发布仍核对同一冻结提交的完整 CI。
 
 ## 覆盖与交付
@@ -48,3 +50,17 @@ Feedback 同样经随机端口与隔离目录通过全部 15 项。通知进度�
 首次正式视觉完整返回 1875 个唯一场景，pending 为 0，其中 1872 项通过，Typography 复制反馈的三个视口因状态准备未完成而失败，不能视为全矩阵通过。原脚本在 axe 之后才暂停 3000ms 成功态，加入 3200ms 主机延迟可复现过期；修复将暂停前移至原生点击前，并有界推进真实 hover 延迟、motion 截止及 axe 定时器。自然离开、Tooltip 隐藏、一次复制、完整 axe、截图期间成功态和随后 3100ms 过期均保留。三视口功能预检与额外慢路径通过，相关 tooling 4/4 通过；没有证实产品事件丢失，也未修改组件或基线。已失败整轮的剩余运行时计算被取消，按未完成记录；最终完整结论由新的同 SHA 验收给出。
 
 用户追加要求先手动更新文档供预览。首次 [手动部署 41613818054](https://github.com/apollocmh/apollo-design-ui/actions/runs/41613818054) 的构建与类型通过，Docs 测试暴露新增主题页后遗漏的指南数量及正文完整性检查，未上线。已补齐双语比较与交互说明、真实目录，并将六个预览放在说明之前；指南数量及新页元数据断言同步为 9 篇，原正文和目录要求保留。重新生成内容后，18 个 Docs 测试文件、188 项测试及 Docs 类型均通过。此前 `89394936` 的完整 CI 因这次文档变更停止，不冒称通过；后续手动预览与最终验收均使用新的冻结提交。
+
+## 最终冻结验收与发布
+
+[完整 CI 41620328747](https://github.com/apollocmh/apollo-design-ui/actions/runs/41620328747) 在同一源码、同一冻结产物上通过全部 14 项，六层均通过。802 个运行时测试文件、17,482 项用例全部通过；语句/分支/函数/行覆盖率为 92.18/83.84/91.83/93.15。严格源码类型、2,409 个公开类型用例及 118 项 tooling 通过。原覆盖率和构建预算未改。
+
+正式视觉精确覆盖 1,875 个唯一场景：1,445 项逐像素一致、430 项符合原有孤立抗锯齿噪声判据，pending 与报告错误均为 0；未更新基线或比较阈值。复制反馈的三个视口均为 exact。Docs 的 12 组浏览器检查、类型及 18 文件/188 项测试通过。
+
+新注解标签 [v0.1.9](https://github.com/apollocmh/apollo-design-ui/tree/v0.1.9) 已推送，标签对象为 `fed51730dab6cf8fe1a531d9440da710b08065ff`。[Tag CI 41627176096](https://github.com/apollocmh/apollo-design-ui/actions/runs/41627176096) 实际复用同 SHA 的完整验收 check `125885682586`，没有宣称另跑一轮全量。[Tag 文档部署 41627175945](https://github.com/apollocmh/apollo-design-ui/actions/runs/41627175945) 成功发布同一提交。
+
+正式部署后，源码标识与最新更新记录均确认为 `787263166be2bcdf3212ec4dd614b78c06fd6672`，主题、Layout 隔离交互、FloatButton、Result、窄屏 Cascader 选择与旧锚点/刷新共 18 项通过，pageerror 与 requestfailed 均为 0，四张实际截图已查看。网络空闲等待的两次超时原样保留；Float 直接功能探针 7.831 秒完成，1/7 个按钮正常，错误和待处理请求均为 0。后续用应用及目标控件就绪继续原断言，项目源码未改。独立 Demo 直链仍使用既有 404 SPA 兜底，不能把该结果写成所有 HTTP 均为 200。
+
+[完整验收证据](evidence/v0.1.9-final-acceptance.json) 保留命令、时间、原始报告哈希、产物摘要、层来源与完整场景集合摘要。验收后仅补台账、派生进度、说明及线上截图；正式发布代码与 tag 保留上述已完整验收 SHA，元数据提交不冒称重新跑过整库验收。
+
+[六主题线上截图](evidence/v0.1.9-online-themes.png) · [Layout 线上截图](evidence/v0.1.9-online-layout.png) · [窄屏主题](evidence/v0.1.9-online-themes-dark-390.png) · [窄屏级联选择](evidence/v0.1.9-online-cascader-dark-390.png)

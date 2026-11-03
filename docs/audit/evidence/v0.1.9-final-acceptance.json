@@ -1,0 +1,804 @@
+{
+  "version": "0.1.9",
+  "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+  "passed": true,
+  "scope": "All 72 component Demo families (1009 Vue Demos) and the documentation site; released code remains at the fully accepted source SHA.",
+  "recordedAt": "2026-11-03T11:41:08.765Z",
+  "fullAcceptance": {
+    "runId": 41620328747,
+    "attempt": 1,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41620328747",
+    "checkRunId": 125885682586,
+    "completedAt": "2026-11-03T11:20:45Z",
+    "artifact": "final-acceptance-1",
+    "reportSha256": "8b1662f27e86666a82eb4e893df0b8351b576d91e65d88cb11fd51f8b9a20527",
+    "checks": [
+      {
+        "id": "0-registry",
+        "commandArgs": [
+          "run",
+          "registry:check"
+        ],
+        "kind": "registry",
+        "command": "pnpm run registry:check",
+        "startedAt": "2026-11-03T10:35:35.600Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:35:36.813Z",
+        "durationMs": 1213
+      },
+      {
+        "id": "1-format",
+        "commandArgs": [
+          "run",
+          "lint:format"
+        ],
+        "kind": "format",
+        "command": "pnpm run lint:format",
+        "startedAt": "2026-11-03T10:35:36.814Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:35:51.377Z",
+        "durationMs": 14556
+      },
+      {
+        "id": "2-build",
+        "commandArgs": [
+          "tests/build/run.mjs",
+          "--strict"
+        ],
+        "kind": "build",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node tests/build/run.mjs --strict",
+        "startedAt": "2026-11-03T10:35:51.378Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:43:09.871Z",
+        "durationMs": 438274
+      },
+      {
+        "id": "3-docs-browser",
+        "commandArgs": [
+          "scripts/verify-docs-browser.mjs"
+        ],
+        "kind": "docs-browser",
+        "command": "/opt/hostedtoolcache/node/22.23.2/x64/bin/node scripts/verify-docs-browser.mjs",
+        "startedAt": "2026-11-03T10:43:54.324Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:48:09.320Z",
+        "durationMs": 254996
+      },
+      {
+        "id": "4-coverage",
+        "commandArgs": [
+          "run",
+          "test:coverage"
+        ],
+        "kind": "coverage",
+        "command": "pnpm run test:coverage",
+        "startedAt": "2026-11-03T10:45:25.297Z",
+        "exitCode": 0,
+        "signal": null,
+        "testReport": "acceptance-runtime.json.evidence/apollo-focused-check-J15JHh/0.json",
+        "tests": {
+          "total": 17482,
+          "passed": 17482,
+          "failed": 0,
+          "pending": 0
+        },
+        "finishedAt": "2026-11-03T11:19:56.434Z",
+        "durationMs": 2071137
+      },
+      {
+        "id": "5-consumer-browser",
+        "commandArgs": [
+          "packages/ui/src/tooltip/__tests__/z-index-browser.mjs"
+        ],
+        "kind": "consumer-browser",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node packages/ui/src/tooltip/__tests__/z-index-browser.mjs",
+        "startedAt": "2026-11-03T10:45:08.895Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:50:06.321Z",
+        "durationMs": 297277
+      },
+      {
+        "id": "6-types",
+        "commandArgs": [
+          "node_modules/vue-tsc/bin/vue-tsc.js",
+          "--noEmit",
+          "-p",
+          "tsconfig.json"
+        ],
+        "kind": "types",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tsconfig.json",
+        "startedAt": "2026-11-03T10:45:17.236Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:49:18.449Z",
+        "durationMs": 241093
+      },
+      {
+        "id": "7-types",
+        "commandArgs": [
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--project",
+          "types"
+        ],
+        "kind": "types",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node node_modules/vitest/vitest.mjs run --project types",
+        "startedAt": "2026-11-03T10:49:18.450Z",
+        "exitCode": 0,
+        "signal": null,
+        "testReport": "acceptance-types.json.evidence/apollo-focused-check-fsV1n7/1.json",
+        "tests": {
+          "total": 2409,
+          "passed": 2409,
+          "failed": 0,
+          "pending": 0
+        },
+        "finishedAt": "2026-11-03T10:54:37.300Z",
+        "durationMs": 318743
+      },
+      {
+        "id": "8-core",
+        "commandArgs": [
+          "run",
+          "test:tooling"
+        ],
+        "kind": "core",
+        "command": "pnpm run test:tooling",
+        "startedAt": "2026-11-03T10:54:37.300Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:55:11.337Z",
+        "durationMs": 34037
+      },
+      {
+        "id": "9-consumer",
+        "commandArgs": [
+          "tests/consumer/run.mjs"
+        ],
+        "kind": "consumer",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node tests/consumer/run.mjs",
+        "startedAt": "2026-11-03T10:50:06.361Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:50:37.811Z",
+        "durationMs": 31434
+      },
+      {
+        "id": "10-consumer",
+        "commandArgs": [
+          "packages/ui-resolver/tests/consumer.mjs",
+          "--themes"
+        ],
+        "kind": "consumer",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node packages/ui-resolver/tests/consumer.mjs --themes",
+        "startedAt": "2026-11-03T10:50:37.812Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:53:12.377Z",
+        "durationMs": 154488
+      },
+      {
+        "id": "11-visual",
+        "commandArgs": [
+          "tests/visual/parallel.mjs"
+        ],
+        "kind": "visual",
+        "command": "/Users/runner/hostedtoolcache/node/22.23.2/x64/bin/node tests/visual/parallel.mjs",
+        "startedAt": "2026-11-03T10:45:39.104Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T11:11:52.630Z",
+        "durationMs": 1573525
+      },
+      {
+        "id": "12-docs-types",
+        "commandArgs": [
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "typecheck"
+        ],
+        "kind": "docs-types",
+        "command": "pnpm --filter @apollo-design/docs run typecheck",
+        "startedAt": "2026-11-03T10:48:09.321Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:48:39.756Z",
+        "durationMs": 30436
+      },
+      {
+        "id": "13-docs-tests",
+        "commandArgs": [
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "test"
+        ],
+        "kind": "docs-tests",
+        "command": "pnpm --filter @apollo-design/docs run test",
+        "startedAt": "2026-11-03T10:48:39.757Z",
+        "exitCode": 0,
+        "signal": null,
+        "finishedAt": "2026-11-03T10:48:55.086Z",
+        "durationMs": 15329
+      }
+    ],
+    "layers": [
+      {
+        "layer": "build",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "passed": true,
+        "ciRunAttempt": 1,
+        "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+        "checkIds": [
+          "0-registry",
+          "1-format",
+          "2-build"
+        ]
+      },
+      {
+        "layer": "runtime",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "passed": true,
+        "ciRunAttempt": 1,
+        "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+        "checkIds": [
+          "4-coverage"
+        ]
+      },
+      {
+        "layer": "types",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "passed": true,
+        "ciRunAttempt": 1,
+        "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+        "checkIds": [
+          "6-types",
+          "7-types",
+          "8-core"
+        ]
+      },
+      {
+        "layer": "consumers",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "passed": true,
+        "ciRunAttempt": 1,
+        "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+        "checkIds": [
+          "5-consumer-browser",
+          "9-consumer",
+          "10-consumer"
+        ]
+      },
+      {
+        "layer": "visual",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "passed": true,
+        "ciRunAttempt": 1,
+        "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+        "checkIds": [
+          "11-visual"
+        ]
+      },
+      {
+        "layer": "docs",
+        "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+        "passed": true,
+        "ciRunAttempt": 1,
+        "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+        "checkIds": [
+          "3-docs-browser",
+          "12-docs-types",
+          "13-docs-tests"
+        ]
+      }
+    ]
+  },
+  "frozenInputs": {
+    "artifactDigest": "e2f2faf8673d5663e3a593d048176b1e225feee81c872ff66ed17eb050501576",
+    "inputDigest": "fcd1e1e1f9c666ca92d26d68d3696bcbd166cf90ac9ca47b69a67a3c80763c7e",
+    "toolchain": {
+      "node": "v22.23.2",
+      "packageManager": "pnpm@12.4.2",
+      "lockfileSha256": "22d6660fa5ebb49625021141afd74c610c97d54b02c543e7c3bd38aef36760a6"
+    },
+    "producerHost": {
+      "platform": "darwin",
+      "arch": "x64"
+    },
+    "files": 6286,
+    "archiveSha256": "8038d886f59ab5c8319f4892dbe8ff3c47419048f09ed7a040ca6b06e6ece0c7"
+  },
+  "runtime": {
+    "total": 17482,
+    "passed": 17482,
+    "failed": 0,
+    "pending": 0,
+    "files": 802,
+    "coverage": {
+      "statements": {
+        "total": 42907,
+        "covered": 39554,
+        "skipped": 0,
+        "pct": 92.18
+      },
+      "branches": {
+        "total": 31099,
+        "covered": 26075,
+        "skipped": 0,
+        "pct": 83.84
+      },
+      "functions": {
+        "total": 11703,
+        "covered": 10747,
+        "skipped": 0,
+        "pct": 91.83
+      },
+      "lines": {
+        "total": 38739,
+        "covered": 36087,
+        "skipped": 0,
+        "pct": 93.15
+      }
+    },
+    "coverageReportSha256": "3b1f2551624c21a850ecdd4223b150e9511a8943677da36f4316114b2e2a8c8a",
+    "thresholdsChanged": false
+  },
+  "publicTypes": {
+    "total": 2409,
+    "passed": 2409,
+    "failed": 0,
+    "pending": 0,
+    "files": 214,
+    "sourceStrictTypecheckPassed": true,
+    "typeErrors": 0
+  },
+  "tooling": {
+    "total": 118,
+    "passed": 118,
+    "failed": 0
+  },
+  "formalVisual": {
+    "total": 1875,
+    "unique": 1875,
+    "passed": true,
+    "pending": 0,
+    "errors": [],
+    "byReason": {
+      "exact": 1445,
+      "antialias-noise": 430
+    },
+    "exactCaseSetSha256": "337b003126c9601c054c08acb605a3688b3eec35289e7efcd3560d1c3f69af5d",
+    "rendering": {
+      "platform": "darwin",
+      "arch": "x64",
+      "os": {
+        "version": "15.7.9",
+        "build": "24G830"
+      },
+      "preferences": {
+        "AppleShowScrollBars": "WhenScrolling",
+        "AppleLanguages": [
+          "zh-Hans-CN"
+        ],
+        "AppleLocale": "zh_CN"
+      },
+      "preferenceReads": {
+        "AppleShowScrollBars": {
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "WhenScrolling\n",
+          "stderr": ""
+        },
+        "AppleLanguages": {
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "(\n    \"zh-Hans-CN\"\n)\n",
+          "stderr": ""
+        },
+        "AppleLocale": {
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "zh_CN\n",
+          "stderr": ""
+        }
+      },
+      "browser": {
+        "version": "150.0.7871.125",
+        "product": "Google Chrome for Testing 150.0.7871.125",
+        "channel": "系统 Chrome",
+        "executablePath": "/Users/runner/work/_temp/apollo-visual-chrome/chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+        "executableSha256": "3fa4f058cca66b165b77821dad9a2414697454443f690fad321f64654f164d24"
+      },
+      "probe": {
+        "documentLang": "zh-CN",
+        "devicePixelRatio": 1,
+        "viewport": 375,
+        "documentClientWidth": 375,
+        "stageWidth": 375,
+        "gutter": "stable",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+        "metrics": [
+          {
+            "font": "16px sans-serif",
+            "text": "Ant Design",
+            "width": 84.52799987792969,
+            "fontBoundingBoxAscent": 17,
+            "fontBoundingBoxDescent": 5
+          },
+          {
+            "font": "12px sans-serif",
+            "text": "Happy Working",
+            "width": 88.55987548828125,
+            "fontBoundingBoxAscent": 13,
+            "fontBoundingBoxDescent": 4
+          }
+        ]
+      },
+      "fonts": {
+        "sans": [
+          {
+            "familyName": "蘋方-簡",
+            "postScriptName": "PingFangSC-Regular",
+            "isCustomFont": false,
+            "glyphCount": 30
+          }
+        ],
+        "system": [
+          {
+            "familyName": "蘋方-簡",
+            "postScriptName": "PingFangSC-Regular",
+            "isCustomFont": false,
+            "glyphCount": 29
+          }
+        ]
+      },
+      "canvasSha256": "c86ce196453f17210d41ca0ee1c19c6dcf15f424dec493aea4003281d6aaea83"
+    },
+    "baselineUpdates": 0,
+    "comparatorThresholdsChanged": false,
+    "copyFeedback": [
+      {
+        "id": "typography/copy-feedback__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact"
+      },
+      {
+        "id": "typography/copy-feedback__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact"
+      },
+      {
+        "id": "typography/copy-feedback__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact"
+      }
+    ]
+  },
+  "docs": {
+    "unitFiles": 18,
+    "unitTests": 188,
+    "typesPassed": true,
+    "browserGroups": [
+      {
+        "script": "packages/docs/tests/smoke-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:43:54.515Z",
+        "finishedAt": "2026-11-03T10:44:16.496Z",
+        "durationMs": 21980
+      },
+      {
+        "script": "docs/audit/tools/stage2-demo-probe.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:44:16.496Z",
+        "finishedAt": "2026-11-03T10:44:31.036Z",
+        "durationMs": 14540
+      },
+      {
+        "script": "docs/audit/visual-v3/verify.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:44:31.037Z",
+        "finishedAt": "2026-11-03T10:45:01.405Z",
+        "durationMs": 30368
+      },
+      {
+        "script": "packages/docs/tests/menu-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:45:01.406Z",
+        "finishedAt": "2026-11-03T10:45:11.909Z",
+        "durationMs": 10503
+      },
+      {
+        "script": "packages/docs/tests/notification-motion-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:45:11.909Z",
+        "finishedAt": "2026-11-03T10:45:31.759Z",
+        "durationMs": 19850
+      },
+      {
+        "script": "packages/docs/tests/motion-review-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:45:31.760Z",
+        "finishedAt": "2026-11-03T10:45:50.777Z",
+        "durationMs": 19017
+      },
+      {
+        "script": "packages/docs/tests/issue86-site-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:45:50.778Z",
+        "finishedAt": "2026-11-03T10:47:05.003Z",
+        "durationMs": 74225
+      },
+      {
+        "script": "packages/docs/tests/issue86-general-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:47:05.004Z",
+        "finishedAt": "2026-11-03T10:47:42.088Z",
+        "durationMs": 37085
+      },
+      {
+        "script": "packages/docs/tests/issue86-controls-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:47:42.089Z",
+        "finishedAt": "2026-11-03T10:47:54.437Z",
+        "durationMs": 12348
+      },
+      {
+        "script": "packages/docs/tests/issue86-data-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:47:54.438Z",
+        "finishedAt": "2026-11-03T10:48:00.780Z",
+        "durationMs": 6342
+      },
+      {
+        "script": "packages/docs/tests/issue86-feedback-browser.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:48:00.780Z",
+        "finishedAt": "2026-11-03T10:48:06.107Z",
+        "durationMs": 5327
+      },
+      {
+        "script": "tests/browser/scroll-animation.mjs",
+        "status": "passed",
+        "startedAt": "2026-11-03T10:48:06.108Z",
+        "finishedAt": "2026-11-03T10:48:08.950Z",
+        "durationMs": 2842
+      }
+    ],
+    "browserReportSha256": "e0f094a80143907da1757de7c685f22d9f6b87ed66e10b45ae5440d57dcb7d02"
+  },
+  "coverageCatalog": {
+    "file": "docs/audit/evidence/issue-86-demo-review.json",
+    "sha256": "1b52b4102da117c3fd2a6e89a4cac077827300414a8c1bba3d0dac4d27f3386c",
+    "components": 72,
+    "demos": 1009,
+    "note": "Individual entries retain the actual reviewed states, interactions and exceptions; they do not claim an exhaustive Cartesian matrix."
+  },
+  "tag": {
+    "name": "v0.1.9",
+    "objectSha": "fed51730dab6cf8fe1a531d9440da710b08065ff",
+    "target": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+    "newTagPushed": true
+  },
+  "tagCi": {
+    "runId": 41627176096,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41627176096",
+    "conclusion": "success",
+    "reference": {
+      "kind": "reused-acceptance",
+      "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+      "checkRunId": 125885682586,
+      "verifiedCheck": "Complete nine-dimension acceptance on one frozen commit",
+      "conclusion": "success",
+      "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41620328747/job/125885682586",
+      "completedAt": "2026-11-03T11:20:45Z",
+      "note": "The frozen commit already passed the complete acceptance. No new tests are claimed."
+    }
+  },
+  "tagDeployment": {
+    "runId": 41627175945,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/41627175945",
+    "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+    "conclusion": "success",
+    "completedAt": "2026-11-03T11:28:03Z",
+    "site": "https://apollocmh.github.io/apollo-design-ui/"
+  },
+  "online": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "expectedSha": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+    "deployedSha": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+    "checkedAt": "2026-11-03T11:36:54.340Z",
+    "browser": "150.0.7871.125",
+    "checks": [
+      "deployed source and newest changelog commit identify the exact release SHA",
+      "online version is 0.1.9",
+      "top-level content navigation has exactly three sections",
+      "six independent theme previews",
+      "Material primary token and painted action use #0073E6",
+      "theme preview controls work",
+      "Layout has eleven iframe previews",
+      "Mac window has three colored controls",
+      "Layout iframe follows dark appearance",
+      "Layout preview interaction remains isolated",
+      "FloatButton basic/group remain present after initial load",
+      "Result actions retain visible spacing",
+      "reduced-motion popup stays within the narrow viewport",
+      "Cascader selection works online",
+      "theme gallery fits a narrow viewport",
+      "deep Demo link reaches its target",
+      "refresh preserves the old Demo anchor",
+      "no runtime errors in online key examples"
+    ],
+    "documents": [
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/changelog",
+        "status": 200
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/guide/themes",
+        "status": 200
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/layout#demo-basic",
+        "status": 200
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/float-button",
+        "status": 200
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/result#demo-success",
+        "status": 200
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/cascader/demo/style-class?theme=dark",
+        "status": 404
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/guide/themes",
+        "status": 200
+      },
+      {
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/button#demo-multiple",
+        "status": 200
+      }
+    ],
+    "requests": [],
+    "errors": [],
+    "screenshots": [
+      {
+        "name": "themes",
+        "sha256": "7e963dfb2051c395ca30462e7edecd7703974a35668b3809e24e31e8ba061675",
+        "file": "docs/audit/evidence/v0.1.9-online-themes.png"
+      },
+      {
+        "name": "layout",
+        "sha256": "ae60b13fd4abe919964e27aaa12bb690f820baa50ad922e45c5db80c5743d0b9",
+        "file": "docs/audit/evidence/v0.1.9-online-layout.png"
+      },
+      {
+        "name": "cascader-dark-390",
+        "sha256": "616a28ccb233306d99168b0baa54e84ae5990bf9e3b5589e658d5d3c9468c327",
+        "file": "docs/audit/evidence/v0.1.9-online-cascader-dark-390.png"
+      },
+      {
+        "name": "themes-dark-390",
+        "sha256": "3985cb4968dabe8c42e91600b82bab13e1fd22f50cd6cd3ff01a7c78229b63c8",
+        "file": "docs/audit/evidence/v0.1.9-online-themes-dark-390.png"
+      }
+    ],
+    "exitCode": 0,
+    "screenshotReview": {
+      "reviewer": "root",
+      "reviewedAt": "2026-11-03T11:41:08.812Z",
+      "count": 4
+    },
+    "readiness": "DOM content, Vue application mount and loaded page data, followed by the same target-control and iframe assertions."
+  },
+  "verificationDiagnostics": {
+    "networkIdleAttempts": [
+      {
+        "directory": "/tmp/apollo-issue86-online-final",
+        "exitCode": 1,
+        "passedChecks": 10,
+        "error": "FloatButton navigation networkidle wait exceeded 60000ms"
+      },
+      {
+        "directory": "/tmp/apollo-issue86-online-final-retry",
+        "exitCode": 1,
+        "passedChecks": 10,
+        "error": "FloatButton navigation networkidle wait exceeded 60000ms"
+      }
+    ],
+    "floatDirectProbe": {
+      "elapsed": 7831,
+      "status": 200,
+      "frames": [
+        {
+          "name": "basic",
+          "count": 1
+        },
+        {
+          "name": "group",
+          "count": 7
+        }
+      ],
+      "pending": [],
+      "errors": []
+    },
+    "resolution": "All 18 original UI assertions passed after changing only the external verification readiness condition. The tagged project code and all test thresholds stayed unchanged.",
+    "preflight": {
+      "runId": 41619469240,
+      "sourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+      "passed": true,
+      "checks": 4,
+      "generalCases": 22
+    },
+    "priorCi": [
+      {
+        "runId": 41606511505,
+        "sourceCommit": "6ad5ec76a9775a346edd7af04a86863f66069003",
+        "conclusion": "cancelled",
+        "defects": [
+          "Docs browser preparation assumptions",
+          "historical release migration test",
+          "copy feedback timer ordering"
+        ],
+        "runtime": "cancelled; not a pass"
+      },
+      {
+        "runId": 41613820612,
+        "sourceCommit": "8939493692e8bac0ba450ed5685363a7a594c76e",
+        "conclusion": "cancelled",
+        "reason": "Theme guide content and manifest assertions were being corrected"
+      },
+      {
+        "runId": 41615778556,
+        "sourceCommit": "b8d8d0b4153f1738f07e677f3df918a8b972c08c",
+        "conclusion": "cancelled",
+        "defects": [
+          "Affix rendering wait",
+          "Anchor click preparation"
+        ],
+        "reason": "Preserved failed evidence; replaced by Linux scoped preflight and a new complete acceptance"
+      }
+    ]
+  },
+  "remainingBoundaries": [
+    "Intentional native event/contenteditable/ARIA/SVG examples, zero-gap Grid/Flex, Compact edges and fixed-column comparisons retain their demonstration semantics.",
+    "FloatButton initial-load flicker was not reproduced in the reviewed version; stable-load checks are retained. The back-top double-easing defect was reproduced and fixed.",
+    "Standalone Demo URLs keep the existing GitHub Pages 404 SPA fallback. The Cascader direct URL returned HTTP 404 while the application, selection and viewport checks passed; normal documentation routes returned 200.",
+    "Per-Demo evidence retains limited interaction scopes, including selectors checked only through opening. Untested Cartesian combinations are not represented as passing."
+  ],
+  "metadataFollowUp": {
+    "purpose": "Record actual completed acceptance and derive current progress. No released business source, dependency, build configuration, comparison threshold or baseline changes are included.",
+    "releaseSourceCommit": "787263166be2bcdf3212ec4dd614b78c06fd6672",
+    "tagMoved": false,
+    "validation": {
+      "registry": {
+        "command": "pnpm run registry:check",
+        "exitCode": 0,
+        "checks": 19,
+        "warnings": 0,
+        "logSha256": "18937e21e45a8aaa3967dbd835a21c2933e14349e23e711a29b31d03089de69d"
+      },
+      "stateTests": {
+        "command": "node --test tests/tooling/audit-migration.test.mjs tests/tooling/audit-workflow.test.mjs tests/tooling/vue-native-status.test.mjs",
+        "exitCode": 0,
+        "total": 17,
+        "passed": 17,
+        "failed": 0,
+        "logSha256": "5fdfd760b34548c0464e82ba22c3da29799c28b32547b761d373901c70b2364e"
+      },
+      "diffCheck": {
+        "command": "git diff --check",
+        "exitCode": 0
+      }
+    }
+  }
+}
