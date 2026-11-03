@@ -1,0 +1,83 @@
+{
+  "scope": "Targeted pre-release checks only; final frozen CI is separate.",
+  "checks": [
+    {
+      "name": "shared scroll unit and consumers",
+      "command": "vitest run --project unit packages/ui/src/_internal/__tests__/scroll-to.test.ts packages/ui/src/back-top packages/ui/src/float-button packages/ui/src/anchor",
+      "exitCode": 0,
+      "tests": 163
+    },
+    {
+      "name": "Material preset derivation",
+      "command": "vitest run --project unit packages/theme/src/__tests__/preset-context.test.ts",
+      "exitCode": 0,
+      "tests": 7
+    },
+    {
+      "name": "verification orchestration regression",
+      "command": "node --test tests/tooling/verification-workflow.test.mjs",
+      "exitCode": 0,
+      "tests": 22
+    },
+    {
+      "name": "focused type recheck after fixing the seven style diagnostics",
+      "command": "vue-tsc --noEmit -p <temporary focused config>",
+      "exitCode": 0,
+      "files": [
+        "packages/ui/src/cascader/demo/style-class.vue",
+        "packages/ui/src/dropdown/demo/style-class.vue",
+        "packages/ui/src/image/demo/component-token.vue",
+        "packages/ui/src/image/demo/popup-provider.vue",
+        "packages/ui/src/image/demo/preview-close.vue",
+        "packages/ui/src/image/demo/preview-group-top-progress.vue",
+        "packages/ui/src/image/demo/preview-group.vue",
+        "packages/ui/src/image/demo/transform-events.vue",
+        "packages/ui/src/modal/demo/component-token.vue",
+        "packages/ui/src/popover/demo/placement.vue",
+        "packages/ui/src/spin/demo/description.vue",
+        "packages/ui/src/spin/demo/percent.vue",
+        "packages/ui/src/spin/demo/size.vue",
+        "packages/ui/src/spin/demo/style-class.vue",
+        "packages/ui/src/splitter/demo/size.vue",
+        "packages/ui/src/table/demo/row-selection-and-operation.vue",
+        "packages/ui/src/tabs/demo/extra.vue"
+      ]
+    },
+    {
+      "name": "Docs types after navigation/TOC changes",
+      "command": "pnpm --filter @apollo-design/docs run typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "shared scroll browser",
+      "command": "SCROLL_ENTRY=packages/ui/src/_internal/scroll-to.ts node tests/browser/scroll-animation.mjs",
+      "exitCode": 0,
+      "scope": [
+        "Window",
+        "Document",
+        "Element",
+        "CSS smooth",
+        "immediate",
+        "cancellation"
+      ]
+    },
+    {
+      "name": "controls final static integration",
+      "command": "DOCS_URL=http://127.0.0.1:4175/apollo-design-ui node packages/docs/tests/issue86-controls-browser.mjs",
+      "exitCode": 0,
+      "checks": 63
+    },
+    {
+      "name": "reduced-motion popup positioning",
+      "command": "Independent native-browser Cascader/Select/TreeSelect light/dark 390px probes",
+      "exitCode": 0,
+      "checks": 6,
+      "evidence": "Reduced motion previously introduced positive transitions on measurement coordinates; 0s restores immediate positioning."
+    }
+  ],
+  "retainedFailures": [
+    "Initial global strict type command exited 2 with seven Popover/Spin style-object diagnostics; fixed using CSSProperties and rechecked in the focused compiler. It is not recorded as a passed global command.",
+    "Initial format commands failed before scoped fixes.",
+    "Initial HMR and locator errors are preserved in the group records; only actual follow-up results close them."
+  ]
+}

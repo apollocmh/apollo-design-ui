@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/picker",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "日期/时间面板引擎。替代 @rc-component/picker。",
   "license": "MIT",
   "type": "module",

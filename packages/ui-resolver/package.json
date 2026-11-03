@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/ui-resolver",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Build-time Vue component and structural CSS imports for Apollo Design.",
   "license": "MIT",
   "type": "module",

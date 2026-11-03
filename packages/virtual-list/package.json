@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/virtual-list",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "虚拟滚动。替代 @rc-component/virtual-list。",
   "license": "MIT",
   "type": "module",

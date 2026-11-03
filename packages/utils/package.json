@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/utils",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "通用工具集。全库的地基，被全部 72 个组件依赖。",
   "license": "MIT",
   "type": "module",

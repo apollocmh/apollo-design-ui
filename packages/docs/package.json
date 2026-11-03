@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/docs",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": true,
   "description": "Apollo Design 官网（Vue 3 + Vite + vite-ssg 独立产品应用，弃用 VitePress）。",
   "type": "module",

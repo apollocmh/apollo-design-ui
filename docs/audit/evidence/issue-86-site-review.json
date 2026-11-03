@@ -1,0 +1,1066 @@
+{
+  "scope": "Docs shared site, guides, navigation, Demo composition/frames, themes gallery",
+  "sourceReviewed": [
+    "packages/docs/src/pages",
+    "packages/docs/src/components/site",
+    "packages/docs/src/components/demo",
+    "packages/docs/src/components/themes",
+    "packages/docs/src/composables/navigation.ts",
+    "packages/docs/src/composables/toc.ts",
+    "packages/docs/content/guide",
+    "packages/docs/tooling/content/build-manifest.mjs"
+  ],
+  "checks": [
+    {
+      "command": "pnpm --filter @apollo-design/docs test",
+      "result": "passed",
+      "detail": "174 existing tests before final navigation regressions"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs typecheck",
+      "result": "passed",
+      "detail": "first implementation batch"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs exec vitest run --config vitest.config.ts tests/navigation.test.ts tests/toc-order.test.ts tests/demo-preview.test.ts tests/site-chrome.test.ts tests/demo-layout.test.ts tests/seo-locale.test.ts",
+      "result": "passed",
+      "detail": "6 files / 63 assertions; no repeated full library tests"
+    },
+    {
+      "command": "node packages/docs/tests/issue86-site-browser.mjs (dev 4174)",
+      "result": "partial: nonzero",
+      "detail": "26 light wide/narrow pages and 109 assertions passed; old Layout inline metadata timed out awaiting iframe, so whole run was not passed",
+      "evidence": "/tmp/apollo-issue86-site/site-coverage.json"
+    },
+    {
+      "command": "node /tmp/issue86-site-final-probe.mjs (SSG 4175)",
+      "result": "passed",
+      "detail": "targeted dark navigation/gallery/Layout/Changelog/SSR fallback, no browser errors",
+      "evidence": "/tmp/apollo-issue86-site/ssg-focused-coverage.json"
+    },
+    {
+      "command": "dev 4174 deep-hash targeted probe",
+      "result": "passed",
+      "detail": "button#demo-multiple direct and refresh top79.8125px / scrollY3084 after ready event fix; prior initial hash scrollY0"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs exec vitest run --config vitest.config.ts tests/toc-order.test.ts",
+      "result": "passed",
+      "detail": "8 tests including Layout with no API heading; insertion uses pipeline intro/rest boundary, not heading names"
+    }
+  ],
+  "dev": {
+    "base": "http://127.0.0.1:4174/apollo-design-ui",
+    "pages": [
+      {
+        "route": "/",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/components",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/audit-progress",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/getting-started",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/styles",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/tree-shaking",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/theming",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/themes",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/i18n",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/compatibility",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/icons",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/components/icon",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/changelog",
+        "mode": "light",
+        "width": 1600,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/components",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/audit-progress",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/getting-started",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/styles",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/tree-shaking",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/theming",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/themes",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/i18n",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/compatibility",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/guide/icons",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/components/icon",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      },
+      {
+        "route": "/changelog",
+        "mode": "light",
+        "width": 390,
+        "checked": [
+          "title",
+          "render",
+          "overflow",
+          "navigation context"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "name": "light/1600/: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/components: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/components: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/components: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/audit-progress: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/audit-progress: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/audit-progress: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/getting-started: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/getting-started: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/getting-started: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/styles: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/styles: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/styles: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/tree-shaking: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/tree-shaking: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/tree-shaking: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/theming: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/theming: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/theming: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/themes: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/themes: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/themes: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/i18n: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/i18n: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/i18n: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/compatibility: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/compatibility: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/compatibility: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/guide/icons: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/guide/icons: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/guide/icons: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/components/icon: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/components/icon: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/components/icon: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/1600/changelog: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/1600/changelog: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/1600/changelog: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/components: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/components: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/components: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/audit-progress: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/audit-progress: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/audit-progress: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/getting-started: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/getting-started: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/getting-started: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/styles: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/styles: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/styles: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/tree-shaking: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/tree-shaking: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/tree-shaking: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/theming: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/theming: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/theming: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/themes: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/themes: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/themes: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/i18n: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/i18n: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/i18n: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/compatibility: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/compatibility: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/compatibility: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/guide/icons: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/guide/icons: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/guide/icons: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/components/icon: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/components/icon: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/components/icon: no error state",
+        "value": 0
+      },
+      {
+        "name": "light/390/changelog: one page title",
+        "value": 1
+      },
+      {
+        "name": "light/390/changelog: no page overflow",
+        "value": true
+      },
+      {
+        "name": "light/390/changelog: no error state",
+        "value": 0
+      },
+      {
+        "name": "light: top navigation",
+        "value": [
+          "文档",
+          "组件",
+          "图标"
+        ]
+      },
+      {
+        "name": "light: component sidebar excludes guides",
+        "value": 0
+      },
+      {
+        "name": "light: every Demo is a TOC child",
+        "value": 20
+      },
+      {
+        "name": "light: two independent columns",
+        "value": true
+      },
+      {
+        "name": "light: source expansion only moves its own column",
+        "value": true
+      },
+      {
+        "name": "light: displayed source uses public package",
+        "value": true
+      },
+      {
+        "name": "light: old Demo hash",
+        "value": "#demo-disabled"
+      },
+      {
+        "name": "light: Demo anchor visible",
+        "value": true
+      },
+      {
+        "name": "light: narrow screen has one column",
+        "value": 1
+      },
+      {
+        "name": "light: responsive change preserves card instance",
+        "value": true
+      },
+      {
+        "name": "light: narrow Demo page stays inside viewport",
+        "value": true
+      },
+      {
+        "name": "light: mobile sections",
+        "value": 3
+      },
+      {
+        "name": "light: docs drawer excludes component catalog",
+        "value": 0
+      },
+      {
+        "name": "light: docs drawer links themes",
+        "value": 1
+      },
+      {
+        "name": "light: Escape closes drawer and restores focus",
+        "value": true
+      },
+      {
+        "name": "light: legacy html path redirects",
+        "value": true
+      },
+      {
+        "name": "light: icon section active in English",
+        "value": "Icons"
+      },
+      {
+        "name": "light: icon guide and API mutually linked",
+        "value": 1
+      },
+      {
+        "name": "light: history restores icon section",
+        "value": "Icons"
+      },
+      {
+        "name": "light: history restores docs section",
+        "value": "Docs"
+      },
+      {
+        "name": "light: six theme scopes",
+        "value": 6
+      },
+      {
+        "name": "light: gallery is three by two",
+        "value": true
+      },
+      {
+        "name": "light: isolated default/light controls",
+        "value": true
+      },
+      {
+        "name": "light: isolated mono/light controls",
+        "value": true
+      },
+      {
+        "name": "light: isolated material3/light controls",
+        "value": true
+      },
+      {
+        "name": "light: isolated default/dark controls",
+        "value": true
+      },
+      {
+        "name": "light: isolated mono/dark controls",
+        "value": true
+      },
+      {
+        "name": "light: isolated material3/dark controls",
+        "value": true
+      },
+      {
+        "name": "light: resize preserves input and focus",
+        "value": true
+      },
+      {
+        "name": "light: single-column mode preserves input",
+        "value": "state survives layout"
+      },
+      {
+        "name": "light: no responsive card recreation",
+        "value": true
+      }
+    ],
+    "errors": []
+  },
+  "ssg": {
+    "base": "http://127.0.0.1:4175/apollo-design-ui",
+    "pages": [
+      {
+        "route": "/changelog",
+        "mode": "dark",
+        "width": 390,
+        "checked": [
+          "overflow regression",
+          "drawer context",
+          "Escape/focus"
+        ]
+      },
+      {
+        "route": "/guide/themes",
+        "mode": "dark",
+        "width": 1600,
+        "checked": [
+          "six independent scopes",
+          "3x2",
+          "brand color",
+          "all input/switch/button/reset interactions"
+        ]
+      },
+      {
+        "route": "/components/button",
+        "mode": "dark",
+        "width": 1600,
+        "checked": [
+          "independent columns",
+          "source expansion",
+          "keyboard anchor"
+        ]
+      },
+      {
+        "route": "/components/layout",
+        "mode": "dark",
+        "width": [
+          1600,
+          390
+        ],
+        "checked": [
+          "11 iframe previews",
+          "Mac dots",
+          "theme propagation",
+          "isolation",
+          "responsive overflow"
+        ]
+      },
+      {
+        "route": "/guide/icons.html?lang=en-US",
+        "mode": "dark",
+        "width": 1600,
+        "checked": [
+          "legacy redirect",
+          "English section",
+          "base"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "name": "SSG dark Changelog390 no horizontal overflow",
+        "value": true
+      },
+      {
+        "name": "SSG docs drawer contains gallery and excludes components",
+        "value": true
+      },
+      {
+        "name": "SSG drawer focus returns",
+        "value": true
+      },
+      {
+        "name": "SSG gallery six scopes",
+        "value": true
+      },
+      {
+        "name": "SSG gallery remains 3x2",
+        "value": true
+      },
+      {
+        "name": "SSG Material brand",
+        "value": true
+      },
+      {
+        "name": "SSG default/light input/switch",
+        "value": true
+      },
+      {
+        "name": "SSG theme primary updates progress",
+        "value": true
+      },
+      {
+        "name": "SSG theme reset",
+        "value": true
+      },
+      {
+        "name": "SSG mono/light input/switch",
+        "value": true
+      },
+      {
+        "name": "SSG theme primary updates progress",
+        "value": true
+      },
+      {
+        "name": "SSG theme reset",
+        "value": true
+      },
+      {
+        "name": "SSG material3/light input/switch",
+        "value": true
+      },
+      {
+        "name": "SSG theme primary updates progress",
+        "value": true
+      },
+      {
+        "name": "SSG theme reset",
+        "value": true
+      },
+      {
+        "name": "SSG default/dark input/switch",
+        "value": true
+      },
+      {
+        "name": "SSG theme primary updates progress",
+        "value": true
+      },
+      {
+        "name": "SSG theme reset",
+        "value": true
+      },
+      {
+        "name": "SSG mono/dark input/switch",
+        "value": true
+      },
+      {
+        "name": "SSG theme primary updates progress",
+        "value": true
+      },
+      {
+        "name": "SSG theme reset",
+        "value": true
+      },
+      {
+        "name": "SSG material3/dark input/switch",
+        "value": true
+      },
+      {
+        "name": "SSG theme primary updates progress",
+        "value": true
+      },
+      {
+        "name": "SSG theme reset",
+        "value": true
+      },
+      {
+        "name": "SSG dark independent columns",
+        "value": true
+      },
+      {
+        "name": "SSG dark source expands only its column",
+        "value": true
+      },
+      {
+        "name": "SSG keyboard Demo anchor",
+        "value": true
+      },
+      {
+        "name": "SSG all Layout previews are frames",
+        "value": true
+      },
+      {
+        "name": "SSG Mac window dots",
+        "value": true
+      },
+      {
+        "name": "SSG Layout iframe follows dark context",
+        "value": true
+      },
+      {
+        "name": "SSG Layout isolation",
+        "value": true
+      },
+      {
+        "name": "SSG Layout390 no document overflow",
+        "value": true
+      },
+      {
+        "name": "SSG legacy English icon context",
+        "value": true
+      },
+      {
+        "name": "SSG no-JS keeps all content/card fallback",
+        "value": true
+      },
+      {
+        "name": "SSG no browser page errors",
+        "value": true
+      }
+    ],
+    "errors": []
+  },
+  "remaining": [
+    "Final Docs rebuild must include deep-hash ready event, corrected i18n guide, and pipeline demoTocIndex; old SSG 4175 predates these last changes.",
+    "Full project acceptance/tag/deployment verification owned by parent; local checks are scoped."
+  ],
+  "exceptions": [
+    "Existing native site select controls remain accessible tool controls; Demo source replacements belong to component agents.",
+    "Three Mac window dot colors are intentional decorative constants.",
+    "Without JavaScript, documentation keeps complete readable SSR cards/grid; interactive demos require JavaScript."
+  ],
+  "screenshots": [
+    "/tmp/apollo-issue86-site/themes-light.png",
+    "/tmp/apollo-issue86-site/themes-dark.png",
+    "/tmp/apollo-issue86-site/layout-dark.png",
+    "/tmp/apollo-issue86-site/layout-dark-390.png",
+    "/tmp/apollo-issue86-site/changelog-dark-390.png",
+    "/tmp/apollo-issue86-site/button-no-js.png",
+    "/tmp/issue86-ant-layout.png"
+  ],
+  "integratorFollowup": {
+    "reducedMotion": {
+      "rootCause": "Positive global transition duration animated temporary positioning measurements. Changed to zero duration.",
+      "cases": [
+        {
+          "mode": "light",
+          "component": "cascader",
+          "x": 24,
+          "y": 141,
+          "right": 158,
+          "width": 390
+        },
+        {
+          "mode": "light",
+          "component": "select",
+          "x": 24,
+          "y": 102,
+          "right": 144,
+          "width": 390
+        },
+        {
+          "mode": "light",
+          "component": "tree-select",
+          "x": 24,
+          "y": 102,
+          "right": 153.84375,
+          "width": 390
+        },
+        {
+          "mode": "dark",
+          "component": "cascader",
+          "x": 24,
+          "y": 141,
+          "right": 158,
+          "width": 390
+        },
+        {
+          "mode": "dark",
+          "component": "select",
+          "x": 24,
+          "y": 102,
+          "right": 144,
+          "width": 390
+        },
+        {
+          "mode": "dark",
+          "component": "tree-select",
+          "x": 24,
+          "y": 102,
+          "right": 153.84375,
+          "width": 390
+        }
+      ]
+    },
+    "i18nGuide": {
+      "i18n": true
+    }
+  }
+}

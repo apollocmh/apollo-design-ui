@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/monorepo",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": true,
   "description": "Independent Vue 3 native UI components with TypeScript, static CSS and CSS-variable themes.",
   "license": "MIT",

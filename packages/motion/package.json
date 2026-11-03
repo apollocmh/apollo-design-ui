@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/motion",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "CSSMotion 等价物：声明式 CSS 过渡/动画控制。替代 @rc-component/motion。",
   "license": "MIT",
   "type": "module",

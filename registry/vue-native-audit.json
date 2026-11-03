@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 253,
+  "revision": 261,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -23,7 +23,7 @@
       "ref": "affix",
       "title": "Affix",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/affix"
@@ -211,7 +211,10 @@
           "Existing jsdom canvas capability diagnostics do not establish browser contrast acceptance."
         ],
         "timing": "Started 2026-10-31T04:14Z; root type first35.083s, final58.642s and consumer7.909s. Existing logs record test duration; exact analysis/implementation split unavailable."
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:alert",
@@ -219,7 +222,7 @@
       "ref": "alert",
       "title": "Alert",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/alert"
@@ -236,7 +239,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-29-alert-contract-audit.md"
+        "docs/audit/2026-10-29-alert-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -245,7 +249,7 @@
       "ref": "anchor",
       "title": "Anchor",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/anchor"
@@ -433,7 +437,10 @@
           "Existing jsdom canvas capability diagnostics do not establish browser contrast acceptance."
         ],
         "timing": "Started 2026-10-31T04:14Z; root type first35.083s, final58.642s and consumer7.909s. Existing logs record test duration; exact analysis/implementation split unavailable."
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:app",
@@ -441,7 +448,7 @@
       "ref": "app",
       "title": "App",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/app"
@@ -658,7 +665,10 @@
         "integrationSnapshot": {
           "result": "Every checked source byte matches current App, context, real h/SFC/Demo and UI public barrel; root strict/declaration0/54.175s."
         }
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:auto-complete",
@@ -666,7 +676,7 @@
       "ref": "auto-complete",
       "title": "AutoComplete",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/auto-complete",
@@ -749,6 +759,9 @@
           "change": "Shared input native event ownership and ARIA override; raw popup consumes the same current presentation as the normal branch.",
           "verification": "CMP:cascader verification: shared native consumer regressions, strict and raw-popup browser functionality; browser diagnostic exit1 is retained as non-blocking."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -757,7 +770,7 @@
       "ref": "avatar",
       "title": "Avatar",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/avatar"
@@ -772,7 +785,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-avatar-contract-audit.md"
+        "docs/audit/2026-10-27-avatar-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -781,7 +795,7 @@
       "ref": "back-top",
       "title": "BackTop",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/back-top"
@@ -844,7 +858,10 @@
           }
         ],
         "boundary": "现有静态响应式断点另记；发布产物和完整视觉留最终冻结验收。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:badge",
@@ -852,7 +869,7 @@
       "ref": "badge",
       "title": "Badge",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/badge"
@@ -867,7 +884,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-28-badge-contract-audit.md"
+        "docs/audit/2026-10-28-badge-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -876,7 +894,7 @@
       "ref": "border-beam",
       "title": "BorderBeam",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/border-beam"
@@ -1077,7 +1095,10 @@
             "change": "Correct Vue callback replacement comment only"
           }
         }
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:breadcrumb",
@@ -1085,7 +1106,7 @@
       "ref": "breadcrumb",
       "title": "Breadcrumb",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/breadcrumb"
@@ -1100,7 +1121,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -1109,7 +1131,7 @@
       "ref": "button",
       "title": "Button",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/button"
@@ -1128,7 +1150,8 @@
       "historicalAcceptance": [
         "docs/audit/2026-10-27-button-contract-audit.md",
         "docs/audit/evidence/button-foreground-acceptance.json",
-        "docs/audit/evidence/button-foreground-publication.json"
+        "docs/audit/evidence/button-foreground-publication.json",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -1137,7 +1160,7 @@
       "ref": "calendar",
       "title": "Calendar",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -1415,7 +1438,10 @@
           "publicExports": "Root integrates each component export in its own commit; full final export surface was included in the passed integration program."
         },
         "recordedAt": "2026-10-30T23:32:37.766833+00:00"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:card",
@@ -1423,7 +1449,7 @@
       "ref": "card",
       "title": "Card",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/card"
@@ -1713,7 +1739,10 @@
             "Root UI barrel Card comment now documents owned tabChange/update:activeTabKey; its executable/type declarations exactly match the passed immutable program."
           ]
         }
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:carousel",
@@ -1721,7 +1750,7 @@
       "ref": "carousel",
       "title": "Carousel",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/carousel"
@@ -1954,7 +1983,10 @@
           "result": "Final bytes match the immutable whole-source/public export/real h-SFC-Demo program. Fixture shallowRef retains the real constructor; declaration:true unchanged."
         },
         "recordedAt": "2026-10-31T01:28:34.217237+00:00"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:cascader",
@@ -1962,7 +1994,7 @@
       "ref": "cascader",
       "title": "Cascader",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/cascader"
@@ -2090,7 +2122,10 @@
           }
         ],
         "boundary": "Cascader 与 Panel 的类型/路径实体/accepted models、当前完整插槽/实际ref/原生attrs、Provider/8Token、键盘/IME/异步请求资源和共享 raw popup 传递已实现；所有源类型、正负类型用例、真实SFC与全部Demo strict exit0。核心/semantic与变化断言通过；theme+a11y旧组合整体exit1，受影响私有路径编码断言已定向修正验证，不将该组合冒称全部通过。真实Chrome功能断言通过，但最终诊断门禁捕获1条共享Trigger RO，整体exit1；保留非阻塞问题及原日志，不宣称browser clean。D113内部面板别名保留；全库、构建消费者和冻结九维未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:checkbox",
@@ -2098,7 +2133,7 @@
       "ref": "checkbox",
       "title": "Checkbox",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/checkbox",
@@ -2232,7 +2267,10 @@
           }
         ],
         "boundary": "Checkbox/Group完整当前契约已收口：owned原生通知与change(Event,bool)、受控勾选/indeterminate原生恢复、动态skipGroup注册、过滤排序后accepted组值、当前Provider语义/原生style、实际值/FormData及nullable ref、真实Ctor正负例/SFC/Demo。核心53、相关实际消费者151、Chrome0诊断证据有效；原生通知迁移后Table owner22项与隔离HEAD仅API桥4项均通过；重叠结果不相加。严格检查全相关源/正负例/SFC/Demo与消费者0。Radio仅处理实际原生组恢复/必要事件与选项类型解耦，不表示全审；Table完整状态/泛型重构仍为当前进行中的独立任务。未新增合成事件兼容路、任意对象值假支持或假Ctor。全库/完整视觉/coverage/构建消费者及同版冻结九维未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:collapse",
@@ -2240,7 +2278,7 @@
       "ref": "collapse",
       "title": "Collapse",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/collapse"
@@ -2257,7 +2295,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
-        "docs/audit/2026-10-29-current-batch-integration.md"
+        "docs/audit/2026-10-29-current-batch-integration.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2266,7 +2305,7 @@
       "ref": "color-picker",
       "title": "ColorPicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/color-picker"
@@ -2390,6 +2429,9 @@
           "change": "Use actual public SliderHandleInfo instead of a private DTO; remove two forced event assertions, preserve listener order and runtime data/gradient behavior.",
           "verification": "CMP:slider includes actual ColorPicker core35 and strict public-h/SFC consumers. Full ColorPicker re-audit not performed."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2398,7 +2440,7 @@
       "ref": "config-provider",
       "title": "ConfigProvider",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/config-provider"
@@ -2415,7 +2457,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
-        "docs/audit/2026-10-29-current-batch-integration.md"
+        "docs/audit/2026-10-29-current-batch-integration.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ],
       "affectedChanges": [
         {
@@ -2433,7 +2476,7 @@
       "ref": "date-picker",
       "title": "DatePicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -2665,6 +2708,9 @@
           "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
           "boundary": "Focused remediation and whole-source strict check passed in the isolated candidate. Built-library and final frozen acceptance remain pending."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2673,7 +2719,7 @@
       "ref": "descriptions",
       "title": "Descriptions",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/descriptions"
@@ -2688,7 +2734,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2697,7 +2744,7 @@
       "ref": "divider",
       "title": "Divider",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/divider"
@@ -2714,7 +2761,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
-        "docs/audit/2026-10-29-current-batch-integration.md"
+        "docs/audit/2026-10-29-current-batch-integration.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2723,7 +2771,7 @@
       "ref": "drawer",
       "title": "Drawer",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/drawer"
@@ -2787,7 +2835,10 @@
           }
         ],
         "boundary": "保留已有原生内容成果；当前Provider/Token、owned通知与真实ref、受控尺寸及撤控、motion完成/延迟销毁、焦点与嵌套push/Escape、拖拽资源释放和两处更新Demo已验证。resizable改boolean，resize/resizeStart/resizeEnd由Vue事件发送number；删除无消费内部panelRef/destroyInactivePanel。未新增Watermark扩展，未执行最终冻结九维/发布消费者验收。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:dropdown",
@@ -2795,7 +2846,7 @@
       "ref": "dropdown",
       "title": "Dropdown",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/dropdown",
@@ -2897,6 +2948,9 @@
           "change": "Existing ShadowRoot popup containers are reflected in actual props and constructors; erased type declarations only.",
           "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2905,7 +2959,7 @@
       "ref": "empty",
       "title": "Empty",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/empty"
@@ -2920,7 +2974,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-empty-contract-audit.md"
+        "docs/audit/2026-10-27-empty-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2929,7 +2984,7 @@
       "ref": "flex",
       "title": "Flex",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/flex"
@@ -2946,7 +3001,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-29-flex-contract-audit.md"
+        "docs/audit/2026-10-29-flex-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -2955,7 +3011,7 @@
       "ref": "float-button",
       "title": "FloatButton",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/float-button"
@@ -3024,7 +3080,10 @@
           }
         ],
         "boundary": "保留Button专项原生样式成果；已验证Group单一事件/attrs/键盘焦点/受控拒绝、当前Provider/Alias、BackTop目标和资源、PurePanel/显式brand样式工具及实际Demo。最终同一冻结提交九维验收未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:form",
@@ -3032,7 +3091,7 @@
       "ref": "form",
       "title": "Form",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [
         "FND:form-core"
       ],
@@ -3284,7 +3343,10 @@
         },
         "stage": "architecture",
         "boundary": "当前 UI Form 架构单元已完成；复用 Form Core 既有有效证据，仅补真实控制实例声明与 UI 消费验证。核心、现有 Demo、DOM/a11y、真实 Chrome 和全单元严格类型已通过；JSDOM canvas 诊断保留，完整视觉/主题/覆盖率、构建消费者与同版九维尚未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:grid",
@@ -3292,7 +3354,7 @@
       "ref": "grid",
       "title": "Grid",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/grid"
@@ -3307,7 +3369,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3316,7 +3379,7 @@
       "ref": "image",
       "title": "Image",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/image"
@@ -3331,7 +3394,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-25-image-contract-audit.md"
+        "docs/audit/2026-10-25-image-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3340,7 +3404,7 @@
       "ref": "input",
       "title": "Input",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input"
@@ -3359,7 +3423,8 @@
       "historicalAcceptance": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
         "docs/audit/2026-10-29-current-batch-integration.md",
-        "docs/audit/evidence/button-search-demo-events.json"
+        "docs/audit/evidence/button-search-demo-events.json",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3368,7 +3433,7 @@
       "ref": "input-number",
       "title": "InputNumber",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input-number"
@@ -3434,7 +3499,10 @@
           }
         ],
         "boundary": "保留已有 F04/F09 成果；已验证当前 Provider/variant/Token、真实 ref、模型、输入法、光标、事件与资源清理。最终冻结版本九维验收未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:layout",
@@ -3442,7 +3510,7 @@
       "ref": "layout",
       "title": "Layout",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/layout"
@@ -3459,7 +3527,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-29-layout-contract-audit.md"
+        "docs/audit/2026-10-29-layout-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3468,7 +3537,7 @@
       "ref": "list",
       "title": "List",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/list"
@@ -3483,7 +3552,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-26-list-contract-audit.md"
+        "docs/audit/2026-10-26-list-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3492,7 +3562,7 @@
       "ref": "listy",
       "title": "Listy",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/listy"
@@ -3747,6 +3817,9 @@
           "verificationTask": "FND:virtual-list",
           "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3755,7 +3828,7 @@
       "ref": "masonry",
       "title": "Masonry",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/masonry"
@@ -3819,6 +3892,9 @@
           "change": "MotionList retained generic slot metadata and actual CSSProperties motionStyle; Masonry continues to consume retained slot data.",
           "verification": "FND:motion final Motion/Masonry core, native browser and scoped strict; existing Masonry historical delivery retained."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -3827,7 +3903,7 @@
       "ref": "mentions",
       "title": "Mentions",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/mentions"
@@ -3906,7 +3982,10 @@
           }
         ],
         "boundary": "六组既有成果保留；已验证当前21字段/Provider/容器/语义/真实refs、PurePanel菜单与模型及readonly/disabled/hidden。删除无消费者的字段，Input自有有效字段不删。最终冻结版本九维验收/发布消费者未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:menu",
@@ -3914,7 +3993,7 @@
       "ref": "menu",
       "title": "Menu",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/menu",
@@ -4010,6 +4089,9 @@
           "change": "Existing ShadowRoot popup containers are reflected in actual props and constructor; erased type declarations only.",
           "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -4018,7 +4100,7 @@
       "ref": "message",
       "title": "Message",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/message"
@@ -4413,7 +4495,10 @@
           "result": "All 91 checked TS/Vue/public barrel/shared/actual consumer bytes match current integration source; full inherited strict and declaration unchanged."
         },
         "timing": "Claim2026-10-31T04:14Z. Actual root strict39.397s/35.067s/37.670s failures and53.896s final; browser8.662s; consumer checks13.503s/12.337s/8.224s/8.073s. Rework was shared Vue content typing, missing PurePanel type aliases and negative-comment locations; exact analysis/implementation split unavailable."
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:modal",
@@ -4421,7 +4506,7 @@
       "ref": "modal",
       "title": "Modal",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/modal"
@@ -4868,6 +4953,9 @@
           },
           "boundary": "Consumer regression only; original architecture/historical acceptance evidence retained without claiming a new component audit or final nine-dimension acceptance."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -4876,7 +4964,7 @@
       "ref": "notification",
       "title": "Notification",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/notification"
@@ -5271,7 +5359,10 @@
           "result": "All 91 checked TS/Vue/public barrel/shared/actual consumer bytes match current integration source; full inherited strict and declaration unchanged."
         },
         "timing": "Claim2026-10-31T04:14Z. Actual root strict39.397s/35.067s/37.670s failures and53.896s final; browser8.662s; consumer checks13.503s/12.337s/8.224s/8.073s. Rework was shared Vue content typing, missing PurePanel type aliases and negative-comment locations; exact analysis/implementation split unavailable."
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:pagination",
@@ -5279,7 +5370,7 @@
       "ref": "pagination",
       "title": "Pagination",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/pagination"
@@ -5343,7 +5434,10 @@
           }
         ],
         "boundary": "已验证原生模型/键盘/焦点/禁用、List/Table 实际组合、当前十二 Token 与现有 Demo；最终冻结版本九维验收未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:popconfirm",
@@ -5351,7 +5445,7 @@
       "ref": "popconfirm",
       "title": "Popconfirm",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popconfirm"
@@ -5441,7 +5535,10 @@
           }
         ],
         "boundary": "保留返回Promise的确认业务回调，owned通知改Vue emits；当前组件配置与Token、单一层级owner、真实ref、稳定DOM和按接受开关隔离的异步会话已验证。共享ActionButton的卸载/旧Promise/失败上报与Modal消费者通过。原浏览器因两条Portal诊断误报exit1，保留原记录；对应Portal修复后原严格脚本复跑exit0。未执行最终冻结九维/发布消费者验收。 后续共享样式类型修正：语义/旧别名/PurePanel与箭头终端统一Vue CSSProperties，实际6路DOM验证undefined撤除/自定义属性/节点身份，完整正负类型通过；原其他证据沿用，非阻塞诊断边界不变。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:popover",
@@ -5449,7 +5546,7 @@
       "ref": "popover",
       "title": "Popover",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popover"
@@ -5552,7 +5649,10 @@
           }
         ],
         "boundary": "沿用既有内容/native-style/delay成果；已验证自身Provider/四Token、Vue事件与模板ref、嵌套层级和Popconfirm消费者。wireframe视觉边界延期，完整冻结版本九维/发布消费者未执行。 后续共享样式类型修正：语义/旧别名/PurePanel与箭头终端统一Vue CSSProperties，实际6路DOM验证undefined撤除/自定义属性/节点身份，完整正负类型通过；原其他证据沿用，非阻塞诊断边界不变。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:progress",
@@ -5560,7 +5660,7 @@
       "ref": "progress",
       "title": "Progress",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/progress"
@@ -5635,7 +5735,10 @@
           }
         ],
         "boundary": "自定义渐变/透明背景的文本配色由语义样式配置；未执行最终冻结视觉/发布验收。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:qr-code",
@@ -5643,7 +5746,7 @@
       "ref": "qr-code",
       "title": "QRCode",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/qr-code"
@@ -5658,7 +5761,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-26-qrcode-contract-audit.md"
+        "docs/audit/2026-10-26-qrcode-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -5667,7 +5771,7 @@
       "ref": "radio",
       "title": "Radio",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/radio"
@@ -5932,7 +6036,10 @@
         "timing": "Only actual check timings reported; analysis/implementation/integration-wait timings were not separately instrumented.",
         "stop": "Radio integrated within the authorized five-component batch; no sixth component is dispatched.",
         "stage": "architecture"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:rate",
@@ -5940,7 +6047,7 @@
       "ref": "rate",
       "title": "Rate",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
@@ -6037,7 +6144,10 @@
           "packages/ui/src/rate/style/token.ts",
           "packages/ui/src/rate/index.zh-CN.md"
         ]
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:result",
@@ -6045,7 +6155,7 @@
       "ref": "result",
       "title": "Result",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/result"
@@ -6060,7 +6170,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-result-contract-audit.md"
+        "docs/audit/2026-10-27-result-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -6069,7 +6180,7 @@
       "ref": "segmented",
       "title": "Segmented",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/segmented"
@@ -6240,7 +6351,10 @@
         "timing": "Claim2026-10-30T22:16:23Z; first red06:21:53local, first core06:24:08local. Final core began06:32:46local. Analysis/implementation/test work overlapped; no fabricated exact split or new instrumentation. Independent source freeze sent before other four tasks finished.",
         "stage": "architecture",
         "passed": true
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:select",
@@ -6248,7 +6362,7 @@
       "ref": "select",
       "title": "Select",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/select"
@@ -6359,6 +6473,9 @@
           "verificationTask": "FND:virtual-list",
           "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -6367,7 +6484,7 @@
       "ref": "skeleton",
       "title": "Skeleton",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/skeleton"
@@ -6382,7 +6499,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-skeleton-contract-audit.md"
+        "docs/audit/2026-10-27-skeleton-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -6391,7 +6509,7 @@
       "ref": "slider",
       "title": "Slider",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/slider"
@@ -6805,7 +6923,10 @@
           "uiBarrelSha256": "30428b1f5e79cb3ab55a587d6aebbefccb3327363982739fbee1d5a951523d9d",
           "rootMerge": "Adds only the validated SliderHandleNodeProps export after independently validated Modal88850e41; component has no Modal runtime dependency."
         }
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:space",
@@ -6813,7 +6934,7 @@
       "ref": "space",
       "title": "Space",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/space"
@@ -6830,7 +6951,8 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-        "docs/audit/2026-10-28-space-contract-audit.md"
+        "docs/audit/2026-10-28-space-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -6839,7 +6961,7 @@
       "ref": "spin",
       "title": "Spin",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/spin"
@@ -6854,7 +6976,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-26-spin-contract-audit.md"
+        "docs/audit/2026-10-26-spin-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -6863,7 +6986,7 @@
       "ref": "splitter",
       "title": "Splitter",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/splitter"
@@ -7199,7 +7322,10 @@
         "batchBoundary": "Only CMP:splitter; no subagents, sixth task, outside writes, commit, index mutation or push.",
         "stage": "architecture",
         "sourceFrozen": true
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:statistic",
@@ -7207,7 +7333,7 @@
       "ref": "statistic",
       "title": "Statistic",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/statistic"
@@ -7222,7 +7348,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-statistic-contract-audit.md"
+        "docs/audit/2026-10-27-statistic-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -7231,7 +7358,7 @@
       "ref": "steps",
       "title": "Steps",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/steps"
@@ -7315,6 +7442,9 @@
           "change": "The current model emits the same requested numeric index as change; model-only listeners enable pointer/keyboard actions and the existing clickable Demo uses native v-model.",
           "verification": "FND:test-utils checks include final current model/core35, AST C11 and full scoped strict; historical full Steps delivery is preserved."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -7323,7 +7453,7 @@
       "ref": "switch",
       "title": "Switch",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
@@ -7401,7 +7531,10 @@
           "packages/ui/src/switch/style/token.ts",
           "packages/ui/src/switch/index.zh-CN.md"
         ]
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:table",
@@ -7409,7 +7542,7 @@
       "ref": "table",
       "title": "Table",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/table",
@@ -7644,7 +7777,10 @@
           }
         ],
         "sourceReuse": "Complete scoped strict passed on frozen sources. Only ExpandIcon and two regression files changed afterward; their strict followup and targeted core/a11y/actual browser passed. The final ExpandIcon header differs only before the first */; all executable/type source was compared exactly. Other source, dependencies and configurations remain unchanged; earlier valid results retained without duplicating whole-suite work."
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:tabs",
@@ -7652,7 +7788,7 @@
       "ref": "tabs",
       "title": "Tabs",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tabs"
@@ -7721,7 +7857,10 @@
           }
         ],
         "boundary": "既有popup/extra槽成果保留；已验证24Token、当前Provider、原生attrs/真实refs、模型/键盘/面板身份、Card消费者、Chrome实际AX所有权与默认/暗色/紧凑色对。原26DOM场景按精确结构变更完整比较，raw和视觉基线未修改。最终冻结九维/发布消费者未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:tag",
@@ -7729,7 +7868,7 @@
       "ref": "tag",
       "title": "Tag",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tag"
@@ -7744,7 +7883,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-tag-contract-audit.md"
+        "docs/audit/2026-10-27-tag-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ],
       "affectedChanges": [
         {
@@ -7782,7 +7922,7 @@
       "ref": "time-picker",
       "title": "TimePicker",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [
         "FND:picker"
       ],
@@ -7912,7 +8052,10 @@
             "resolution": "The existing popup-style helper used an inaccurate string/number record; both actual public CSSProperties boundaries were corrected without runtime or assertion changes. Final strict exit0."
           }
         ]
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:timeline",
@@ -7920,7 +8063,7 @@
       "ref": "timeline",
       "title": "Timeline",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/timeline"
@@ -7935,7 +8078,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/evidence/four-unit-final-acceptance.json"
+        "docs/audit/evidence/four-unit-final-acceptance.json",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -7944,7 +8088,7 @@
       "ref": "tooltip",
       "title": "Tooltip",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tooltip"
@@ -8072,7 +8216,10 @@
           }
         ],
         "boundary": "已验证当前Token/placement/尺寸/真实refs、事件单一通知与两层包装、原生样式落点及Demo；首次消费者命令的旧函数ref断言失败，已依公开属性契约改真实模板ref并定向通过，其余52条原通过范围未重跑。最终冻结版本九维验收未执行。 后续共享样式类型修正：语义/旧别名/PurePanel与箭头终端统一Vue CSSProperties，实际6路DOM验证undefined撤除/自定义属性/节点身份，完整正负类型通过；原其他证据沿用，非阻塞诊断边界不变。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:tour",
@@ -8080,7 +8227,7 @@
       "ref": "tour",
       "title": "Tour",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tour"
@@ -8389,7 +8536,10 @@
         ],
         "sourceFrozen": true,
         "recordedAt": "2026-10-31T01:42:37.287425+00:00"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:transfer",
@@ -8397,7 +8547,7 @@
       "ref": "transfer",
       "title": "Transfer",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/transfer"
@@ -8551,6 +8701,9 @@
           "change": "Native accepted checked restoration and actual Checkbox Event/bool consumer bridge; Radio retains its own existing event contract.",
           "verification": "CMP:checkbox focused checks: native core, actual Chrome/Radio/Transfer/Table consumers and full scoped strict. This delta does not mark the whole Radio/Table audit complete."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -8559,7 +8712,7 @@
       "ref": "tree",
       "title": "Tree",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree",
@@ -8671,6 +8824,9 @@
           "verificationTask": "FND:virtual-list",
           "boundary": "Only this shared foundation consumer delta was checked. Historical verification retains its original source/date; no fresh full component or final nine-dimensional pass is claimed."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -8679,7 +8835,7 @@
       "ref": "tree-select",
       "title": "TreeSelect",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree-select",
@@ -8833,7 +8989,10 @@
           }
         ],
         "boundary": "TreeSelect完整当前Props/5models/owned通知、动态完整槽/真实ref/attrs、自己的Provider展示职责与共享Tree/Select主题、当前原始业务node加载/过滤、最大选择与受控缓存、async不可变children有效更新及加载替换/卸载保护、真实Tree ARIA关系已实现并通过相关核心、实际消费者、Demo及最终完整窄strict。源码Chrome零console/pageerror，后续类型/原始node桥和非冒泡scroll变化另用最终15项回归覆盖；未将重叠测试数相加为全库覆盖。ARIA从listbox改为tree的13条精确差异有当前原生断言，RAW/HTML基线未改。含a11y的日志保留17条jsdom canvas未实现诊断，不声称unit零日志。TreeSelect没有新独立Token；TreeNode children数据形态继续不支持。全库、coverage、完整视觉/辅助技术、构建消费者及同版冻结九维未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:typography",
@@ -8841,7 +9000,7 @@
       "ref": "typography",
       "title": "Typography",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/typography"
@@ -8856,7 +9015,8 @@
       ],
       "issues": [],
       "historicalAcceptance": [
-        "docs/audit/2026-10-27-typography-contract-audit.md"
+        "docs/audit/2026-10-27-typography-contract-audit.md",
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ],
       "affectedChanges": [
         {
@@ -8910,7 +9070,7 @@
       "ref": "upload",
       "title": "Upload",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/upload"
@@ -8979,7 +9139,10 @@
           }
         ],
         "boundary": "保留Progress六字段组合；已验证请求替换/取消/迟到回调、受控列表与异步移除、真实Ctor/slots/refs、PNG/URL资源、Provider/主题及原生样式。浏览器24项通过且dist原SHA不变。后续构造器声明提取已定向25条与完整strict复核。最终冻结版本九维/发布产物未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "CMP:watermark",
@@ -8987,7 +9150,7 @@
       "ref": "watermark",
       "title": "Watermark",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/watermark"
@@ -9172,7 +9335,10 @@
           "publicExports": "Root integrates each component export in its own commit; full final export surface was included in the passed integration program."
         },
         "recordedAt": "2026-10-30T23:32:37.768125+00:00"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:a11y",
@@ -9180,7 +9346,7 @@
       "ref": "a11y",
       "title": "@apollo-design/a11y",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/a11y",
@@ -9278,7 +9444,10 @@
           "packages/a11y/src/use-typeahead.ts": "a50101737abb1bc4f9433c6d7641cf5805e5780b09b6af5de98597d025f4d954",
           "packages/a11y/src/__tests__/native-contracts.test.ts": "fa2845228e088a27a4c420def926dc125dd9ed08262175f2157edd1e17b22423"
         }
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:form-core",
@@ -9286,7 +9455,7 @@
       "ref": "form-core",
       "title": "@apollo-design/form-core",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/form-core",
@@ -9421,6 +9590,9 @@
           "change": "getFieldInstance accurately returns the actual registered object; UI canonical form/control identity, native focus/scroll and nearest useFormInstance are verified.",
           "verification": "CMP:form focused core, Demo, real Chrome and full scoped strict. Existing Form Core algorithm and historical evidence retained; no repeated full foundation audit."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -9429,7 +9601,7 @@
       "ref": "icons",
       "title": "@apollo-design/icons",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/icons",
@@ -9532,7 +9704,10 @@
         },
         "typedSourceDrift": [],
         "boundary": "保留已有IconProvider配置、848份SVG数据和原参考。无新增模型/所属emits/Expose；事件为根DOM attrs。默认静态CSS链源码核对且getIconStyle生成的CSS真实浏览器通过，未构建dist。自定义icon前缀需静态引入匹配CSS；模块全局双色setter不宣称SSR请求隔离，实例prop可隔离。iconfont工厂保持立即加载；共享脚本/sprite按页面保留，错误继续后续，不自动重试。最终冻结九维/发布消费者未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:locale",
@@ -9540,7 +9715,7 @@
       "ref": "locale",
       "title": "@apollo-design/locale",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/locale",
@@ -9624,6 +9799,9 @@
           "change": "Shared TableLocale.emptyText matches actual static VNodeChild data and the Table dynamic #emptyText contract; removed an unconsumed callback declaration.",
           "verification": "CMP:table full scoped strict includes every Locale source/type case and the actual Table consumer. Type-only delta; existing Locale runtime/confirmation evidence retained."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -9632,7 +9810,7 @@
       "ref": "motion",
       "title": "@apollo-design/motion",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/motion",
@@ -9857,6 +10035,9 @@
           "change": "Actual Vue animated component roots take precedence over value/current data props.",
           "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -9865,7 +10046,7 @@
       "ref": "overlay",
       "title": "@apollo-design/overlay",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/overlay",
@@ -9936,7 +10117,10 @@
           }
         ],
         "boundary": "受控延迟/焦点历史组保留；已验证多app/多文档Esc、外点/hover/IME、回调当前值、触摸复位与关闭/卸载释放；实际UI Trigger消费者149条通过。几何/容器不在本包职责，最终冻结验收未执行。"
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:picker",
@@ -9944,7 +10128,7 @@
       "ref": "picker",
       "title": "@apollo-design/picker",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/picker",
@@ -10087,6 +10271,9 @@
           "change": "Date/Time wrapper native slots/events/accepted state; actual panel focus/readonly keyboard, active range endpoint and observer cleanup.",
           "verification": "CMP:date-picker architecture verification: current core, actual related consumers/Demo, zero-diagnostic Chrome and full scoped strict. This delta does not mark the TimePicker whole audit complete."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -10095,7 +10282,7 @@
       "ref": "portal",
       "title": "@apollo-design/portal",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/portal",
@@ -10250,7 +10437,10 @@
           "packages/portal/src/__tests__/use-portal.test.ts",
           "packages/portal/src/__tests__/container.test.ts"
         ]
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:position",
@@ -10258,7 +10448,7 @@
       "ref": "position",
       "title": "@apollo-design/position",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/position/src"
@@ -10825,7 +11015,10 @@
           "This machine uses overlay scrollbars; classic left-side scrollbar geometry is untested.",
           "Final nine-dimensional, coverage, built distribution and release-consumer acceptance remain for the unified frozen stage."
         ]
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:test-utils",
@@ -10833,7 +11026,7 @@
       "ref": "test-utils",
       "title": "@apollo-design/test-utils",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/test-utils",
@@ -11081,6 +11274,9 @@
           },
           "boundary": "The focused instrumented Image matrix completed all original 72 demo/theme combinations within the unchanged deadline. That probe really exited 1 on global thresholds and is not a green whole-library coverage command. Final same-version full coverage is still required."
         }
+      ],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
       ]
     },
     {
@@ -11089,7 +11285,7 @@
       "ref": "theme",
       "title": "@apollo-design/theme",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/theme/src"
@@ -11105,7 +11301,10 @@
         "docs/history/registry-implementation-2026-10-29/foundation.json",
         "docs/audit/evidence/theme-foundation-source-acceptance.json"
       ],
-      "issues": []
+      "issues": [],
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:utils",
@@ -11113,7 +11312,7 @@
       "ref": "utils",
       "title": "@apollo-design/utils",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
@@ -11545,7 +11744,10 @@
           "packages/utils/src/__tests__/hooks.test.ts",
           "docs/foundation/rc-util-contract.md"
         ]
-      }
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
     },
     {
       "id": "FND:virtual-list",
@@ -11553,7 +11755,7 @@
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
       "architectureStatus": "done",
-      "acceptanceStatus": "passed",
+      "acceptanceStatus": "historical_passed",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
@@ -12140,136 +12342,396 @@
           "useHeights outside a Vue scope remains an imperative service; callers pair registration with setInstanceRef(item,null).",
           "No full-library coverage/visual/publication/nine-dimension acceptance was executed; current checks prove this architecture unit only."
         ]
+      },
+      "historicalAcceptance": [
+        "docs/audit/evidence/v0.1.8-final-acceptance.json"
+      ]
+    },
+    {
+      "id": "SHARED:docs-demo-general",
+      "kind": "shared",
+      "ref": "docs-demo-general",
+      "title": "Issue 86: general Demo review",
+      "architectureStatus": "done",
+      "acceptanceStatus": "not_started",
+      "workDependencies": [],
+      "owns": [
+        "packages/ui/src/affix",
+        "packages/ui/src/anchor",
+        "packages/ui/src/avatar",
+        "packages/ui/src/back-top",
+        "packages/ui/src/badge",
+        "packages/ui/src/border-beam",
+        "packages/ui/src/breadcrumb",
+        "packages/ui/src/button",
+        "packages/ui/src/divider",
+        "packages/ui/src/flex",
+        "packages/ui/src/float-button",
+        "packages/ui/src/grid",
+        "packages/ui/src/layout",
+        "packages/ui/src/masonry",
+        "packages/ui/src/menu",
+        "packages/ui/src/pagination",
+        "packages/ui/src/space",
+        "packages/ui/src/splitter",
+        "packages/ui/src/steps",
+        "packages/ui/src/tag",
+        "packages/ui/src/typography"
+      ],
+      "assignment": null,
+      "evidence": [
+        "docs/audit/2026-11-03-docs-demo-polish.md",
+        "docs/audit/evidence/issue-86-demo-review.json",
+        "docs/audit/evidence/issue-86-focused-checks.json"
+      ],
+      "existingWork": [],
+      "issues": [],
+      "verification": {
+        "passed": true,
+        "scope": [
+          "packages/ui/src/affix",
+          "packages/ui/src/anchor",
+          "packages/ui/src/avatar",
+          "packages/ui/src/back-top",
+          "packages/ui/src/badge",
+          "packages/ui/src/border-beam",
+          "packages/ui/src/breadcrumb",
+          "packages/ui/src/button",
+          "packages/ui/src/divider",
+          "packages/ui/src/flex",
+          "packages/ui/src/float-button",
+          "packages/ui/src/grid",
+          "packages/ui/src/layout",
+          "packages/ui/src/masonry",
+          "packages/ui/src/menu",
+          "packages/ui/src/pagination",
+          "packages/ui/src/space",
+          "packages/ui/src/splitter",
+          "packages/ui/src/steps",
+          "packages/ui/src/tag",
+          "packages/ui/src/typography"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "Owned component behavior regressions and actual Demo interaction review",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <focused style fixes and imported UI source config>",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "evidence": [
+          "docs/audit/evidence/issue-86-demo-review.json",
+          "docs/audit/evidence/issue-86-focused-checks.json"
+        ],
+        "limits": "Architecture/scoped review only. Full frozen acceptance and release are not implied."
+      }
+    },
+    {
+      "id": "SHARED:docs-demo-controls",
+      "kind": "shared",
+      "ref": "docs-demo-controls",
+      "title": "Issue 86: controls Demo review",
+      "architectureStatus": "done",
+      "acceptanceStatus": "not_started",
+      "workDependencies": [],
+      "owns": [
+        "packages/ui/src/auto-complete",
+        "packages/ui/src/checkbox",
+        "packages/ui/src/color-picker",
+        "packages/ui/src/input",
+        "packages/ui/src/input-number",
+        "packages/ui/src/mentions",
+        "packages/ui/src/radio",
+        "packages/ui/src/rate",
+        "packages/ui/src/segmented",
+        "packages/ui/src/select",
+        "packages/ui/src/slider",
+        "packages/ui/src/switch"
+      ],
+      "assignment": null,
+      "evidence": [
+        "docs/audit/2026-11-03-docs-demo-polish.md",
+        "docs/audit/evidence/issue-86-demo-review.json",
+        "docs/audit/evidence/issue-86-focused-checks.json"
+      ],
+      "existingWork": [],
+      "issues": [],
+      "verification": {
+        "passed": true,
+        "scope": [
+          "packages/ui/src/auto-complete",
+          "packages/ui/src/checkbox",
+          "packages/ui/src/color-picker",
+          "packages/ui/src/input",
+          "packages/ui/src/input-number",
+          "packages/ui/src/mentions",
+          "packages/ui/src/radio",
+          "packages/ui/src/rate",
+          "packages/ui/src/segmented",
+          "packages/ui/src/select",
+          "packages/ui/src/slider",
+          "packages/ui/src/switch"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "Owned component behavior regressions and actual Demo interaction review",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <focused style fixes and imported UI source config>",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "evidence": [
+          "docs/audit/evidence/issue-86-demo-review.json",
+          "docs/audit/evidence/issue-86-focused-checks.json"
+        ],
+        "limits": "Architecture/scoped review only. Full frozen acceptance and release are not implied."
+      }
+    },
+    {
+      "id": "SHARED:docs-demo-data",
+      "kind": "shared",
+      "ref": "docs-demo-data",
+      "title": "Issue 86: data Demo review",
+      "architectureStatus": "done",
+      "acceptanceStatus": "not_started",
+      "workDependencies": [],
+      "owns": [
+        "packages/ui/src/calendar",
+        "packages/ui/src/card",
+        "packages/ui/src/cascader",
+        "packages/ui/src/collapse",
+        "packages/ui/src/descriptions",
+        "packages/ui/src/empty",
+        "packages/ui/src/form",
+        "packages/ui/src/list",
+        "packages/ui/src/listy",
+        "packages/ui/src/progress",
+        "packages/ui/src/qr-code",
+        "packages/ui/src/skeleton",
+        "packages/ui/src/statistic",
+        "packages/ui/src/table",
+        "packages/ui/src/tabs",
+        "packages/ui/src/timeline",
+        "packages/ui/src/transfer",
+        "packages/ui/src/tree",
+        "packages/ui/src/tree-select"
+      ],
+      "assignment": null,
+      "evidence": [
+        "docs/audit/2026-11-03-docs-demo-polish.md",
+        "docs/audit/evidence/issue-86-demo-review.json",
+        "docs/audit/evidence/issue-86-focused-checks.json"
+      ],
+      "existingWork": [],
+      "issues": [],
+      "verification": {
+        "passed": true,
+        "scope": [
+          "packages/ui/src/calendar",
+          "packages/ui/src/card",
+          "packages/ui/src/cascader",
+          "packages/ui/src/collapse",
+          "packages/ui/src/descriptions",
+          "packages/ui/src/empty",
+          "packages/ui/src/form",
+          "packages/ui/src/list",
+          "packages/ui/src/listy",
+          "packages/ui/src/progress",
+          "packages/ui/src/qr-code",
+          "packages/ui/src/skeleton",
+          "packages/ui/src/statistic",
+          "packages/ui/src/table",
+          "packages/ui/src/tabs",
+          "packages/ui/src/timeline",
+          "packages/ui/src/transfer",
+          "packages/ui/src/tree",
+          "packages/ui/src/tree-select"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "Owned component behavior regressions and actual Demo interaction review",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <focused style fixes and imported UI source config>",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "evidence": [
+          "docs/audit/evidence/issue-86-demo-review.json",
+          "docs/audit/evidence/issue-86-focused-checks.json"
+        ],
+        "limits": "Architecture/scoped review only. Full frozen acceptance and release are not implied."
+      }
+    },
+    {
+      "id": "SHARED:docs-demo-feedback",
+      "kind": "shared",
+      "ref": "docs-demo-feedback",
+      "title": "Issue 86: feedback Demo review",
+      "architectureStatus": "done",
+      "acceptanceStatus": "not_started",
+      "workDependencies": [],
+      "owns": [
+        "packages/ui/src/alert",
+        "packages/ui/src/app",
+        "packages/ui/src/config-provider",
+        "packages/ui/src/carousel",
+        "packages/ui/src/date-picker",
+        "packages/ui/src/time-picker",
+        "packages/ui/src/drawer",
+        "packages/ui/src/dropdown",
+        "packages/ui/src/image",
+        "packages/ui/src/message",
+        "packages/ui/src/modal",
+        "packages/ui/src/notification",
+        "packages/ui/src/popconfirm",
+        "packages/ui/src/popover",
+        "packages/ui/src/result",
+        "packages/ui/src/spin",
+        "packages/ui/src/tooltip",
+        "packages/ui/src/tour",
+        "packages/ui/src/upload",
+        "packages/ui/src/watermark"
+      ],
+      "assignment": null,
+      "evidence": [
+        "docs/audit/2026-11-03-docs-demo-polish.md",
+        "docs/audit/evidence/issue-86-demo-review.json",
+        "docs/audit/evidence/issue-86-focused-checks.json"
+      ],
+      "existingWork": [],
+      "issues": [],
+      "verification": {
+        "passed": true,
+        "scope": [
+          "packages/ui/src/alert",
+          "packages/ui/src/app",
+          "packages/ui/src/config-provider",
+          "packages/ui/src/carousel",
+          "packages/ui/src/date-picker",
+          "packages/ui/src/time-picker",
+          "packages/ui/src/drawer",
+          "packages/ui/src/dropdown",
+          "packages/ui/src/image",
+          "packages/ui/src/message",
+          "packages/ui/src/modal",
+          "packages/ui/src/notification",
+          "packages/ui/src/popconfirm",
+          "packages/ui/src/popover",
+          "packages/ui/src/result",
+          "packages/ui/src/spin",
+          "packages/ui/src/tooltip",
+          "packages/ui/src/tour",
+          "packages/ui/src/upload",
+          "packages/ui/src/watermark"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "Owned component behavior regressions and actual Demo interaction review",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <focused style fixes and imported UI source config>",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "evidence": [
+          "docs/audit/evidence/issue-86-demo-review.json",
+          "docs/audit/evidence/issue-86-focused-checks.json"
+        ],
+        "limits": "Architecture/scoped review only. Full frozen acceptance and release are not implied."
+      }
+    },
+    {
+      "id": "SHARED:docs-site-polish",
+      "kind": "shared",
+      "ref": "docs-site-polish",
+      "title": "Issues 86/87: navigation, themes, masonry and preview shell",
+      "architectureStatus": "done",
+      "acceptanceStatus": "not_started",
+      "workDependencies": [],
+      "owns": [
+        "packages/docs/src",
+        "packages/docs/tooling/content",
+        "packages/docs/tests",
+        "packages/docs/content/guide/i18n.md",
+        "packages/docs/content/guide/styles.md",
+        "packages/docs/content/guide/tree-shaking.md",
+        "packages/docs/content/guide/getting-started.md",
+        "packages/docs/content/guide/theming.md",
+        "packages/docs/content/guide/themes.md",
+        "packages/docs/content/guide/compatibility.md",
+        "packages/docs/content/guide/icons.md"
+      ],
+      "assignment": null,
+      "evidence": [
+        "docs/audit/2026-11-03-docs-demo-polish.md",
+        "docs/audit/evidence/issue-86-site-review.json",
+        "docs/audit/evidence/issue-86-focused-checks.json"
+      ],
+      "existingWork": [],
+      "issues": [],
+      "verification": {
+        "passed": true,
+        "scope": [
+          "packages/docs/src",
+          "packages/docs/tooling/content",
+          "packages/docs/tests",
+          "packages/docs/content/guide/i18n.md",
+          "packages/docs/content/guide/styles.md",
+          "packages/docs/content/guide/tree-shaking.md",
+          "packages/docs/content/guide/getting-started.md",
+          "packages/docs/content/guide/theming.md",
+          "packages/docs/content/guide/themes.md",
+          "packages/docs/content/guide/compatibility.md",
+          "packages/docs/content/guide/icons.md"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "Docs navigation, preview, TOC and site browser focused regressions",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "pnpm --filter @apollo-design/docs run typecheck",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "evidence": [
+          "docs/audit/evidence/issue-86-site-review.json",
+          "docs/audit/evidence/issue-86-focused-checks.json"
+        ],
+        "limits": "Architecture/scoped review only. Full frozen acceptance and release are not implied."
       }
     }
   ],
   "finalAcceptance": {
-    "status": "passed",
-    "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-    "gates": [
-      {
-        "dimension": "api",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "types",
-          "coverage",
-          "build",
-          "consumer"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "tokens",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "coverage",
-          "visual",
-          "consumer-browser"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "styles",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "build",
-          "visual",
-          "consumer",
-          "consumer-browser"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "unit",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "coverage"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "interaction",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "coverage",
-          "consumer-browser",
-          "docs-browser"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "types",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "types",
-          "docs-types"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "a11y",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "coverage",
-          "docs-browser"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "visual",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "visual"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      },
-      {
-        "dimension": "docs",
-        "status": "passed",
-        "sourceCommit": "479e5f6959ca8c4d996dceb7ecb038e1ab7f3fd5",
-        "checks": [
-          "build",
-          "docs-types",
-          "docs-tests",
-          "docs-browser"
-        ],
-        "evidence": [
-          "docs/audit/evidence/v0.1.8-final-acceptance.json",
-          "docs/audit/2026-11-02-v0.1.8-release.md"
-        ]
-      }
-    ]
+    "status": "in_progress",
+    "sourceCommit": null,
+    "gates": []
   }
 }

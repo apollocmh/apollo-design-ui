@@ -1,6 +1,6 @@
 {
   "name": "@apollo-design/icons",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 antd 图标像素一致。",
   "license": "MIT",
   "type": "module",
