@@ -1,0 +1,10 @@
+/* Keep grouped thumbnails distinct when the Demo canvas wraps to a narrow width. */
+.image-demo-gallery,
+.image-demo-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}

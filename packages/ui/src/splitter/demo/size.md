@@ -5,4 +5,4 @@ title:
   en-US: Size
 ---
 
-`default-size` 支持百分比与像素，`min` / `max` 限制拖拽范围；下方实时显示 `resize` 事件的像素尺寸。
+`default-size`、`min`、`max` 使用数值表示像素（例如 `:min="100"`），使用百分比字符串表示比例（例如 `min="20%"`）。下方实时显示 `resize` 事件的像素尺寸。

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './thumbnail-groups.css';
 import {
   Button,
   Image,
@@ -43,15 +44,17 @@ function recordGroup(info: TransformInfo) {
     <p>Open a preview and rotate, flip or zoom its image. Closing resets the transform and emits that snapshot.</p>
     <Button html-type="button" @mousedown.prevent @click="cycleBounds">Cycle preview bounds</Button>
     <p>Current bounds: <output data-transform-demo-bounds>{{ boundsMode === 1 ? '1–1.05' : boundsMode === 2 ? '1.15–2' : 'default' }}</output>. A bound change applies on the next transform action.</p>
-    <Image :src="first" alt="Transform event image" :width="180" :height="110"
+    <div class="image-demo-gallery">
+<Image :src="first" alt="Transform event image" :width="180" :height="110"
       :preview="preview" data-transform-demo-image @transform="recordImage" @transform.once="imageOnce++">
       <template #previewActions="info"><div class="transform-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycleBounds">Cycle preview bounds</Button></div></template>
     </Image>
-    <ImagePreviewGroup :preview="preview" @transform="recordGroup" @transform.once="groupOnce++">
+    <ImagePreviewGroup class="image-demo-thumbnails" :preview="preview" @transform="recordGroup" @transform.once="groupOnce++">
       <Image :src="first" alt="Transform event group first" :width="140" :height="86" data-transform-demo-group-first />
       <Image :src="second" alt="Transform event group second" :width="140" :height="86" />
       <template #previewActions="info"><div class="transform-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycleBounds">Cycle preview bounds</Button></div></template>
     </ImagePreviewGroup>
+    </div>
     <p>Image events: {{ imageChanges }} (once: {{ imageOnce }}); group events: {{ groupChanges }} (once: {{ groupOnce }}).</p>
     <pre>{{ last ? JSON.stringify(last, null, 2) : 'No transform yet' }}</pre>
     <output data-image-transform-demo-state hidden>{{ JSON.stringify({ imageChanges, groupChanges, imageOnce, groupOnce, last }) }}</output>

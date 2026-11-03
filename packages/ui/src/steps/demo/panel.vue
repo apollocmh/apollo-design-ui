@@ -10,5 +10,7 @@ const items = [
 </script>
 
 <template>
-  <Steps type="panel" :items="items" :current="1" />
+  <div role="region" aria-label="Scrollable step panels" tabindex="0" style="max-width: 100%; overflow-x: auto">
+    <Steps type="panel" :items="items" :current="1" style="min-width: 600px" />
+  </div>
 </template>

@@ -8,12 +8,14 @@ const InternalPanel = Modal._InternalPanelDoNotUseOrYouWillBeFired;
 const modalTheme = {
   components: {
     Modal: {
-      footerBg: '#f6ffed',
-      contentBg: '#e6fffb',
-      headerBg: '#f9f0ff',
+      footerBg:
+        'color-mix(in srgb, var(--apollo-color-success) 10%, var(--apollo-color-bg-elevated))',
+      contentBg: 'color-mix(in srgb, var(--apollo-color-info) 8%, var(--apollo-color-bg-elevated))',
+      headerBg:
+        'color-mix(in srgb, var(--apollo-color-primary) 12%, var(--apollo-color-bg-elevated))',
       titleLineHeight: 3,
       titleFontSize: 12,
-      titleColor: '#1d39c4',
+      titleColor: 'var(--apollo-color-primary-text)',
     },
   },
 };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd demo/style-class.tsx（classNames/styles 语义槽）
-import { Button, ConfigProvider, Dropdown } from '@apollo-design/ui';
+import { Button, ConfigProvider, Dropdown, Space } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const custom = ref(true);
@@ -13,6 +13,7 @@ const items = [
 
 <template>
   <ConfigProvider :theme="custom ? { components: { Dropdown: { paddingBlock: 9, zIndexPopup: 1500 } } } : undefined">
+    <Space wrap>
     <Button @click="custom = !custom">Change menu spacing</Button>
     <Dropdown
     :menu="{ items }"
@@ -22,5 +23,6 @@ const items = [
   >
       <Button>Open styled actions</Button>
     </Dropdown>
+    </Space>
   </ConfigProvider>
 </template>

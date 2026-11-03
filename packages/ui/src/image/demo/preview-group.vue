@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './thumbnail-groups.css';
 import { Button, Image } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -17,9 +18,9 @@ const reset = () => {
 </script>
 
 <template>
-  <section data-image-group-ownership>
+  <section data-image-group-ownership style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px">
     <Button html-type="button" @click="reset">Reset group</Button>
-    <PreviewGroup v-model:current="current">
+    <PreviewGroup class="image-demo-thumbnails" v-model:current="current">
       <Image v-for="i in images" :key="i" :alt="`Group image ${i}`" :width="200" :src="src" />
       <template #previewImage="{ originNode }">
         <component :is="originNode" />

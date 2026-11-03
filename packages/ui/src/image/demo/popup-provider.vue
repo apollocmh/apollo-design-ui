@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './thumbnail-groups.css';
 import {
   Button,
   ConfigProvider,
@@ -54,19 +55,21 @@ function cycle() {
     <p>Navigation icon direction: <output data-popup-demo-direction>{{ direction }}</output>.</p>
     <p>Current provider: <output data-popup-demo-mode>{{ labels[phase] }}</output>. Open either preview; its toolbar can update the same provider while it stays open.</p>
     <ConfigProvider :components="components" :direction="direction">
-      <Image :src="source" alt="Provider standalone preview" :width="160" :height="94"
+      <div class="image-demo-gallery">
+<Image :src="source" alt="Provider standalone preview" :width="160" :height="94"
         :class-names="{ popup: { root: 'popup-demo-local' } }" data-popup-demo-image>
         <template #previewActions="info">
           <div class="popup-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycle">Cycle popup provider</Button><Button html-type="button" @click="toggleDirection">Toggle provider icon direction</Button></div>
         </template>
       </Image>
-      <ImagePreviewGroup :class-names="{ popup: { root: 'popup-demo-local' } }">
+      <ImagePreviewGroup class="image-demo-thumbnails" :class-names="{ popup: { root: 'popup-demo-local' } }">
         <Image :src="source" alt="Provider group first" :width="140" :height="82" data-popup-demo-group />
         <Image :src="source" alt="Provider group second" :width="140" :height="82" />
         <template #previewActions="info">
           <div class="popup-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycle">Cycle popup provider</Button><Button html-type="button" @click="toggleDirection">Toggle provider icon direction</Button></div>
         </template>
       </ImagePreviewGroup>
+    </div>
     </ConfigProvider>
   </section>
 </template>

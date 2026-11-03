@@ -19,7 +19,7 @@ const items = [
     <Tabs
       default-active-key="1"
       :items="items"
-      :tab-bar-extra-content="{ left: h('span', 'Left extra action'), right: h(Button, null, () => 'Right extra action') }"
+      :tab-bar-extra-content="{ left: h('span', { style: { marginInlineEnd: '12px' } }, 'Left extra action'), right: h(Button, null, () => 'Right extra action') }"
     />
   </div>
 </template>

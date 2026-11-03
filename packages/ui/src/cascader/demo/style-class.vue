@@ -38,23 +38,27 @@ const classNames = computed<Record<string, unknown>>(() => ({
 const styles = computed<Record<string, unknown>>(() => ({
   root: {
     borderRadius: emphasize.value ? '14px' : '8px',
-    borderColor: emphasize.value ? '#95de64' : '#d9d9d9',
-    background: emphasize.value ? '#f6ffed' : '#ffffff',
+    borderColor: emphasize.value ? 'var(--apollo-color-success-border)' : 'var(--apollo-color-border)',
+    background: emphasize.value ? 'var(--apollo-color-success-bg)' : 'var(--apollo-color-bg-container)',
   },
   suffix: {
-    color: emphasize.value ? '#389e0d' : '#8c8c8c',
+    color: emphasize.value ? 'var(--apollo-color-success-text)' : 'var(--apollo-color-text-tertiary)',
   },
   content: {
     fontWeight: emphasize.value ? '600' : '400',
-    color: emphasize.value ? '#135200' : '#1f1f1f',
+    color: emphasize.value ? 'var(--apollo-color-success-text)' : 'var(--apollo-color-text)',
+  },
+  placeholder: {
+    color: emphasize.value ? 'var(--apollo-color-success-text)' : 'var(--apollo-color-text-secondary)',
   },
   popup: {
     list: {
-      backgroundColor: emphasize.value ? '#f6ffed' : '#ffffff',
+      backgroundColor: emphasize.value ? 'var(--apollo-color-success-bg)' : 'var(--apollo-color-bg-elevated)',
       padding: '6px',
     },
     listItem: {
       borderRadius: '8px',
+      color: 'var(--apollo-color-text)',
     },
   },
 }));
@@ -80,7 +84,7 @@ const styles = computed<Record<string, unknown>>(() => ({
 
 <style>
 .cascader-style-class-popup {
-  border: 1px solid #b7eb8f;
+  border: 1px solid var(--apollo-color-success-border);
 }
 
 .cascader-style-class-list {

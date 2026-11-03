@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './thumbnail-groups.css';
 import { compactAlgorithm, darkAlgorithm } from '@apollo-design/theme';
 import {
   Button,
@@ -45,7 +46,7 @@ const src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="
           <template #previewActions="info"><component :is="info.originNode" /><div class="image-token-controls"><Button html-type="button" @mousedown.prevent @click="change">Cycle component tokens</Button><output>Phase {{ phase }}</output></div></template>
           <template #previewImage="info"><figure class="image-token-editor"><component :is="info.originNode" /><Input aria-label="Token preview note" /></figure></template>
         </Image>
-        <ImagePreviewGroup>
+        <ImagePreviewGroup class="image-demo-thumbnails">
           <Image :src="src" alt="Themed group first" :width="120" data-token-group />
           <Image :src="src" alt="Themed group second" :width="120" />
           <template #previewActions="info"><component :is="info.originNode" /><div class="image-token-controls"><Button html-type="button" @mousedown.prevent @click="change">Cycle component tokens</Button><output>Phase {{ phase }}</output></div></template>

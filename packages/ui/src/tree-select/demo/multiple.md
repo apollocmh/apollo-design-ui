@@ -1,4 +1,4 @@
 ---
 order: 110
 ---
-多选与标签（`multiple`），`allowClear` 一键清空。\n
+多选与标签（`multiple`），`allowClear` 一键清空。

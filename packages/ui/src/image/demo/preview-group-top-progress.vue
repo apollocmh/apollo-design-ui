@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './thumbnail-groups.css';
 import { Button, Image, ImagePreviewGroup, Input, type TransformInfo } from '@apollo-design/ui';
 import { computed, ref, shallowRef } from 'vue';
 
@@ -24,7 +25,7 @@ const second = svg('#297373', 'Second');
       <Button html-type="button" @mousedown.prevent @click="empty = !empty">Empty preview slots</Button>
       <Button html-type="button" @mousedown.prevent @click="revision++">Update preview sources</Button>
     </p>
-    <ImagePreviewGroup v-model:open="open" v-model:current="current" @transform="info => transformed = info">
+    <ImagePreviewGroup class="image-demo-thumbnails" v-model:open="open" v-model:current="current" @transform="info => transformed = info">
       <Image :src="first" :alt="`Preview slot first ${revision}`" :width="180" :height="105" data-preview-demo-first />
       <Image :src="second" alt="Preview slot second" :width="180" :height="105" />
       <template v-if="custom" #previewImage="info">

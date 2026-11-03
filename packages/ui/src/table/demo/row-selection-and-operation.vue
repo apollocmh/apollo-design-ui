@@ -68,6 +68,6 @@ function batchDelete(): void {
         {{ hasSelected ? `已选择 ${selectedRowKeys.length} 项` : '未选择' }}
       </span>
     </div>
-    <Table :columns="columns" :data-source="data" :row-selection="rowSelection" />
+    <Table :columns="columns" :data-source="data" :row-selection="rowSelection" :scroll="{ x: 'max-content' }" />
   </div>
 </template>

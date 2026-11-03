@@ -135,6 +135,29 @@ try {
     assert.match(await target.innerText(), /content1/);
   });
 
+  await run('Narrow dark Table keeps row selection and Delete reachable by keyboard', async () => {
+    await page.setViewportSize({ width: 390, height: 960 });
+    await go('table', 'row-selection-and-operation', 'default', 'dark');
+    const row = page.locator('.apollo-table-tbody > tr[data-row-key="1"]');
+    await row.getByRole('checkbox').check();
+    assert.match(await page.locator('.demo-renderer').innerText(), /已选择 1 项/);
+    const remove = row.getByRole('button', { name: 'Delete', exact: true });
+    await remove.focus();
+    assert.equal(await remove.evaluate((node) => node === document.activeElement), true);
+    const viewport = await page.locator('.apollo-table-content').boundingBox();
+    const button = await remove.boundingBox();
+    assert.ok(viewport && button);
+    assert.ok(button.x >= viewport.x && button.x + button.width <= viewport.x + viewport.width + 1);
+    assert.equal(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+      true,
+    );
+    await page.screenshot({ path: path.join(evidence, 'issue86-table-selection-dark-390.png') });
+    await page.keyboard.press('Enter');
+    assert.equal(await row.count(), 0);
+    assert.match(await page.locator('.demo-renderer').innerText(), /未选择/);
+  });
+
   assert.deepEqual(errors, [], 'No runtime, hydration or console errors');
 } finally {
   fs.writeFileSync(

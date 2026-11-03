@@ -1,4 +1,4 @@
 ---
 order: 105
 ---
-最简单的用法（`v-model:value` 绑定）。\n
+最简单的用法（`v-model:value` 绑定）。

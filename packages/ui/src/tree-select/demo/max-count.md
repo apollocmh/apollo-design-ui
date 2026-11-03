@@ -1,4 +1,4 @@
 ---
 order: 109
 ---
-限制最大选中数量（`maxCount`，多选 / SHOW_CHILD 下生效）。\n
+限制最大选中数量（`maxCount`，多选 / SHOW_CHILD 下生效）。

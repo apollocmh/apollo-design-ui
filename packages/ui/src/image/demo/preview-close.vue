@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './thumbnail-groups.css';
 import { Button, Image, ImagePreviewGroup, Input, type PreviewConfig } from '@apollo-design/ui';
 import { computed, h, ref } from 'vue';
 
@@ -24,18 +25,20 @@ function cycle() {
   <section data-image-close-demo>
     <Button html-type="button" data-close-demo-cycle @mousedown.prevent @click="cycle">Cycle close control</Button>
     <p>Close control: <output data-close-demo-phase>{{ labels[phase] }}</output>. Escape and the mask can still close a preview when its close button is hidden.</p>
-    <Image v-model:open="imageOpen" :src="source" alt="Close control image" :width="160" :height="94" :preview="preview" data-close-demo-image>
+    <div class="image-demo-gallery">
+<Image v-model:open="imageOpen" :src="source" alt="Close control image" :width="160" :height="94" :preview="preview" data-close-demo-image>
       <template v-if="phase === 0 || phase === 1" #previewCloseIcon><span v-if="phase === 0" aria-hidden="true" data-close-demo-icon="slot">×</span></template>
       <template #previewImage="info"><figure class="close-demo-frame"><component :is="info.originNode" /><Input v-model:value="note" aria-label="Close control note" /></figure></template>
       <template #previewActions="info"><div class="close-demo-actions"><component :is="info.originNode" /><Button html-type="button" @mousedown.prevent @click="cycle">Cycle close control</Button></div></template>
     </Image>
-    <ImagePreviewGroup v-model:open="groupOpen" :preview="preview">
+    <ImagePreviewGroup class="image-demo-thumbnails" v-model:open="groupOpen" :preview="preview">
       <Image :src="source" alt="Close control group first" :width="140" :height="82" data-close-demo-group />
       <Image :src="source" alt="Close control group second" :width="140" :height="82" />
       <template v-if="phase === 0 || phase === 1" #previewCloseIcon><span v-if="phase === 0" aria-hidden="true" data-close-demo-icon="slot">×</span></template>
       <template #previewImage="info"><figure class="close-demo-frame"><component :is="info.originNode" /><Input v-model:value="note" aria-label="Close control note" /></figure></template>
       <template #previewActions="info"><div class="close-demo-actions"><component :is="info.originNode" /><Button html-type="button" @mousedown.prevent @click="cycle">Cycle close control</Button></div></template>
     </ImagePreviewGroup>
+    </div>
     <output data-close-demo-state hidden>{{ JSON.stringify({ phase, imageOpen, groupOpen, note }) }}</output>
   </section>
 </template>
