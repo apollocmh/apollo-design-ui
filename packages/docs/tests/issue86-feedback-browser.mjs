@@ -11,6 +11,7 @@ const selectedCases = new Set((process.env.FEEDBACK_CASES ?? '').split(',').filt
 const wants = (name) => selectedCases.size === 0 || selectedCases.has(name);
 const results = [];
 const errors = [];
+let notificationProgress = null;
 const { browser } = await launchBrowser();
 try {
   const page = await browser.newPage({ viewport: { width: 440, height: 900 }, locale: 'zh-CN' });
@@ -122,6 +123,33 @@ try {
     await page.getByRole('button', { name: 'Show custom progress color', exact: true }).click();
     const progress = page.locator('.apollo-notification-notice-progress');
     await progress.waitFor();
+    const progressNode = await progress.elementHandle();
+    notificationProgress = {
+      before: await progress.evaluate((node) => {
+        const notice = node.closest('.apollo-notification-notice');
+        return { className: notice.className, opacity: getComputedStyle(notice).opacity };
+      }),
+    };
+    // A visible native <progress> can still belong to the first, almost transparent
+    // notification frame. Wait for the real entrance to finish before testing its color.
+    await page.waitForFunction((node) => {
+      const notice = node.closest('.apollo-notification-notice');
+      if (!node.isConnected || /-fade-(appear|enter|leave)(-|\b)/.test(notice.className))
+        return false;
+      for (let ancestor = node; ancestor; ancestor = ancestor.parentElement) {
+        const style = getComputedStyle(ancestor);
+        if (
+          Number(style.opacity) !== 1 ||
+          style.visibility !== 'visible' ||
+          style.display === 'none' ||
+          ancestor
+            .getAnimations()
+            .some((animation) => animation.pending || animation.playState === 'running')
+        )
+          return false;
+      }
+      return node.value > 0;
+    }, progressNode);
     const progressStyle = await progress.evaluate((node) => ({
       background: getComputedStyle(node).backgroundImage,
       custom: getComputedStyle(node).getPropertyValue('--apollo-notification-progress-bg'),
@@ -129,7 +157,26 @@ try {
     }));
     assert.ok(progressStyle.success.length > 0);
     assert.ok(progressStyle.custom.includes(progressStyle.success));
-    const barPixels = await sharp(await progress.screenshot())
+    notificationProgress.settled = await progress.evaluate((node) => {
+      const notice = node.closest('.apollo-notification-notice');
+      return {
+        className: notice.className,
+        opacity: getComputedStyle(notice).opacity,
+        transform: getComputedStyle(notice).transform,
+        rect: node.getBoundingClientRect().toJSON(),
+        value: node.value,
+        ...Object.fromEntries(
+          ['--apollo-notification-progress-bg', '--apollo-color-success'].map((name) => [
+            name,
+            getComputedStyle(node).getPropertyValue(name),
+          ]),
+        ),
+      };
+    });
+    const progressImage = await progress.screenshot();
+    notificationProgress.image = `${evidence}.notification-progress.png`;
+    fs.writeFileSync(notificationProgress.image, progressImage);
+    const barPixels = await sharp(progressImage)
       .removeAlpha()
       .raw()
       .toBuffer({ resolveWithObject: true });
@@ -138,6 +185,7 @@ try {
         Math.floor(barPixels.info.width / 4)) *
       barPixels.info.channels;
     const gradientPixel = [...barPixels.data.subarray(pixelOffset, pixelOffset + 3)];
+    notificationProgress.gradientPixel = gradientPixel;
     assert.ok(
       gradientPixel[1] > gradientPixel[0] + 20 && gradientPixel[1] > gradientPixel[2] + 20,
       `Expected the visible success gradient, got ${gradientPixel}`,
@@ -237,7 +285,7 @@ try {
 } finally {
   fs.writeFileSync(
     evidence,
-    `${JSON.stringify({ base, browser: browser.version(), results, errors }, null, 2)}\n`,
+    `${JSON.stringify({ base, browser: browser.version(), results, errors, notificationProgress }, null, 2)}\n`,
   );
   await browser.close();
 }
