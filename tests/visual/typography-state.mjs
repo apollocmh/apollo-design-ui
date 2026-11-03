@@ -20,11 +20,16 @@ export async function prepareTypographyVisual(page, variant) {
     const tooltip = page.getByRole('tooltip');
     await tooltip.waitFor({ state: 'visible' });
     assert.equal(await tooltip.textContent(), 'Copy the payload');
+    // This scene owns page timers. Pause before creating the 3000ms feedback
+    // timer so CI/axe latency cannot consume the state intended for capture.
+    const current = await page.evaluate(() => Date.now());
+    await page.clock.pauseAt(new Date(current + 50));
     await copy.click();
     await page.waitForFunction(() =>
       Boolean(document.querySelector('.apollo-typography-copy-success')),
     );
     assert.equal(await page.evaluate(() => window.typographyVisualCopied), 'Clipboard payload');
+    await page.clock.runFor(1);
     // Move focus to a concrete external target; blur-to-body has no relatedTarget.
     await stage
       .locator('h1')
@@ -34,6 +39,8 @@ export async function prepareTypographyVisual(page, variant) {
         n.focus();
       });
     await page.mouse.move(0, 0);
+    // Include the 100ms hover delay and Tooltip's 1000ms motion deadline.
+    await page.clock.runFor(1200);
     try {
       await tooltip.waitFor({ state: 'hidden' });
     } catch (error) {
@@ -108,8 +115,14 @@ export async function prepareTypographyVisual(page, variant) {
     );
   }
   await page.addScriptTag({ path: createRequire(import.meta.url).resolve('axe-core/axe.min.js') });
-  const violations = await stage.evaluate(async (n) =>
-    (await window.axe.run(n)).violations.map((v) => ({
+  await stage.evaluate((n) => {
+    window.typographyVisualAudit = window.axe.run(n);
+  });
+  // axe yields rule results through zero-delay timers. Start the audit before
+  // advancing those timers, while preserving the copy-feedback expiry timer.
+  if (variant === 'copy-feedback') await page.clock.runFor(100);
+  const violations = await page.evaluate(async () =>
+    (await window.typographyVisualAudit).violations.map((v) => ({
       id: v.id,
       nodes: v.nodes.map((x) => x.failureSummary),
     })),
@@ -125,10 +138,6 @@ export async function prepareTypographyVisual(page, variant) {
   }));
   assert.ok(state.scrollWidth <= state.width + 1, JSON.stringify(state));
   if (variant === 'copy-feedback') {
-    // The production success state expires after 3000ms. Pause real page timers
-    // after validating it so the shared screenshot settlement cannot erase it.
-    const current = await page.evaluate(() => Date.now());
-    await page.clock.pauseAt(new Date(current + 50));
     assert.equal(await stage.locator('.apollo-typography-copy-success').count(), 1);
   }
   return state;
