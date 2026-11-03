@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image } from '@apollo-design/ui';
+import { Button, Image } from '@apollo-design/ui';
 import { computed, h, ref, shallowRef } from 'vue';
 
 const svgSource = (color: string, label: string) =>
@@ -87,10 +87,10 @@ function onImageOpenUpdate(open: boolean) {
 
 <template>
   <section data-image-render-demo :data-image-event-state="JSON.stringify(eventState)">
-    <p>
-      <button type="button" @mousedown.prevent @click="revision++">Update image content</button>
-      <button type="button" @mousedown.prevent @click="empty = !empty">Empty image render slot</button>
-      <button type="button" @mousedown.prevent @click="show = !show">Toggle image render slot</button>
+    <p style="display: flex; flex-wrap: wrap; gap: 8px">
+      <Button html-type="button" @mousedown.prevent @click="revision++">Update image content</Button>
+      <Button html-type="button" @mousedown.prevent @click="empty = !empty">Empty image render slot</Button>
+      <Button html-type="button" @mousedown.prevent @click="show = !show">Toggle image render slot</Button>
     </p>
     <Image :alt="alt" :width="width" :height="height" :src="src" :title="`Image title ${revision}`" :preview="false"
       data-image-event-root role="group" aria-label="Custom image event group" :tabindex="0"
@@ -113,14 +113,14 @@ function onImageOpenUpdate(open: boolean) {
     <p>Keydowns: <output data-image-event-keydowns>{{ keydowns }}</output> (<output data-image-event-keydown-once>{{ keydownOnce }}</output> once); last event: <output data-image-event-keydown-type>{{ eventState.lastKeydownType }}</output>, key: <output data-image-event-key>{{ eventState.lastKey }}</output>.</p>
     <p>Preview open updates: <output data-image-event-open-updates>{{ openUpdates }}</output>. Preview is disabled; the input keeps its own click and keyboard events.</p>
     <section data-image-rich-preview>
-      <p><button type="button" @click="richCover = !richCover">Toggle interactive cover</button></p>
+      <p><Button html-type="button" @click="richCover = !richCover">Toggle interactive cover</Button></p>
       <Image v-model:open="richOpened" :src="firstSource" alt="Rich preview image" :width="200" :preview="richPreview">
         <template #imageRender="{ originNode }">
           <figure class="image-render-frame">
             <component :is="originNode" />
             <figcaption>Preview the image and edit its caption.</figcaption>
             <input v-model="richDraft" aria-label="Preview thumbnail caption" />
-            <button type="button" @click="richSaved++">Save thumbnail caption</button>
+            <Button html-type="button" @click="richSaved++">Save thumbnail caption</Button>
           </figure>
         </template>
       </Image>

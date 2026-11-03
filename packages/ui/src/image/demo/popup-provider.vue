@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  Button,
   ConfigProvider,
   type ConfigProviderProps,
   Image,
@@ -46,22 +47,24 @@ function cycle() {
 
 <template>
   <section data-image-popup-provider-demo>
-    <button type="button" @mousedown.prevent @click="cycle">Cycle popup provider</button>
-    <button type="button" @mousedown.prevent @click="toggleDirection">Toggle provider icon direction</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+    <Button html-type="button" @mousedown.prevent @click="cycle">Cycle popup provider</Button>
+    <Button html-type="button" @mousedown.prevent @click="toggleDirection">Toggle provider icon direction</Button>
+    </div>
     <p>Navigation icon direction: <output data-popup-demo-direction>{{ direction }}</output>.</p>
     <p>Current provider: <output data-popup-demo-mode>{{ labels[phase] }}</output>. Open either preview; its toolbar can update the same provider while it stays open.</p>
     <ConfigProvider :components="components" :direction="direction">
       <Image :src="source" alt="Provider standalone preview" :width="160" :height="94"
         :class-names="{ popup: { root: 'popup-demo-local' } }" data-popup-demo-image>
         <template #previewActions="info">
-          <div class="popup-demo-toolbar"><component :is="info.originNode" /><button type="button" @click="cycle">Cycle popup provider</button><button type="button" @click="toggleDirection">Toggle provider icon direction</button></div>
+          <div class="popup-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycle">Cycle popup provider</Button><Button html-type="button" @click="toggleDirection">Toggle provider icon direction</Button></div>
         </template>
       </Image>
       <ImagePreviewGroup :class-names="{ popup: { root: 'popup-demo-local' } }">
         <Image :src="source" alt="Provider group first" :width="140" :height="82" data-popup-demo-group />
         <Image :src="source" alt="Provider group second" :width="140" :height="82" />
         <template #previewActions="info">
-          <div class="popup-demo-toolbar"><component :is="info.originNode" /><button type="button" @click="cycle">Cycle popup provider</button><button type="button" @click="toggleDirection">Toggle provider icon direction</button></div>
+          <div class="popup-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycle">Cycle popup provider</Button><Button html-type="button" @click="toggleDirection">Toggle provider icon direction</Button></div>
         </template>
       </ImagePreviewGroup>
     </ConfigProvider>
@@ -69,6 +72,6 @@ function cycle() {
 </template>
 
 <style scoped>
-.popup-demo-toolbar { display: flex; align-items: center; gap: var(--apollo-margin-xs); }
+.popup-demo-toolbar { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--apollo-margin-xs); }
 .popup-demo-toolbar > button { color: var(--apollo-color-text); background: var(--apollo-color-bg-container); }
 </style>

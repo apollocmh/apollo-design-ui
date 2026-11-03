@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd demo/item.tsx
-import { Dropdown } from '@apollo-design/ui';
+import { Button, Dropdown } from '@apollo-design/ui';
 
 const items = [
   { key: '0', label: '1st menu item' },
@@ -11,8 +11,8 @@ const items = [
 
 <template>
   <Dropdown :menu="{ items }">
-    <a class="cursor-pointer" @click.prevent>
+    <Button type="link">
       Hover me
-    </a>
+    </Button>
   </Dropdown>
 </template>

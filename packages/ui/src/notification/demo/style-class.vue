@@ -28,7 +28,7 @@ const showObjectStyle = () => {
 
 <template>
   <component :is="contextHolder" />
-  <Space>
+  <Space wrap>
     <Button @click="showObjectStyle">Object style</Button>
   </Space>
 </template>

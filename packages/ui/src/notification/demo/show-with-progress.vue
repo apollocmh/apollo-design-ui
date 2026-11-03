@@ -4,7 +4,7 @@ import { Button, notification, Space } from '@apollo-design/ui';
 
 const [api, contextHolder] = notification.useNotification();
 
-const openNotification = (pauseOnHover: boolean) => () => {
+const openNotification = (pauseOnHover: boolean) => {
   api.open({
     title: 'Notification Title',
     description:
@@ -17,7 +17,7 @@ const openNotification = (pauseOnHover: boolean) => () => {
 
 <template>
   <component :is="contextHolder" />
-  <Space>
+  <Space wrap>
     <Button type="primary" @click="openNotification(true)">Pause on hover</Button>
     <Button type="primary" @click="openNotification(false)">Don't pause on hover</Button>
   </Space>

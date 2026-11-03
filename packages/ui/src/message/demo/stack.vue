@@ -27,12 +27,12 @@ const openMessage = () => {
 
 <template>
   <component :is="contextHolder" />
-  <Space size="large">
-    <Space>
+  <Space wrap size="large">
+    <Space wrap>
       <span>Enabled: </span>
       <Switch v-model:checked="enabled" aria-label="Enable message stack" />
     </Space>
-    <Space>
+    <Space wrap>
       <span>Threshold: </span>
       <InputNumber
         v-model:value="threshold"
@@ -45,7 +45,7 @@ const openMessage = () => {
     </Space>
   </Space>
   <Divider />
-  <Space>
+  <Space wrap>
     <Button type="primary" @click="openMessage">Open the message box</Button>
     <Button @click="messageApi.destroy()">Destroy all</Button>
   </Space>

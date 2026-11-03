@@ -8,7 +8,7 @@ const placements = ['topLeft', 'top', 'topRight'] as const;
 </script>
 
 <template>
-  <div style="display: flex; gap: 4px; justify-content: center">
+  <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center">
     <Popconfirm
       v-for="placement in placements"
       :key="placement"

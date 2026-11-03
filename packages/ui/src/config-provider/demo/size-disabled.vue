@@ -19,7 +19,7 @@ const Child = {
       h('div', null, [
         h('div', null, `componentSize：${componentSize.value ?? '（未设置）'}`),
         h('div', null, `componentDisabled：${String(componentDisabled.value)}`),
-        h(Space, { style: { marginTop: '12px' } }, () => [
+        h(Space, { wrap: true, style: { marginTop: '12px' } }, () => [
           h(Input, { 'aria-label': '全局禁用输入框', placeholder: '继承 large 与 disabled' }),
           h(Button, null, () => '已禁用按钮'),
         ]),

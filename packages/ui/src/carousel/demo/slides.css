@@ -1,0 +1,5 @@
+/* The sample slides use a fixed blue artwork surface in every theme. */
+.demo-carousel-slides.apollo-carousel .slick-dots li button,
+.demo-carousel-slides.apollo-carousel .slick-dots li.slick-active::after {
+  background: var(--apollo-color-text-light-solid);
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Alert, Button, Collapse, CollapsePanel, Flex } from '@apollo-design/ui';
+import { Alert, Button, Collapse, CollapsePanel, Flex, Input } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const show = ref(true);
@@ -21,7 +21,7 @@ const label = ref('Template content');
     <Collapse :default-active-key="['one']">
       <CollapsePanel key="one" header="Prop header">
         <template v-if="show" #header><strong v-if="!empty">{{ label }}</strong><span v-else class="alert-demo-panel-name">Toggle panel</span></template>
-        <label>Panel state <input aria-label="Panel state" /></label>
+        <label>Panel state <Input aria-label="Panel state" /></label>
       </CollapsePanel>
     </Collapse>
   </Flex>

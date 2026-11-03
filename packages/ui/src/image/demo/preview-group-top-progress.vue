@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image, ImagePreviewGroup, type TransformInfo } from '@apollo-design/ui';
+import { Button, Image, ImagePreviewGroup, Input, type TransformInfo } from '@apollo-design/ui';
 import { computed, ref, shallowRef } from 'vue';
 
 const custom = ref(true);
@@ -19,10 +19,10 @@ const second = svg('#297373', 'Second');
 
 <template>
   <section data-image-preview-slots-demo>
-    <p>
-      <button type="button" @mousedown.prevent @click="custom = !custom">Toggle custom preview slots</button>
-      <button type="button" @mousedown.prevent @click="empty = !empty">Empty preview slots</button>
-      <button type="button" @mousedown.prevent @click="revision++">Update preview sources</button>
+    <p style="display: flex; flex-wrap: wrap; gap: 8px">
+      <Button html-type="button" @mousedown.prevent @click="custom = !custom">Toggle custom preview slots</Button>
+      <Button html-type="button" @mousedown.prevent @click="empty = !empty">Empty preview slots</Button>
+      <Button html-type="button" @mousedown.prevent @click="revision++">Update preview sources</Button>
     </p>
     <ImagePreviewGroup v-model:open="open" v-model:current="current" @transform="info => transformed = info">
       <Image :src="first" :alt="`Preview slot first ${revision}`" :width="180" :height="105" data-preview-demo-first />
@@ -31,14 +31,14 @@ const second = svg('#297373', 'Second');
         <figure v-if="!empty" data-preview-demo-image>
           <component :is="info.originNode" />
           <figcaption>{{ info.alt }} · {{ info.current + 1 }} / {{ info.total }}</figcaption>
-          <input v-model="note" aria-label="Preview caption" />
+          <Input v-model:value="note" aria-label="Preview caption" />
         </figure>
       </template>
       <template v-if="custom" #previewActions="info">
         <section v-if="!empty" data-preview-demo-actions>
           <component :is="info.originNode" />
-          <button type="button" @click="info.actions.reset">Reset preview transform</button>
-          <button type="button" :disabled="info.disabled.zoomIn" @click="info.actions.zoomIn">Custom preview zoom</button>
+          <Button html-type="button" @click="info.actions.reset">Reset preview transform</Button>
+          <Button html-type="button" :disabled="info.disabled.zoomIn" @click="info.actions.zoomIn">Custom preview zoom</Button>
         </section>
       </template>
       <template v-if="custom" #previewCount="info">
@@ -53,7 +53,7 @@ const second = svg('#297373', 'Second');
 <style scoped>
 [data-preview-demo-image] { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 0; padding: var(--apollo-padding-sm); color: var(--apollo-color-text); background: var(--apollo-color-bg-container); }
 [data-preview-demo-image] input { color: var(--apollo-color-text); background: var(--apollo-color-bg-container); }
-[data-preview-demo-actions] { display: flex; align-items: center; gap: 8px; }
+[data-preview-demo-actions] { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; }
 [data-preview-demo-actions] > button { color: var(--apollo-color-text); background: var(--apollo-color-bg-container); }
 [data-preview-demo-count] { padding: var(--apollo-padding-xs); text-align: center; color: var(--apollo-color-text); background: var(--apollo-color-bg-container); }
 </style>

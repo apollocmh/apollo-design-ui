@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { compactAlgorithm, darkAlgorithm } from '@apollo-design/theme';
 import {
+  Button,
   ConfigProvider,
   type ConfigProviderThemeConfig,
   Image,
   ImagePreviewGroup,
+  Input,
 } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
@@ -36,18 +38,18 @@ const src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="
 
 <template>
   <section data-image-token-demo>
-    <button type="button" @mousedown.prevent @click="change">Cycle component tokens</button>
+    <Button html-type="button" @mousedown.prevent @click="change">Cycle component tokens</Button>
     <ConfigProvider :theme="theme">
       <div class="image-token-examples">
         <Image :src="src" alt="Themed single image" :width="160" data-token-image>
-          <template #previewActions="info"><component :is="info.originNode" /><div class="image-token-controls"><button type="button" @mousedown.prevent @click="change">Cycle component tokens</button><output>Phase {{ phase }}</output></div></template>
-          <template #previewImage="info"><figure class="image-token-editor"><component :is="info.originNode" /><input aria-label="Token preview note" /></figure></template>
+          <template #previewActions="info"><component :is="info.originNode" /><div class="image-token-controls"><Button html-type="button" @mousedown.prevent @click="change">Cycle component tokens</Button><output>Phase {{ phase }}</output></div></template>
+          <template #previewImage="info"><figure class="image-token-editor"><component :is="info.originNode" /><Input aria-label="Token preview note" /></figure></template>
         </Image>
         <ImagePreviewGroup>
           <Image :src="src" alt="Themed group first" :width="120" data-token-group />
           <Image :src="src" alt="Themed group second" :width="120" />
-          <template #previewActions="info"><component :is="info.originNode" /><div class="image-token-controls"><button type="button" @mousedown.prevent @click="change">Cycle component tokens</button><output>Phase {{ phase }}</output></div></template>
-          <template #previewImage="info"><figure class="image-token-editor"><component :is="info.originNode" /><input aria-label="Token preview note" /></figure></template>
+          <template #previewActions="info"><component :is="info.originNode" /><div class="image-token-controls"><Button html-type="button" @mousedown.prevent @click="change">Cycle component tokens</Button><output>Phase {{ phase }}</output></div></template>
+          <template #previewImage="info"><figure class="image-token-editor"><component :is="info.originNode" /><Input aria-label="Token preview note" /></figure></template>
         </ImagePreviewGroup>
         <Image :width="160" :height="100" :placeholder="{ progress: { percent: 65 } }" />
       </div>

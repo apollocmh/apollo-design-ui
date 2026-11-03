@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { QuestionCircleOutlined } from '@apollo-design/icons';
-import { Button, Popconfirm, PopconfirmPurePanel } from '@apollo-design/ui';
+import { Button, Input, Popconfirm, PopconfirmPurePanel } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const show = ref(true);
@@ -10,10 +10,10 @@ const count = ref(0);
 
 <template>
   <div>
-    <p>
-      <button @click="show = !show">Toggle native icon slot</button>
-      <button @click="empty = !empty">Empty native icon slot</button>
-      <button @click="count++">Update native icon</button>
+    <p style="display: flex; flex-wrap: wrap; gap: 8px">
+      <Button @click="show = !show">Toggle native icon slot</Button>
+      <Button @click="empty = !empty">Empty native icon slot</Button>
+      <Button @click="count++">Update native icon</Button>
     </p>
     <Popconfirm title="Delete the task" description="Are you sure to delete this task?">
       <Button danger>Delete with native icon</Button>
@@ -25,7 +25,7 @@ const count = ref(0);
       <template v-if="show" #icon>
         <template v-if="!empty"><QuestionCircleOutlined style="color: red" /><span data-native-icon-count>{{ count }}</span></template>
       </template>
-      <template #description><input aria-label="Native icon note" /></template>
+      <template #description><Input aria-label="Native icon note" /></template>
     </PopconfirmPurePanel>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider, PopoverPurePanel } from '@apollo-design/ui';
+import { Button, ConfigProvider, PopoverPurePanel } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const content = ['Content', 'Content'];
@@ -13,8 +13,8 @@ const theme = computed(() => ({
 
 <template>
   <ConfigProvider :theme="theme">
-    <button type="button" @click="padding = padding === 12 ? 20 : 12">Padding: {{ padding }}px</button>
-    <div style="display: flex; gap: 16px">
+    <Button style="margin-bottom: 16px" @click="padding = padding === 12 ? 20 : 12">Padding: {{ padding }}px</Button>
+    <div style="display: flex; flex-wrap: wrap; gap: 16px">
       <PopoverPurePanel title="Title" class="demo-current-popover">
         <template #content>
           <div>
@@ -22,7 +22,7 @@ const theme = computed(() => ({
           </div>
         </template>
       </PopoverPurePanel>
-      <PopoverPurePanel title="Title" placement="bottomLeft" style="width: 250px">
+      <PopoverPurePanel title="Title" placement="bottomLeft" style="width: 250px; max-width: 100%">
         <template #content>
           <div>
             <p v-for="(c, i) in content" :key="i">{{ c }}</p>

@@ -13,7 +13,7 @@ const onClose = () => {
 </script>
 
 <template>
-  <div style="position: relative; height: 240px; overflow: hidden; border: 1px solid #ddd">
+  <div style="position: relative; height: 240px; overflow: hidden; border: 1px solid var(--apollo-color-border)">
     <Button type="primary" @click="showDrawer">Open</Button>
     <Drawer
       title="Render in current node"

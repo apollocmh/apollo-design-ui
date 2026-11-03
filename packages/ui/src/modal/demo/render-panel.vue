@@ -11,19 +11,19 @@ const InternalPanel = Modal._InternalPanelDoNotUseOrYouWillBeFired;
     <InternalPanel title="Hello World!" :style="{ width: '100%', height: '200px' }">
       Hello World?!
     </InternalPanel>
-    <InternalPanel type="success" :style="{ width: '200px', height: '150px' }">
+    <InternalPanel type="success" :style="{ width: '200px', maxWidth: '100%', height: '150px' }">
       A good news!
     </InternalPanel>
-    <InternalPanel title="Confirm This?" type="confirm" :style="{ width: '300px', height: '200px' }">
+    <InternalPanel title="Confirm This?" type="confirm" :style="{ width: '300px', maxWidth: '100%', height: '200px' }">
       Some descriptions.
     </InternalPanel>
     <InternalPanel
       title="Custom Footer Render"
-      :style="{ width: '380px', height: '200px' }"
+      :style="{ width: '380px', maxWidth: '100%', height: '200px' }"
     >
       <p>Custom footer content.</p>
       <template #footer>
-        <Space>
+        <Space wrap>
           <Button>Cancel</Button>
           <Button danger type="primary">Custom</Button>
           <Button type="primary">OK</Button>

@@ -1,10 +1,11 @@
 ---
 order: 6
 ---
+
 ## zh-CN
 
-自定义进度条配色（本仓以默认配色渲染 —— ConfigProvider 的组件级 token 覆盖尚未落地）。
+使用 `Notification.progressBg` 组件 Token 设置渐变进度条。通知 Holder 位于局部 `ConfigProvider` 内，弹层继承该主题。
 
 ## en-US
 
-Customize the progress bar color (default color in this build — component-level token override is not implemented yet).
+Customize the progress bar with the `Notification.progressBg` component token. Keep the notification holder inside the local `ConfigProvider` so its overlay inherits that theme.

@@ -1,8 +1,18 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import { Spin } from '../../index';
 
-const rowStyle = { display: 'flex', alignItems: 'center', gap: '16px' };
-const contentStyle = { padding: '50px', background: 'rgba(0, 0, 0, 0.05)', borderRadius: '4px' };
+const rowStyle: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  flexWrap: 'wrap',
+};
+const contentStyle = {
+  padding: '50px',
+  background: 'var(--apollo-color-fill-quaternary)',
+  borderRadius: '4px',
+};
 </script>
 
 <template>

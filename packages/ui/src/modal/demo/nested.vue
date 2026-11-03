@@ -11,7 +11,7 @@ const onShowStatic = () => {
 </script>
 
 <template>
-  <Space>
+  <Space wrap>
     <Button @click="open = !open">{{ open ? 'Close' : 'Open' }}</Button>
     <Button @click="onShowStatic">Static</Button>
   </Space>

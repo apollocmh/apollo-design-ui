@@ -1,27 +1,28 @@
 <script setup lang="ts">
-// 对齐 antd demo/dark.tsx（上游在弹窗里塞了整个 antd 的暗色示例；
-// 本 demo 保留「暗色主题下的 Modal」这一意图，内容用一小组组件代替）
-
 import { darkAlgorithm } from '@apollo-design/theme';
-import { ConfigProvider, Modal, Switch } from '@apollo-design/ui';
+import { Button, ConfigProvider, Modal, Slider, Space, Switch, Timeline } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 const disabled = ref(false);
+const value = ref(30);
+const items = [
+  { content: 'Create a service' },
+  { content: 'Configure the deployment' },
+  { content: 'Complete the operation' },
+];
 </script>
 
 <template>
   <ConfigProvider :theme="{ algorithm: darkAlgorithm }">
-    <Switch v-model:checked="disabled" checked-children="Disabled" un-checked-children="Enabled" />
-    <Modal
-      title="Dark Modal"
-      :open="open"
-      @ok="open = false"
-      @cancel="open = false"
-    >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Slider / Timeline 尚未落地，这里用纯文本代替（意图不变：展示暗色主题下的内容区）。</p>
+    <Button type="primary" @click="open = true">Open dark modal</Button>
+    <Modal title="Dark Modal" :open="open" @ok="open = false" @cancel="open = false">
+      <Space wrap style="margin-bottom: 40px">
+        <span>Disable slider</span>
+        <Switch v-model:checked="disabled" aria-label="Disable dark modal slider" />
+      </Space>
+      <Slider v-model:value="value" :disabled="disabled" aria-label-for-handle="Dark modal value" />
+      <Timeline :items="items" style="margin-top: 24px" />
     </Modal>
   </ConfigProvider>
 </template>

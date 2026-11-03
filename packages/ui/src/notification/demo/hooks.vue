@@ -3,19 +3,24 @@
 
 import type { NotificationPlacement } from '@apollo-design/ui';
 import { Button, Divider, notification, Space } from '@apollo-design/ui';
-import { inject, provide } from 'vue';
+import { defineComponent, h, inject, provide } from 'vue';
 
 const nameKey = Symbol('demo-name');
 provide(nameKey, 'Apollo Design');
-const name = inject(nameKey, 'Default');
+const Greeting = defineComponent({
+  setup() {
+    const name = inject(nameKey, 'Default');
+    return () => h('span', `Hello, ${name}!`);
+  },
+});
 
 const [api, contextHolder] = notification.useNotification();
 
 const openNotification = (placement: NotificationPlacement) => {
   api.info({
     title: `Notification ${placement}`,
-    // 内容在**调用时**求值（演示「能读到组件树的 context」）
-    description: `Hello, ${name}!`,
+    // Holder 中实际挂载的后代组件读取当前示例的 provide。
+    description: h(Greeting),
     placement,
   });
 };
@@ -23,12 +28,12 @@ const openNotification = (placement: NotificationPlacement) => {
 
 <template>
   <component :is="contextHolder" />
-  <Space>
+  <Space wrap>
     <Button type="primary" @click="openNotification('topLeft')">topLeft</Button>
     <Button type="primary" @click="openNotification('topRight')">topRight</Button>
   </Space>
   <Divider />
-  <Space>
+  <Space wrap>
     <Button type="primary" @click="openNotification('bottomLeft')">bottomLeft</Button>
     <Button type="primary" @click="openNotification('bottomRight')">bottomRight</Button>
   </Space>

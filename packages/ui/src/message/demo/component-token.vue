@@ -1,16 +1,26 @@
 <script setup lang="ts">
-// 对齐 antd demo/component-token.tsx
-// ⚠️ antd 用 ConfigProvider 的 theme.components.Message 覆盖组件 token；本仓的
-//    组件级 token 覆盖尚未落地（D25/D83 同判）⇒ 以**默认主题**渲染两个面板，
-//    差异只在 ConfigProvider 那一层（已登记）。
-import { message } from '@apollo-design/ui';
+import { Button, ConfigProvider, Flex, message } from '@apollo-design/ui';
+import { ref } from 'vue';
 
 const InternalPanel = message._InternalPanelDoNotUseOrYouWillBeFired;
+const custom = ref(true);
+const theme = {
+  components: {
+    Message: {
+      contentBg: 'var(--apollo-color-primary-bg)',
+      contentPadding: '16px 24px',
+      zIndexPopup: 2100,
+    },
+  },
+};
 </script>
 
 <template>
-  <div>
-    <component :is="InternalPanel" content="Hello World!" type="error" />
-    <component :is="InternalPanel" content="Hello World!" type="error" />
-  </div>
+  <Flex vertical gap="middle" align="flex-start">
+    <Button @click="custom = !custom">{{ custom ? 'Use default tokens' : 'Use custom tokens' }}</Button>
+    <InternalPanel content="Default message" type="info" />
+    <ConfigProvider :theme="custom ? theme : undefined">
+      <InternalPanel content="Message with current component tokens" type="success" />
+    </ConfigProvider>
+  </Flex>
 </template>

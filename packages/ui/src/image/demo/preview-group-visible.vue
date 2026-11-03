@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image } from '@apollo-design/ui';
+import { Button, Image } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const open = ref(false);
@@ -29,10 +29,10 @@ function onChange(next: number, prev: number) {
 
 <template>
   <section data-image-group-model-demo style="display: flex; flex-direction: column; row-gap: 8px; align-items: flex-start">
-    <button type="button" aria-haspopup="dialog" :aria-expanded="open" @mousedown.prevent @click="open = !open">
+    <Button html-type="button" aria-haspopup="dialog" :aria-expanded="open" @mousedown.prevent @click="open = !open">
       {{ open ? 'Close controlled group preview' : 'Open controlled group preview' }}
-    </button>
-    <button type="button" @mousedown.prevent @click="current = (current + 1) % items.length">Next image from parent</button>
+    </Button>
+    <Button html-type="button" @mousedown.prevent @click="current = (current + 1) % items.length">Next image from parent</Button>
     <PreviewGroup
       v-model:open="open"
       v-model:current="current"

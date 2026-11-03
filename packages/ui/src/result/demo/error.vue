@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 error demo（含 body 内容区）。C8-R2：extra 走 `#extra` 插槽。
-import { Button, Result } from '@apollo-design/ui';
+import { Button, Result, Space } from '@apollo-design/ui';
 </script>
 
 <template>
@@ -10,8 +10,10 @@ import { Button, Result } from '@apollo-design/ui';
     sub-title="Please check and modify the following information before resubmitting."
   >
     <template #extra>
-      <Button type="primary">Go Console</Button>
-      <Button>Buy Again</Button>
+      <Space wrap :size="8" style="justify-content: center">
+        <Button type="primary">Go Console</Button>
+        <Button>Buy Again</Button>
+      </Space>
     </template>
     <div class="desc">
       <p style="font-size: 16px">

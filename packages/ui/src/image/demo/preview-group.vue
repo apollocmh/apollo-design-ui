@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image } from '@apollo-design/ui';
+import { Button, Image } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const src =
@@ -18,12 +18,12 @@ const reset = () => {
 
 <template>
   <section data-image-group-ownership>
-    <button type="button" @click="reset">Reset group</button>
+    <Button html-type="button" @click="reset">Reset group</Button>
     <PreviewGroup v-model:current="current">
       <Image v-for="i in images" :key="i" :alt="`Group image ${i}`" :width="200" :src="src" />
       <template #previewImage="{ originNode }">
         <component :is="originNode" />
-        <button type="button" :disabled="images.length < 2" @click="removeCurrent">Remove current thumbnail</button>
+        <Button html-type="button" :disabled="images.length < 2" @click="removeCurrent">Remove current thumbnail</Button>
       </template>
     </PreviewGroup>
   </section>

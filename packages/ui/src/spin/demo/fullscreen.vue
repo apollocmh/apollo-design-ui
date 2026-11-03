@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted, ref } from 'vue';
-import { Spin } from '../../index';
+import { Button, Input, Spin } from '../../index';
 
 /**
  * 全屏。`fullscreen` 会加一层半透明遮罩并把转圈居中。
@@ -43,8 +43,8 @@ onUnmounted(stop);
 </script>
 
 <template>
-  <button type="button" @click="showLoader">Show fullscreen</button>
+  <Button style="margin-bottom: 16px" @click="showLoader">Show fullscreen</Button>
   <Spin :spinning="spinning" :percent="percent" fullscreen description="Updating">
-    <input v-model="draft" aria-label="Fullscreen loading draft" />
+    <Input v-model:value="draft" aria-label="Fullscreen loading draft" />
   </Spin>
 </template>

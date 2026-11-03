@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // 语义化 classNames / styles：root / image / cover 三个槽位。
 import {
+  Button,
   ConfigProvider,
   type ConfigProviderProps,
   Image,
@@ -142,7 +143,7 @@ const cycleImageProvider = () => {
   <ConfigProvider :components="imageProviderComponents">
     <div class="demo-image-style-wrap" data-image-provider-demo>
       <p>
-        <button type="button" @mousedown.prevent @click="cycleImageProvider">Cycle image provider configuration</button>
+        <Button html-type="button" @mousedown.prevent @click="cycleImageProvider">Cycle image provider configuration</Button>
         <output data-image-provider-state>{{ providerStateLabels[providerStage] }}</output>
       </p>
       <Image
@@ -155,7 +156,7 @@ const cycleImageProvider = () => {
       />
       <p class="demo-image-style-hint">悬停查看自定义遮罩，点击打开预览。</p>
       <section data-image-native-style-demo>
-        <p><button type="button" @mousedown.prevent @click="phase = (phase + 1) % 4">Cycle native image styles</button></p>
+        <p><Button html-type="button" @mousedown.prevent @click="phase = (phase + 1) % 4">Cycle native image styles</Button></p>
         <Image data-image-native-style :width="280" :height="160" :src="src" alt="Native image style example" :preview="false"
           :class="nativeClass" :style="nativeStyle" :class-names="{ root: 'semantic-demo-image-root' }" :styles="nativeSemanticStyles">
           <template #imageRender="{ originNode }">

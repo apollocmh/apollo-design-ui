@@ -11,7 +11,7 @@ const [modal, contextHolder] = Modal.useModal();
 </script>
 
 <template>
-  <Space>
+  <Space wrap>
     <Button @click="modal.confirm({ ...modalConfig, mask: { blur: true } })">blur</Button>
     <Button @click="modal.confirm(modalConfig)">Dimmed mask</Button>
     <Button @click="modal.confirm({ ...modalConfig, mask: false })">No mask</Button>

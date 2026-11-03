@@ -24,7 +24,7 @@ const onEndChange = (value: SingleValue) => {
 
 <template>
   <Flex vertical align="flex-start" gap="small">
-    <Flex gap="small" align="center">
+    <Flex wrap gap="small" align="center">
       <DatePicker
         :value="start"
         :disabled-date="disabledStart"

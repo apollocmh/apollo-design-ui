@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import { Spin } from '../../index';
 
-const rowStyle = { display: 'flex', alignItems: 'center', gap: '16px' };
+const rowStyle: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  flexWrap: 'wrap',
+};
 </script>
 
 <template>

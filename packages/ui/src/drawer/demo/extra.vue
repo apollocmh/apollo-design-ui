@@ -16,7 +16,7 @@ const onClose = () => {
 </script>
 
 <template>
-  <Space>
+  <Space wrap>
     <Radio.Group v-model:value="placement">
       <Radio value="top">top</Radio>
       <Radio value="right">right</Radio>
@@ -28,7 +28,7 @@ const onClose = () => {
   <Drawer title="Drawer Title" :placement="placement" :open="open" @close="onClose">
     <p>Some contents...</p>
     <template #extra>
-      <Space>
+      <Space wrap>
         <Button>Cancel</Button>
         <Button type="primary">Submit</Button>
       </Space>

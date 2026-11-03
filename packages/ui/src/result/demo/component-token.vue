@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, ConfigProvider, Result } from '@apollo-design/ui';
+import { Button, ConfigProvider, Input, Result } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const enabled = ref(true),
@@ -28,7 +28,7 @@ const theme = computed(() =>
   <ConfigProvider :theme="theme">
     <Result class="demo-result-token" status="success" title="操作成功" sub-title="标题、副标题、图标字号与操作区间距均由 Component Token 控制。" :style="native ? { '--apollo-result-title-font-size': '36px' } : undefined">
       <template #extra><Button type="primary">查看详情</Button></template>
-      <label>备注 <input v-model="draft" aria-label="Result token draft" /></label><strong>保留原生内容</strong>
+      <label>备注 <Input v-model:value="draft" aria-label="Result token draft" /></label><strong>保留原生内容</strong>
     </Result>
   </ConfigProvider>
 </template>

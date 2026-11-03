@@ -16,7 +16,7 @@ function changeLanguage(value: unknown) {
 
 <template>
   <div>
-    <Space style="margin-bottom: 16px">
+    <Space wrap style="margin-bottom: 16px">
       <span>locale</span>
       <Select :value="language" :options="options" aria-label="切换示例语言" style="width: 140px" @change="changeLanguage" />
     </Space>

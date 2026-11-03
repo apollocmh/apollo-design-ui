@@ -33,7 +33,7 @@ const Page = {
     :message="{ maxCount: limited ? 1 : 2 }"
     :notification="{ placement: limited ? 'bottomLeft' : 'topLeft' }"
   >
-    <Button @click="limited = !limited">Change current defaults</Button>
+    <Button style="margin-bottom: 12px" @click="limited = !limited">Change current defaults</Button>
     <Page />
   </App>
 </template>

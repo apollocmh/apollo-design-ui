@@ -13,8 +13,8 @@ Auto adjust overflow.
 <script setup lang="ts">
 // 对齐 antd 的 demo/auto-adjust-overflow.tsx（滚动容器内对比 autoAdjustOverflow）
 
+import { Button, Space, Tooltip } from '@apollo-design/ui';
 import { onMounted, ref } from 'vue';
-import { Button, Tooltip } from '@apollo-design/ui';
 
 const block1 = ref<HTMLDivElement | null>(null);
 const block2 = ref<HTMLDivElement | null>(null);
@@ -24,13 +24,13 @@ onMounted(() => {
   if (block2.value) block2.value.scrollLeft = (block2.value.clientWidth || 0) * 0.5;
 });
 
-const blockStyle = {
+const blockStyle: Record<string, string> = {
   overflow: 'auto',
   position: 'relative',
   padding: '24px',
-  border: '1px solid #e9e9e9',
+  border: '1px solid var(--apollo-color-border)',
 };
-const innerStyle = {
+const innerStyle: Record<string, string> = {
   width: '200%',
   display: 'flex',
   flexDirection: 'column',
@@ -41,16 +41,14 @@ const innerStyle = {
 
 <template>
   <div style="font-family: sans-serif; display: flex; flex-direction: column; row-gap: 16px">
-    <Block :get-popup-container="(trigger) => trigger.parentElement as HTMLElement">
-      <template #default="{ autoAdjustOverflow }">
-        <Tooltip placement="left" title="Prompt Text" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
-          <Button>Adjust automatically</Button>
-        </Tooltip>
-        <Tooltip placement="left" title="Prompt Text" :auto-adjust-overflow="false" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
-          <Button>Ignore</Button>
-        </Tooltip>
-      </template>
-    </Block>
+    <Space wrap>
+      <Tooltip placement="left" title="Prompt Text" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
+        <Button>Adjust automatically</Button>
+      </Tooltip>
+      <Tooltip placement="left" title="Prompt Text" :auto-adjust-overflow="false" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
+        <Button>Ignore</Button>
+      </Tooltip>
+    </Space>
     <div ref="block1" :style="blockStyle">
       <div :style="innerStyle">
         <Tooltip placement="left" title="Prompt Text" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
@@ -73,5 +71,4 @@ const innerStyle = {
     </div>
   </div>
 </template>
-
 ```

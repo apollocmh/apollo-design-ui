@@ -2,11 +2,17 @@
 // 对齐 antd demo/placement.tsx（12 方向）。antd 用 ConfigProvider button 统一宽度，
 // 本仓 D25：直接给按钮行内样式（语义等价）。
 import { Button, Popover } from '@apollo-design/ui';
+import type { CSSProperties } from 'vue';
 
 const text = 'Title';
 
-const btnStyle = { width: '80px', margin: '4px' };
-const rowStyle = { whiteSpace: 'nowrap' };
+const btnStyle = { width: '80px' };
+const rowStyle: CSSProperties = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  gap: '8px',
+};
 </script>
 
 <template>

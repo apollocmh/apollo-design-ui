@@ -94,7 +94,7 @@ const sharedProps = {
 
 <template>
   <Flex vertical gap="medium">
-    <Flex gap="medium">
+    <Flex wrap gap="medium">
       <Button type="primary" @click="open = true">Begin Tour Object</Button>
       <Button type="primary" @click="openFn = true">Begin Tour Function</Button>
     </Flex>
@@ -132,7 +132,7 @@ const sharedProps = {
         />
       </template>
     </Tour>
-    <Space>
+    <Space wrap>
       <Button ref="ref1" type="primary">Upload</Button>
       <Button ref="ref2">Save</Button>
       <Button ref="ref3" type="dashed">Other Actions</Button>

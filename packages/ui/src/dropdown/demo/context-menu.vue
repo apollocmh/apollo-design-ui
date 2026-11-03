@@ -10,7 +10,7 @@ const items = [
 
 <template>
   <Dropdown :menu="{ items }" :trigger="['contextMenu']">
-    <div style="padding: 40px; border: 1px dashed #d9d9d9; text-align: center; user-select: none">
+    <div style="padding: 40px; border: 1px dashed var(--apollo-color-border); text-align: center; user-select: none">
       Right Click on here
     </div>
   </Dropdown>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/placement.tsx
 
-import { Button, Tooltip } from '@apollo-design/ui';
+import { Button, Tooltip, type TooltipPlacement } from '@apollo-design/ui';
 
-const rows: Array<Array<[string, string]>> = [
+const rows: Array<Array<[TooltipPlacement, string]>> = [
   [
     ['topLeft', 'TL'],
     ['top', 'Top'],
@@ -31,7 +31,7 @@ const buttonWidth = 80;
 
 <template>
   <div
-    style="font-family: sans-serif; width: 480px; margin: 0 auto; display: flex; flex-direction: column; row-gap: 8px"
+    style="font-family: sans-serif; width: 480px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; row-gap: 8px"
   >
     <template v-for="(row, i) in rows" :key="i">
       <div
@@ -39,10 +39,11 @@ const buttonWidth = 80;
           display: 'flex',
           justifyContent: i === 1 ? 'flex-start' : i === 2 ? 'flex-end' : 'center',
           gap: '4px',
+          flexWrap: 'wrap',
           whiteSpace: 'nowrap',
         }"
       >
-        <Tooltip v-for="[p, label] in row" :key="p" :title="p" :placement="p as never">
+        <Tooltip v-for="[p, label] in row" :key="p" :title="p" :placement="p">
           <Button :style="{ width: buttonWidth + 'px', margin: '4px' }">{{ label }}</Button>
         </Tooltip>
       </div>

@@ -19,7 +19,7 @@ const customRequest: UploadProps['customRequest'] = ({ onProgress, onSuccess }) 
 </script>
 
 <template>
-  <div style="width: 420px">
+  <div style="width: 420px; max-width: 100%">
     <Upload
       v-model:file-list="fileList"
       action="/upload.do"

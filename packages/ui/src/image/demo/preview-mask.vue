@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image, type PreviewConfig } from '@apollo-design/ui';
+import { Button, Checkbox, Image, type PreviewConfig } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const phase = ref(0);
@@ -27,14 +27,14 @@ const src =
 <template>
   <section data-image-mask-demo>
     <div>
-      <button type="button" @mousedown.prevent @click="phase = (phase + 1) % 3">Cycle mask and zoom step</button>
-      <label><input v-model="local" type="checkbox" /> Use local preview container</label>
+      <Button html-type="button" @mousedown.prevent @click="phase = (phase + 1) % 3">Cycle mask and zoom step</Button>
+      <Checkbox v-model:checked="local">Use local preview container</Checkbox>
     </div>
     <Image alt="Mask configuration example" :width="200" :src="src" :preview="preview">
       <template #previewActions="info">
         <component :is="info.originNode" />
         <div class="image-demo-mask-controls">
-          <button type="button" @click="phase = (phase + 1) % 3">Cycle mask and zoom step</button>
+          <Button html-type="button" @click="phase = (phase + 1) % 3">Cycle mask and zoom step</Button>
           <output>Step: {{ preview.scaleStep }}</output>
         </div>
       </template>

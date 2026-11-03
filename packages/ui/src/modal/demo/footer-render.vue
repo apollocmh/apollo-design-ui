@@ -7,7 +7,7 @@ const open = ref(false);
 </script>
 
 <template>
-  <Button type="primary" @click="open = true">Open Modal with customized footer</Button>
+  <Button type="primary" style="max-width: 100%; height: auto; min-height: 32px; white-space: normal" @click="open = true">Open Modal with customized footer</Button>
   <Modal
     title="Custom Footer Render"
     :open="open"
@@ -16,7 +16,7 @@ const open = ref(false);
   >
     <p>Some contents...</p>
     <template #footer="{ OkBtn, CancelBtn }">
-      <Space>
+      <Space wrap>
         <component :is="CancelBtn" />
         <Button danger type="primary" @click="open = false">Custom</Button>
         <component :is="OkBtn" />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Alert, Button, ConfigProvider } from '@apollo-design/ui';
+import { Alert, Button, ConfigProvider, Input } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const custom = ref(true);
@@ -18,7 +18,7 @@ const draft = ref('Saved business draft');
       <Alert show-icon type="success" title="Current border radius and padding" />
       <Alert show-icon type="info" title="Current description spacing">
         <template #description>
-          <label>Business draft <input v-model="draft" aria-label="Alert theme draft" /></label>
+          <label>Business draft <Input v-model:value="draft" aria-label="Alert theme draft" /></label>
         </template>
       </Alert>
     </ConfigProvider>

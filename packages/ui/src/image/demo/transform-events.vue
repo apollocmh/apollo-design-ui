@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  Button,
   Image,
   ImagePreviewGroup,
   type PreviewConfig,
@@ -40,16 +41,16 @@ function recordGroup(info: TransformInfo) {
 <template>
   <section data-image-transform-demo>
     <p>Open a preview and rotate, flip or zoom its image. Closing resets the transform and emits that snapshot.</p>
-    <button type="button" @mousedown.prevent @click="cycleBounds">Cycle preview bounds</button>
+    <Button html-type="button" @mousedown.prevent @click="cycleBounds">Cycle preview bounds</Button>
     <p>Current bounds: <output data-transform-demo-bounds>{{ boundsMode === 1 ? '1–1.05' : boundsMode === 2 ? '1.15–2' : 'default' }}</output>. A bound change applies on the next transform action.</p>
     <Image :src="first" alt="Transform event image" :width="180" :height="110"
       :preview="preview" data-transform-demo-image @transform="recordImage" @transform.once="imageOnce++">
-      <template #previewActions="info"><div class="transform-demo-toolbar"><component :is="info.originNode" /><button type="button" @click="cycleBounds">Cycle preview bounds</button></div></template>
+      <template #previewActions="info"><div class="transform-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycleBounds">Cycle preview bounds</Button></div></template>
     </Image>
     <ImagePreviewGroup :preview="preview" @transform="recordGroup" @transform.once="groupOnce++">
       <Image :src="first" alt="Transform event group first" :width="140" :height="86" data-transform-demo-group-first />
       <Image :src="second" alt="Transform event group second" :width="140" :height="86" />
-      <template #previewActions="info"><div class="transform-demo-toolbar"><component :is="info.originNode" /><button type="button" @click="cycleBounds">Cycle preview bounds</button></div></template>
+      <template #previewActions="info"><div class="transform-demo-toolbar"><component :is="info.originNode" /><Button html-type="button" @click="cycleBounds">Cycle preview bounds</Button></div></template>
     </ImagePreviewGroup>
     <p>Image events: {{ imageChanges }} (once: {{ imageOnce }}); group events: {{ groupChanges }} (once: {{ groupOnce }}).</p>
     <pre>{{ last ? JSON.stringify(last, null, 2) : 'No transform yet' }}</pre>

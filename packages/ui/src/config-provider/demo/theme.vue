@@ -55,7 +55,7 @@ const RuntimeFont = defineComponent({
 
 <template>
   <div>
-    <Space style="margin-bottom: 16px">
+    <Space wrap style="margin-bottom: 16px">
       <span>theme.algorithm</span>
       <Select :value="mode" :options="modes" aria-label="主题算法" style="width: 200px" @change="changeMode" />
     </Space>

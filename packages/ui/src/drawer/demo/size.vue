@@ -14,7 +14,7 @@ const onClose = () => {
 </script>
 
 <template>
-  <Space>
+  <Space wrap>
     <Radio.Group v-model:value="size">
       <Radio value="default">Default</Radio>
       <Radio value="large">Large</Radio>

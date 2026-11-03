@@ -7,7 +7,7 @@ const open = ref(false);
 </script>
 
 <template>
-  <Button type="primary" @click="open = true">Open Modal with customized button props</Button>
+  <Button type="primary" style="max-width: 100%; height: auto; min-height: 32px; white-space: normal" @click="open = true">Open Modal with customized button props</Button>
   <Modal
     title="Basic Modal"
     :open="open"

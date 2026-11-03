@@ -25,14 +25,14 @@ const openNotification = (placement: NotificationPlacement) => {
 
 <template>
   <component :is="contextHolder" />
-  <Space>
+  <Space wrap>
     <Button type="primary" :icon="BorderTopOutlined" @click="openNotification('top')">top</Button>
     <Button type="primary" :icon="BorderBottomOutlined" @click="openNotification('bottom')">
       bottom
     </Button>
   </Space>
   <Divider />
-  <Space>
+  <Space wrap>
     <Button type="primary" :icon="RadiusUpleftOutlined" @click="openNotification('topLeft')">
       topLeft
     </Button>
@@ -41,7 +41,7 @@ const openNotification = (placement: NotificationPlacement) => {
     </Button>
   </Space>
   <Divider />
-  <Space>
+  <Space wrap>
     <Button type="primary" :icon="RadiusBottomleftOutlined" @click="openNotification('bottomLeft')">
       bottomLeft
     </Button>

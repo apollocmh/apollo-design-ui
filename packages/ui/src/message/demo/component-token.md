@@ -1,10 +1,11 @@
 ---
 order: 0
 ---
+
 ## zh-CN
 
-组件级 token 调试（本仓以默认主题渲染 —— ConfigProvider 的组件级 token 覆盖尚未落地）。
+使用局部 `ConfigProvider` 动态覆盖消息的背景、内边距和层级，并与默认消息对照。移除覆盖后恢复当前站点主题。
 
 ## en-US
 
-Component Token Debug (default theme in this build — component-level token override is not implemented yet).
+Compare the default message with live `ConfigProvider` overrides for its surface, padding and stacking layer. Removing overrides restores the current site theme.

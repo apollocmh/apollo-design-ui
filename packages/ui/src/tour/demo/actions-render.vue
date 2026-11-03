@@ -23,7 +23,7 @@ const steps = [
 <template>
   <Button type="primary" @click="open = true">Begin Tour</Button>
   <Divider />
-  <Space>
+  <Space wrap>
     <Button ref="ref1">Upload</Button>
     <Button ref="ref2" type="primary">Save</Button>
     <Button ref="ref3">...</Button>

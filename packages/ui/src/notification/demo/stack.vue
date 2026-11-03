@@ -26,14 +26,14 @@ const openNotification = () => {
 
 <template>
   <component :is="contextHolder" />
-  <Space size="large">
-    <Space>
+  <Space wrap size="large">
+    <Space wrap>
       <span>Enabled: </span>
       <!-- ⚠️ 比 antd 的 demo 多了 aria-label：axe 会为无名的 Switch / InputNumber 报
            button-name / label 违规，而本仓的 L5 要求 demo 零违规（教学内容不受影响） -->
       <Switch v-model:checked="enabled" aria-label="Enable notification stack" />
     </Space>
-    <Space>
+    <Space wrap>
       <span>Threshold: </span>
       <InputNumber
         v-model:value="threshold"

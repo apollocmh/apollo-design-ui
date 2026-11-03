@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd demo/event.tsx
-import { Dropdown } from '@apollo-design/ui';
+import { Button, Dropdown } from '@apollo-design/ui';
 
 const items = [
   { key: '1', label: '1st menu item' },
@@ -14,9 +14,9 @@ const onClick = ({ key }: { key: string | number }) => {
 </script>
 
 <template>
-  <Dropdown :menu="{ items, onClick: onClick as never }">
-    <a class="cursor-pointer" @click.prevent>
+  <Dropdown :menu="{ items, onClick }">
+    <Button type="link">
       Hover me
-    </a>
+    </Button>
   </Dropdown>
 </template>

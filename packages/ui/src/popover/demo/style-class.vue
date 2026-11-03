@@ -33,7 +33,7 @@ const stylesFn = (info: { props: { arrow?: unknown } }) => {
 </script>
 
 <template>
-  <div style="display: flex; gap: 12px">
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
     <Popover content="Object text" :styles="styles" :arrow="false">
       <Button>Object Style</Button>
     </Popover>

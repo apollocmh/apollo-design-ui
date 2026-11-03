@@ -47,7 +47,7 @@ const showErrorStyle = () => {
 
 <template>
   <component :is="contextHolder" />
-  <Space>
+  <Space wrap>
     <Button @click="showObjectStyle">Object style</Button>
     <Button type="primary" @click="showErrorStyle">Error style</Button>
   </Space>

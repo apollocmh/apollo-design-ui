@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 render-panel demo：PurePanel（调试用面板）
-import { ConfigProvider, PopconfirmPurePanel } from '@apollo-design/ui';
+import { Button, ConfigProvider, PopconfirmPurePanel } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const show = ref(false);
@@ -11,11 +11,11 @@ const themed = ref(false);
 
 <template>
   <div>
-    <p>
-      <button @click="show = !show">Toggle popconfirm slots</button>
-      <button @click="empty = !empty">Empty popconfirm slots</button>
-      <button @click="count++">Update popconfirm slots</button>
-      <button @click="themed = !themed">Theme z-index: {{ themed ? 2060 : 'default' }}</button>
+    <p style="display: flex; flex-wrap: wrap; gap: 8px">
+      <Button @click="show = !show">Toggle popconfirm slots</Button>
+      <Button @click="empty = !empty">Empty popconfirm slots</Button>
+      <Button @click="count++">Update popconfirm slots</Button>
+      <Button @click="themed = !themed">Theme z-index: {{ themed ? 2060 : 'default' }}</Button>
     </p>
     <ConfigProvider :theme="themed ? { components: { Popconfirm: { zIndexPopup: 2060 } } } : undefined">
     <PopconfirmPurePanel data-native-popconfirm-panel title="Delete the task" description="Are you sure to delete this task?" ok-text="Confirm" cancel-text="Cancel" style="max-width: 360px" :styles="{ root: { minHeight: '80px' }, arrow: { opacity: 0.6 } }">

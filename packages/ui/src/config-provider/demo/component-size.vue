@@ -20,7 +20,7 @@ function onSizeChange(value: unknown): void {
 
 <template>
   <div>
-    <Space :size="12" style="margin-bottom: 16px">
+    <Space wrap :size="12" style="margin-bottom: 16px">
       <span>componentSize</span>
       <Select
         aria-label="组件尺寸"
@@ -34,7 +34,7 @@ function onSizeChange(value: unknown): void {
 
     <ConfigProvider :component-size="componentSize">
       <div class="component-size-demo-panel">
-        <Space>
+        <Space wrap>
           <Input aria-label="组件尺寸输入框" placeholder="组件尺寸跟随配置" style="width: 220px" />
           <Button>操作按钮</Button>
           <Button>次要按钮</Button>

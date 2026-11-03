@@ -37,7 +37,7 @@ const stylesFn = (info: { props: { arrow?: unknown } }) => {
 
 <template>
   <div style="font-family: sans-serif">
-    <Flex gap="medium">
+    <Flex wrap gap="medium">
       <Tooltip :class-names="classNames" :styles="styles" :arrow="false" title="Object text">
         <Button>Object Style</Button>
       </Tooltip>
@@ -56,5 +56,4 @@ const stylesFn = (info: { props: { arrow?: unknown } }) => {
     </Flex>
   </div>
 </template>
-
 ```

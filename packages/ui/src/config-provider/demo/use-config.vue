@@ -47,11 +47,11 @@ const ConfigProbe = {
             () => `componentDisabled: ${String(disabled.value)}`,
           ),
         ]),
-        h(Space, { style: { marginTop: '12px' } }, () => [
+        h(Space, { wrap: true, style: { marginTop: '12px' } }, () => [
           h(Input, {
             'aria-label': '尺寸与禁用状态示例',
             placeholder: '尺寸与禁用状态跟随配置',
-            style: { width: '240px' },
+            style: { width: '240px', maxWidth: '100%' },
           }),
           h(Button, null, () => '提交'),
           h(Button, null, () => '取消'),

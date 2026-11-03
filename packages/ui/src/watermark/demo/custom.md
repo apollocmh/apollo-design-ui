@@ -5,6 +5,10 @@ title:
   en-US: Custom
 ---
 
-通过配置参数来配置水印。
+## zh-CN
 
-> 面板控件为原生等价实现（Form / Slider / ColorPicker 等组件尚未落地）。
+使用本库的输入框、颜色选择器、滑块和数字输入框调整水印。预览与设置面板会随容器宽度换行；偏移留空时采用默认值。
+
+## en-US
+
+Adjust the watermark with Apollo inputs, color picker, sliders and number inputs. The preview and controls wrap to fit the container. Empty offsets use the default placement.

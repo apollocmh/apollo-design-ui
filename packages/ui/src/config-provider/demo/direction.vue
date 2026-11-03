@@ -17,7 +17,7 @@ function onDirectionChange(value: unknown): void {
 
 <template>
   <div>
-    <Space :size="12" style="margin-bottom: 16px">
+    <Space wrap :size="12" style="margin-bottom: 16px">
       <span>direction</span>
       <Select
         aria-label="文字方向"
@@ -31,7 +31,7 @@ function onDirectionChange(value: unknown): void {
 
     <ConfigProvider :direction="direction">
       <div class="direction-demo-panel">
-        <Space>
+        <Space wrap>
           <Input aria-label="姓名" placeholder="请输入姓名" style="width: 180px" />
           <Button>提交</Button>
           <Button>取消</Button>

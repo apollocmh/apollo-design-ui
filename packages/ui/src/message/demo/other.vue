@@ -17,7 +17,7 @@ const warning = () => {
 
 <template>
   <component :is="contextHolder" />
-  <Space>
+  <Space wrap>
     <Button @click="success">Success</Button>
     <Button @click="error">Error</Button>
     <Button @click="warning">Warning</Button>

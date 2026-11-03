@@ -6,7 +6,7 @@ const sizes = ['small', 'medium', 'large'] satisfies SpinSize[];
 </script>
 
 <template>
-  <div style="display: flex; align-items: center; gap: 16px">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
     <Spin v-for="size in sizes" :key="size" :size="size">
       <template #indicator>
         <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" focusable="false" aria-hidden="true">

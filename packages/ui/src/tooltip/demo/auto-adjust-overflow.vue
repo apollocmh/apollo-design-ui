@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/auto-adjust-overflow.tsx（滚动容器内对比 autoAdjustOverflow）
 
-import { Button, Tooltip } from '@apollo-design/ui';
+import { Button, Space, Tooltip } from '@apollo-design/ui';
 import { onMounted, ref } from 'vue';
 
 const block1 = ref<HTMLDivElement | null>(null);
@@ -16,7 +16,7 @@ const blockStyle: Record<string, string> = {
   overflow: 'auto',
   position: 'relative',
   padding: '24px',
-  border: '1px solid #e9e9e9',
+  border: '1px solid var(--apollo-color-border)',
 };
 const innerStyle: Record<string, string> = {
   width: '200%',
@@ -29,14 +29,14 @@ const innerStyle: Record<string, string> = {
 
 <template>
   <div style="font-family: sans-serif; display: flex; flex-direction: column; row-gap: 16px">
-    <div>
+    <Space wrap>
       <Tooltip placement="left" title="Prompt Text" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
         <Button>Adjust automatically</Button>
       </Tooltip>
       <Tooltip placement="left" title="Prompt Text" :auto-adjust-overflow="false" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">
         <Button>Ignore</Button>
       </Tooltip>
-    </div>
+    </Space>
     <div ref="block1" :style="blockStyle">
       <div :style="innerStyle">
         <Tooltip placement="left" title="Prompt Text" :get-popup-container="(t: HTMLElement) => t.parentElement as HTMLElement">

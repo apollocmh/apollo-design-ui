@@ -30,8 +30,8 @@ const modalTheme = {
           Hello World?!
         </InternalPanel>
       </ConfigProvider>
-      <InternalPanel type="success" :style="{ width: '200px' }">A good news!</InternalPanel>
-      <InternalPanel title="Confirm This?" type="confirm" :style="{ width: '300px' }">
+      <InternalPanel type="success" :style="{ width: '200px', maxWidth: '100%' }">A good news!</InternalPanel>
+      <InternalPanel title="Confirm This?" type="confirm" :style="{ width: '300px', maxWidth: '100%' }">
         Some descriptions.
       </InternalPanel>
     </div>

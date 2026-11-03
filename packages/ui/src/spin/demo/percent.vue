@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import { onUnmounted, ref, watch } from 'vue';
 import type { SpinPercent } from '../../index';
-import { Spin } from '../../index';
+import { Checkbox, Spin } from '../../index';
 
 /**
  * 进度。切到 `auto` 时组件自己按 200ms 一档**渐近**推进（越接近 100% 越慢），
@@ -42,15 +43,17 @@ const toggleAuto = () => {
   percent.value = -50;
 };
 
-const rowStyle = { display: 'flex', alignItems: 'center', gap: '16px' };
+const rowStyle: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  flexWrap: 'wrap',
+};
 </script>
 
 <template>
   <div :style="rowStyle">
-    <label>
-      <input type="checkbox" :checked="auto" @change="toggleAuto" />
-      Auto
-    </label>
+    <Checkbox :checked="auto" @change="toggleAuto">Auto</Checkbox>
     <Spin :percent="mergedPercent()" size="small" />
     <Spin :percent="mergedPercent()" />
     <Spin :percent="mergedPercent()" size="large" />

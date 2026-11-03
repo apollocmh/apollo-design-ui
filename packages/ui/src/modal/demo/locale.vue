@@ -19,7 +19,7 @@ const confirm = () => {
 </script>
 
 <template>
-  <Space>
+  <Space wrap>
     <Button type="primary" @click="open = true">Modal</Button>
     <Button @click="confirm">Confirm</Button>
   </Space>

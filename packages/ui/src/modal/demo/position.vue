@@ -8,7 +8,7 @@ const modal2Open = ref(false);
 </script>
 
 <template>
-  <Button type="primary" @click="modal1Open = true">Display a modal dialog at 20px to Top</Button>
+  <Button type="primary" style="max-width: 100%; height: auto; min-height: 32px; white-space: normal" @click="modal1Open = true">Display a modal dialog at 20px to Top</Button>
   <Modal
     title="20px to Top"
     :style="{ top: '20px' }"
@@ -22,7 +22,7 @@ const modal2Open = ref(false);
   </Modal>
   <br />
   <br />
-  <Button type="primary" @click="modal2Open = true">Vertically centered modal dialog</Button>
+  <Button type="primary" style="max-width: 100%; height: auto; min-height: 32px; white-space: normal" @click="modal2Open = true">Vertically centered modal dialog</Button>
   <Modal
     title="Vertically centered modal dialog"
     centered

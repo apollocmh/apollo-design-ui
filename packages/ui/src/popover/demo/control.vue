@@ -17,7 +17,7 @@ const hide = () => {
     trigger="click"
   >
     <template #content>
-      <a @click="hide">Close</a>
+      <Button type="link" @click="hide">Close</Button>
     </template>
     <Button type="primary">Click me</Button>
   </Popover>

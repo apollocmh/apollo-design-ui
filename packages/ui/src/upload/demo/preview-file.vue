@@ -32,7 +32,7 @@ const closePreview = (): void => {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px; width: 420px">
+  <div style="display: flex; flex-direction: column; gap: 12px; width: 420px; max-width: 100%">
     <Upload
       action="/upload.do"
       list-type="picture"

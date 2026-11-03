@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TooltipPurePanel } from '@apollo-design/ui';
+import { Button, TooltipPurePanel } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const show = ref(false);
@@ -9,10 +9,10 @@ const count = ref(0);
 
 <template>
   <div style="font-family: sans-serif">
-    <p>
-      <button @click="show = !show">Toggle tooltip title</button>
-      <button @click="empty = !empty">Empty tooltip title</button>
-      <button @click="count++">Update tooltip title</button>
+    <p style="display: flex; flex-wrap: wrap; gap: 8px">
+      <Button @click="show = !show">Toggle tooltip title</Button>
+      <Button @click="empty = !empty">Empty tooltip title</Button>
+      <Button @click="count++">Update tooltip title</Button>
     </p>
     <TooltipPurePanel title="Hello, Pink Pure Panel!" color="pink" />
     <TooltipPurePanel title="Hello, Customize Color Pure Panel!" color="#f50" />

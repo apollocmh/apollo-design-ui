@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 success demo
 
-import { Button, Result } from '@apollo-design/ui';
+import { Button, Result, Space } from '@apollo-design/ui';
 </script>
 
 <template>
@@ -11,10 +11,10 @@ import { Button, Result } from '@apollo-design/ui';
     sub-title="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
   >
     <template #extra>
-      <div>
+      <Space wrap :size="8" style="justify-content: center">
         <Button type="primary">Go Console</Button>
         <Button>Buy Again</Button>
-      </div>
+      </Space>
     </template>
   </Result>
 </template>

@@ -7,7 +7,7 @@ const content = ['Content', 'Content'];
 </script>
 
 <template>
-  <div style="display: flex; gap: 16px">
+  <div style="display: flex; flex-wrap: wrap; gap: 16px">
     <PopoverPurePanel title="Title">
       <template #content>
         <div>
@@ -15,7 +15,7 @@ const content = ['Content', 'Content'];
         </div>
       </template>
     </PopoverPurePanel>
-    <PopoverPurePanel title="Title" placement="bottomLeft" style="width: 250px">
+    <PopoverPurePanel title="Title" placement="bottomLeft" style="width: 250px; max-width: 100%">
       <template #content>
         <div>
           <p v-for="(c, i) in content" :key="i">{{ c }}</p>

@@ -1,10 +1,11 @@
 ---
 order: 1
 ---
+
 ## zh-CN
 
-组件级 token 调试（本仓以默认主题渲染 —— ConfigProvider 的组件级 token 覆盖尚未落地）。
+通过 `ConfigProvider` 动态设置通知宽度、进度条与各状态背景色，切换按钮可移除或恢复局部组件 Token。
 
 ## en-US
 
-Component Token Debug (default theme in this build — component-level token override is not implemented yet).
+Set notification width, progress and status surfaces through `ConfigProvider`. Toggle the local component tokens to compare them with the inherited theme.

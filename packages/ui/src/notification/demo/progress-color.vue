@@ -1,15 +1,19 @@
 <script setup lang="ts">
-// 对齐 antd demo/progress-color.tsx —— 进度条配色
-// ⚠️ antd 用 ConfigProvider 的 theme.components.Notification.progressBg 覆盖；本仓的
-//    组件级 token 覆盖尚未落地（D25/D83 同判）⇒ 以**默认**进度条配色渲染。
-import { Button, notification } from '@apollo-design/ui';
+import { Button, ConfigProvider, notification } from '@apollo-design/ui';
 
 const [api, contextHolder] = notification.useNotification();
-
+const theme = {
+  components: {
+    Notification: {
+      progressBg:
+        'linear-gradient(90deg, var(--apollo-color-success-border), var(--apollo-color-success))',
+    },
+  },
+};
 const openNotification = () => {
   api.open({
     title: 'Customize progress bar color',
-    description: 'You can use component token to customize the progress bar color',
+    description: 'The progress bar uses Notification.progressBg from the nearest ConfigProvider.',
     showProgress: true,
     duration: 20,
   });
@@ -17,6 +21,8 @@ const openNotification = () => {
 </script>
 
 <template>
-  <component :is="contextHolder" />
-  <Button type="primary" @click="openNotification">Show custom progress color</Button>
+  <ConfigProvider :theme="theme">
+    <component :is="contextHolder" />
+    <Button type="primary" @click="openNotification">Show custom progress color</Button>
+  </ConfigProvider>
 </template>

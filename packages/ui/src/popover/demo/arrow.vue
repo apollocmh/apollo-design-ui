@@ -1,14 +1,13 @@
 <script setup lang="ts">
 // 对齐 antd demo/arrow.tsx（箭头三态：Show / Hide / Center）。
-// ⚠️ Segmented 未落地 ⇒ 原生 select 替换（demo 替换约定，README §2）。
 
 import type { TooltipPlacement } from '@apollo-design/ui';
-import { Button, Popover } from '@apollo-design/ui';
+import { Button, Popover, Segmented } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const text = 'Title';
 const arrowMode = ref<'Show' | 'Hide' | 'Center'>('Show');
-const btnStyle = { width: '80px', margin: '4px' };
+const btnStyle = { width: '80px' };
 
 const rows: TooltipPlacement[][] = [
   ['topLeft', 'top', 'topRight'],
@@ -24,13 +23,9 @@ const mergedArrow = () => {
 
 <template>
   <div>
-    <select v-model="arrowMode" aria-label="arrow mode" style="margin-bottom: 24px">
-      <option>Show</option>
-      <option>Hide</option>
-      <option>Center</option>
-    </select>
+    <Segmented v-model:value="arrowMode" :options="['Show', 'Hide', 'Center']" aria-label="arrow mode" style="margin-bottom: 24px" />
     <div style="display: flex; flex-direction: column; align-items: center; row-gap: 16px">
-      <div v-for="(row, i) in rows" :key="i" style="white-space: nowrap">
+      <div v-for="(row, i) in rows" :key="i" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 4px">
         <Popover v-for="p in row" :key="p" :placement="p" :title="text" :arrow="mergedArrow()">
           <template #content>
             <p>Content</p>

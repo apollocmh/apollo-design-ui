@@ -37,7 +37,7 @@ const confirm = () => {
 </script>
 
 <template>
-  <Space>
+  <Space wrap>
     <Button @click="countDown">Open modal to close in 5s</Button>
     <Button @click="confirm">Confirm</Button>
   </Space>

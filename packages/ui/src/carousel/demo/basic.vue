@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './slides.css';
 // 对齐 antd 的 basic demo
 import { Carousel } from '@apollo-design/ui';
 
@@ -8,7 +9,7 @@ const onChange = (current: number) => {
 </script>
 
 <template>
-  <Carousel @after-change="onChange">
+  <Carousel class="demo-carousel-slides" @after-change="onChange">
     <div><h3 style="height: 160px; color: #fff; line-height: 160px; text-align: center; background: #364d79">1</h3></div>
     <div><h3 style="height: 160px; color: #fff; line-height: 160px; text-align: center; background: #626c91">2</h3></div>
     <div><h3 style="height: 160px; color: #fff; line-height: 160px; text-align: center; background: #1677ff">3</h3></div>

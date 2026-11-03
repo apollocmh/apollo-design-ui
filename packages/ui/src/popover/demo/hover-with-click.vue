@@ -23,7 +23,6 @@ const handleClickChange = (next: boolean) => {
 
 <template>
   <Popover
-    style="width: 500px"
     title="Hover title"
     trigger="hover"
     :open="hovered"
@@ -40,7 +39,7 @@ const handleClickChange = (next: boolean) => {
     >
       <template #content>
         <div>This is click content.</div>
-        <a @click="hide">Close</a>
+        <Button type="link" @click="hide">Close</Button>
       </template>
       <Button>Hover and click</Button>
     </Popover>
