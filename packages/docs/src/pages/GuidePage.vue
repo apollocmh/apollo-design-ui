@@ -63,12 +63,12 @@ watch(
     setToc(
       page.value?.slug === 'themes'
         ? [
-            ...next,
             {
               level: 2,
               text: locale.value === 'zh-CN' ? '亮暗预览' : 'Light and dark previews',
               id: 'theme-previews',
             },
+            ...next,
           ]
         : next,
     ),
@@ -81,8 +81,8 @@ onBeforeUnmount(() => setToc([]));
   <div class="guide-page">
     <template v-if="state === 'ready' && page">
       <h1 class="guide-title">{{ titleText }}</h1>
-      <DocHtml :html="doc?.html ?? ''" />
       <ThemeGallery v-if="page.slug === 'themes'" />
+      <DocHtml :html="doc?.html ?? ''" />
     </template>
     <div v-else-if="state === 'loading'" class="page-loading">{{ t('loading') }}</div>
     <div v-else class="page-loading">⚠️ {{ route.params.slug }} — {{ t('demoError') }}</div>

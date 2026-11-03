@@ -27,7 +27,11 @@ const allDemos = pages.flatMap((p) => p.data.demos);
 describe('manifest 骨架', () => {
   it('组件与指南都有产出', () => {
     expect(manifest.components.length).toBe(72);
-    expect(manifest.guides.length).toBe(8);
+    expect(manifest.guides.length).toBe(9);
+    expect(manifest.guides.find((guide) => guide.slug === 'themes')).toMatchObject({
+      title: { zh: '主题展示', en: 'Theme gallery' },
+      order: 4.1,
+    });
     expect(manifest.guides.find((guide) => guide.slug === 'audit-progress')).toMatchObject({
       title: { zh: '整改进展', en: 'Audit Progress' },
       order: 0,
