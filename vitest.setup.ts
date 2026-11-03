@@ -163,7 +163,15 @@ if (!globalThis.matchMedia) {
 //    那时 `Element` 根本不存在 —— 直接访问会 ReferenceError 让**整个文件**收集失败
 //    （而不是跳过这几行）。所以这里必须先判「有没有 DOM」。
 if (globalThis.Element !== undefined && !Element.prototype.scrollTo) {
-  Element.prototype.scrollTo = function scrollTo() {};
+  Element.prototype.scrollTo = function scrollTo(options?: ScrollToOptions | number, y?: number) {
+    if (typeof options === 'number') {
+      this.scrollLeft = options;
+      if (y !== undefined) this.scrollTop = y;
+    } else {
+      if (options?.left !== undefined) this.scrollLeft = options.left;
+      if (options?.top !== undefined) this.scrollTop = options.top;
+    }
+  };
 }
 
 // jsdom 同样不实现 scrollIntoView（docs 的搜索面板键盘导航会调到它）。
