@@ -149,11 +149,30 @@ try {
         const { frame } = await loadPreview(name);
         await frame.evaluate(() => window.scrollTo({ top: 220, behavior: 'instant' }));
         await frame.waitForFunction(() => scrollY > 100);
+        // Affix measures in rAF and Vue then commits the fixed node's class/style.
+        await frame.locator('.apollo-affix').first().waitFor({ state: 'visible' });
         const fixed = await frame.locator('.apollo-affix').count();
         assert(fixed > 0, `${name} affixes within its frame`);
+        const position = await frame
+          .locator('.apollo-affix')
+          .first()
+          .evaluate((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              position: getComputedStyle(element).position,
+              top: rect.top,
+              bottom: innerHeight - rect.bottom,
+            };
+          });
+        assert.equal(position.position, 'fixed', `${name}: ${JSON.stringify(position)}`);
+        const offset = name === 'on-change' ? 120 : name === 'update-position' ? 60 : 80;
+        assert(
+          Math.abs(position[name === 'offset-bottom' ? 'bottom' : 'top'] - offset) < 1,
+          `${name} frame offset: ${JSON.stringify(position)}`,
+        );
         if (name === 'update-position')
           await frame.getByRole('button', { name: '手动重新测量' }).click();
-        measured.push({ name, fixed, scrollY: await frame.evaluate(() => scrollY) });
+        measured.push({ name, fixed, position, scrollY: await frame.evaluate(() => scrollY) });
       }
       const { frame } = await loadPreview('target');
       const scroller = frame.locator('[aria-label="Affix scroll container"]');
@@ -173,6 +192,8 @@ try {
 
   await check('Anchor targets belong to each Demo and scroll their own container', async () => {
     await component('anchor');
+    await page.locator('.demos-grid--masonry').waitFor();
+    const measured = [];
     for (const name of [
       'basic',
       'onChange',
@@ -194,31 +215,63 @@ try {
       assert(hash);
       assert.equal(await root.locator(`[id="${hash.slice(1)}"]`).count(), 1);
       const scroller = root.locator('[aria-label="Anchor scroll content"]');
-      const outer = await page.evaluate(() => window.scrollY);
-      const historyLength = await page.evaluate(() => window.history.length);
-      await link.click();
-      await scroller.evaluate(
-        (element) =>
-          new Promise((resolve, reject) => {
-            const started = performance.now();
-            const read = () => {
-              if (element.scrollTop > 70) resolve(element.scrollTop);
-              else if (performance.now() - started > 1500)
-                reject(new Error('local scroll did not advance'));
-              else requestAnimationFrame(read);
-            };
-            read();
-          }),
-      );
-      assert(Math.abs((await page.evaluate(() => window.scrollY)) - outer) < 3, name);
-      if (name === 'replace')
-        assert.equal(await page.evaluate(() => history.length), historyLength);
+      // Finish Playwright's actionability/scrollIntoView preparation before measuring
+      // the native link action. Lazy Demo heights can move its card after activation.
+      await link.click({ trial: true });
+      const observation = await link.evaluateHandle((element) => {
+        const read = (phase) => ({
+          phase,
+          time: performance.now(),
+          outerY: scrollY,
+          documentTop: element.getBoundingClientRect().top + scrollY,
+          viewportTop: element.getBoundingClientRect().top,
+        });
+        const events = [];
+        for (const type of ['pointerdown', 'click'])
+          element.addEventListener(type, () => events.push(read(type)), {
+            capture: true,
+            once: true,
+          });
+        return { before: read('before'), events, read, historyLength: history.length };
+      });
+      try {
+        await link.click();
+        const localScroll = await scroller.evaluate(
+          (element) =>
+            new Promise((resolve, reject) => {
+              const started = performance.now();
+              const read = () => {
+                if (element.scrollTop > 70) resolve(element.scrollTop);
+                else if (performance.now() - started > 1500)
+                  reject(new Error('local scroll did not advance'));
+                else requestAnimationFrame(read);
+              };
+              read();
+            }),
+        );
+        const detail = await observation.evaluate(({ before, events, read, historyLength }) => ({
+          before,
+          events,
+          after: read('after'),
+          historyLength,
+        }));
+        measured.push({ name, localScroll, ...detail });
+        assert(
+          Math.abs(detail.after.outerY - detail.before.outerY) < 3,
+          `${name}: ${JSON.stringify(detail)}`,
+        );
+        if (name === 'replace')
+          assert.equal(await page.evaluate(() => history.length), detail.historyLength);
+      } finally {
+        await observation.dispose();
+      }
     }
     const duplicates = await page.locator('[id^="anchor-"]').evaluateAll((elements) => {
       const ids = elements.map((element) => element.id);
       return ids.filter((id, index) => ids.indexOf(id) !== index);
     });
     assert.deepEqual(duplicates, []);
+    return measured;
   });
 
   await check(
@@ -295,6 +348,8 @@ try {
     await page.setViewportSize({ width, height: 1000 });
     await check(`Layout iframe, Mac window and sticky header at ${width}px`, async () => {
       await component('layout');
+      // The SSR cards precede client-mounted viewport frames.
+      await page.locator('.demo-preview iframe').first().waitFor({ state: 'attached' });
       assert.equal(await page.locator('.demo-preview iframe').count(), 11);
       const dots = await page
         .locator('.demo-viewport')
