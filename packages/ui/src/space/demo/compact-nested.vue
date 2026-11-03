@@ -16,6 +16,7 @@ const options = [
 ];
 </script>
 <template>
+  <div style="max-width: 100%; overflow-x: auto; padding: 2px" tabindex="0" aria-label="Compact control examples">
   <Space orientation="vertical" style="display: flex">
     <SpaceCompact block>
       <SpaceCompact><SpaceCompact><Input aria-label="Nested query" placeholder="Typing…" style="width: 90px" /><Button type="primary">Search</Button></SpaceCompact><SpaceCompact><InputNumber aria-label="Nested number" :default-value="12" /><Select aria-label="Nested option" :options="options" default-value="opt1" style="width: 110px" /></SpaceCompact></SpaceCompact>
@@ -25,4 +26,5 @@ const options = [
     <SpaceCompact block><SpaceCompact><TimePicker aria-label="Nested time" /><Button type="primary">Submit</Button></SpaceCompact><Button>~</Button><Button>~</Button><SpaceCompact><Select aria-label="Nested address" :options="options" default-value="opt1" style="width: 130px" /><Button type="primary">Submit</Button></SpaceCompact></SpaceCompact>
     <SpaceCompact><Button v-for="i in 4" :key="i" type="primary">Button {{ i }}</Button></SpaceCompact>
   </Space>
+  </div>
 </template>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { PlusOutlined } from '@apollo-design/icons';
-import { Space, Tag } from '@apollo-design/ui';
+import { Button, type ButtonRef, Input, type InputRef, Space, Tag } from '@apollo-design/ui';
 import { nextTick, ref } from 'vue';
 
 const tags = ref(['Tag 1', 'Tag 2', 'Tag 3']);
 const inputVisible = ref(false);
 const inputValue = ref('');
-const input = ref<HTMLInputElement | null>(null);
-const addButton = ref<HTMLButtonElement | null>(null);
+const input = ref<InputRef | null>(null);
+const addButton = ref<ButtonRef | null>(null);
 
 const showInput = async () => {
   inputVisible.value = true;
@@ -23,7 +23,7 @@ const handleInputConfirm = async () => {
   inputVisible.value = false;
   inputValue.value = '';
   await nextTick();
-  addButton.value?.focus();
+  addButton.value?.nativeElement?.focus();
 };
 
 const handleClose = (removed: string) => {
@@ -34,18 +34,18 @@ const handleClose = (removed: string) => {
 <template>
   <Space wrap>
     <Tag v-for="tag in tags" :key="tag" closable @close="handleClose(tag)">{{ tag }}</Tag>
-    <input
+    <Input
       v-if="inputVisible"
       ref="input"
-      v-model="inputValue"
+      v-model:value="inputValue"
       type="text"
       aria-label="New tag name"
       :style="{ width: '78px', marginRight: '8px', verticalAlign: 'top' }"
       @blur="handleInputConfirm"
       @keydown.enter.prevent="handleInputConfirm"
-    >
-    <button v-else ref="addButton" type="button" @click="showInput">
+    />
+    <Button v-else ref="addButton" size="small" @click="showInput">
       <PlusOutlined aria-hidden="true" /> New Tag
-    </button>
+    </Button>
   </Space>
 </template>

@@ -28,7 +28,7 @@ const collapsibleConfig: EllipsisConfig = {
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 16px; width: 300px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 16px; width: min(300px, 100%); font-family: sans-serif"
   >
     <Paragraph :ellipsis="basicConfig">{{ longText }}</Paragraph>
     <Paragraph :ellipsis="collapsibleConfig">{{ longText }}</Paragraph>

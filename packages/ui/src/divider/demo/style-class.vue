@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { DividerProps } from '../../index';
-import { Divider } from '../../index';
+import { Divider, Select } from '../../index';
 
 const size = ref<DividerProps['size']>('small');
 
@@ -35,7 +35,7 @@ const stylesFn: DividerProps['styles'] = (info) =>
 
 <template>
   <div>
-    <label>Semantic size <select v-model="size" aria-label="Divider semantic size"><option value="small">Small</option><option value="medium">Medium</option><option value="middle">Middle</option><option value="large">Large</option></select></label>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">Semantic size <Select v-model:value="size" aria-label="Divider semantic size" style="width: 140px" :options="[{ value: 'small', label: 'Small' }, { value: 'medium', label: 'Medium' }, { value: 'middle', label: 'Middle' }, { value: 'large', label: 'Large' }]" /></div>
     <Divider :class-names="classNamesObject">classNames Object</Divider>
     <Divider title-placement="start" :class-names="classNamesFn">classNames Function</Divider>
     <Divider :styles="stylesObject">styles Object</Divider>

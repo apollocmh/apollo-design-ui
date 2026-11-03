@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 colorful demo
-import { Badge } from '@apollo-design/ui';
+import { Badge, Space } from '@apollo-design/ui';
 
 const colors = [
   'pink',
@@ -20,5 +20,7 @@ const colors = [
 </script>
 
 <template>
+  <Space wrap :size="[16, 12]">
   <Badge v-for="c in colors" :key="c" :color="c" :text="c" />
+  </Space>
 </template>

@@ -20,6 +20,7 @@ const actions = [
 ];
 </script>
 <template>
+  <div style="max-width: 100%; overflow-x: auto; padding: 2px" tabindex="0" aria-label="Compact control examples">
   <Space orientation="vertical" style="display: flex">
     <SpaceCompact block><Input aria-label="Area code" default-value="0571" style="width: 20%" /><Input aria-label="Phone" default-value="26888888" style="width: 80%" /></SpaceCompact>
     <SpaceCompact block size="small"><Input aria-label="Site URL" default-value="https://example.com" style="min-height: 24px" /><Button type="primary" style="min-height: 24px">Submit</Button></SpaceCompact>
@@ -33,4 +34,5 @@ const actions = [
     <SpaceCompact block><Input aria-label="First amount" placeholder="First amount" /><SpaceAddon>$</SpaceAddon><Input aria-label="Second amount" placeholder="Second amount" /><Input aria-label="Third amount" placeholder="Third amount" /><SpaceAddon>$</SpaceAddon></SpaceCompact>
     <SpaceCompact block><Button type="primary">Button</Button><Input aria-label="Amount with unit" placeholder="Input here" /><SpaceAddon>$</SpaceAddon></SpaceCompact>
   </Space>
+  </div>
 </template>

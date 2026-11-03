@@ -1,12 +1,11 @@
 <script setup lang="ts">
 // 对齐 antd 的 badge demo。
+
+import { UserOutlined } from '@apollo-design/icons';
 import { Avatar, Badge, Space } from '@apollo-design/ui';
 import { h } from 'vue';
 
-const icon = () =>
-  h('span', {
-    style: { display: 'inline-block', width: '1em', height: '1em', background: '#999' },
-  });
+const icon = () => h(UserOutlined);
 </script>
 
 <template>

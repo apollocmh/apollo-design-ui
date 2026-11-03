@@ -14,5 +14,5 @@ const items: ItemType[] = [
 </script>
 
 <template>
-  <Menu v-model:selectedKeys="current" mode="inline" :items="items" style="width: 256px" />
+  <Menu v-model:selectedKeys="current" mode="inline" :items="items" style="width: min(256px, 100%)" />
 </template>

@@ -55,6 +55,7 @@ const onLayoutChange = (sortedItems: MasonryLayoutItem<number>[]): void => {
           {{ Number(key) + 1 }}
           <Button
             size="small"
+            :aria-label="`Remove item ${Number(key) + 1}`"
             style="position: absolute; top: 8px; right: 8px"
             @click="removeItem(Number(key))"
           >×</Button>

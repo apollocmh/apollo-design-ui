@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Breadcrumb, BreadcrumbItem, BreadcrumbSeparator } from '@apollo-design/ui';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbSeparator, Button } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const menuOpen = ref(false);
@@ -14,9 +14,9 @@ const menu = {
 </script>
 
 <template>
-  <button type="button" style="margin-bottom: 12px" @click="custom = !custom">
+  <Button style="margin-bottom: 12px" @click="custom = !custom">
     Toggle separator and icon slots
-  </button>
+  </Button>
   <Breadcrumb aria-label="Documentation path">
     <template v-if="custom" #separator><span>›</span></template>
     <template v-if="custom" #dropdownIcon><span>⌄</span></template>

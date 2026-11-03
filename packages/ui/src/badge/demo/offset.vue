@@ -4,7 +4,7 @@ import { Badge, Space } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Space wrap>
+  <Space wrap :size="32">
     <Badge :count="5" :offset="[10, 10]">
       <div style="width: 40px; height: 40px; background: var(--apollo-color-fill-alter); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center" />
     </Badge>

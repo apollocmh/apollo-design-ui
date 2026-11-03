@@ -18,6 +18,7 @@ const options = [
 const addonSizes = ['small', 'middle', 'large'] as const;
 </script>
 <template>
+  <div style="max-width: 100%; overflow-x: auto; padding: 2px" tabindex="0" aria-label="Compact control examples">
   <Space orientation="vertical" style="display: flex">
     <SpaceCompact><Button>Default</Button><Button danger>Danger</Button><Button type="dashed">Dashed</Button><Button type="text">Text</Button><Button type="link">Link</Button><Button disabled>Disabled</Button></SpaceCompact>
     <SpaceCompact block><SpaceAddon>Prefix</SpaceAddon><Input aria-label="Site with prefix" default-value="mysite" /><Button type="primary">Submit</Button></SpaceCompact>
@@ -36,4 +37,5 @@ const addonSizes = ['small', 'middle', 'large'] as const;
     <SpaceCompact v-for="size in addonSizes" :key="size" :size="size"><SpaceAddon variant="underlined">Underlined {{ size }}</SpaceAddon><SpaceAddon variant="underlined" status="error">Error</SpaceAddon><SpaceAddon variant="underlined" status="warning">Warning</SpaceAddon><SpaceAddon variant="underlined" disabled><Button type="text" disabled>Disabled</Button></SpaceAddon></SpaceCompact>
     <SpaceCompact><SpaceAddon variant="borderless">Borderless</SpaceAddon><SpaceAddon variant="borderless" status="error">Error</SpaceAddon><SpaceAddon variant="borderless" status="warning">Warning</SpaceAddon><SpaceAddon variant="borderless" disabled><Button type="text" disabled>Disabled</Button></SpaceAddon></SpaceCompact>
   </Space>
+  </div>
 </template>

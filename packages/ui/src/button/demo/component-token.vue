@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, ConfigProvider, Space } from '@apollo-design/ui';
+import { Button, Checkbox, ConfigProvider, Input, Space } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const clicks = ref(0);
@@ -31,10 +31,10 @@ const theme = computed(() =>
   <div class="demo-button-token">
     <fieldset>
       <legend>当前配置</legend>
-      <label><input v-model="enabled" type="checkbox">启用组件 Token</label>
-      <label><input v-model="enlarged" type="checkbox">放大字号</label>
-      <label><input v-model="native" type="checkbox">原生变量优先</label>
-      <label><input v-model="customForeground" type="checkbox">自定义主按钮文字</label>
+      <Checkbox v-model:checked="enabled">启用组件 Token</Checkbox>
+      <Checkbox v-model:checked="enlarged">放大字号</Checkbox>
+      <Checkbox v-model:checked="native">原生变量优先</Checkbox>
+      <Checkbox v-model:checked="customForeground">自定义主按钮文字</Checkbox>
     </fieldset>
     <ConfigProvider :theme="theme">
       <Space wrap>
@@ -43,7 +43,7 @@ const theme = computed(() =>
         <Button type="primary" danger>Danger</Button>
       </Space>
     </ConfigProvider>
-    <label>保留草稿 <input aria-label="Button token draft" placeholder="切换配置时保留输入和焦点"></label>
+    <label>保留草稿 <Input aria-label="Button token draft" placeholder="切换配置时保留输入和焦点" style="max-width: 280px" /></label>
     <p aria-live="polite" class="demo-button-token__hint">
       点击 Primary 次数：{{ clicks }}；切换或移除当前组件配置，原生根变量仍有最高优先级。
     </p>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {
+  Button,
   ConfigProvider,
   type ConfigProviderProps,
+  Input,
   Paragraph,
   Text,
   type TypographyConfig,
@@ -161,20 +163,20 @@ const providerLocalStyles: TypographyProps['styles'] = {
   <Paragraph :class-names="classNamesFn" class="demo-alt">Function form, alt</Paragraph>
   <Text :class-names="classNamesObject" :styles="stylesObject" :copyable="true" />
   <section data-native-typography-style-demo>
-    <p><button type="button" @mousedown.prevent @click="phase = (phase + 1) % 4">Cycle native typography styles</button></p>
+    <p><Button @mousedown.prevent @click="phase = (phase + 1) % 4">Cycle native typography styles</Button></p>
     <Text data-demo-native-style :class="nativeClass" :style="nativeStyle"
       :class-names="{ root: 'semantic-demo-root' }" :styles="nativeSemanticStyles">
       Native style: {{ ['string', 'array', 'object', 'removed'][phase] }}
-      <input aria-label="Semantic typography draft" />
+      <Input aria-label="Semantic typography draft" style="width: min(160px, 100%); margin-top: 8px" />
     </Text>
   </section>
   <section data-typography-provider-demo>
-    <p><button type="button" @mousedown.prevent @click="replaceProvider">Replace typography provider</button></p>
+    <p><Button @mousedown.prevent @click="replaceProvider">Replace typography provider</Button></p>
     <ConfigProvider :components="providerComponents">
       <Paragraph data-provider-demo-rich class="demo-native-provider-root" :style="{ color: 'var(--apollo-color-text)' }"
         :class-names="{ root: 'demo-local-provider-root' }" :styles="providerLocalStyles" copyable>
         Current provider: {{ ['first object', 'new object', 'function', 'removed'][providerPhase] }}
-        <input aria-label="Provider typography draft" />
+        <Input aria-label="Provider typography draft" style="width: min(160px, 100%); margin-top: 8px" />
       </Paragraph>
       <div data-provider-demo-editor>
         <Text aria-label="Provider typography editor" :editable="{ editing: true }"

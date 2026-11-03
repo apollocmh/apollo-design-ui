@@ -15,6 +15,6 @@ const items: VNodeChild[] = [
   null,
   undefined,
 ];
-const Demo = () => h(Space, null, { default: () => items });
+const Demo = () => h(Space, { wrap: true }, { default: () => items });
 </script>
 <template><component :is="Demo" /></template>

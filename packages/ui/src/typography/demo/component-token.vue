@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ThemeConfig } from '@apollo-design/theme';
-import { ConfigProvider, Paragraph, Text, Title } from '@apollo-design/ui';
+import { Button, ConfigProvider, Paragraph, Text, Title } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const phase = ref(0);
@@ -23,7 +23,7 @@ const headingAliases = {
 </script>
 <template>
   <section class="demo-typography-token">
-    <p><button type="button" @mousedown.prevent @click="phase = (phase + 1) % 3">Cycle title spacing</button> {{ ['Default', 'Custom', 'Zero'][phase] }}</p>
+    <p style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><Button @mousedown.prevent @click="phase = (phase + 1) % 3">Cycle title spacing</Button> {{ ['Default', 'Custom', 'Zero'][phase] }}</p>
     <ConfigProvider :theme="theme">
       <Title :level="2" :style="headingAliases">组件 Token 标题</Title>
       <Paragraph>正文颜色来自 --apollo-color-text，标题颜色来自 --apollo-color-text-heading。</Paragraph>

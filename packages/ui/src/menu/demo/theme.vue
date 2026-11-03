@@ -52,6 +52,6 @@ const items: ItemType[] = [
     mode="inline"
     theme="dark"
     :items="items"
-    style="width: 256px"
+    style="width: min(256px, 100%)"
   />
 </template>

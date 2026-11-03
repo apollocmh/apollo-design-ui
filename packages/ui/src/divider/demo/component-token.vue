@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { ConfigProvider, Divider } from '../../index';
+import { Button, Checkbox, ConfigProvider, Divider, Slider } from '../../index';
 
 const enabled = ref(true);
 const padding = ref(12);
@@ -29,11 +29,11 @@ function reset() {
 
 <template>
   <div class="divider-token-controls">
-    <label><input v-model="enabled" type="checkbox" /> Enable component theme</label>
-    <label>Text padding: {{ padding }}px<input v-model.number="padding" aria-label="Divider text padding" type="range" min="0" max="40" step="2" /></label>
-    <label>Edge ratio: {{ ratio }}<input v-model.number="ratio" aria-label="Divider edge ratio" type="range" min="0" max="1" step="0.05" /></label>
-    <label>Vertical margin: {{ margin }}px<input v-model.number="margin" aria-label="Divider vertical margin" type="range" min="0" max="32" step="2" /></label>
-    <button type="button" @click="reset">Reset Divider theme</button>
+    <Checkbox v-model:checked="enabled">Enable component theme</Checkbox>
+    <div>Text padding: {{ padding }}px<Slider v-model:value="padding" aria-label="Divider text padding" :min="0" :max="40" :step="2" /></div>
+    <div>Edge ratio: {{ ratio }}<Slider v-model:value="ratio" aria-label="Divider edge ratio" :min="0" :max="1" :step="0.05" /></div>
+    <div>Vertical margin: {{ margin }}px<Slider v-model:value="margin" aria-label="Divider vertical margin" :min="0" :max="32" :step="2" /></div>
+    <Button style="width: fit-content" @click="reset">Reset Divider theme</Button>
   </div>
   <ConfigProvider :theme="theme">
     <Divider title-placement="start">Section heading</Divider>
@@ -43,9 +43,5 @@ function reset() {
 
 <style scoped>
 .divider-token-controls { display: grid; gap: 12px; }
-.divider-token-controls label { display: grid; gap: 4px; }
-.divider-token-controls label:first-child { display: flex; align-items: center; }
-.divider-token-controls input[type='range'] { width: 100%; }
-.divider-token-controls button { width: fit-content; }
 .divider-token-inline { margin-block: 16px; }
 </style>

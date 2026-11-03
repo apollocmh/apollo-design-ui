@@ -1,5 +1,7 @@
 ---
 order: 6
+preview:
+  span: full
 ---
 ## zh-CN
 

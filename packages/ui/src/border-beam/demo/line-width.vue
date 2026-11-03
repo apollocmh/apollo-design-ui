@@ -5,6 +5,6 @@ import { BorderBeam } from '@apollo-design/ui';
 
 <template>
   <BorderBeam :line-width="8">
-    <div style="position: relative; border: 8px solid #ddd; border-radius: 8px; padding: 24px">Thick border</div>
+    <div style="position: relative; border: 8px solid var(--apollo-color-border); border-radius: 8px; padding: 24px">Thick border</div>
   </BorderBeam>
 </template>

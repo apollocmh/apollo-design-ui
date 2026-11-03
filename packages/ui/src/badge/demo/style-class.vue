@@ -5,6 +5,7 @@ import {
   ConfigProvider,
   type ConfigProviderThemeConfig,
   Flex,
+  Input,
   Ribbon,
 } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
@@ -63,7 +64,7 @@ const theme = computed<ConfigProviderThemeConfig>(() => {
         <Badge :count="15" size="small" />
         <Badge dot />
         <Badge status="processing" text="Processing" />
-        <Badge :count="5"><input aria-label="Token and direction draft" placeholder="Draft" style="width: 100px" /></Badge>
+        <Badge :count="5"><Input aria-label="Token and direction draft" placeholder="Draft" style="width: 100px" /></Badge>
         <Badge><template #count><strong>Rich padding</strong></template></Badge>
         <Badge dir="ltr" :count="5"><span>Native LTR</span></Badge>
         <Ribbon dir="ltr" text="Native LTR"><span>Root direction</span></Ribbon>

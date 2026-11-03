@@ -6,7 +6,7 @@ import { BorderBeam } from '@apollo-design/ui';
 <template>
   <BorderBeam :size="40" class="custom-beam-host" :style="{ padding: '8px' }" :styles="{ effect: { opacity: 0.8 } }">
     <div
-      style="position: relative; border-radius: 16px; height: 64px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd"
+      style="position: relative; border-radius: 16px; height: 64px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--apollo-color-border)"
     >
       Custom container
     </div>

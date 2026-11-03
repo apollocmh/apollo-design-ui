@@ -1,52 +1,11 @@
 ---
 order: 203
 ---
+
 ## zh-CN
 
-自定义锚点高亮（`getCurrentAnchor` **只改高亮**，`onChange` 收到的仍是原始 link）。
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 customizeHighlight demo：`getCurrentAnchor` **改写高亮**
-// （⚠️ 只改高亮，`onChange` 收到的仍是**原始 link**）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
-];
-
-/** 永远把 `#anchor-demo-b` 显示为高亮。 */
-const getCurrentAnchor = (): string => '#anchor-demo-b';
-</script>
-
-<template>
-  <Anchor :items="items" :affix="false" :get-current-anchor="getCurrentAnchor" />
-</template>
-```
+getCurrentAnchor 只改写高亮：始终突出 Section B，点击后仍滚动到真实目标。
 
 ## en-US
 
-Customize the anchor highlight (`getCurrentAnchor` only changes the highlight; `onChange` still receives the original link).
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 customizeHighlight demo：`getCurrentAnchor` **改写高亮**
-// （⚠️ 只改高亮，`onChange` 收到的仍是**原始 link**）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
-];
-
-/** 永远把 `#anchor-demo-b` 显示为高亮。 */
-const getCurrentAnchor = (): string => '#anchor-demo-b';
-</script>
-
-<template>
-  <Anchor :items="items" :affix="false" :get-current-anchor="getCurrentAnchor" />
-</template>
-```
+getCurrentAnchor changes the highlight only: Section B stays highlighted while links still scroll to their actual targets.

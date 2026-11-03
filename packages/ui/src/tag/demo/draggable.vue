@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Tag } from '@apollo-design/ui';
+import { Space, Tag } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const items = ref([
@@ -27,6 +27,7 @@ const onDrop = (i: number) => {
 </script>
 
 <template>
+  <Space wrap>
   <Tag
     v-for="(item, i) in items"
     :key="item.id"
@@ -39,4 +40,5 @@ const onDrop = (i: number) => {
   >
     {{ item.text }}
   </Tag>
+  </Space>
 </template>

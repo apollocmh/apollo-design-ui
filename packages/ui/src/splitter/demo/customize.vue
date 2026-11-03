@@ -13,7 +13,7 @@ const onResizeEnd = (sizes: number[]) => {
 
 <template>
   <Splitter
-    style="height: 200px; box-shadow: 0 0 0 1px #d9d9d9"
+    style="height: 200px; box-shadow: 0 0 0 1px var(--apollo-color-border)"
     @resize-end="onResizeEnd"
   >
     <Splitter.Panel class="demo-splitter-panel-a" default-size="50%">自定义拖拽手柄</Splitter.Panel>
@@ -28,11 +28,11 @@ const onResizeEnd = (sizes: number[]) => {
 <style scoped>
 .demo-splitter-panel-a {
   padding: 12px;
-  background: #e6f4ff;
+  background: var(--apollo-color-primary-bg);
 }
 
 .demo-splitter-panel-b {
   padding: 12px;
-  background: #f6ffed;
+  background: var(--apollo-color-success-bg);
 }
 </style>

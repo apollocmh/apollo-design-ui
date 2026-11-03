@@ -29,7 +29,7 @@ const formatSize = (size: number | string | undefined): string => {
       <Button @click="sizes = undefined">撤回控制</Button>
       <Button @click="applyPreset(30)">重置为 30 / 70</Button>
     </Flex>
-    <Splitter style="height: 200px; box-shadow: 0 0 0 1px #d9d9d9" @resize="onResize">
+    <Splitter style="height: 200px; box-shadow: 0 0 0 1px var(--apollo-color-border)" @resize="onResize">
       <Splitter.Panel :size="sizes?.[0]">左侧（受控 size）</Splitter.Panel>
       <Splitter.Panel :size="sizes?.[1]">右侧（受控 size）</Splitter.Panel>
     </Splitter>

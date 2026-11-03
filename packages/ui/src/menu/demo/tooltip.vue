@@ -16,7 +16,7 @@ const items: ItemType[] = [
 </script>
 
 <template>
-  <div style="width: 80px">
+  <div :style="{ width: collapsed ? '80px' : '256px', maxWidth: '100%' }">
     <Button style="margin-bottom: 16px" @click="collapsed = !collapsed">
       {{ collapsed ? 'Expand' : 'Collapse' }}
     </Button>

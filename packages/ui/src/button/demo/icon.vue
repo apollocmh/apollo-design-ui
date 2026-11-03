@@ -7,7 +7,7 @@ import { Button, Space } from '@apollo-design/ui';
   <Space wrap>
     <Button type="primary" :icon="SearchOutlined">Search</Button>
     <Button :icon="SearchOutlined" icon-placement="end">Search</Button>
-    <Button type="primary" :icon="SearchOutlined" />
+    <Button type="primary" :icon="SearchOutlined" aria-label="Search" />
     <!-- 用插槽传图标 -->
     <Button type="primary">
       <template #icon><SearchOutlined /></template>

@@ -25,5 +25,5 @@ const stylesFn: SpaceProps['styles'] = ({ props }) => ({
 });
 </script>
 <template>
-  <div><Space :styles="styles" :class-names="classNames" separator="•"><Button v-for="i in 3" :key="i">Styled {{ i }}</Button></Space><Space size="large" :styles="stylesFn" :class-names="classNamesFn"><Button v-for="i in 3" :key="i">Large space {{ i }}</Button></Space></div>
+  <div style="display: grid; gap: 16px"><Space wrap :styles="styles" :class-names="classNames" separator="•"><Button v-for="i in 3" :key="i">Styled {{ i }}</Button></Space><Space wrap size="large" :styles="stylesFn" :class-names="classNamesFn"><Button v-for="i in 3" :key="i">Large space {{ i }}</Button></Space></div>
 </template>

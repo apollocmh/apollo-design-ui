@@ -55,6 +55,7 @@ const getContainer = (): HTMLElement | null => scrollArea.value;
 <style>
 .demo-anchor-static-scroll {
   flex: 1;
+  min-width: 0;
   height: 240px;
   overflow: auto;
   padding-inline: 16px;

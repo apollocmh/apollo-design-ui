@@ -1,70 +1,11 @@
 ---
 order: 209
 ---
+
 ## zh-CN
 
-为每条链接单独设置 `targetOffset`（优先级高于全局的 `targetOffset`）。
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 targetOffset-per-link demo：**每条链接**自己的滚动偏移
-// （优先级高于 `Anchor` 的全局 `targetOffset`）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A', targetOffset: 0 },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B', targetOffset: 120 },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C', targetOffset: 60 },
-];
-</script>
-
-<template>
-  <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" />
-    <div style="flex: 1; height: 240px; overflow: auto">
-      <div
-        v-for="id in ['a', 'b', 'c']"
-        :id="`anchor-demo-${id}`"
-        :key="id"
-        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
-      >
-        Section {{ id.toUpperCase() }}
-      </div>
-    </div>
-  </div>
-</template>
-```
+每条链接独立设置 targetOffset，点击小节比较 0、120 与 60px 的落点。
 
 ## en-US
 
-Set `targetOffset` for each link; the link-level value takes precedence over the global prop.
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 targetOffset-per-link demo：**每条链接**自己的滚动偏移
-// （优先级高于 `Anchor` 的全局 `targetOffset`）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A', targetOffset: 0 },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B', targetOffset: 120 },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C', targetOffset: 60 },
-];
-</script>
-
-<template>
-  <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" />
-    <div style="flex: 1; height: 240px; overflow: auto">
-      <div
-        v-for="id in ['a', 'b', 'c']"
-        :id="`anchor-demo-${id}`"
-        :key="id"
-        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
-      >
-        Section {{ id.toUpperCase() }}
-      </div>
-    </div>
-  </div>
-</template>
-```
+Set targetOffset per link and compare the 0, 120, and 60px landing positions.

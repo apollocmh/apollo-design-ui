@@ -9,8 +9,8 @@ const items = [{ title: '等待中' }, { title: '处理中' }, { title: '已发�
     <template #progressDot="{ index, status }">
       <span :style="{
         display: 'inline-flex', width: '16px', height: '16px', borderRadius: '50%',
-        background: status === 'finish' ? '#1677ff' : status === 'process' ? '#91caff' : '#e0e0e0',
-        color: '#fff', fontSize: '10px', alignItems: 'center', justifyContent: 'center',
+        background: status === 'finish' ? 'var(--apollo-color-primary)' : status === 'process' ? 'var(--apollo-color-primary-bg)' : 'var(--apollo-color-fill-secondary)',
+        color: status === 'finish' ? 'var(--apollo-color-text-light-solid)' : 'var(--apollo-color-text)', fontSize: '10px', alignItems: 'center', justifyContent: 'center',
       }">{{ index + 1 }}</span>
     </template>
   </Steps>

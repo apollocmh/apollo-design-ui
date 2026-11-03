@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Text } from '@apollo-design/ui';
+import { Button, Text } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const editableText = ref('Click the icon to edit');
@@ -26,9 +26,9 @@ const updateText = () => {
   <br />
   <Text aria-label="Editable without tooltip" :editable="{ tooltip: false }">No tooltip on the edit icon</Text>
   <section data-conditional-typography>
-    <p>
-      <button type="button" @mousedown.prevent @click="showContent = !showContent">Toggle editable content</button>
-      <button type="button" @mousedown.prevent @click="updateText">Update editable text</button>
+    <p style="display: flex; flex-wrap: wrap; gap: 8px">
+      <Button @mousedown.prevent @click="showContent = !showContent">Toggle editable content</Button>
+      <Button @mousedown.prevent @click="updateText">Update editable text</Button>
     </p>
     <Text aria-label="Conditional editable text" copyable
       :editable="{ onChange: (value: string) => (currentText = value) }">

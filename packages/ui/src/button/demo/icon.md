@@ -16,23 +16,3 @@ title:
   容器上额外带 `-loading-icon` 类名 —— ⚠️ **只在前两支都没提供自定义图标时才带**；
   一旦有自定义加载图标（prop 或 ConfigProvider），该类名**不出现**。
 - 插槽仍只接受 `() => VNodeChild`；组件要走 prop。
-
-```vue
-<script setup lang="ts">
-import { SearchOutlined } from '@apollo-design/icons';
-import { Button } from '@apollo-design/ui';
-import { h } from 'vue';
-</script>
-
-<template>
-  <!-- 组件形态：与 antd 的 `icon={<SearchOutlined />}` 等价（差异 D42） -->
-  <Button type="primary" :icon="SearchOutlined">Search</Button>
-  <!-- VNode 形态：`h(SearchOutlined)` 渲染结果一致 -->
-  <Button type="primary" :icon="h(SearchOutlined)">Search</Button>
-  <!-- 插槽形态 -->
-  <Button type="primary">
-    <template #icon><SearchOutlined /></template>
-    Slot icon
-  </Button>
-</template>
-```

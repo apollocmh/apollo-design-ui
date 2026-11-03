@@ -11,6 +11,6 @@ const stops = [
 
 <template>
   <BorderBeam :color="stops">
-    <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">Gradient</div>
+    <div style="position: relative; border: 1px solid var(--apollo-color-border); border-radius: 8px; padding: 24px">Gradient</div>
   </BorderBeam>
 </template>

@@ -10,7 +10,7 @@ const items = [
   { title: '发货', content: '付款后 24 小时内发货' },
   { title: '签收', content: '请记得查收商品' },
 ];
-const description = computed(() => (current.value < items.length ? '下一步' : '全部完成'));
+const description = computed(() => (current.value < items.length - 1 ? '下一步' : '全部完成'));
 const prev = () => {
   current.value = Math.max(0, current.value - 1);
 };

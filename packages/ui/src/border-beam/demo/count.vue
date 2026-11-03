@@ -5,6 +5,6 @@ import { BorderBeam } from '@apollo-design/ui';
 
 <template>
   <BorderBeam :count="3">
-    <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+    <div style="position: relative; border: 1px solid var(--apollo-color-border); border-radius: 8px; padding: 24px">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
   </BorderBeam>
 </template>

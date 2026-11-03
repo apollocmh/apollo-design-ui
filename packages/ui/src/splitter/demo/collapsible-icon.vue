@@ -23,7 +23,7 @@ const onCollapse = (collapsed: boolean[]) => {
 
 <template>
   <Splitter
-    style="height: 200px; box-shadow: 0 0 0 1px #d9d9d9"
+    style="height: 200px; box-shadow: 0 0 0 1px var(--apollo-color-border)"
     :collapsible="collapsible"
     @collapse="onCollapse"
   >

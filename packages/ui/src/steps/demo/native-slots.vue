@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Steps } from '@apollo-design/ui';
+import { Button, Input, Steps } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const custom = ref(true);
@@ -34,7 +34,7 @@ const update = () => {
     <template v-if="custom" #itemRender="{ itemNode, item, index, active }">
       <div v-if="!empty" :data-native-step="item.key" :data-index="index" :data-active="active">
         <component :is="itemNode" />
-        <input :aria-label="`Step note ${item.key}`" style="width: 80px" />
+        <Input :aria-label="`Step note ${item.key}`" style="width: 80px" />
       </div>
     </template>
   </Steps>

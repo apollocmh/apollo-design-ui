@@ -1,70 +1,11 @@
 ---
 order: 202
 ---
+
 ## zh-CN
 
-最简单的用法。
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `<div>` 做锚点目标 + 固定高度容器；
-// 本仓同样用原生元素（demo 不引入未落地的组件）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
-];
-</script>
-
-<template>
-  <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" />
-    <div style="flex: 1; height: 240px; overflow: auto">
-      <div
-        v-for="id in ['a', 'b', 'c']"
-        :id="`anchor-demo-${id}`"
-        :key="id"
-        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
-      >
-        Section {{ id.toUpperCase() }}
-      </div>
-    </div>
-  </div>
-</template>
-```
+将锚点绑定到右侧独立滚动容器。点击 Section B/C 或滚动内容，观察定位和高亮。
 
 ## en-US
 
-The simplest usage.
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `<div>` 做锚点目标 + 固定高度容器；
-// 本仓同样用原生元素（demo 不引入未落地的组件）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
-];
-</script>
-
-<template>
-  <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" />
-    <div style="flex: 1; height: 240px; overflow: auto">
-      <div
-        v-for="id in ['a', 'b', 'c']"
-        :id="`anchor-demo-${id}`"
-        :key="id"
-        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
-      >
-        Section {{ id.toUpperCase() }}
-      </div>
-    </div>
-  </div>
-</template>
-```
+Bind anchors to the adjacent scroll container. Click Section B/C or scroll its content to follow the active section.

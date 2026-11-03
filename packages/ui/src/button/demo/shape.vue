@@ -5,10 +5,10 @@ import { Button, Space } from '@apollo-design/ui';
 
 <template>
   <Space wrap>
-    <Button type="primary" shape="circle" :icon="SearchOutlined" />
+    <Button type="primary" shape="circle" :icon="SearchOutlined" aria-label="Search" />
     <Button type="primary" shape="round">Round</Button>
     <Button type="primary" shape="square">Square</Button>
-    <Button shape="circle" :icon="SearchOutlined" />
+    <Button shape="circle" :icon="SearchOutlined" aria-label="Search" />
     <Button shape="round">Round</Button>
   </Space>
 </template>

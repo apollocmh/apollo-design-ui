@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `Card` 渲染条目 —— 本仓 Card 尚未落地，
-// 用**原生 div + 等价内联样式**替换（缺口登记在 README §7）。
+// 用不同高度的原生内容块展示瀑布流的排列。
 import { Masonry } from '@apollo-design/ui';
 
 const tileStyle = {

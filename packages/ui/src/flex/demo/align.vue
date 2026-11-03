@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FlexAlign, FlexJustify } from '@apollo-design/ui';
-import { Flex } from '@apollo-design/ui';
+import { Button, Flex, Select } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const justifyOptions = [
@@ -25,18 +25,14 @@ const boxStyle = {
 <template>
   <Flex gap="medium" align="start" vertical>
     <p>Select justify :</p>
-    <select v-model="justify" aria-label="Select justify">
-      <option v-for="o in justifyOptions" :key="o" :value="o">{{ o }}</option>
-    </select>
+    <Select v-model:value="justify" aria-label="Select justify" style="width: 180px" :options="justifyOptions.map(value => ({ value, label: value }))" />
     <p>Select align :</p>
-    <select v-model="align" aria-label="Select align">
-      <option v-for="o in alignOptions" :key="o" :value="o">{{ o }}</option>
-    </select>
+    <Select v-model:value="align" aria-label="Select align" style="width: 180px" :options="alignOptions.map(value => ({ value, label: value }))" />
     <Flex :style="boxStyle" :justify="justify" :align="align">
-      <button type="button">Task</button>
-      <button type="button">Task</button>
-      <button type="button">Task</button>
-      <button type="button">Task</button>
+      <Button>Task</Button>
+      <Button>Task</Button>
+      <Button>Task</Button>
+      <Button>Task</Button>
     </Flex>
   </Flex>
 </template>

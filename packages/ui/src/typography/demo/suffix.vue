@@ -8,7 +8,7 @@ const longText =
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 320px">
+  <div style="display: flex; flex-direction: column; gap: 16px; width: min(320px, 100%)">
     <Paragraph :ellipsis="{ rows: 2, suffix: '…… 查看全文' }">
       {{ longText }}
     </Paragraph>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 fresh demo：条目内容的高度会变 ⇒ 需要 `fresh`（每个条目各挂一个
 // ResizeObserver）。`fresh` 还会持续观察 CSS 过渡期间的高度变化。
-import { Masonry } from '@apollo-design/ui';
+import { Button, Masonry } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const tileStyle = {
@@ -25,9 +25,9 @@ const bump = (index: number): void => {
 </script>
 
 <template>
-  <Masonry fresh :columns="4" :gutter="16" :items="items">
+  <Masonry fresh :columns="{ xs: 2, sm: 3, lg: 4 }" :gutter="16" :items="items">
     <template #item="{ index }">
-      <div :style="{ height: `${current[index]}px`, ...tileStyle, cursor: 'pointer', transition: 'height 0.3s' }" @click="bump(index)">{{ index + 1 }} - Click</div>
+      <Button :style="{ height: `${current[index]}px`, width: '100%', ...tileStyle, whiteSpace: 'normal', transition: 'height 0.3s' }" @click="bump(index)">{{ index + 1 }} - Click</Button>
     </template>
   </Masonry>
 </template>

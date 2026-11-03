@@ -1,68 +1,11 @@
 ---
 order: 208
 ---
+
 ## zh-CN
 
-锚点目标滚动到屏幕正中间（`targetOffset` 优先于 `offsetTop`）。
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 targetOffset demo：滚动落点的偏移（优先于 `offsetTop`）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
-];
-</script>
-
-<template>
-  <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" :target-offset="60" />
-    <div style="flex: 1; height: 240px; overflow: auto">
-      <div
-        v-for="id in ['a', 'b', 'c']"
-        :id="`anchor-demo-${id}`"
-        :key="id"
-        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
-      >
-        Section {{ id.toUpperCase() }}
-      </div>
-    </div>
-  </div>
-</template>
-```
+目标滚动到容器顶部下方 60px；targetOffset 优先于 offsetTop。
 
 ## en-US
 
-Anchor target scroll to screen center (`targetOffset` takes precedence over `offsetTop`).
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 targetOffset demo：滚动落点的偏移（优先于 `offsetTop`）。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
-];
-</script>
-
-<template>
-  <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" :target-offset="60" />
-    <div style="flex: 1; height: 240px; overflow: auto">
-      <div
-        v-for="id in ['a', 'b', 'c']"
-        :id="`anchor-demo-${id}`"
-        :key="id"
-        style="height: 200px; margin-bottom: 16px; background: var(--apollo-color-fill-alter); color: var(--apollo-color-text); padding: 8px"
-      >
-        Section {{ id.toUpperCase() }}
-      </div>
-    </div>
-  </div>
-</template>
-```
+Targets stop 60px below the scroll container’s top. targetOffset takes precedence over offsetTop.

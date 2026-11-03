@@ -38,7 +38,7 @@ const getPopupContainer = (node: HTMLElement): HTMLElement =>
 </script>
 
 <template>
-  <Switch v-model:checked="dark" checked-children="Dark" un-checked-children="Light" />
+  <Switch aria-label="Use dark submenu theme" v-model:checked="dark" checked-children="Dark" un-checked-children="Light" />
   <br />
   <br />
   <Menu
@@ -48,6 +48,6 @@ const getPopupContainer = (node: HTMLElement): HTMLElement =>
     mode="vertical"
     theme="dark"
     :get-popup-container="getPopupContainer"
-    style="width: 256px"
+    style="width: min(256px, 100%)"
   />
 </template>

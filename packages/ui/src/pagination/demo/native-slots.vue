@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Pagination } from '@apollo-design/ui';
+import { Button, Pagination } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const current = ref(1);
@@ -23,13 +23,13 @@ const onRootClick = (event: MouseEvent) => {
 
 <template>
   <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px">
-    <button @click="customItems = !customItems">Toggle page slots</button>
-    <button @click="customSize = !customSize">Toggle size slot</button>
-    <button @click="showTotal = !showTotal">Toggle total slot</button>
-    <button @click="empty = !empty">Toggle empty pages</button>
-    <button @click="disabled = !disabled">Toggle pagination disabled</button>
-    <button @click="label = label === 'Page' ? 'Current' : 'Page'">Update page label</button>
-    <button @click="blue = !blue">Update pagination attrs</button>
+    <Button @click="customItems = !customItems">Toggle page slots</Button>
+    <Button @click="customSize = !customSize">Toggle size slot</Button>
+    <Button @click="showTotal = !showTotal">Toggle total slot</Button>
+    <Button @click="empty = !empty">Toggle empty pages</Button>
+    <Button @click="disabled = !disabled">Toggle pagination disabled</Button>
+    <Button @click="label = label === 'Page' ? 'Current' : 'Page'">Update page label</Button>
+    <Button @click="blue = !blue">Update pagination attrs</Button>
   </div>
   <Pagination id="native-pagination" v-model:current="current" v-model:pageSize="pageSize"
     :total="85" show-size-changer :disabled="disabled"
@@ -45,10 +45,10 @@ const onRootClick = (event: MouseEvent) => {
       <output data-native-total>{{ range[0] }}-{{ range[1] }} / {{ total }}</output>
     </template>
     <template v-if="customSize" #sizeChanger="{ value, onSizeChange, disabled }">
-      <button data-native-size :disabled="disabled" @click="onSizeChange(value === 10 ? 20 : 10)">
+      <Button data-native-size :disabled="disabled" @click="onSizeChange(value === 10 ? 20 : 10)">
         Size {{ value }}
-      </button>
+      </Button>
     </template>
   </Pagination>
-  <output id="pagination-state">{{ JSON.stringify({ current, pageSize, changes, sizes, rootClicks, nativeEvent }) }}</output>
+  <output id="pagination-state" style="display: block; overflow-wrap: anywhere; margin-top: 12px">{{ JSON.stringify({ current, pageSize, changes, sizes, rootClicks, nativeEvent }) }}</output>
 </template>

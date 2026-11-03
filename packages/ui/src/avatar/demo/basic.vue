@@ -1,13 +1,12 @@
 <script setup lang="ts">
 // 对齐 antd 的 basic demo。
+
+import { UserOutlined } from '@apollo-design/icons';
 import { Avatar, Space } from '@apollo-design/ui';
 import { h } from 'vue';
 
-// ⚠️ 图标替身：demo 里用纯色方块（与视觉用例同一份结构，避免外链图标带来的差异）
-const icon = () =>
-  h('span', {
-    style: { display: 'inline-block', width: '1em', height: '1em', background: '#999' },
-  });
+// 本地图标随库发布，不依赖外链资源。
+const icon = () => h(UserOutlined);
 </script>
 
 <template>

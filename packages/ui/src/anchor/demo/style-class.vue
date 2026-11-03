@@ -51,7 +51,7 @@ const getContainer = (): HTMLElement | null => scrollArea.value;
 
 <style>
 .demo-anchor-style-root .demo-anchor-style-title {
-  color: #531dab;
+  color: var(--apollo-color-primary-text);
   font-weight: 600;
 }
 
@@ -61,17 +61,18 @@ const getContainer = (): HTMLElement | null => scrollArea.value;
 }
 
 .demo-anchor-style-root .demo-anchor-style-item:hover {
-  background: #f9f0ff;
+  background: var(--apollo-color-primary-bg);
 }
 
 .demo-anchor-style-root .demo-anchor-style-indicator {
   width: 4px;
   border-radius: 2px;
-  background: #722ed1;
+  background: var(--apollo-color-primary);
 }
 
 .demo-anchor-style-scroll {
   flex: 1;
+  min-width: 0;
   height: 240px;
   overflow: auto;
   padding-inline: 8px;

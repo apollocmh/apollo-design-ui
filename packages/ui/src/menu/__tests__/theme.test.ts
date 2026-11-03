@@ -27,6 +27,16 @@ describe('Menu · token 契约', () => {
     expect(decls).toContain('--apollo-menu-item-margin-inline:4px;');
   });
 
+  it('Issue #86: surfaces, text and selection consume the current theme aliases', () => {
+    expect(decls).toContain('--apollo-menu-item-bg:var(--apollo-color-bg-container);');
+    expect(decls).toContain('--apollo-menu-item-color:var(--apollo-color-text);');
+    expect(decls).toContain('--apollo-menu-item-selected-color:var(--apollo-color-primary);');
+    expect(decls).toContain('--apollo-menu-item-selected-bg:var(--apollo-color-primary-bg);');
+    expect(decls).toContain('--apollo-menu-popup-bg:var(--apollo-color-bg-elevated);');
+    expect(decls).toContain('--apollo-menu-dark-item-selected-bg:var(--apollo-color-primary);');
+    expect(decls).toContain('--apollo-menu-dark-item-bg:#001529;');
+  });
+
   it('base 段（root / -hidden / item / submenu-title）', () => {
     expect(css).toContain(
       '.apollo-menu{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);',

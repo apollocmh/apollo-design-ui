@@ -6,7 +6,7 @@ import {
   ExclamationCircleOutlined,
   SyncOutlined,
 } from '@apollo-design/icons';
-import { Tag } from '@apollo-design/ui';
+import { Space, Tag } from '@apollo-design/ui';
 
 const variants = ['filled', 'solid', 'outlined'] as const;
 const presets = ['success', 'processing', 'warning', 'error', 'default'] as const;
@@ -22,9 +22,11 @@ const iconMap = {
 <template>
   <div v-for="variant in variants" :key="variant">
     <p>Status ({{ variant }})</p>
+    <Space wrap>
     <Tag v-for="s in presets" :key="s" :color="s" :variant="variant">
       <template #icon><component :is="iconMap[s]" aria-hidden="true" /></template>
       {{ s }}
     </Tag>
+    </Space>
   </div>
 </template>

@@ -13,20 +13,6 @@ title:
 
 局部 ConfigProvider 示例进一步替换整个 `components.typography` 配置：对象 → 新对象 → 捕获当前普通值的新函数 → 移除。根、操作区、按钮和编辑输入的类名/样式同步更新；函数只读取既有 `props.prefixCls`，可看到解析后的前缀。原生根 style 和本地 `styles.root` 的覆盖顺序保持，输入草稿和焦点不被配置替换重置。
 
-```vue
-<script setup lang="ts">
-import { ref, type StyleValue } from 'vue';
-import { Text } from '@apollo-design/ui';
-
-const nativeStyle = ref<StyleValue>('color:var(--apollo-color-primary)');
-</script>
-
-<template>
-  <Text :style="nativeStyle" :styles="{ root: { color: 'var(--apollo-color-text-secondary)' } }">
-    Native style overrides the semantic root; undefined restores it.
-  </Text>
-</template>
-```
 
 ## en-US
 

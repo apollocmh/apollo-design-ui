@@ -11,7 +11,7 @@ const onResize = (next: number[]) => {
 </script>
 
 <template>
-  <Splitter style="height: 200px; box-shadow: 0 0 0 1px #d9d9d9" @resize="onResize">
+  <Splitter style="height: 200px; box-shadow: 0 0 0 1px var(--apollo-color-border)" @resize="onResize">
     <Splitter.Panel default-size="30%" min="20%" max="50%">30% / min 20% / max 50%</Splitter.Panel>
     <Splitter.Panel default-size="200px" min="100px" max="300px">200px 初始宽度</Splitter.Panel>
     <Splitter.Panel>剩余空间</Splitter.Panel>

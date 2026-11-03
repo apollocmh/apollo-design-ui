@@ -5,7 +5,7 @@ import {
   TwitterOutlined,
   YoutubeOutlined,
 } from '@apollo-design/icons';
-import { Tag } from '@apollo-design/ui';
+import { Space, Tag } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const checked = ref([true, false, false, false]);
@@ -18,14 +18,16 @@ const toggle = (i: number) => {
 </script>
 
 <template>
+  <Space wrap>
   <button v-for="(item, i) in icons" :key="i" type="button" class="demo-tag-toggle" :aria-pressed="checked[i]" @click="toggle(i)">
     <Tag :color="checked[i] ? colors[i] : undefined">
       <template #icon><component :is="item" aria-hidden="true" /></template>
       {{ colors[i] }}
     </Tag>
   </button>
+  </Space>
 </template>
 <style scoped>
-.demo-tag-toggle { margin-inline-end: 8px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.demo-tag-toggle { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .demo-tag-toggle:focus-visible { outline: 2px solid var(--apollo-color-primary); outline-offset: 2px; }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider, type ItemType, Menu } from '@apollo-design/ui';
+import { Button, ConfigProvider, type ItemType, Menu } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const current = ref<string[]>(['1']);
@@ -19,9 +19,9 @@ const items: ItemType[] = [
 
 <template>
   <section>
-    <button type="button" @click="alternate = !alternate">Switch Menu tokens</button>
+    <Button style="margin-bottom: 12px" @click="alternate = !alternate">Switch Menu tokens</Button>
     <ConfigProvider :theme="theme">
-      <Menu v-model:selectedKeys="current" mode="inline" :items="items" style="width: 256px" />
+      <Menu v-model:selectedKeys="current" mode="inline" :items="items" style="width: min(256px, 100%)" />
     </ConfigProvider>
   </section>
 </template>

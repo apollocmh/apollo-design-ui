@@ -56,7 +56,7 @@ const items: ItemType[] = [
 </script>
 
 <template>
-  <div style="width: 256px">
+  <div style="width: min(256px, 100%)">
     <Button type="primary" style="margin-bottom: 16px" @click="collapsed = !collapsed">
       {{ collapsed ? 'Expand' : 'Collapse' }}
     </Button>

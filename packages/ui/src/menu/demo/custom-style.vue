@@ -13,7 +13,7 @@ const items: ItemType[] = [
 ];
 
 const menuStyle = {
-  width: '256px',
+  width: 'min(256px, 100%)',
   '--apollo-menu-item-height': '44px',
   '--apollo-menu-item-border-radius': '10px',
   '--apollo-menu-item-margin-inline': '0px',

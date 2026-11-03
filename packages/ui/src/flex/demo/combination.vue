@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Flex } from '@apollo-design/ui';
+import { Button, Flex } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const expanded = ref(false);
@@ -14,7 +14,7 @@ const expanded = ref(false);
     <Flex vertical align="flex-start" justify="space-between" gap="small" flex="1 1 240px" style="min-width: 0; padding: 24px; box-sizing: border-box">
       <h3 style="margin: 0">Keep the team in sync</h3>
       <p style="margin: 0">Use nested Flex layouts for a responsive project summary.</p>
-      <button type="button" :aria-expanded="expanded" @click="expanded = !expanded">{{ expanded ? 'Hide details' : 'Show details' }}</button>
+      <Button :aria-expanded="expanded" @click="expanded = !expanded">{{ expanded ? 'Hide details' : 'Show details' }}</Button>
       <p v-if="expanded" style="margin: 0">Three milestones are ready for review.</p>
     </Flex>
   </Flex>

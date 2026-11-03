@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Divider } from '../../index';
+import { Checkbox, Divider, Input } from '../../index';
 
 const showTitle = ref(true);
 const plain = ref(false);
@@ -9,8 +9,8 @@ const draft = ref('Draft title');
 
 <template>
   <div class="divider-title-controls">
-    <label><input v-model="showTitle" type="checkbox" /> Show title</label>
-    <label><input v-model="plain" type="checkbox" /> Plain title</label>
+    <Checkbox v-model:checked="showTitle">Show title</Checkbox>
+    <Checkbox v-model:checked="plain">Plain title</Checkbox>
   </div>
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
@@ -18,7 +18,7 @@ const draft = ref('Draft title');
   </p>
   <Divider :plain="plain">
     <template v-if="showTitle" #default>
-      <strong>Text</strong><input v-model="draft" class="divider-title-draft" aria-label="Divider title draft" />
+      <strong>Text</strong><Input v-model:value="draft" class="divider-title-draft" aria-label="Divider title draft" size="small" />
     </template>
   </Divider>
   <p>
@@ -53,6 +53,5 @@ const draft = ref('Draft title');
 
 <style scoped>
 .divider-title-controls { display: flex; flex-wrap: wrap; gap: 16px; }
-.divider-title-controls label { display: inline-flex; align-items: center; gap: 4px; }
-.divider-title-draft { width: min(10rem, 40vw); margin-inline-start: 8px; }
+.divider-title-draft { width: min(10rem, 32vw); margin-inline-start: 8px; }
 </style>

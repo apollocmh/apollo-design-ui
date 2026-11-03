@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Layout } from '@apollo-design/ui';
+import { Checkbox, Layout } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -7,7 +7,7 @@ const withSider = ref(false);
 </script>
 <template>
   <div>
-    <label><input v-model="withSider" type="checkbox" /> Include sidebar</label>
+    <Checkbox v-model:checked="withSider" style="margin-bottom: 16px">Include sidebar</Checkbox>
     <Layout class="demo-basic">
       <Header>Header</Header>
       <Layout v-if="withSider"><Sider width="25%">Sider</Sider><Content class="demo-basic-content">Content</Content></Layout>

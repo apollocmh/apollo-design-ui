@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Flex } from '@apollo-design/ui';
+import { Button, Flex } from '@apollo-design/ui';
 </script>
 
 <template>
   <Flex wrap gap="small">
-    <button v-for="i in 24" :key="i" type="button">Button</button>
+    <Button v-for="i in 24" :key="i">Button</Button>
   </Flex>
 </template>

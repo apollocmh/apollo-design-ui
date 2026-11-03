@@ -13,22 +13,6 @@ title:
 
 最后一个示例使用正常 Vue 模板的条件默认插槽。它最初没有正文；更新当前文本，再显示、编辑或复制正文，操作均读取当前内容。再次移除正文时，复制按钮恢复只有图标的状态。编辑态使用原生 `<textarea>`，示例显式提供可访问名。
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Text } from '@apollo-design/ui';
-
-const showContent = ref(false);
-const currentText = ref('Current template text');
-</script>
-
-<template>
-  <Text aria-label="Conditional editable text" copyable
-    :editable="{ onChange: (value: string) => (currentText = value) }">
-    <template v-if="showContent" #default>{{ currentText }}</template>
-  </Text>
-</template>
-```
 
 ## en-US
 

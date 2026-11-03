@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider, Tag } from '@apollo-design/ui';
+import { Button, ConfigProvider, Tag } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const alternate = ref(false);
@@ -14,7 +14,7 @@ const theme = computed(() => ({
 }));
 </script>
 <template>
-  <button type="button" @click="alternate = !alternate">Switch component tokens</button>
+  <Button @click="alternate = !alternate">Switch component tokens</Button>
   <ConfigProvider :theme="theme">
     <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-block-start: 8px">
       <Tag>Default</Tag><Tag>Another</Tag><Tag color="blue">Blue</Tag>

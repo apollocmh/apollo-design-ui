@@ -4,7 +4,7 @@
 //
 // ⚠️ antd 的 demo 用 `antd-style` 的 `createStaticStyles` 生成 CSS 类 ——
 // 本仓没有这个依赖 ⇒ 用**普通类名**替换（真正的样式在 `styles` 里给），
-// 缺口登记在 README §7。`Flex` / `Divider` / `Typography` 换成原生元素。
+// 示例内容使用普通块元素，样式保持在当前示例内。
 import { Masonry, type MasonryProps } from '@apollo-design/ui';
 
 const heights = [120, 80, 100, 60, 140, 90, 110, 70];
@@ -19,7 +19,11 @@ const styles: MasonryProps<number>['styles'] = {
     height: '260px',
     backgroundColor: 'var(--apollo-color-fill-alter)',
   },
-  item: { border: '1px solid #ccc', borderRadius: '12px', overflow: 'hidden' },
+  item: {
+    border: '1px solid var(--apollo-color-border)',
+    borderRadius: '12px',
+    overflow: 'hidden',
+  },
 };
 
 /** 函数形态：入参的 `props.columns` 是**解析后的列数**。 */

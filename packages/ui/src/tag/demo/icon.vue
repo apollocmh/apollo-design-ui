@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LinkedinOutlined, TwitterOutlined, YoutubeOutlined } from '@apollo-design/icons';
-import { CheckableTag } from '@apollo-design/ui';
+import { CheckableTag, Space } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const checked = ref([true, false, false]);
@@ -9,8 +9,10 @@ const colors = ['geekblue', 'green', 'purple'];
 </script>
 
 <template>
-    <CheckableTag v-for="(item, i) in icons" :key="i" :style="{ marginInlineEnd: '8px' }" v-model:checked="checked[i]">
+  <Space wrap>
+    <CheckableTag v-for="(item, i) in icons" :key="i" v-model:checked="checked[i]">
       <template #icon><component :is="item" aria-hidden="true" /></template>
       {{ colors[i] }}
     </CheckableTag>
+  </Space>
 </template>

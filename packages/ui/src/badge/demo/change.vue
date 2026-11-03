@@ -1,14 +1,14 @@
 <script setup lang="ts">
-// 对齐 antd 的 change demo（Button/Icon 用原生 button 等价替换）
+// 使用本库操作按钮观察徽标数值更新。
 
-import { Badge, Button } from '@apollo-design/ui';
+import { Badge, Button, Space } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const count = ref(5);
 </script>
 
 <template>
-  <div>
+  <Space wrap :size="16">
     <Badge :count="count">
       <div style="width: 40px; height: 40px; background: var(--apollo-color-fill-alter); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center" />
     </Badge>
@@ -16,5 +16,5 @@ const count = ref(5);
     <Button aria-label="增加计数 / Increase count" @click="count = count + 1">+</Button>
     <Button @click="count = -12">负数 / Negative</Button>
     <Button @click="count = 5">重置 / Reset</Button>
-  </div>
+  </Space>
 </template>

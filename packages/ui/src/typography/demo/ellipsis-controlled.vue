@@ -31,7 +31,7 @@ const ellipsisConfig = computed<EllipsisConfig>(() => ({
 
 <template>
   <div
-    style="display: flex; flex-direction: column; gap: 12px; width: 280px; font-family: sans-serif"
+    style="display: flex; flex-direction: column; gap: 12px; width: min(280px, 100%); font-family: sans-serif"
   >
     <Paragraph :ellipsis="ellipsisConfig">{{ longText }}</Paragraph>
     <div>

@@ -10,6 +10,7 @@ const contents = [
 </script>
 
 <template>
+  <div class="grid-demo">
   <Row style="height: 120px">
     <Col v-for="c in contents" :key="c.key" :span="8" :style="{ display: 'flex', flexDirection: 'column' }">
       <div :style="{ background: 'var(--apollo-color-primary-bg)', borderRadius: '4px', color: 'var(--apollo-color-text)', textAlign: 'center', height: c.percent }">
@@ -17,4 +18,10 @@ const contents = [
       </div>
     </Col>
   </Row>
+  </div>
 </template>
+
+<style scoped>
+.grid-demo { display: grid; gap: 16px; min-width: 0; }
+.grid-demo :deep(.apollo-col:nth-child(even)) { --grid-demo-cell-bg: var(--apollo-color-primary-bg-hover); }
+</style>

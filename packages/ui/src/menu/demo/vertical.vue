@@ -56,6 +56,6 @@ const handleClick = (info: { key: string }) => {
     mode="vertical"
     :items="items"
     @click="handleClick"
-    style="width: 256px"
+    style="width: min(256px, 100%)"
   />
 </template>

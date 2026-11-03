@@ -1,42 +1,11 @@
 ---
 order: 207
 ---
+
 ## zh-CN
 
-替换浏览器历史记录中的路径，后退按钮将返回到上一页而不是上一个锚点。
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 replace demo：用 `replaceState` 而不是 `pushState`。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-];
-</script>
-
-<template>
-  <Anchor replace :items="items" :affix="false" />
-</template>
-```
+点击示例内锚点时使用 replaceState；后退返回上一页而不是上一个锚点。
 
 ## en-US
 
-Replace path in browser history, so back button returns to previous page instead of previous anchor item.
-
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 replace demo：用 `replaceState` 而不是 `pushState`。
-import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
-
-const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-];
-</script>
-
-<template>
-  <Anchor replace :items="items" :affix="false" />
-</template>
-```
+Use replaceState when clicking this demo’s anchors, so Back returns to the previous page rather than the previous anchor.

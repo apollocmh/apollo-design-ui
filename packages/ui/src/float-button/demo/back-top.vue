@@ -18,7 +18,9 @@ const onScroll = (event: Event) => {
     <Text type="secondary">在下方容器内滚动，超过 80px 后显示带进度环的回到顶部按钮。</Text>
     <div
       ref="scrollContainer"
-      style="height: 240px; overflow-y: auto; margin-top: 12px; padding: 12px; border: 1px solid #f0f0f0; border-radius: 8px"
+      style="height: 240px; overflow-y: auto; margin-top: 12px; padding: 12px; border: 1px solid var(--apollo-color-border); border-radius: 8px"
+      tabindex="0"
+      aria-label="FloatButton scroll content"
       @scroll="onScroll"
     >
       <div v-for="i in 40" :key="i" style="padding: 6px 0">Scroll content {{ i }}</div>

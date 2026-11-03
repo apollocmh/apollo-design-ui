@@ -90,6 +90,7 @@ function onChange(link: string): void {
 <style>
 .anchor-token-demo-scroll {
   flex: 1;
+  min-width: 0;
   height: 240px;
   overflow: auto;
   padding-inline: 8px;

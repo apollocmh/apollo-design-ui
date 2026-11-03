@@ -35,7 +35,7 @@ const items: ItemType[] = [
 </script>
 
 <template>
-  <div style="height: 200px">
+  <Layout style="min-height: 320px">
     <Sider
       collapsible
       :collapsed="collapsed"
@@ -45,9 +45,11 @@ const items: ItemType[] = [
         v-model:selectedKeys="current"
         v-model:openKeys="openKeys"
         mode="inline"
+        theme="dark"
         :inline-collapsed="collapsed"
         :items="items"
       />
     </Sider>
-  </div>
+    <Layout.Content style="padding: 16px; min-width: 0">Toggle the sidebar to update the menu.</Layout.Content>
+  </Layout>
 </template>
