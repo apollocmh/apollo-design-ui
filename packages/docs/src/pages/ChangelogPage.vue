@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useSiteLocale } from '../composables/locale';
 import { loadChangelog } from '../composables/manifest';
+import { useSeo } from '../composables/seo';
 import { useTocState } from '../composables/toc';
 import type { ChangelogDay } from '../types/manifest';
 
@@ -12,6 +13,14 @@ onMounted(() => setToc([]));
 const days = ref<ChangelogDay[]>([]);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
 const latestCommit = computed(() => days.value[0]?.commits[0]);
+useSeo(
+  computed(() => t('changelog')),
+  computed(() =>
+    locale.value === 'zh-CN'
+      ? 'Apollo Design 版本与更新记录。'
+      : 'Apollo Design releases and changes.',
+  ),
+);
 
 onMounted(async () => {
   try {
@@ -150,6 +159,7 @@ const TYPE_COLOR: Record<string, string> = {
 .changelog-subject {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .changelog-hash {
@@ -157,5 +167,11 @@ const TYPE_COLOR: Record<string, string> = {
   font-size: 12px;
   color: var(--site-text-tertiary);
   flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .changelog-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+  .changelog-type { grid-column: 1; justify-self: start; max-width: 100%; overflow-wrap: anywhere; }
+  .changelog-subject { grid-column: 1 / -1; grid-row: 2; }
+  .changelog-hash { grid-column: 2; grid-row: 1; }
 }
 </style>

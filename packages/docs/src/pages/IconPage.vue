@@ -122,6 +122,8 @@ onBeforeUnmount(() => {
       </p>
     </header>
 
+    <p><RouterLink to="/guide/icons">{{ txt('图标使用指南 →', 'Icon guide →') }}</RouterLink></p>
+
     <section id="icon-usage" class="icon-section">
       <h2 class="icon-section-title">{{ txt('使用方式', 'Usage') }}</h2>
       <p class="icon-section-lead">

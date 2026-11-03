@@ -105,6 +105,9 @@ describe('全量 demo 审计', () => {
       .filter(({ demo }) => demo.preview.mode === 'viewport')
       .map(({ component, demo }) => `${component}/${demo.name}`);
     expect(viewportDemos).toContain('float-button/basic');
+    for (const { demo } of allDemos.filter(({ component }) => component === 'layout')) {
+      expect(demo.preview.mode, `layout/${demo.name}`).toBe('viewport');
+    }
     expect(viewportDemos).toContain('float-button/group');
     expect(viewportDemos).toContain('float-button/back-top');
     const fixedBackTop = allDemos.find(

@@ -7,6 +7,8 @@ order: 4
 
 ## zh-CN
 
+[打开主题展示](/guide/themes)，在同一页比较三套主题的亮暗外观。
+
 ### 风格与明暗独立选择
 
 默认、Mono 与 Material 3 风格通过相同公开 API 派生。Mono 使用黑白灰、克制圆角与阴影，并保留语义色；Material 3 风格提供字体层级、形状、表面与状态 Token，不替代组件的交互规范。
@@ -69,6 +71,8 @@ Header 的主题面板分别提供默认/Mono/Material 与浅色/深色/跟随�
 内联 Demo 继承站点选择，但其局部 Provider 可覆盖。独立链接携带初始 `preset`、`theme`、`lang`。iframe 在客户端首次创建时携带当前选择，后续以验证 origin、source、frameId 的受控消息更新，不改写 src，不丢失输入、选择与展开状态。文档站为了提供三个可选风格显式加载三份预设 CSS；只用一个风格的应用只需加载自己的入口。
 
 ## en-US
+
+[Open the theme gallery](/guide/themes) to compare all three themes in light and dark.
 
 ### Independent style and appearance
 

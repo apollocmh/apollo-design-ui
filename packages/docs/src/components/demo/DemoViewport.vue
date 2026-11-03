@@ -54,11 +54,14 @@ const { t } = useSiteLocale();
 }
 
 .demo-viewport-dots i {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--site-border);
+  background: #ff5f57;
 }
+
+.demo-viewport-dots i:nth-child(2) { background: #febc2e; }
+.demo-viewport-dots i:nth-child(3) { background: #28c840; }
 
 .demo-viewport-title {
   font-size: 12px;

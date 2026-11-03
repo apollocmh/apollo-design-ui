@@ -142,7 +142,9 @@ function parseDemo(componentName, demoMdPath) {
     ? previewRaw.mode
     : meta.iframe === true
       ? 'isolated'
-      : 'inline';
+      : componentName === 'layout'
+        ? 'viewport'
+        : 'inline';
   if (previewRaw.mode !== undefined && !allowedModes.has(previewRaw.mode)) {
     throw new Error(
       `${componentName}/demo/${name}：preview.mode 必须是 inline / isolated / viewport，实际「${previewRaw.mode}」`,
@@ -440,6 +442,7 @@ async function renderComponentDocs(comp) {
       introHtml: introR.html,
       restHtml: restR.html,
       toc: [...introR.toc, ...restR.toc],
+      demoTocIndex: introR.toc.length,
     };
   }
   return out;

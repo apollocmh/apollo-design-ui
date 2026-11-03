@@ -5,9 +5,9 @@
  * 页面数据（文档 HTML、demo 元数据与源码）按组件懒加载，离开页面即释放。
  */
 import { Segmented } from '@apollo-design/ui';
-import { computed, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import DemoPreview from '../components/demo/DemoPreview.vue';
+import DemoMasonry from '../components/demo/DemoMasonry.vue';
 import DocHtml from '../components/docs/DocHtml.vue';
 import { useSiteLocale } from '../composables/locale';
 import { findComponent, loadComponentPage } from '../composables/manifest';
@@ -30,6 +30,16 @@ const layoutOptions = computed(() => [
 ]);
 const fullWidth = computed(() => layoutMode.value === 'full');
 const requestGuard = createRequestGuard();
+
+async function positionInitialAnchor(): Promise<void> {
+  const hash = route.hash;
+  if (!hash) return;
+  // The page JSON and first masonry geometry are asynchronous. Router scroll
+  // can run before either exists; locate deep links once both are committed.
+  await nextTick();
+  if (hash !== route.hash) return;
+  document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start', behavior: 'auto' });
+}
 
 async function load(name: string): Promise<void> {
   const token = requestGuard.next();
@@ -64,18 +74,19 @@ const langKey = computed(() => (locale.value === 'zh-CN' ? 'zh' : 'en'));
 
 const doc = computed(() => (page.value ? page.value.doc[langKey.value] : null));
 
-/**
- * TOC = intro 标题 + 「代码演示」锚点 + rest 标题（demo 区块由本页渲染，占锚 `id="demos"`）。
- *
- * 🚨 「代码演示」必须**插到 intro 与 rest 的交界**，不能追加到末尾（2026-10-20 修）。
- *    生成器 `splitDocBody()` 用 `## 代码演示` 作切分点、把它**连同标题一起吃掉**，
- *    所以 `doc.toc` 里天然没有这一项；旧实现直接追加 ⇒ 目录里「代码演示」从正文
- *    第 3 位掉到最后，与正文顺序不符（用户报「表格文档页目录没更新」）。
- *    插入规则见 `composables/toc.ts` 的 `withDemoAnchor()`。
- */
+/** The content pipeline retains the intro/rest boundary, including pages without an API heading. */
 const toc = computed<TocItem[]>(() => {
   if (!doc.value) return [];
-  return withDemoAnchor(doc.value.toc, t('groupDemo'));
+  return withDemoAnchor(
+    doc.value.toc,
+    t('groupDemo'),
+    doc.value.demoTocIndex,
+    (page.value?.demos ?? []).map((demo) => ({
+      level: 3,
+      text: pick(demo.title).text,
+      id: `demo-${demo.name}`,
+    })),
+  );
 });
 
 watch(toc, (next) => setToc(next), { immediate: true });
@@ -126,14 +137,7 @@ useSeo(
         <div class="demos-toolbar">
           <Segmented v-model:value="layoutMode" :options="layoutOptions" size="small" />
         </div>
-        <div class="demos-grid" :class="{ 'full-width': fullWidth }">
-          <DemoPreview
-            v-for="demo in page.demos"
-            :key="demo.id"
-            :demo="demo"
-            :full-width="fullWidth"
-          />
-        </div>
+        <DemoMasonry :demos="page.demos" :full-width="fullWidth" @ready="positionInitialAnchor" />
       </section>
 
       <DocHtml :html="doc?.restHtml ?? ''" />
@@ -158,6 +162,7 @@ useSeo(
   letter-spacing: -0.01em;
   margin: 0 0 12px;
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 12px;
 }
@@ -219,41 +224,6 @@ useSeo(
   display: flex;
   gap: 6px;
   margin-bottom: 14px;
-}
-
-/*
- * V3：稳定 CSS Grid（行优先，DOM 顺序 = 阅读顺序 = Tab 顺序）。
- * - 默认两列；宽度不足时单列；超宽（≥2200）才评估三列。
- * - 展开源码只改变当前行高度，不再触发 CSS columns 的整列重排。
- * - `full` 档 demo 由 `.demo-preview--span-full` 占满一行。
- */
-.demos-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 1.5vw, 24px);
-  align-items: start;
-}
-
-.demos-grid.full-width {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-@media (max-width: 1080px) {
-  .demos-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (min-width: 2200px) {
-  .demos-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .demos-grid.full-width {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .demos-grid :deep(.demo-preview--span-2) {
-    grid-column: span 2;
-  }
 }
 
 .page-loading,

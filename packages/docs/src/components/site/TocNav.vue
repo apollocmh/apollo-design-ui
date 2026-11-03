@@ -33,7 +33,7 @@ function setupSpy(): void {
 watch(
   () => props.items.map((i) => i.id).join('|'),
   () => setupSpy(),
-  { immediate: false },
+  { immediate: false, flush: 'post' },
 );
 
 onMounted(setupSpy);
@@ -49,6 +49,7 @@ onBeforeUnmount(() => observer?.disconnect());
       class="site-toc-link"
       :class="{ active: activeId === item.id, l3: item.level === 3 }"
       :href="`#${item.id}`"
+      :aria-current="activeId === item.id ? 'location' : undefined"
     >
       {{ item.text }}
     </a>

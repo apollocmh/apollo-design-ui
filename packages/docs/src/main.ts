@@ -7,7 +7,7 @@
 import { ViteSSG } from 'vite-ssg';
 import App from './App.vue';
 import { initSiteLocale, provideSiteLocale } from './composables/locale';
-import { setupTheme } from './composables/theme';
+import { prefersReducedMotion, setupTheme } from './composables/theme';
 import { routes, stripHtmlGuard } from './router';
 
 // ⚠️ 组件样式必须显式引入：文档站的示例走的是**发布产物同源**的静态 CSS
@@ -31,7 +31,8 @@ export const createApp = ViteSSG(
     routes,
     scrollBehavior(to, from, saved) {
       if (saved) return saved;
-      if (to.hash) return { el: to.hash, behavior: 'smooth', top: 72 };
+      if (to.hash)
+        return { el: to.hash, behavior: prefersReducedMotion() ? 'auto' : 'smooth', top: 72 };
       if (to.path !== from.path) return { top: 0 };
     },
   },

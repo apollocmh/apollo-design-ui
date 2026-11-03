@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { Button } from '@apollo-design/ui';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useSiteLocale } from '../composables/locale';
 import { siteManifest } from '../composables/manifest';
+import { useSeo } from '../composables/seo';
 
 const { locale, t } = useSiteLocale();
 const logoSrc = `${import.meta.env.BASE_URL}logo.svg`;
+useSeo(
+  ref(''),
+  computed(() =>
+    locale.value === 'zh-CN'
+      ? 'Vue 3 原生 UI 组件库，支持静态 CSS 与三套亮暗主题。'
+      : 'Native Vue 3 UI components with static CSS and three light/dark themes.',
+  ),
+);
 
 /** 首页实时示例：与所有 demo 一致，仅客户端动态加载（SSR 安全 + 按需 chunk）。 */
 const hero = ref<Record<string, unknown>>({});

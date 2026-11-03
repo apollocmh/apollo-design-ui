@@ -25,7 +25,7 @@ describe('组件页 TOC：代码演示锚点的插入位置', () => {
       item(3, 'Table', 'table'),
       item(2, '语义化与可访问性', '语义化与可访问性'),
     ];
-    expect(withDemoAnchor(toc, '代码演示').map((t) => t.id)).toEqual([
+    expect(withDemoAnchor(toc, '代码演示', 2).map((t) => t.id)).toEqual([
       '何时使用',
       '引入',
       'demos',
@@ -36,24 +36,25 @@ describe('组件页 TOC：代码演示锚点的插入位置', () => {
   });
 
   it('锚点 id 恒为 `demos`、层级恒为 2（对应本页渲染的 <section id="demos">）', () => {
-    const out = withDemoAnchor([item(2, 'API', 'api')], 'Code Demo');
+    const out = withDemoAnchor([item(2, 'API', 'api')], 'Code Demo', 0);
     expect(out[0]).toEqual({ level: 2, text: 'Code Demo', id: 'demos' });
   });
 
-  it('「API」大小写不敏感（英文文档 / 自定义写法都能命中）', () => {
-    const out = withDemoAnchor([item(2, 'Intro', 'intro'), item(2, 'Api', 'API')], '代码演示');
+  it('API 标题大小写不影响构建期边界', () => {
+    const out = withDemoAnchor([item(2, 'Intro', 'intro'), item(2, 'Api', 'API')], '代码演示', 1);
     expect(out.map((t) => t.id)).toEqual(['intro', 'demos', 'API']);
   });
 
-  it('没有 API 章节时退化为追加 —— 宁可顺序差一点，也不能丢掉入口', () => {
-    const out = withDemoAnchor([item(2, '何时使用', '何时使用')], '代码演示');
+  it('没有 rest 章节时插入在 intro 之后', () => {
+    const out = withDemoAnchor([item(2, '何时使用', '何时使用')], '代码演示', 1);
     expect(out.map((t) => t.id)).toEqual(['何时使用', 'demos']);
   });
 
-  it('只认 level 2 的 API（三级标题同名不算）', () => {
+  it('intro 中的 API 标题不改变构建期边界', () => {
     const out = withDemoAnchor(
       [item(3, 'API', 'api'), item(2, '语义化与可访问性', 'a11y')],
       '代码演示',
+      2,
     );
     expect(out.map((t) => t.id)).toEqual(['api', 'a11y', 'demos']);
   });
@@ -61,7 +62,35 @@ describe('组件页 TOC：代码演示锚点的插入位置', () => {
   it('不修改入参数组（computed 里复用同一份 doc.toc）', () => {
     const toc = [item(2, 'API', 'api')];
     const snapshot = [...toc];
-    withDemoAnchor(toc, '代码演示');
+    withDemoAnchor(toc, '代码演示', 0);
     expect(toc).toEqual(snapshot);
   });
+});
+
+it('Issue #86: all demo anchors are children of Demos and keep API order', () => {
+  const toc = withDemoAnchor([item(2, 'Intro', 'intro'), item(2, 'API', 'api')], 'Demos', 1, [
+    item(3, 'Basic', 'demo-basic'),
+    item(3, 'Dynamic', 'demo-dynamic'),
+  ]);
+  expect(toc.map((entry) => [entry.id, entry.level])).toEqual([
+    ['intro', 2],
+    ['demos', 2],
+    ['demo-basic', 3],
+    ['demo-dynamic', 3],
+    ['api', 2],
+  ]);
+});
+
+it('Issue #86: Layout without an API heading places Demos before all rest headings', () => {
+  const layoutToc = [
+    item(2, 'Layout', 'layout'),
+    item(2, 'LayoutSider', 'layoutsider'),
+    item(2, '插槽、键盘与 ref', 'slots'),
+    item(2, '样式入口', 'styles'),
+  ];
+  expect(
+    withDemoAnchor(layoutToc, '代码演示', 0, [item(3, '基本结构', 'demo-basic')]).map(
+      (entry) => entry.id,
+    ),
+  ).toEqual(['demos', 'demo-basic', 'layout', 'layoutsider', 'slots', 'styles']);
 });

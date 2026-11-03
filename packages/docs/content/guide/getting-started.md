@@ -69,7 +69,7 @@ import { Button, Space } from '@apollo-design/ui';
 - [样式引入](/guide/styles) —— tokens.css 与组件样式的关系
 - [按需使用](/guide/tree-shaking) —— ESM tree-shaking
 - [主题](/guide/theming) —— 亮暗切换与 token 定制
-- [国际化](/guide/i18n) —— LocaleProvider 与内置语言包
+- [国际化](/guide/i18n) —— ConfigProvider 与内置语言包
 
 ## en-US
 

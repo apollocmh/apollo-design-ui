@@ -130,6 +130,8 @@ function reset(): void {
   border-radius: var(--site-radius);
   margin: 0;
   overflow: hidden;
+  min-width: 0;
+  scroll-margin-top: 80px;
   background: var(--site-bg);
 }
 
@@ -187,7 +189,8 @@ function reset(): void {
   transition: opacity 0.15s;
 }
 
-.demo-preview:hover .demo-anchor {
+.demo-preview:hover .demo-anchor,
+.demo-anchor:focus-visible {
   opacity: 1;
 }
 

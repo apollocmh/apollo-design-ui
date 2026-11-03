@@ -9,9 +9,10 @@ import {
 } from '@apollo-design/icons';
 import { Button } from '@apollo-design/ui';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { type SiteTextKey, useSiteLocale } from '../../composables/locale';
 import { siteManifest } from '../../composables/manifest';
+import { sectionForPath, sectionLinks } from '../../composables/navigation';
 import { useSearch } from '../../composables/search';
 import {
   type SitePreset,
@@ -25,6 +26,8 @@ defineProps<{ menuOpen?: boolean }>();
 defineEmits<{ toggleMenu: [] }>();
 
 const router = useRouter();
+const route = useRoute();
+const section = computed(() => sectionForPath(route.path));
 const { t, locale, setLocale } = useSiteLocale();
 const { mode, setMode } = useThemeMode();
 const { preset, setPreset } = useThemePreset();
@@ -127,7 +130,7 @@ function toggleLocale(): void {
       <template #icon><MenuOutlined /></template>
     </Button>
 
-    <RouterLink to="/" class="site-logo">
+    <RouterLink to="/" class="site-logo" aria-label="Apollo Design">
       <img :src="logoSrc" alt="" />
       <span>Apollo Design</span>
     </RouterLink>
@@ -139,14 +142,15 @@ function toggleLocale(): void {
     </Button>
 
     <nav class="site-topbar-nav" :aria-label="t('mainNav')">
-      <RouterLink to="/components" :class="{ 'router-link-active': $route.path.startsWith('/components') }">
-        {{ t('components') }}
+      <RouterLink
+        v-for="link in sectionLinks"
+        :key="link.section"
+        :to="link.to"
+        :class="{ 'router-link-active': section === link.section }"
+        :aria-current="section === link.section ? 'page' : undefined"
+      >
+        {{ t(link.key) }}
       </RouterLink>
-      <RouterLink to="/guide/getting-started" :class="{ 'router-link-active': $route.path.startsWith('/guide') }">
-        {{ t('docs') }}
-      </RouterLink>
-      <RouterLink to="/changelog">{{ t('changelog') }}</RouterLink>
-      <a :href="siteManifest.repoUrl" target="_blank" rel="noopener noreferrer">{{ t('github') }}</a>
     </nav>
 
     <div class="site-topbar-actions">

@@ -23,6 +23,8 @@ export interface RenderedDoc {
   introHtml: string;
   restHtml: string;
   toc: TocItem[];
+  /** Insertion boundary retained from the build-time intro/rest split. */
+  demoTocIndex: number;
 }
 
 /** 指南页是单段正文（无 demo 拆分）。 */

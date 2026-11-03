@@ -2,9 +2,11 @@
 import { computed, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import DocHtml from '../components/docs/DocHtml.vue';
+import ThemeGallery from '../components/themes/ThemeGallery.vue';
 import { useSiteLocale } from '../composables/locale';
 import { loadGuidePage } from '../composables/manifest';
 import { createRequestGuard } from '../composables/request-guard';
+import { useSeo } from '../composables/seo';
 import { useTocState } from '../composables/toc';
 import type { GuidePageData } from '../types/manifest';
 
@@ -48,10 +50,28 @@ const doc = computed(() =>
   page.value ? page.value.doc[locale.value === 'zh-CN' ? 'zh' : 'en'] : null,
 );
 const titleText = computed(() => (page.value ? pick(page.value.title).text : ''));
+useSeo(
+  titleText,
+  computed(
+    () => `${titleText.value} · Apollo Design ${locale.value === 'zh-CN' ? '使用指南' : 'guide'}`,
+  ),
+);
 
 watch(
   () => doc.value?.toc ?? [],
-  (next) => setToc(next),
+  (next) =>
+    setToc(
+      page.value?.slug === 'themes'
+        ? [
+            ...next,
+            {
+              level: 2,
+              text: locale.value === 'zh-CN' ? '亮暗预览' : 'Light and dark previews',
+              id: 'theme-previews',
+            },
+          ]
+        : next,
+    ),
   { immediate: true },
 );
 onBeforeUnmount(() => setToc([]));
@@ -62,6 +82,7 @@ onBeforeUnmount(() => setToc([]));
     <template v-if="state === 'ready' && page">
       <h1 class="guide-title">{{ titleText }}</h1>
       <DocHtml :html="doc?.html ?? ''" />
+      <ThemeGallery v-if="page.slug === 'themes'" />
     </template>
     <div v-else-if="state === 'loading'" class="page-loading">{{ t('loading') }}</div>
     <div v-else class="page-loading">⚠️ {{ route.params.slug }} — {{ t('demoError') }}</div>

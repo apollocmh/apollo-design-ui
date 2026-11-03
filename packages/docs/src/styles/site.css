@@ -561,3 +561,29 @@ a:hover {
   color: var(--site-text-secondary);
   font-size: 12.5px;
 }
+
+/* Content sections remain reachable when the desktop navigation is collapsed. */
+.site-mobile-sections {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid var(--site-border);
+}
+.site-mobile-sections a {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+  border-radius: var(--site-radius);
+  color: var(--site-text-secondary);
+}
+.site-mobile-sections a.active {
+  color: var(--site-brand);
+  background: var(--site-bg-soft);
+  font-weight: 600;
+}
+
+@media (max-width: 380px) {
+  .site-logo span {
+    display: none;
+  }
+}

@@ -14,6 +14,7 @@ const { items } = useTocState();
 const drawerOpen = ref(false);
 const drawer = ref<HTMLElement | null>(null);
 let restoreFocus: HTMLElement | null = null;
+let bodyOverflow: string | null = null;
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -48,12 +49,16 @@ function onDrawerKeydown(e: KeyboardEvent): void {
 watch(drawerOpen, async (open) => {
   if (open) {
     restoreFocus = document.activeElement as HTMLElement | null;
+    bodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', onDrawerKeydown);
     await nextTick();
     focusables()[0]?.focus();
     return;
   }
   document.removeEventListener('keydown', onDrawerKeydown);
+  if (bodyOverflow !== null) document.body.style.overflow = bodyOverflow;
+  bodyOverflow = null;
   restoreFocus?.focus();
   restoreFocus = null;
 });
@@ -68,6 +73,7 @@ watch(
 
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', onDrawerKeydown);
+  if (bodyOverflow !== null) document.body.style.overflow = bodyOverflow;
 });
 
 const showNav = computed(() => route.name !== 'home');
@@ -99,7 +105,7 @@ const showNav = computed(() => route.name !== 'home');
         aria-modal="true"
         :aria-label="t('mobileNav')"
       >
-        <SideNav @navigate="drawerOpen = false" />
+        <SideNav mobile @navigate="drawerOpen = false" />
       </nav>
     </template>
   </div>
