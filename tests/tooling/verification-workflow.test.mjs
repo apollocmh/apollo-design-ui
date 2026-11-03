@@ -14,6 +14,7 @@ import {
   focusedPlan,
   fullPlan,
 } from '../../scripts/verification.mjs';
+import { DOCS_BROWSER_SCRIPTS } from '../../scripts/verify-docs-browser.mjs';
 
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-verification-'));
@@ -248,7 +249,9 @@ test('Docs browser changes and their shared tools select the affected real brows
   const f = fixture(t);
   const menu = 'packages/docs/tests/menu-browser.mjs';
   const motion = 'packages/docs/tests/motion-review-browser.mjs';
-  for (const file of [menu, motion]) f.write(file, '');
+  const review = DOCS_BROWSER_SCRIPTS.filter((file) => /issue86|scroll-animation/.test(file));
+  assert.equal(review.length, 6);
+  for (const file of [menu, motion, ...review]) f.write(file, '');
   for (const [files, expected] of [
     [[menu], [menu]],
     [[motion], [motion]],
@@ -258,6 +261,7 @@ test('Docs browser changes and their shared tools select the affected real brows
       [menu, motion, menu],
       [menu, motion],
     ],
+    ...review.map((file) => [[file], [file]]),
   ]) {
     const plan = changedPlan(f.root, files);
     assert.deepEqual(plan.checks.find((step) => step.kind === 'demo')?.args, [
@@ -281,9 +285,7 @@ test('Docs browser changes and their shared tools select the affected real brows
   ]) {
     const plan = changedPlan(f.root, [file]);
     const browser = plan.checks.find((step) => step.kind === 'demo');
-    assert.equal(browser.args.length, 7);
-    assert.ok(browser.args.includes(menu));
-    assert.ok(browser.args.includes(motion));
+    assert.deepEqual(browser.args, ['scripts/verify-docs-browser.mjs', ...DOCS_BROWSER_SCRIPTS]);
   }
 });
 

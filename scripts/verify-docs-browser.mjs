@@ -14,6 +14,12 @@ export const DOCS_BROWSER_SCRIPTS = [
   'packages/docs/tests/menu-browser.mjs',
   'packages/docs/tests/notification-motion-browser.mjs',
   'packages/docs/tests/motion-review-browser.mjs',
+  'packages/docs/tests/issue86-site-browser.mjs',
+  'packages/docs/tests/issue86-general-browser.mjs',
+  'packages/docs/tests/issue86-controls-browser.mjs',
+  'packages/docs/tests/issue86-data-browser.mjs',
+  'packages/docs/tests/issue86-feedback-browser.mjs',
+  'tests/browser/scroll-animation.mjs',
 ];
 export function docsBrowserScriptsForFiles(files) {
   const selected = new Set();
