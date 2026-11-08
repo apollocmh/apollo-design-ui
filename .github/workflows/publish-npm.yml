@@ -1,0 +1,67 @@
+name: Publish npm
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag whose exact commit passed complete acceptance
+        required: true
+        type: string
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+jobs:
+  publish:
+    if: >-
+      github.ref == 'refs/heads/master' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: npm
+    permissions:
+      contents: read
+      actions: read
+      checks: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Install the pinned OIDC-capable npm CLI
+        run: npm install --global npm@12.2.2 --ignore-scripts --no-audit --no-fund
+      - name: Resolve complete acceptance and pack its original frozen SDK
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+          RELEASE_RUN: ${{ github.event.workflow_run.id }}
+        run: node scripts/npm-release.mjs prepare "$RUNNER_TEMP/npm-release"
+      - name: Publish with npm trusted publishing and verify registry contents
+        run: node scripts/npm-release.mjs publish "$RUNNER_TEMP/npm-release"
+      - name: Install from npm and check public consumers
+        run: node scripts/npm-release.mjs verify "$RUNNER_TEMP/npm-release"
+      - name: Preserve publication evidence, including partial failures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: npm-release-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/npm-release/*.json
+            ${{ runner.temp }}/npm-release/tarballs/
+            ${{ runner.temp }}/npm-release/logs/
+          if-no-files-found: warn
+          retention-days: 14
