@@ -1,99 +1,46 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # @apollo-design/overlay
 
-> **层**：L2 ｜ **风险**：high
->
-> 本文档声明本包的**职责边界**。边界之外的事情不做 —— 如果发现需要做，说明架构需要调整，
-> 应当先修改 `ARCHITECTURE.md` 并记录 ADR。
+锚定浮层的 Vue 交互编排：触发动作、受控显隐、延迟、外部点击、子浮层登记与 Esc 顺序。适合创建自己的下拉面板、提示或上下文菜单。
 
----
-
-## 职责
-
-锚定浮层的生命周期编排。替代 @rc-component/trigger 的触发时机与生命周期部分。**定位几何在 @apollo-design/position，挂载在 @apollo-design/portal** —— 本包只编排「何时开、何时关、谁在上层」。
-
-## 替代的 Ant Design 依赖
-
-- `@rc-component/trigger（生命周期部分）`
-
-## 公开 API
-
-- useOverlay —— Vue composable，返回当前开合状态、元素 Ref、原生事件 props 和显式开关方法
-- 触发动作：hover / click / focus / contextMenu / touch；动作和延迟配置支持 Ref/getter
-- 延迟：mouseEnterDelay / mouseLeaveDelay / focusDelay / blurDelay
-- 关闭：外部点击（clickToHide，含 contextMenu）/ Esc / 失焦，及各自的关闭钩子
-- 层级：按实际窗口共享 Esc 栈，同窗口多个 app 按开启顺序仅关闭栈顶；z-index 数值归 portal
-
-`onOpenChange` 是开关请求回调，受控时由父级决定是否接受。返回的 `targetProps` / `popupProps` 绑定 Vue 原生 DOM 事件并传递原始 Event；composable 本身没有组件 emits、插槽或 Provider。完整导出、选项、返回值和资源归属见[当前 API 契约](../../docs/foundation/overlay-contract.md#5-api-设计)。
-
-> ⚠️ 2026-09-18 修正：此处原写「堆叠：与 portal 的 z-index 协调，后开的浮层在上层」，
-> **两处都错**。① z-index 数值由 `portal` 的 `computeZIndex` 负责，本包不做；
-> ② antd 的 z-index 是「组件类型偏移 + 嵌套上下文累加」，**不是** LIFO 栈，
-> 且最外层浮层根本不设 z-index（靠同一容器内的 DOM 顺序决定层叠）。
-> 本包唯一的「栈」是 Esc 栈。依据见
-> [`docs/foundation/overlay-contract.md`](../../docs/foundation/overlay-contract.md) §3.13
-> 与 [`portal-contract.md`](../../docs/foundation/portal-contract.md) §3.4。
-> 模板源已同步修正（`registry/tools/scaffold-packages.mjs` 的 `publicApi`）；
-> README 默认不被 scaffold 覆盖，所以这里需要手工保持同步。
-
-## 明确不做（边界）
-
-- ❌ 不实现定位几何（那是 @apollo-design/position）
-- ❌ 不实现挂载与容器（那是 @apollo-design/portal）
-- ❌ 不实现焦点陷阱本体（@apollo-design/a11y 再导出自 @apollo-design/utils）
-- ❌ 不产出任何视觉样式 —— 浮层长什么样是组件层的事
-
-## 必须遵守的契约
-
-- 受控请求被拒绝时不改变当前状态，撤控保留最后接受值；disabled 仅压制渲染
-- hover 移入 popup 时以新的开启请求替换旧关闭延迟，离场中的 inMotion 可保活
-- Esc 只关闭派发开始时的栈顶，多 app 不共用实例 id；IME 结束后锁定 200ms
-- 外点判定排除 target、popup 与已登记子浮层，支持同源多文档和 ShadowRoot
-- 关闭、配置/元素变化及卸载释放所属窗口监听；卸载同时取消延迟，null 解除子浮层登记
-
-## 依赖
-
-### 运行时依赖
-
-| `@apollo-design/utils` | `workspace:*` |
-| `@apollo-design/portal` | `workspace:*` |
-| `@apollo-design/position` | `workspace:*` |
-| `@apollo-design/a11y` | `workspace:*` |
-
-### peer 依赖
-
-| `vue` | `catalog:` |
-
-### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
-
-（无）
-
-## 依赖约束（ARCHITECTURE.md §3.1）
-
-- **R1 单向**：只能依赖同层或更低层
-- **R2 无环**：不得与其他包循环依赖
-- **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
-- **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
-- **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
-- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
-  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
-  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
-
-本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
-
-
-## 测试
+## 安装
 
 ```bash
-pnpm --filter @apollo-design/overlay test
-pnpm --filter @apollo-design/overlay lint
-node packages/overlay/src/__tests__/native-browser.mjs
+npm install @apollo-design/overlay vue
 ```
 
-测试要求见 [`TESTING.md`](../../TESTING.md)。
-覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L2 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+需要带定位和样式的完整组件时，使用 UI 包的 Dropdown、Popover 或 Tooltip。
 
-## 当前受控值与待执行延迟
+## 基础触发
 
-外部受控显隐值实际变化时，本实例先前排定的触发延迟失效；同一渲染tick内关闭后再打开，也不会被旧hide回调关闭。未受控延迟、显式setOpen、disabled压制、拒绝关闭时的焦点规则保持原契约。2026-10-28复现与相关482条回归见[专项证据](../../docs/audit/2026-10-28-overlay-controlled-delay-audit.md)。
+```vue
+<script setup lang="ts">
+import { useOverlay } from '@apollo-design/overlay';
+
+const { open, targetRef, popupRef, targetProps, popupProps } = useOverlay({
+  action: 'click',
+});
+</script>
+
+<template>
+  <button ref="targetRef" type="button" v-bind="targetProps" :aria-expanded="open">
+    详细信息
+  </button>
+  <div v-if="open" ref="popupRef" v-bind="popupProps">这里是内容</div>
+</template>
+```
+
+示例在文档流内展示内容。`targetProps` 与 `popupProps` 应绑定到实际触发和浮层节点，便于内部/外部事件判定。
+
+## 组合方式
+
+- `action`、`showAction`、`hideAction` 选择点击、悬停、焦点或上下文菜单行为。
+- `open` 接收值、ref 或 getter；受控状态通过 `onOpenChange` 提出更新请求。非受控使用 `defaultOpen`。
+- `mouseEnterDelay`、`mouseLeaveDelay`、`focusDelay`、`blurDelay` 及 `setOpen` 的延迟单位为秒。
+- 子浮层使用 `registerSubPopup` 登记实际节点，内部点击不会被误判为外部关闭。
+- `inMotion` 用于协调离场中的状态；卸载会释放监听和延迟任务。
+
+定位由 `@apollo-design/position` 提供，容器由 `@apollo-design/portal` 提供，焦点管理使用 `@apollo-design/a11y`，动效使用 `@apollo-design/motion`。本包不输出视觉样式，也不导出名为 `Trigger` 的组件。
+
+## 文档与维护
+
+[公开导出](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/overlay/src/index.ts) · [项目规范](https://github.com/apollocmh/apollo-design-ui/blob/master/AGENTS.md) · [测试要求](https://github.com/apollocmh/apollo-design-ui/blob/master/TESTING.md)

@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/form-core",
   "version": "0.1.9",
-  "description": "表单状态机 + 字段校验引擎。替代 @rc-component/form 与 @rc-component/async-validator。",
+  "description": "Vue form state, field subscriptions and asynchronous validation.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -33,5 +33,14 @@
     "@apollo-design/test-utils": "workspace:*",
     "@rc-component/async-validator": "catalog:",
     "@rc-component/form": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/form-core"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/icons",
   "version": "0.1.9",
-  "description": "Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 antd 图标像素一致。",
+  "description": "Vue 3 SVG icons, icon context and custom iconfont integration.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -33,5 +33,14 @@
     "@apollo-design/test-utils": "workspace:*",
     "@ant-design/icons-svg": "catalog:",
     "@ant-design/colors": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/icons"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

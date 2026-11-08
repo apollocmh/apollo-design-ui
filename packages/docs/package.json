@@ -2,7 +2,7 @@
   "name": "@apollo-design/docs",
   "version": "0.1.9",
   "private": true,
-  "description": "Apollo Design 官网（Vue 3 + Vite + vite-ssg 独立产品应用，弃用 VitePress）。",
+  "description": "Apollo Design documentation, component demos, icons and theme gallery.",
   "type": "module",
   "scripts": {
     "dev": "node tooling/content/build-manifest.mjs && vite",

@@ -1,114 +1,57 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # @apollo-design/a11y
 
-> **层**：L1 ｜ **风险**：medium
->
-> 本文档声明本包的**职责边界**。边界之外的事情不做 —— 如果发现需要做，说明架构需要调整，
-> 应当先修改 `ARCHITECTURE.md` 并记录 ADR。
+面向 Vue 组件作者的无障碍交互原语：焦点约束与恢复、方向键导航、活动后代、字符定位和屏幕阅读器播报。
 
----
+## 安装
 
-## 职责
+```bash
+npm install @apollo-design/a11y vue
+```
 
-运行时无障碍原语。antd 把焦点管理、roving tabindex、live region 等散落在各组件与 rc 包里，本项目把它们收敛为可复用的原语。
-
-## 替代的 Ant Design 依赖
-
-- `antd 内联 a11y 逻辑（本项目新增能力：antd 没有对应的独立包）`
-
-## 公开 API
-
-- lockFocus / useLockFocus / getFocusNodeList / triggerFocus / resetFocusLock —— 焦点陷阱（再导出自 utils）
-- useFocusRestore —— 关闭后焦点恢复（Modal / Drawer / Image.Preview）；多层保存返回路径，移除目标回退与卸载锁释放后恢复见 [当前契约](../../docs/foundation/a11y-contract.md#351-apollo-多层焦点返回2026-10-25)
-
-`save(target?: Element | null)`省略参数保存当前外部焦点；已知封闭源根可传实际Element，null明确不保存。容器的焦点判断使用其实际根，包含判断跨ShadowRoot宿主；恢复仍保留多层返回路径、目标移除回退与后续开层优先。Image通过私有源节点getter使用此能力，没有新增Image公开prop。
-- useRovingFocus + nextRovingIndex / moveRovingIndex / getRovingOffset / getRovingTabIndex —— roving tabindex 与方向键导航（Menu / Tabs / Radio.Group / Toolbar）
-- useActiveDescendant + getListboxId / getOptionId —— aria-activedescendant 的 id 方案（Select / Tree / Listbox 类）
-- useLiveRegion / announce / announceValues / formatLiveRegionText —— 屏幕阅读器播报（message / notification / upload / transfer）
-- useTypeahead + pushTypeaheadChar / findTypeaheadIndex / isTypeaheadKey —— 键盘字符快速定位（Select / Tree / Menu）
-
-## 明确不做（边界）
-
-- ❌ 不做视觉样式（本包零 CSS；唯一例外是隐藏 live region 的内联样式，它是可达性语义的一部分）
-- ❌ 不做 axe 扫描（那是 @apollo-design/test-utils 的 a11yDemoTest）
-- ❌ 不重复实现 useId（在 utils）
-- ❌ 不重写焦点陷阱（已在 utils，本包只再导出）
-- ❌ 不渲染组件（列表 / 菜单 / 浮层的 DOM 结构属 ui 层）
-
-## 当前 Vue 用法
-
-组合函数的回调负责提出请求，组件是否接受由当前 ref 决定。`undefined` 撤控后保留最后接收值；返回的 `activeIndex` ref 可直接写入，也会经过同一请求出口。已有代码若只是要设置非受控初值，改用 `setActive(index, false)`，不要把静态 `activeIndex` 当作默认值。
+## 键盘导航示例
 
 ```vue
 <script setup lang="ts">
-import { useRovingFocus } from '@apollo-design/a11y';
 import { ref, useTemplateRef } from 'vue';
+import { useRovingFocus } from '@apollo-design/a11y';
 
 const count = ref(3);
-const selected = ref(0);
+const active = ref(0);
 const items = useTemplateRef<HTMLButtonElement[]>('items');
 const { getTabIndex, onKeyDown } = useRovingFocus({
   count,
-  activeIndex: selected,
-  onChange: (index) => { selected.value = index; },
+  activeIndex: active,
+  onChange: (index) => { active.value = index; },
   getItem: (index) => items.value?.[index] ?? null,
 });
 </script>
 
 <template>
-  <div role="toolbar" aria-label="Actions" @keydown="onKeyDown">
+  <div role="toolbar" aria-label="工具" @keydown="onKeyDown">
     <button v-for="index in count" :key="index" ref="items" :tabindex="getTabIndex(index - 1)">
-      Action {{ index }}
+      操作 {{ index }}
     </button>
   </div>
 </template>
 ```
 
-导航仅在接受目标后移动焦点，Home/End 与方向键会阻止默认行为；已处理事件、输入法事件和空列表不消费。宿主提供逻辑项顺序及禁用过滤。本包不创建控件 DOM。
+这里使用原生按钮展示基础原语。宿主负责提供元素、逻辑顺序、禁用过滤和语义；导航在状态变更被接受后移动焦点。
 
-`useLiveRegion()` 可在 setup 的 `watchEffect` 中播报；挂载前保留最后文本，挂载后创建节点，卸载销毁。命令式 `announce()` 继续使用默认文档的共享节点。详细契约与历史证据见[当前增量](../../docs/foundation/a11y-contract.md#当前增量--2026-10-30)。
+## 能力与职责
 
-## 必须遵守的契约
+| 场景 | API |
+| --- | --- |
+| 模态内容内的焦点循环 | `lockFocus`、`useLockFocus` |
+| 关闭后返回触发元素 | `useFocusRestore` |
+| 工具栏、列表中的方向键导航 | `useRovingFocus` |
+| 保持输入焦点并标记活动选项 | `useActiveDescendant` |
+| 输入字符定位选项 | `useTypeahead` |
+| 状态播报 | `useLiveRegion`、`announce` |
 
-- 所有原语必须可在 jsdom 中用键盘事件断言（不需要真实浏览器）
-- 焦点恢复必须回到触发元素（Modal/Drawer 关闭后）
-- live region 必须复用同一个 DOM 节点，避免播报丢失
+组合函数在 Vue 作用域内使用。`useLiveRegion` 随组件挂载建立节点、卸载清理；`announce` 使用共享的命令式播报区域。焦点恢复支持嵌套层级，已移除的目标按当前恢复契约回退。
 
-## 依赖
+本包不生成控件布局、主题或完整 ARIA 结构。无障碍扫描属于测试工具，组件仍需要验证名称、角色、焦点顺序和实际键盘操作。
 
-### 运行时依赖
+## 文档与维护
 
-| `@apollo-design/utils` | `workspace:*` |
-
-### peer 依赖
-
-| `vue` | `catalog:` |
-
-### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
-
-（无）
-
-## 依赖约束（ARCHITECTURE.md §3.1）
-
-- **R1 单向**：只能依赖同层或更低层
-- **R2 无环**：不得与其他包循环依赖
-- **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
-- **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
-- **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
-- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
-  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
-  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
-
-本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
-
-
-## 测试
-
-```bash
-pnpm --filter @apollo-design/a11y test
-pnpm --filter @apollo-design/a11y lint
-```
-
-测试要求见 [`TESTING.md`](../../TESTING.md)。
-覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L1 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+[公开导出](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/a11y/src/index.ts) · [项目规范](https://github.com/apollocmh/apollo-design-ui/blob/master/AGENTS.md) · [测试要求](https://github.com/apollocmh/apollo-design-ui/blob/master/TESTING.md)

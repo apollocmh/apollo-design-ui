@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/a11y",
   "version": "0.1.9",
-  "description": "运行时无障碍原语。antd 把焦点管理、roving tabindex、live region 等散落在各组件与 rc 包里，本项目把它们收敛为可复用的原语。",
+  "description": "Vue accessibility primitives for focus, keyboard navigation and live announcements.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -31,5 +31,14 @@
   },
   "devDependencies": {
     "@apollo-design/test-utils": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/a11y"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

@@ -1,91 +1,77 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # @apollo-design/ui
 
-> **层**：L3 ｜ **风险**：high
->
-> 本文档声明本包的**职责边界**。边界之外的事情不做 —— 如果发现需要做，说明架构需要调整，
-> 应当先修改 `ARCHITECTURE.md` 并记录 ADR。
+Apollo Design 的 Vue 3 UI 组件库，提供表单、数据展示、导航、反馈与布局组件。组件使用 Vue 响应性、插槽和事件，提供 TypeScript 声明；样式以静态 CSS 和 CSS 变量交付。
 
----
+[组件文档](https://apollocmh.github.io/apollo-design-ui/components/button) · [主题预览](https://apollocmh.github.io/apollo-design-ui/guide/themes) · [源码](https://github.com/apollocmh/apollo-design-ui)
 
-## 职责
-
-组件库本体：72 个组件 + locale + 全局样式 + ConfigProvider。
-
-## 替代的 Ant Design 依赖
-
-- `antd（除上述 foundation 包承接的部分）`
-
-## 公开 API
-
-- 72 个组件（见 registry/components.json）
-- ConfigProvider —— Token / 主题 / locale / size / disabled / prefixCls 的统一入口
-- locale —— 73 个语言包
-- 静态方法：message / notification / Modal.confirm
-- composable：useApp / useMessage / useNotification / useModal / useForm / useToken / useBreakpoint
-- 样式产物：dist/index.css（汇总）+ dist/<component>/style.css（按需）
-- genComponentStyles(prefixCls) —— 静态样式生成器（自定义 prefixCls 时使用）
-
-## 明确不做（边界）
-
-- ❌ 不重复实现 foundation 包已覆盖的能力（ARCHITECTURE.md R5）
-- ❌ 不含任何 React 代码
-- ❌ 不含 CSS-in-JS 运行时
-
-## 必须遵守的契约
-
-- 组件间不得互相 import 组件目录；共享 context 与工具必须放在 src/_internal/（见 ARCHITECTURE.md §8.4）
-- 组件样式不得硬编码视觉值（validate-registry E10）
-- 构建产物不得含 React 痕迹（validate-registry E11）
-
-## 依赖
-
-### 运行时依赖
-
-| `@apollo-design/utils` | `workspace:*` |
-| `@apollo-design/theme` | `workspace:*` |
-| `@apollo-design/icons` | `workspace:*` |
-| `@apollo-design/motion` | `workspace:*` |
-| `@apollo-design/portal` | `workspace:*` |
-| `@apollo-design/position` | `workspace:*` |
-| `@apollo-design/overlay` | `workspace:*` |
-| `@apollo-design/a11y` | `workspace:*` |
-| `@apollo-design/virtual-list` | `workspace:*` |
-| `@apollo-design/form-core` | `workspace:*` |
-| `@apollo-design/picker` | `workspace:*` |
-| `@apollo-design/locale` | `workspace:*` |
-| `dayjs` | `catalog:` |
-| `scroll-into-view-if-needed` | `catalog:` |
-
-### peer 依赖
-
-| `vue` | `catalog:` |
-
-### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
-
-（无）
-
-## 依赖约束（ARCHITECTURE.md §3.1）
-
-- **R1 单向**：只能依赖同层或更低层
-- **R2 无环**：不得与其他包循环依赖
-- **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
-- **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
-- **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
-- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
-  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
-  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
-
-本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
-
-
-## 测试
+## 安装
 
 ```bash
-pnpm --filter @apollo-design/ui test
-pnpm --filter @apollo-design/ui lint
+npm install @apollo-design/ui @apollo-design/theme vue
 ```
 
-测试要求见 [`TESTING.md`](../../TESTING.md)。
-覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L3 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+Vue 的 peer 版本要求为 `^3.5.42`。建议所有直接安装的 `@apollo-design/*` 包使用同一版本；基础依赖由包管理器自动安装。
+
+## 快速开始
+
+在应用入口引入默认主题变量与组件样式：
+
+```ts
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/style.css';
+```
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { Button, Input, Space } from '@apollo-design/ui';
+
+const name = ref('');
+const submitted = ref('');
+</script>
+
+<template>
+  <Space direction="vertical">
+    <Input v-model:value="name" placeholder="你的名字" />
+    <Button type="primary" @click="submitted = name">保存</Button>
+    <span v-if="submitted">已保存：{{ submitted }}</span>
+  </Space>
+</template>
+```
+
+## 主题与语言
+
+`ConfigProvider` 提供主题、语言、尺寸、方向和组件默认配置。Default、Mono、Material 三套预设均支持亮色、暗色与跟随系统；局部 Provider 可以覆盖父级配置。
+
+```vue
+<script setup lang="ts">
+import { Button, ConfigProvider } from '@apollo-design/ui';
+import { zh_CN } from '@apollo-design/locale';
+import { material3Preset } from '@apollo-design/theme/presets/material3';
+</script>
+
+<template>
+  <ConfigProvider :locale="zh_CN" :theme="{ preset: material3Preset, mode: 'system' }">
+    <Button type="primary">开始使用</Button>
+  </ConfigProvider>
+</template>
+```
+
+直接使用语言包时安装 `@apollo-design/locale`。主题接入及首屏样式配置见[主题指南](https://apollocmh.github.io/apollo-design-ui/guide/theming)。
+
+## 按需使用
+
+组件支持公开子路径，例如 `import { Button } from '@apollo-design/ui/button'`。手动按需引入时加载对应的 `@apollo-design/ui/button/style.css` 和主题变量。
+
+模板自动引入使用 [`@apollo-design/ui-resolver`](https://www.npmjs.com/package/@apollo-design/ui-resolver)。它按组件加载结构 CSS；已经加载汇总样式的项目应设置 `importStyle: false`，避免重复 CSS。
+
+## 使用边界
+
+- 浏览器交互在客户端挂载后建立。SSR 应使用各组件的服务端契约，弹层容器在客户端可用后打开。
+- 插槽、`v-model` 与事件以各组件文档为准，不承诺其他组件库的直接替换兼容。
+- 需要应用上下文的反馈服务，使用 `App` 或对应的上下文 API；全局静态调用不自动携带任意组件树的配置。
+- 发布运行图不依赖 React、React DOM 或 CSS-in-JS 运行时。
+
+## 文档与维护
+
+[公开导出](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/index.ts) · [项目规范](https://github.com/apollocmh/apollo-design-ui/blob/master/AGENTS.md) · [测试要求](https://github.com/apollocmh/apollo-design-ui/blob/master/TESTING.md)

@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/utils",
   "version": "0.1.9",
-  "description": "通用工具集。全库的地基，被全部 72 个组件依赖。",
+  "description": "Shared Vue state, DOM, scheduling, attribute and color utilities.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -30,5 +30,14 @@
     "@apollo-design/test-utils": "workspace:*",
     "@ant-design/colors": "catalog:",
     "@ant-design/fast-color": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/utils"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

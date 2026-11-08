@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/position",
   "version": "0.1.9",
-  "description": "浮层定位几何。替代 @rc-component/trigger 与 rc-tooltip 的定位部分。**只做几何与尺寸测量**，触发时机与生命周期在 @apollo-design/overlay。",
+  "description": "Popup alignment geometry, collision adjustment and DOM measurement.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -31,5 +31,14 @@
   },
   "devDependencies": {
     "@apollo-design/test-utils": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/position"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

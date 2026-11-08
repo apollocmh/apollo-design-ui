@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/motion",
   "version": "0.1.9",
-  "description": "CSSMotion 等价物：声明式 CSS 过渡/动画控制。替代 @rc-component/motion。",
+  "description": "Vue CSS animation phases, lifecycle coordination and keyed list transitions.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -31,5 +31,14 @@
   },
   "devDependencies": {
     "@apollo-design/test-utils": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/motion"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

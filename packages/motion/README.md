@@ -1,40 +1,50 @@
 # @apollo-design/motion
 
-CSSMotion and MotionList coordinate CSS animation phases, DOM measurements and completion. They generate class/style timelines without shipping CSS or choosing component visuals. Vue owns rendering, scoped slots, notifications, attrs, refs and disposal. The established frame/status algorithm and historical 002/hydration evidence remain in [the contract](../../docs/foundation/motion-contract.md).
+Vue 组件动效编排：`CSSMotion` 管理单个根节点的进入、离开和完成，`MotionList` 管理带键列表的增删过渡。包负责阶段、类名和测量时序，动效 CSS 由消费方提供。
 
-## CSSMotion
+## 安装
 
-| Prop | Meaning | Default |
-| --- | --- | --- |
-| visible | Requested visibility; the component does not mutate it | false |
-| motionName | CSS class prefix; no name means no CSS animation | - |
-| motionAppear / motionEnter / motionLeave | Enable the corresponding phase | true |
-| motionLeaveImmediately | Allow an initial hidden node to leave | false |
-| motionDeadline | Fallback deadline in milliseconds, read when a phase becomes active | 0 |
-| removeOnLeave | Remove the element after leave | true |
-| forceRender | Keep a hidden element rendered | false |
-| leavedClassName | Class for an already rendered retained node | - |
-| hooks | Prepare, start, active and end service callbacks | - |
-| supportMotion | Explicit environment/preference input; otherwise detect CSS support | Detected |
+```bash
+npm install @apollo-design/motion vue
+```
 
-The native default slot receives `{ className, style, visible, status, step }`. Bind className/style to the actual animated root. There must be one element or component root; native Fragments, conditional comments and empty content are supported without adding a layout host. Multiple real roots and text-only animation targets report a clear error instead of silently discarding siblings. Animate multiple elements with MotionList, or provide an explicit root yourself.
+## 单节点过渡
 
-Native attrs merge onto that root, including class/style/listeners, while its existing Vue ref remains bound. `@visibleChanged="handler"` is an owned Vue event: it fires after the requested visibility settles, skips an initially hidden idle node, and supports current listeners and listener arrays. It is the only component completion channel; `hooks.onVisibleChanged` is removed.
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { CSSMotion } from '@apollo-design/motion';
 
-Prepare callbacks may return a Promise, start/active return style or nothing, and end returns false to veto completion. They remain functions because their results control the animation. Current phase flags apply to subsequent visibility transitions; current hook functions are read at each phase step/end. Render options and CSS names remain reactive. Replacing an active root moves its end listeners; unmount cancels frames, deadlines and pending DOM work. A preparation rejection aborts only its own generation, releases resources and reaches Vue’s transition error handling. It does not silently succeed or retry.
+const visible = ref(false);
+</script>
 
-## MotionList
+<template>
+  <button type="button" @click="visible = !visible">切换</button>
+  <CSSMotion :visible="visible" motion-name="demo-fade" :motion-deadline="250">
+    <template #default="{ className, style }">
+      <div :class="className" :style="style">内容</div>
+    </template>
+  </CSSMotion>
+</template>
 
-`keys` accepts a readonly list of keys or key objects carrying business data. MotionList has a real generic functional public entry in TypeScript: the same type parameter covers keys and the actual slot context, while the existing Vue state loop stays in a private core. It makes no public constructor/ref/expose promise and needs no constructor assertion or SFC build support. Keys keep the established String normalization; numeric 0 and strings such as constructor/__proto__ remain valid. Key object data survives leave until removal finishes. The default slot receives this retained data plus the CSSMotion fields, `itemKey: string` and `index: number`; motion fields take precedence over conflicting metadata.
+<style>
+.demo-fade-enter, .demo-fade-appear { opacity: 0; }
+.demo-fade-enter-active, .demo-fade-appear-active { opacity: 1; transition: opacity .2s; }
+.demo-fade-leave { opacity: 1; }
+.demo-fade-leave-active { opacity: 0; transition: opacity .2s; }
+</style>
+```
 
-`component` selects the wrapper (default div); false/null omit it. Native attrs land on an existing wrapper, including a functional/component wrapper’s normal Vue attrs contract. An unwrapped list has no native attr target: bind per-item attrs in the slot instead of expecting one id or listener to be spread over multiple roots.
+默认槽接收 `{ className, style, visible, status, step }`，把类名与样式绑定到单个实际根节点。完成通知使用 `@visibleChanged`。`motionDeadline` 单位为毫秒，供无法收到结束事件的场景收尾。
 
-The animation props are the same as CSSMotion. `@visibleChanged` forwards each item’s settled visibility, replacing the former hook notification. `@allRemoved` fires once when all requested removals finish. A reintroduced key cancels its pending leave; finished list entries are removed even when standalone CSSMotion would retain an element.
+## 生命周期与列表
 
-## Composables and boundaries
+`motionAppear`、`motionEnter`、`motionLeave` 控制各阶段；`removeOnLeave`、`forceRender` 与 `leavedClassName` 控制保留内容。`hooks` 的 prepare/start/active/end 回调用于参与阶段处理；prepare 可返回 Promise。卸载、快速反向切换和根节点更换会清理或转移对应资源。
 
-useMotionStatus accepts values or getters for current animation/render configuration. Its callback is a composition service, while component notifications use Emits. createMotionDriver stays framework independent: its phase hooks control the timeline; onVisibleChanged and onError are driver options for host integration. No Vue dependency is added to the driver. Public component/slot types are exported with the existing state, scheduler, support and preset APIs.
+`MotionList` 使用稳定 `keys`，默认槽除动效字段外包含 `itemKey`、`index` 和业务数据。离场期间保留项，重新加入同键项可取消待完成的移除；全部移除后触发 `allRemoved`。`component` 配置外层容器，`false` 或 `null` 表示无容器。
 
-The package has no Token, CSS generator, Portal dependency, MotionProvider, global preference subscription or useMotion API. UI consumers supply CSS, delay/stagger and reduced-motion policy through their existing configuration. These unimplemented historical plans are not advertised as completed APIs.
+高级宿主可使用 `useMotionStatus` 或框架无关的 `createMotionDriver`。本包不选择主题、动画曲线或系统减弱动效策略；这些由应用/组件配置与 CSS 决定。
 
-Related core behavior, types and necessary real-DOM/browser consumers are the architecture-stage gate. The final frozen library version retains the project’s separate full acceptance step; historical PoC, hydration and visual results are not a fresh full-library pass.
+## 文档与维护
+
+[公开导出](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/motion/src/index.ts) · [项目规范](https://github.com/apollocmh/apollo-design-ui/blob/master/AGENTS.md) · [测试要求](https://github.com/apollocmh/apollo-design-ui/blob/master/TESTING.md)

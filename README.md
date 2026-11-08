@@ -23,7 +23,13 @@ pnpm install --frozen-lockfile
 pnpm build
 ```
 
-在同一 pnpm workspace 中添加 `@apollo-design/ui`、`@apollo-design/theme` 的 `workspace:*` 依赖。独立项目需要使用已构建的 workspace 包或打包后的包，并同时提供其 `@apollo-design/*` 依赖；不要只复制 UI 的 dist 目录。
+在应用项目中从 npm 安装：
+
+```bash
+npm install @apollo-design/ui @apollo-design/theme vue
+```
+
+基础依赖由包管理器自动安装；建议直接使用的 `@apollo-design/*` 包保持相同版本。仓库内部开发继续使用 `workspace:*` 依赖。
 
 ## 快速开始
 

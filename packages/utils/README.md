@@ -1,103 +1,48 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # @apollo-design/utils
 
-> **层**：L0 ｜ **风险**：high
->
-> 本文档声明本包的**职责边界**。边界之外的事情不做 —— 如果发现需要做，说明架构需要调整，
-> 应当先修改 `ARCHITECTURE.md` 并记录 ADR。
+Apollo Design 的基础工具包，提供 Vue 状态组合函数、DOM 与焦点操作、属性合并、调度和颜色计算。适合组件作者与基础设施代码；普通业务应用通常只需安装 `@apollo-design/ui`。
 
----
-
-## 职责
-
-通用工具集。全库的地基，被全部 72 个组件依赖。
-
-## 替代的 Ant Design 依赖
-
-- `@rc-component/util`
-- `@rc-component/resize-observer`
-- `@rc-component/mutate-observer`
-- `@rc-component/overflow（检测部分）`
-- `throttle-debounce`
-
-## 公开 API
-
-- 类型判断：isNumber / isString / isFunction / isPlainObject / isThenable / isPrimitive / isNonNullable / isRenderable / isVNode / isEmptyVNode / isFragmentVNode / isElementVNode / isComponentVNode / isWindow / isDocument / isHTMLElement / isTransitionEvent
-- 警告体系：warning / note / warningOnce / noteOnce / preMessage / resetWarned（dev-only + 去重）
-- 开发期告警：devUseWarning(component)（组件名前缀 + deprecated 聚合 + strict 开关）
-- DOM：canUseDom / contains / isVisible / isStyleSupport / getScroll / getElement / isDOM
-- 调度：raf / cancelRaf / throttleByAnimationFrame / throttle / debounce
-- ref 工具：fillRef / composeRef / useComposeRef / supportRef / supportNodeRef / getNodeRef
-- 属性工具：pickAttrs / toNativeEventName / toVueDomAttrs / mergeDomAttrs
-- 对象工具：omit / mergeProps / isEqual / get / set / merge / mergeWith
-- 子节点工具：toArray（展平 slot / 数组 / Fragment）
-- 键盘：KeyCode、isEditableTarget（与KeyCode.isEditableTarget为同一原生函数，可单独按需引入）
-- 焦点：getFocusNodeList / triggerFocus / lockFocus / useLockFocus
-
-`getActiveElement(node?)`读取已知节点所属根的焦点，支持封闭ShadowRoot和开放后代；省略节点使用当前文档。`containsComposed(root,node)`跨ShadowRoot宿主判断包含，原contains保留原生语义。getFocusNodeList按实际开放树及slot分发读取HTML/SVG焦点顺序，返回FocusNode[]（HTMLElement | SVGElement），使用HTML专属属性前须收窄；原生disabled fieldset、inert及隐藏控件不进入循环。锁同时监听已知根内的focusin，因为同一宿主内换焦可能不冒泡到window。最后释放移除所有根监听与观察，详见同一Image清单。
-
-`lockFocus` / `useLockFocus` 按元素所属文档协调锁栈，同文档后打开的锁优先；监听器绑定所属窗口。Tab在边界同步循环，子控件的preventDefault优先；无可Tab子项时保留可编程聚焦的容器。实际DOM搬迁保留记忆焦点，跨文档时迁移锁及监听器。每个活动文档共享一个原生MutationObserver，最后一个锁释放后清理。Vue作用域结束会取消待执行重试，卸载后不会重新注册。当前接口签名不变；Image/Modal/Drawer的验证范围见 [统一清单](../../docs/audit/2026-10-25-image-contract-audit.md)。
-- 观察器：useResizeObserver / useMutationObserver / useOverflow（单例复用）
-- composable：useControlledValue / useDelayState / useUpdateEffect / useId / useSafeState
-
-`useControlledValue` 的 `undefined` 表示非受控。受控请求只通知 `onChange`，父级拒绝时不写本地值；撤销受控保留最后接收值，函数式请求依据当前公开值。开发期迁移见 [受控状态契约](../../docs/migrations/controlled-value.md)。
-- 其他：toList / capitalize
-- 颜色：Color / generatePalette（10 阶色板）—— 由 color.oracle.test.ts 对上游差分验证
-
-## 明确不做（边界）
-
-- ❌ 不含任何设计值：无圆角 / 尺寸 / 阴影 / 字号的字面值，也不含任何色值字面量（R3）
-- ❌ 不产出任何 CSS
-- ❌ 不依赖 @apollo-design/* 的任何其他包（L0 是最底层）
-- ❌ 不提供 render/unmount —— 含 Vue 渲染器耦合，归 packages/ui/src/_internal
-- ❌ src/color/ 只放算法（R3 由 barrel.test.ts 的色值字面量扫描强制）；预设色板归 theme
-
-## 必须遵守的契约
-
-- warning 的输出格式必须与 antd 一致（含组件名前缀），因为测试会断言 warning
-- pickAttrs 保留既有属性白名单与 className 数据输出，识别已知 Vue 模板事件键及 Once/Passive/Capture 后缀；旧事件拼写转为 Vue 键，两种拼写的监听器按函数身份单次合并。未知业务事件仍过滤。
-- 真正落 DOM 时使用 toVueDomAttrs / mergeDomAttrs：className 归一为 class，class/style 按 Vue 规则合并，监听器数组按函数身份去重，不修改输入记录。Vue 事件后缀保持大小写，原生 change 与业务事件的语义由组件明确路由。
-- isEqual 的共享引用 quirk 必须保留（见同文档 §6.2）
-- raf 的 cancel 对已完成的 id 必须幂等且不抛错
-- useResizeObserver 必须支持批量监听同一元素（单例 observer 复用）
-- 任何 dev-only 代码不得裸写 process.env.NODE_ENV（见同文档 §6.4）
-
-## 依赖
-
-### 运行时依赖
-
-（无）
-
-### peer 依赖
-
-| `vue` | `catalog:` |
-
-### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
-
-| `@ant-design/colors` | `catalog:` |
-| `@ant-design/fast-color` | `catalog:` |
-
-## 依赖约束（ARCHITECTURE.md §3.1）
-
-- **R1 单向**：只能依赖同层或更低层
-- **R2 无环**：不得与其他包循环依赖
-- **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
-- **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
-- **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
-- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
-  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
-  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
-
-本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
-
-
-## 测试
+## 安装
 
 ```bash
-pnpm --filter @apollo-design/utils test
-pnpm --filter @apollo-design/utils lint
+npm install @apollo-design/utils vue
 ```
 
-测试要求见 [`TESTING.md`](../../TESTING.md)。
-覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L0 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+## 受控状态
+
+在 Vue `setup()` 或有效作用域内创建组合函数。标准 SFC 的双向绑定可直接使用 Vue 的 `defineModel`；需要在独立组合函数中处理受控和非受控状态时使用 `useControlledValue`：
+
+```ts
+import { ref } from 'vue';
+import { useControlledValue } from '@apollo-design/utils';
+
+const source = ref<number | undefined>(1);
+const [value, requestValue] = useControlledValue({
+  defaultValue: 0,
+  getValue: () => source.value,
+  onChange: (next) => { source.value = next; },
+});
+requestValue(2);
+console.log(value.value); // 2
+```
+
+受控请求由调用方决定是否接受；`undefined` 表示撤销受控，并保留最后一次实际接收的值。
+
+## 主要能力
+
+| 类别 | 入口示例 |
+| --- | --- |
+| Vue 状态与生命周期 | `useControlledValue`、`useDelayState`、`useId` |
+| DOM 与焦点 | `canUseDom`、`getActiveElement`、`containsComposed`、`lockFocus` |
+| 元素观察 | `useResizeObserver`、`useMutationObserver` |
+| 属性与插槽内容 | `toVueDomAttrs`、`mergeDomAttrs`、`toArray` |
+| 调度 | `raf`、`cancelRaf`、`throttle`、`debounce` |
+| 数据与颜色 | `get`、`set`、`merge`、`Color`、`generatePalette` |
+
+焦点工具按元素所属文档协调，支持 Shadow DOM 的相关边界；作用域工具在释放时清理监听与观察器。直接使用命令式 API 时由调用方执行对应清理。
+
+本包不提供组件外观或 CSS。颜色算法输出计算结果，品牌色、尺寸与设计令牌属于 `@apollo-design/theme`。DOM 工具在存在实际元素的客户端阶段调用。
+
+## 文档与维护
+
+[公开导出](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/utils/src/index.ts) · [项目规范](https://github.com/apollocmh/apollo-design-ui/blob/master/AGENTS.md) · [测试要求](https://github.com/apollocmh/apollo-design-ui/blob/master/TESTING.md)

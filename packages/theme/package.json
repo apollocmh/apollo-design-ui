@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/theme",
   "version": "0.1.9",
-  "description": "Token Runtime：Seed → Map → Alias → Component 的完整派生链，以及 Token → CSS 变量的注入。",
+  "description": "Apollo Design tokens, theme presets, CSS variables and Vue theme context.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -51,5 +51,14 @@
     "@apollo-design/test-utils": "workspace:*",
     "@ant-design/colors": "catalog:",
     "@ant-design/fast-color": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/theme"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

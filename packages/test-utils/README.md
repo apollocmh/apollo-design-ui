@@ -1,87 +1,38 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # @apollo-design/test-utils
 
-> **层**：测试 ｜ **风险**：medium
->
-> 本文档声明本包的**职责边界**。边界之外的事情不做 —— 如果发现需要做，说明架构需要调整，
-> 应当先修改 `ARCHITECTURE.md` 并记录 ADR。
+Apollo Design 仓库内部的 Vue 测试工具。用于复用组件挂载、DOM 契约、键盘焦点、无障碍、主题与资源释放检查。本包设置为 `private: true`，不发布到 npm。
 
----
+## 使用场景
 
-## 职责
+组件测试在各组件的 `__tests__` 中维护。本包提供测试辅助函数与可复用契约，不集中存放具体组件用例。
 
-供 Vue 组件与基础包复用的测试契约。历史上游对照保留在契约文档中。
+| 场景 | 入口示例 |
+| --- | --- |
+| Demo 与挂载 | `demoTest`、`mountTest` |
+| DOM 与根属性 | `domContractTest`、`rootPropsTest` |
+| 无障碍与焦点 | `a11yDemoTest`、`focusTest` |
+| 方向和主题 | `rtlTest`、`themeTest` |
+| 异步更新 | `flushAll`、`waitFrames` |
+| 资源与告警 | `snapshotObservers`、`captureWarnings`、`assertNoUnexpectedWarnings` |
 
-## 替代的 Ant Design 依赖
+## 仓库接入
 
-- `antd 的 tests/shared/*`
+需要使用的 workspace 包将 `@apollo-design/test-utils` 声明为 `workspace:*` 开发依赖，在 Vitest 的对应项目中导入：
 
-## 公开 API
+```ts
+import { flushAll } from '@apollo-design/test-utils';
 
-- mountTest —— 渲染/更新/卸载不报错，无内存泄漏警告
-- demoTest —— 遍历组件全部 demo，渲染无报错无 warning
-- a11yDemoTest —— 遍历全部 demo 跑 axe，要求 0 violation
-- focusTest —— 原生焦点事件、公开 focus/blur 与实际焦点目标
-- rtlTest —— 当前 RTL 上下文下的标记类（不证明布局）
-- rootPropsTest —— 根 class / style / prefixCls 契约（注入原生 attrs）
-- domContractTest —— 按相同投影规则比对结构化 DOM 契约
-- themeTest —— light/dark/compact/token-override 四态渲染（本项目新增）
-- resetWarned / waitFrames / flushAll
-
-## 明确不做（边界）
-
-- ❌ 不包含任何具体组件的测试用例
-
-## 必须遵守的契约
-
-- domContractTest 的归一化必须对称（见 tests/compat/README.md §4）
-- a11yDemoTest 不允许 disableRules 来通过
-- 所有等待必须是确定性的（禁止真实 sleep）
-- suite 的渲染集合、主题态和 DOM 用例选择不得为空；告警豁免的 reason/match 必须非空
-- 节点身份、焦点和连续浮层交互使用用例内真实 Teleport；不改变环境默认的结构桩
-
-完整输入、资源释放、observer 基线迁移及断言范围见
-[`test-utils-contract.md`](../../docs/foundation/test-utils-contract.md#2026-10-30当前-vue-测试契约)。
-
-## 依赖
-
-### 运行时依赖
-
-| `@apollo-design/theme` | `workspace:*` |
-| `@apollo-design/utils` | `workspace:*` |
-| `@vue/test-utils` | `catalog:` |
-| `axe-core` | `catalog:` |
-| `vitest` | `catalog:` |
-
-### peer 依赖
-
-| `vue` | `catalog:` |
-
-### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
-
-| `typescript` | `catalog:` | 仅用于 C11 测试的本地 AST，不创建类型程序或进入 helper 运行时 |
-
-## 依赖约束（ARCHITECTURE.md §3.1）
-
-- **R1 单向**：只能依赖同层或更低层
-- **R2 无环**：不得与其他包循环依赖
-- **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
-- **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
-- **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
-- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
-  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
-  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
-
-本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
-
-
-## 测试
-
-```bash
-pnpm --filter @apollo-design/test-utils test
-pnpm --filter @apollo-design/test-utils lint
+// 触发组件状态更新后，等待 Vue 和本轮异步任务完成。
+await flushAll();
 ```
 
-测试要求见 [`TESTING.md`](../../TESTING.md)。
-覆盖率下限为 语句 95% / 分支 90% / 函数 95%（测试 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+辅助函数的参数类型从包根导出，实际测试场景以对应组件的测试为例。需要浏览器布局、滚动或真实动效时，使用仓库的浏览器验证入口，不能用 DOM 模拟结果替代。
+
+## 约定
+
+- 等待应描述实际更新或帧，不添加任意时长的 sleep。
+- 已知例外通过带原因的 `Allowance` 表达，未命中的例外不能长期留存。
+- 使用现有警告捕获与观察器快照，保持释放与清理检查有效。
+- 测试范围、阈值与验收阶段由项目规范统一规定，README 不维护第二套数字。
+
+[公开导出](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/test-utils/src/index.ts) · [测试标准](https://github.com/apollocmh/apollo-design-ui/blob/master/TESTING.md) · [工作流程](https://github.com/apollocmh/apollo-design-ui/blob/master/WORKFLOW.md)

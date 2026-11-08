@@ -1,7 +1,7 @@
 {
   "name": "@apollo-design/ui",
   "version": "0.1.9",
-  "description": "组件库本体：72 个组件 + locale + 全局样式 + ConfigProvider。",
+  "description": "Apollo Design: Vue 3 UI components with TypeScript, static CSS and CSS-variable themes.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -480,5 +480,14 @@
   },
   "devDependencies": {
     "@apollo-design/test-utils": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollocmh/apollo-design-ui.git",
+    "directory": "packages/ui"
+  },
+  "homepage": "https://apollocmh.github.io/apollo-design-ui/",
+  "bugs": {
+    "url": "https://github.com/apollocmh/apollo-design-ui/issues"
   }
 }

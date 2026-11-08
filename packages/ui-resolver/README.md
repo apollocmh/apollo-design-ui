@@ -1,10 +1,17 @@
 # @apollo-design/ui-resolver
 
-Official build-time component resolver for [unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components). It imports Apollo components from their public JavaScript subpaths. It does not load the UI runtime in Node, register components globally, or select a theme.
+Apollo Design 的 Vue 模板自动引入工具，配合 `unplugin-vue-components` 将组件名解析为公开 JavaScript 子路径，并按需引入结构 CSS。
 
-## Install and configure
+## 安装
 
-Install `@apollo-design/ui` >=0.1.8 and Vue as application dependencies, and `@apollo-design/ui-resolver`, `unplugin-vue-components` as development dependencies. Use Node >=22.12 and an ESM Vite configuration. This implementation is tested with unplugin-vue-components 32.1.0, Vue 3.5.42, Vite 8.3.0 and TypeScript 5.9.3.
+```bash
+npm install @apollo-design/ui @apollo-design/theme vue
+npm install -D @apollo-design/ui-resolver unplugin-vue-components
+```
+
+当前 peer 要求为 UI `>=0.1.8 <0.2.0`、`unplugin-vue-components ^32.1.0`，Node.js `>=22.12.0`。建议 Apollo 包使用同一发布版本。
+
+## Vite 配置
 
 ```ts
 import { defineConfig } from 'vite';
@@ -13,37 +20,45 @@ import Components from 'unplugin-vue-components/vite';
 import { ApolloResolver } from '@apollo-design/ui-resolver';
 
 export default defineConfig({
-  plugins: [vue(), Components({ resolvers: [ApolloResolver()], dts: 'src/components.d.ts' })],
+  plugins: [
+    vue(),
+    Components({ resolvers: [ApolloResolver()], dts: 'src/components.d.ts' }),
+  ],
 });
+```
+
+Vite 项目需要已安装 `vite` 和 `@vitejs/plugin-vue`。将生成的 `components.d.ts` 纳入 TypeScript 项目，并在应用入口加载主题变量：
+
+```ts
+import '@apollo-design/theme/tokens.css';
 ```
 
 ```vue
 <template>
-  <AButton type="primary">Save</AButton>
-  <AInputSearch placeholder="Search" />
+  <AButton type="primary">保存</AButton>
+  <AInputSearch placeholder="搜索" />
 </template>
 ```
 
-Include the generated components declaration in the application's TypeScript project. PascalCase and kebab-case template tags are normalized by unplugin-vue-components: `<AButton>` and `<a-button>` both use the same public Button import. Unknown names are left for other resolvers or local components.
+## 选项与样式
 
-## API
+`ApolloResolver({ importStyle?: boolean })` 返回组件解析器。`importStyle` 默认开启，读取 UI 的 `style-manifest.json`，按顺序引入 `base.css`、共享结构资源和组件 `structure.css`。
 
-`ApolloResolver({ importStyle?: boolean })` returns a component resolver. Automatic structural styles are enabled by default; `ApolloResolver({ importStyle: false })` imports only JavaScript and leaves all CSS loading to the application. There are no theme, runtime registration, arbitrary prefix, fallback or global-CSS options.
+已经手动加载 `@apollo-design/ui/style.css` 或组件 `style.css` 的项目使用 `ApolloResolver({ importStyle: false })`，由应用统一管理 CSS。主题预设始终由应用选择；解析器不注册组件、不载入主题运行时，也不以全库 CSS 作为缺省兜底。
 
-Compound components use explicit flat template names, including AInputSearch, AInputPassword, AInputOtp, ASelectOption, ASelectOptGroup, AFormItem, AFormList, ASpaceCompact, ALayoutSider, ASkeletonButton, ATableSummary, ATableSummaryRow and ATableSummaryCell. Typography children accept AText/ATitle/AParagraph/ALink and ATypographyText/ATypographyTitle/ATypographyParagraph/ATypographyLink. AAutoComplete uses Select structure; ATimePicker and ATimeRangePicker use DatePicker structure rather than nonexistent CSS paths. Parent member expressions in JavaScript remain normal explicit component imports.
+组件名支持插件归一化后的 PascalCase 与 kebab-case。复合组件使用明确名称，如 `AInputSearch`、`AFormItem`、`ASpaceCompact`、`ALayoutSider`、`ATableSummaryRow`；Typography 支持 `AText` / `ATypographyText` 等别名。未知名称交给其他解析器或本地组件处理。
 
-## Styles and themes
+## 维护
 
-The resolver reads the public `@apollo-design/ui/style-manifest.json` metadata. For each component it imports the manifest's ordered resource list: neutral `base.css`, required shared resources, and component `structure.css` files. Repeated resource paths are deduplicated by the bundler; the resolver has no per-file import state or second dependency graph. This requires the UI 0.1.8 structural style exports. Existing `style.css` entries remain available for manual use.
+名称表与样式映射以 UI 的公开导出和结构清单为准。AutoComplete、TimePicker 等组件有共享样式来源，不能仅靠名称转 kebab-case 推导路径。
 
-The resolver never imports a theme preset, theme registry or aggregate UI stylesheet. The application loads its public theme entry first, component structure CSS next, and application overrides last. Turning off automatic styles means the application must import the required component CSS itself. Manual JavaScript imports may coexist with resolved template components. Manual CSS imports can reuse the same public `base.css` and component `structure.css` paths to retain module deduplication.
+仓库消费者验证使用已构建产物：
 
-Legacy component `style.css` files and aggregate UI CSS contain their existing dependency closures. Importing them alongside new structure entries repeats overlapping CSS text. Applications already loading those styles should use `ApolloResolver({ importStyle: false })`; the resolver still handles component JavaScript imports.
+```bash
+node packages/ui-resolver/tests/consumer.mjs
+node packages/ui-resolver/tests/consumer.mjs --themes
+```
 
-Theme-independent import checks and the complete preset/custom-theme acceptance are separate: the latter is integrated with the public theme contract from issue #80. Import success alone does not establish theme correctness.
+第一条验证 Vite、SSR、生成声明和浏览器行为；第二条增加预设/自定义主题矩阵。它们构建消费者应用，不重建组件发布产物。
 
-## Maintenance
-
-Source unit tests check component name mappings and options without built UI files. The published consumer checks special CSS families, order-independent styles and the complete shipped name table against installed UI declarations, public exports and structural CSS metadata. Update the table and consumer regression whenever those public contracts change. Do not infer every component path with a kebab-case conversion, resolve service objects as components, import the UI package at resolver runtime, or use whole-library CSS as a fallback.
-
-The repository consumer regression reads already built packages: `node packages/ui-resolver/tests/consumer.mjs [uiPackageRoot] [freshOutputDirectory] [--themes]`. It packs and installs once, then checks Vite, SSR, generated declarations and browser behavior. `--themes` additionally uses that same installation for the three import methods × four preset/custom values × two appearances matrix; it may appear before or after the optional paths. With no flag, the command keeps the focused resolver checks. A prepared installation can also run `node packages/ui-resolver/tests/theme-matrix.mjs <installedConsumerDirectory> [freshOutputDirectory]` without packing or installing again. These scripts build consumer applications, never package distribution files.
+[源码](https://github.com/apollocmh/apollo-design-ui/tree/master/packages/ui-resolver) · [样式指南](https://apollocmh.github.io/apollo-design-ui/guide/styles) · [主题指南](https://apollocmh.github.io/apollo-design-ui/guide/theming)
