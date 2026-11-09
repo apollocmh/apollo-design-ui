@@ -11,7 +11,7 @@ order: 4
 
 ### 风格与明暗独立选择
 
-默认、Mono 与 Material 3 风格通过相同公开 API 派生。Mono 使用黑白灰、克制圆角与阴影，并保留语义色；Material 3 风格提供字体层级、形状、表面与状态 Token，不替代组件的交互规范。
+默认、Mono 与 Material 风格通过相同公开 API 派生。Mono 使用黑白灰、克制圆角与阴影，并保留语义色；Material 参考 MUI 的中性表面、4px 默认圆角与层级阴影，保留 Apollo 的组件交互规范。公开入口仍为 `material3`，可在[主题展示](/guide/themes)中比较亮暗效果。
 
 ```vue
 <script setup lang="ts">
@@ -76,7 +76,7 @@ Header 的主题面板分别提供默认/Mono/Material 与浅色/深色/跟随�
 
 ### Independent style and appearance
 
-Default, Mono and Material 3 inspired presets use the same public `ThemePreset` and `ThemeConfig` API. Import `defaultPreset`, `monoPreset` or `material3Preset` from the independent `@apollo-design/theme/presets/default`, `/mono` or `/material3` entry. Each also has a default export. The root entry does not load every preset. Custom presets do not require resolver registration.
+Default, Mono and Material presets use the same public `ThemePreset` and `ThemeConfig` API. Material references MUI’s neutral surfaces, 4px default corners and elevation shadows while retaining Apollo’s component interactions. Compare light and dark appearances in the [theme gallery](/guide/themes). Import `defaultPreset`, `monoPreset` or `material3Preset` from the independent `@apollo-design/theme/presets/default`, `/mono` or `/material3` entry. Each also has a default export. The root entry does not load every preset. Custom presets do not require resolver registration.
 
 ```ts
 import { monoPreset } from '@apollo-design/theme/presets/mono';

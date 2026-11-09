@@ -40,13 +40,12 @@ describe('Built-in presets use public configuration', () => {
       preset: material3Preset,
       token: { fontSize: 20, borderRadius: 10, colorPrimary: '#a52142' },
     });
-    expect(original.fontSizeHeading1).toBe(32);
-    expect(token.fontSizeHeading1).toBe(40);
-    expect(token.borderRadiusLG).toBe(15);
-    expect(token.colorPrimaryHover).toBe(
-      getDesignToken({ token: { colorPrimary: '#a52142' } }).colorPrimaryHover,
-    );
-    expect(token.colorBgElevated).not.toBe(token.colorBgContainer);
+    expect(original.fontSizeHeading1).toBe(34);
+    expect(token.fontSizeHeading1).toBeGreaterThan(original.fontSizeHeading1);
+    expect(token.borderRadiusLG).toBe(10);
+    expect(token.colorPrimary).toBe('#a52142');
+    expect(token.colorPrimaryHover).not.toBe(original.colorPrimaryHover);
+    expect(token.colorBgElevated).toBe(token.colorBgContainer);
     expect(original.boxShadow).not.toBe(getDesignToken().boxShadow);
     expect(
       getDesignToken({
@@ -56,26 +55,37 @@ describe('Built-in presets use public configuration', () => {
     ).toMatchObject({ fontSizeHeading1: 72, boxShadow: 'none' });
   });
 
-  it('uses the Material blue brand in both appearances and derives its interactive palette', () => {
-    for (const mode of ['light', 'dark'] as const) {
-      const token = getDesignToken({ preset: material3Preset, mode });
-      const expected = getDesignToken({
-        mode,
-        token: { colorPrimary: '#0073e6' },
-      });
-      expect(material3Preset[mode]?.token?.colorPrimary).toBe('#0073e6');
-      expect(token.colorPrimary).toBe(expected.colorPrimary);
-      expect(token.colorInfo).toBe(
-        getDesignToken({ mode, token: { colorInfo: '#0073e6' } }).colorInfo,
-      );
-      expect(token.colorPrimaryHover).toBe(expected.colorPrimaryHover);
-      expect(token.colorPrimaryActive).toBe(expected.colorPrimaryActive);
-      expect(token.colorPrimaryText).toBe(expected.colorPrimaryText);
+  it('keeps Material brand actions, neutral surfaces and readable dark text independently', () => {
+    const light = getDesignToken({ preset: material3Preset, mode: 'light' });
+    const dark = getDesignToken({ preset: material3Preset, mode: 'dark' });
+    for (const token of [light, dark]) {
+      expect(token.colorPrimary).toBe('#0073e6');
+      expect(token.colorInfo).toBe('#0073e6');
+      expect(token.borderRadiusLG).toBe(4);
+      expect(token.colorPrimaryHover).not.toBe(token.colorPrimary);
+      expect(token.colorInfoBorder).toBe(token.colorInfoBg);
     }
-    expect(getDesignToken({ preset: material3Preset }).colorLink).toBe('#0073e6');
-    expect(getDesignToken({ preset: material3Preset, mode: 'dark' }).colorLink).toBe(
-      getDesignToken({ mode: 'dark', token: { colorLink: '#80bfff' } }).colorLink,
-    );
+    expect(light.colorBgContainer).toBe('#ffffff');
+    expect(light.colorLink).toBe('#0073e6');
+    expect(dark.colorBgContainer).toMatch(/^#([\da-f]{2})\1\1$/i);
+    expect(dark.colorBgElevated).toMatch(/^#([\da-f]{2})\1\1$/i);
+    expect(dark.colorBgElevated).not.toBe(dark.colorBgContainer);
+    expect(dark.colorPrimaryText).not.toBe(dark.colorPrimary);
+    expect(dark.colorLink).toBe('#90caf9');
+    const custom = getDesignToken({
+      preset: material3Preset,
+      mode: 'dark',
+      token: {
+        colorBgBase: '#202830',
+        colorTextBase: '#ffeedd',
+        colorPrimary: '#ad294a',
+        colorBgElevated: '#334455',
+      },
+    });
+    expect(custom.colorPrimary).toBe('#ad294a');
+    expect(custom.colorBgContainer).not.toBe(dark.colorBgContainer);
+    expect(custom.colorText).toBe('rgb(255,238,221)');
+    expect(custom.colorBgElevated).toBe('#334455');
   });
 
   it('inherits raw user overrides and keeps local legacy algorithms and reset semantics', () => {

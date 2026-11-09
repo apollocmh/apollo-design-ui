@@ -17,7 +17,7 @@ order: 4.1
 
 ### 选用与定制
 
-Default 提供默认外观，Mono 呈现单色风格，Material 展示另一套色彩与形状方案。Material 的品牌种子为 **#0073E6**，暗色及交互状态色由主题算法派生。应用接入、自定义品牌、明暗切换与嵌套作用域的具体配置，请阅读[主题使用与定制](/guide/theming)；此页用于比较真实组件效果。
+Default 提供默认外观，Mono 呈现单色风格，Material 参考 [MUI Material UI](https://github.com/mui/material-ui) 的中性表面、克制圆角和层级阴影。品牌色在亮暗模式中均为 **#0073E6**；填充操作的悬停色加深，暗色文字与链接使用更明亮的颜色。保留 `material3Preset` / `material3` 的公开名称，已有导入路径与主题配置无需改名。应用接入、自定义品牌、明暗切换与嵌套作用域的具体配置，请阅读[主题使用与定制](/guide/theming)；此页用于比较真实组件效果。
 
 ## en-US
 
@@ -31,4 +31,4 @@ Reset restores only progress to 64. The edited name and notification switch keep
 
 ### Choose and customize
 
-Default is the standard appearance, Mono uses a monochrome style, and Material offers a different color and shape scheme. Material's brand seed is **#0073E6**; the theme algorithm derives dark and interaction colors. See [Theming](/guide/theming) for application setup, brand overrides, appearance switching and nested scopes. This page focuses on comparing working components.
+Default is the standard appearance, Mono uses a monochrome style, and Material references [MUI Material UI](https://github.com/mui/material-ui) for neutral surfaces, restrained corners and elevation shadows. The brand stays **#0073E6** in both appearances: filled actions darken on hover, while dark-mode text and links use lighter colors. The public `material3Preset` / `material3` names are retained, so existing imports and configuration need no renaming. See [Theming](/guide/theming) for application setup, brand overrides, appearance switching and nested scopes. This page focuses on comparing working components.
