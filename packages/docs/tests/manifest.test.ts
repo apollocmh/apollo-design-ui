@@ -25,9 +25,28 @@ const pages = manifest.components.map((c) => ({ meta: c, data: readPage(c.name) 
 const allDemos = pages.flatMap((p) => p.data.demos);
 
 describe('manifest 骨架', () => {
+  it('AI Markdown covers both languages and preserves every displayed demo source', () => {
+    for (const suffix of ['', '.en']) {
+      const index = fs.readFileSync(path.join(GENERATED, 'ai', `llms${suffix}.txt`), 'utf8');
+      const full = fs.readFileSync(path.join(GENERATED, 'ai', `llms-full${suffix}.txt`), 'utf8');
+      expect(index).toContain(`UI version: ${manifest.apolloVersion}`);
+      for (const page of pages) {
+        const relative = `components/${page.meta.name}${suffix}.md`;
+        const markdown = fs.readFileSync(path.join(GENERATED, 'ai', relative), 'utf8');
+        expect(index).toContain(relative);
+        expect(full).toContain(markdown);
+        expect(markdown).not.toMatch(/<code\s+src=/);
+        for (const demo of page.data.demos) {
+          for (const source of demo.sources) expect(markdown).toContain(source.code.trimEnd());
+        }
+      }
+      expect(index).toContain(`guide/ai${suffix}.md`);
+    }
+  });
+
   it('组件与指南都有产出', () => {
     expect(manifest.components.length).toBe(72);
-    expect(manifest.guides.length).toBe(9);
+    expect(manifest.guides.length).toBe(10);
     expect(manifest.guides.find((guide) => guide.slug === 'themes')).toMatchObject({
       title: { zh: '主题展示', en: 'Theme gallery' },
       order: 4.1,

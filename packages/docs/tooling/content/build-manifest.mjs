@@ -20,6 +20,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import nodePath from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createAiContent, writeAiFiles } from './ai-content.mjs';
 import { compareCategories } from './categories.mjs';
 import { collectDemoSources } from './demo-source.mjs';
 import { bilingualOf, localeOf, normalizeText, parseFrontmatter } from './frontmatter.mjs';
@@ -305,7 +306,7 @@ export function scanIcons() {
 // 指南
 // ---------------------------------------------------------------------------
 
-function scanGuides() {
+export function scanGuides() {
   if (!fs.existsSync(GUIDE_SRC)) return [];
   const guides = [];
   for (const f of fs.readdirSync(GUIDE_SRC)) {
@@ -535,6 +536,26 @@ function buildSearchIndex(manifest, pageData) {
 // 汇总
 // ---------------------------------------------------------------------------
 
+export function buildAiContent(components = scanComponents(), guides = scanGuides()) {
+  const { version } = JSON.parse(fs.readFileSync(nodePath.join(UI_SRC, '../package.json'), 'utf8'));
+  const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8',
+  }).trim();
+  return createAiContent({
+    components: components.map((component) => ({
+      ...component,
+      body: {
+        zh: stripLegacyDemoRefs(component.body.zh),
+        en: stripLegacyDemoRefs(component.body.en),
+      },
+    })),
+    guides,
+    version,
+    sourceCommit,
+  });
+}
+
 export async function buildManifest({ write = true } = {}) {
   // ⚠️ notes/problems 是模块级数组，而 vite.config 里 includedRoutes 与 onFinished
   // 会各自再调用一次本函数 —— 不复位就会把同一条提示累积打印成几十条重复项。
@@ -651,6 +672,7 @@ export async function buildManifest({ write = true } = {}) {
     fs.rmSync(OUT_DIR, { recursive: true, force: true });
     fs.mkdirSync(nodePath.join(OUT_DIR, 'docs'), { recursive: true });
     fs.mkdirSync(nodePath.join(OUT_DIR, 'guides'), { recursive: true });
+    writeAiFiles(nodePath.join(OUT_DIR, 'ai'), buildAiContent(scanned, guides).files);
     fs.writeFileSync(nodePath.join(OUT_DIR, 'manifest.json'), JSON.stringify(manifest));
     fs.writeFileSync(nodePath.join(OUT_DIR, 'search.json'), JSON.stringify(search));
     fs.writeFileSync(

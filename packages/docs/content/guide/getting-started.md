@@ -17,25 +17,11 @@ Apollo Design 是独立发展的 **Vue 3 + TypeScript 原生组件库**，以公
 
 ### 安装
 
-> ⚠️ **发布状态**：`@apollo-design/ui` 尚未发布到 npm。当前阶段请从仓库源码使用：
-
 ```bash
-git clone https://github.com/apollocmh/apollo-design-ui.git
-cd apollo-design-ui
-pnpm install
-pnpm build   # 构建全部包（theme 的 tokens.css 与 ui 的组件样式是真源）
+npm install @apollo-design/ui @apollo-design/theme vue
 ```
 
-构建完成后，在同一个 pnpm workspace 里以 `workspace:*` 引入，或用文件依赖指向构建产物：
-
-```json
-{
-  "dependencies": {
-    "@apollo-design/ui": "workspace:*",
-    "@apollo-design/theme": "workspace:*"
-  }
-}
-```
+图标按需安装 `@apollo-design/icons`。使用 AI 编程助手时，可参考 [AI 接入](/guide/ai) 获取当前版本的 API 与示例。
 
 ### 引入
 
@@ -83,16 +69,11 @@ Apollo Design is an **independent Vue 3 + TypeScript component library** with co
 
 ### Install
 
-> ⚠️ **Publishing status**: `@apollo-design/ui` is **not published to npm yet**. Use it from the repository source:
-
 ```bash
-git clone https://github.com/apollocmh/apollo-design-ui.git
-cd apollo-design-ui
-pnpm install
-pnpm build
+npm install @apollo-design/ui @apollo-design/theme vue
 ```
 
-Then depend on it inside the same pnpm workspace via `workspace:*`, or via a file dependency to the built output.
+Install `@apollo-design/icons` if you need icons. See [AI integration](/guide/ai) for versioned API documentation and examples.
 
 ### Usage
 

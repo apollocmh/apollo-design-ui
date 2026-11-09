@@ -65,6 +65,8 @@ fs.mkdirSync(consumer, { recursive: true });
 
 try {
   console.log(`[consumer] temp dir: ${tmp}`);
+  // The MCP consumer reads the same frozen build; it never rebuilds packages.
+  run(process.execPath, ['--test', 'packages/mcp/tests/consumer.mjs'], ROOT);
 
   const packageDependencies = {};
   for (const directory of PACKAGES) {

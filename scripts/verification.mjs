@@ -99,6 +99,11 @@ export function changedPlan(root, files) {
     /^packages\/ui-resolver\/tests\/[^/]+\.mjs$/.test(file),
   );
   const docsBrowserScripts = docsBrowserScriptsForFiles(files);
+  const mcpChanged = files.some(
+    (file) =>
+      file.startsWith('packages/mcp/') ||
+      /^packages\/docs\/tooling\/content\/(ai-content|build-manifest|demo-source)\.mjs$/.test(file),
+  );
   let workflow = resolverConsumerChanged || docsBrowserScripts.length > 0,
     docs = false,
     globalTypes = false;
@@ -134,7 +139,7 @@ export function changedPlan(root, files) {
       else for (const row of components) selected.add(row.name);
     }
     const pkg = file.match(/^packages\/([^/]+)\/src\//);
-    if (pkg && !['ui', 'docs'].includes(pkg[1])) packages.add(`@apollo-design/${pkg[1]}`);
+    if (pkg && !['ui', 'docs', 'mcp'].includes(pkg[1])) packages.add(`@apollo-design/${pkg[1]}`);
   }
   let previous;
   do {
@@ -154,6 +159,23 @@ export function changedPlan(root, files) {
   for (const name of [...packages].sort())
     scopes.push(`packages/${name.replace('@apollo-design/', '')}/src`);
   const checks = scopes.length ? focusedPlan(root, scopes, { projects: [...projects] }).checks : [];
+  if (mcpChanged) {
+    checks.push(
+      node('types', [
+        'node_modules/typescript/bin/tsc',
+        '--noEmit',
+        '-p',
+        'packages/mcp/tsconfig.json',
+      ]),
+    );
+    checks.push({
+      kind: 'build',
+      command: pnpm,
+      args: ['--filter', '@apollo-design/mcp', 'run', 'build'],
+    });
+    checks.push(node('consumer', ['--test', 'packages/mcp/tests/consumer.mjs']));
+    checks.push(node('format', ['node_modules/@biomejs/biome/bin/biome', 'check', 'packages/mcp']));
+  }
   const changedBaselines = new Set(
     files.flatMap((file) => {
       const generator = file.match(/^tests\/compat\/baseline\/([^/]+)\.mjs$/);

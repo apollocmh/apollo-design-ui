@@ -16,6 +16,22 @@ function contentWatchPlugin(): Plugin {
     name: 'apollo-docs-content-watch',
     apply: 'serve',
     configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        const pathname = new URL(request.url ?? '/', 'http://localhost').pathname;
+        const relative = pathname.startsWith(BASE)
+          ? pathname.slice(BASE.length)
+          : pathname.slice(1);
+        if (
+          !/^(llms(?:-full)?(?:\.en)?\.txt|(?:components|guide)\/[a-z0-9-]+(?:\.en)?\.md)$/.test(
+            relative,
+          )
+        )
+          return next();
+        const file = path.resolve(process.cwd(), '.generated/ai', relative);
+        if (!fs.existsSync(file)) return next();
+        response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        response.end(fs.readFileSync(file));
+      });
       const RELEVANT =
         /(packages\/ui\/src\/[^/]+\/(index\.(zh-CN|en-US)\.md|demo\/[^/]+\.(md|vue))|packages\/docs\/content\/)/;
       const schedule = (p: string): void => {
@@ -119,6 +135,7 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
         )
         .join('\n')}\n</urlset>\n`;
       mkdirSync(outDir, { recursive: true });
+      cpSync(path.resolve(process.cwd(), '.generated/ai'), outDir, { recursive: true });
       writeFileSync(path.join(outDir, 'sitemap.xml'), sitemap);
       writeFileSync(
         path.join(outDir, 'robots.txt'),

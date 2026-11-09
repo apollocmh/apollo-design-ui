@@ -578,6 +578,17 @@ test('dry runs execute nothing and never manufacture a successful report', (t) =
   assert.equal(fs.existsSync(`${output}.evidence`), false);
 });
 
+test('MCP changes use their own stdio consumer instead of component Vitest scopes', (t) => {
+  const f = fixture(t);
+  const plan = changedPlan(f.root, ['packages/mcp/src/index.ts']);
+  assert.ok(plan.checks.some((step) => step.args.includes('packages/mcp/tests/consumer.mjs')));
+  assert.ok(plan.checks.some((step) => step.args.includes('packages/mcp/tsconfig.json')));
+  assert.equal(
+    plan.checks.some((step) => step.vitest),
+    false,
+  );
+});
+
 test('the final plan builds once, runs runtime through coverage once and preserves complete native visuals', () => {
   const plan = fullPlan();
   assert.deepEqual(

@@ -13,7 +13,7 @@ Vue 原生化按“架构整改 → 冻结版本统一验收”推进。已有�
 
 ## 安装
 
-本仓库当前开发版本为 `0.1.8`，版本标签按 `v0.1.x` 递增，工作区包与标签保持一致。尚未建立稳定版本发布承诺；请按源码或本地打包产物使用，不要假定 npm 上已有可安装版本。
+UI 与基础包已发布 npm，仓库开发环境需要 Node.js >= 22.12，pnpm 版本见 `package.json` 的 `packageManager`。从源码开发：
 
 ```bash
 git clone https://github.com/apollocmh/apollo-design-ui.git
@@ -85,6 +85,8 @@ pnpm docs:preview
 ```
 
 打开开发服务器输出的地址。文档站包含组件总览、API、可运行 Demo、图标目录、主题及国际化指南。文档源码在 `packages/docs`，组件 API 和 Demo 与实现共置于 `packages/ui/src/<component>/`。
+
+AI 编程助手可读取 [llms.txt](https://apollocmh.github.io/apollo-design-ui/llms.txt)、完整文档和逐组件 Markdown，或通过 [本地 MCP](packages/mcp/README.md) 查询 API 与真实示例。详见 [AI 接入指南](packages/docs/content/guide/ai.md)。
 
 ## 开发指南
 
