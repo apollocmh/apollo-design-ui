@@ -2,22 +2,22 @@
 
 Apollo Design 的本地 MCP 文档服务。让 AI 编程助手查询真实的 Vue 3 API 与 Demo，文档随包携带，运行时无需在线服务器。
 
-当前可从仓库构建使用，npm 发布前请使用以下本地路径配置：
+通过 `npx` 启动，版本与项目的 `@apollo-design/ui` 保持一致（当前为 `0.1.9`）：
 
 ```bash
-pnpm install
-pnpm --filter @apollo-design/mcp build
+npx -y @apollo-design/mcp@0.1.9 --project /absolute/path/your-vue-project
 ```
 
-需要 Node.js 22.12+。在 MCP 客户端中配置：
+需要 Node.js 22.12+。首次启动会下载 npm 包；文档随包携带，查询时离线运行。在 MCP 客户端中配置：
 
 ```json
 {
   "mcpServers": {
     "apollo-design": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/absolute/path/apollo-design-ui/packages/mcp/dist/cli.mjs",
+        "-y",
+        "@apollo-design/mcp@0.1.9",
         "--project",
         "/absolute/path/your-vue-project"
       ]
@@ -26,7 +26,9 @@ pnpm --filter @apollo-design/mcp build
 }
 ```
 
-`--project` 用应用目录解析已安装的 `@apollo-design/ui`，与随包文档的精确版本核对。版本不匹配或未安装会拒绝启动；省略参数只浏览文档，并标记项目版本未验证。客户端需能找到 Node，也可将 `command` 换成 Node 的绝对路径。
+仓库开发者也可执行 `pnpm --filter @apollo-design/mcp build`，将客户端的命令改为 `node`，参数指向 `packages/mcp/dist/cli.mjs` 的绝对路径。
+
+`--project` 用应用目录解析已安装的 `@apollo-design/ui`，与随包文档的精确版本核对。版本不匹配或未安装会拒绝启动；省略参数只浏览文档，并标记项目版本未验证。客户端需能找到 Node 和 npx，也可将 `command` 换成 npx 的绝对路径。
 
 | 工具 | 用途 |
 | --- | --- |

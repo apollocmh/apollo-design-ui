@@ -32,22 +32,22 @@ Props、Slots、Emits、v-model 和导入方式以 Apollo 文档为准，不推�
 
 ### 本地 MCP
 
-`@apollo-design/mcp` 提供 stdio MCP 服务，文档随包携带，查询时无需网络、账号、API Key 或在线服务器。首版可从仓库构建使用；npm 包发布后再改用对应版本的 npm 命令。
+`@apollo-design/mcp` 提供 stdio MCP 服务，文档随包携带，查询时无需网络、账号、API Key 或在线服务器。通过 npm 分发，选择与项目 UI 相同的版本（当前为 `0.1.9`）。首次使用 `npx` 会下载包，后续查询直接读取随包文档。
 
 ```bash
-pnpm install
-pnpm --filter @apollo-design/mcp build
+npx -y @apollo-design/mcp@0.1.9 --project /absolute/path/your-vue-project
 ```
 
-在支持 MCP 的客户端中加入配置，替换两个绝对路径（不同客户端配置文件位置可能不同）：
+在支持 MCP 的客户端中加入配置，替换项目绝对路径（不同客户端配置文件位置可能不同）：
 
 ```json
 {
   "mcpServers": {
     "apollo-design": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/absolute/path/apollo-design-ui/packages/mcp/dist/cli.mjs",
+        "-y",
+        "@apollo-design/mcp@0.1.9",
         "--project",
         "/absolute/path/your-vue-project"
       ]
@@ -77,22 +77,22 @@ Add the index URL to your project's AI instructions and ask the assistant to rea
 
 ### Local MCP
 
-`@apollo-design/mcp` serves bundled documentation through stdio, with no network requests, account, API key or hosted server required at runtime. Initially, build it from the repository; use a matching npm version once the package is published.
+`@apollo-design/mcp` serves bundled documentation through stdio, with no network requests, account, API key or hosted server required at runtime. Use the npm package matching your UI version (currently `0.1.9`). The first npx launch downloads the package; subsequent queries read bundled files.
 
 ```bash
-pnpm install
-pnpm --filter @apollo-design/mcp build
+npx -y @apollo-design/mcp@0.1.9 --project /absolute/path/your-vue-project
 ```
 
-Configure your MCP client, replacing both absolute paths:
+Configure your MCP client, replacing the absolute project path:
 
 ```json
 {
   "mcpServers": {
     "apollo-design": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/absolute/path/apollo-design-ui/packages/mcp/dist/cli.mjs",
+        "-y",
+        "@apollo-design/mcp@0.1.9",
         "--project",
         "/absolute/path/your-vue-project"
       ]
