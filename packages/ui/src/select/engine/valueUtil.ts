@@ -173,7 +173,8 @@ export function getSeparatedContent(
     return flat;
   };
 
-  const list = separate(text, tokens);
+  // Empty fragments are separators, not selected values. Filter before limiting.
+  const list = separate(text, tokens).filter((part) => part !== '');
   if (match) {
     return typeof end !== 'undefined' ? list.slice(0, end) : list;
   }

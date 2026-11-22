@@ -280,6 +280,24 @@ it('tokenizes only new selections, counts unique additions and respects maxCount
   expect(wrapper.emitted('select')).toEqual([['b', options[1]]]);
 });
 
+it('ignores empty split fragments without using up tagging capacity', async () => {
+  const wrapper = mount(Select, {
+    props: { mode: 'tags', maxCount: 2, tokenSeparators: [',', ';'] },
+    attachTo: document.body,
+  });
+  const input = wrapper.get('input');
+  await input.setValue(',;,,');
+  expect(input.element.value).toBe('');
+  expect(wrapper.emitted('change')).toBeUndefined();
+  expect(wrapper.emitted('select')).toBeUndefined();
+
+  await input.setValue('One,');
+  await input.setValue(';;One,,Two;');
+  expect(wrapper.emitted('change')?.map(([value]) => value)).toEqual([['One'], ['One', 'Two']]);
+  expect(wrapper.emitted('select')?.map(([value]) => value)).toEqual(['One', 'Two']);
+  wrapper.unmount();
+});
+
 it('cancels delayed open changes and short-lock timers when the owner unmounts', async () => {
   const change = vi.fn();
   let close = () => {};

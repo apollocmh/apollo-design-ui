@@ -287,7 +287,7 @@ export const BaseSelect = defineComponent({
 
       if (props.mode !== 'combobox' && patchLabels) {
         newSearchText = '';
-        props.onSearchSplit?.(patchLabels);
+        if (patchLabels.length) props.onSearchSplit?.(patchLabels);
         toggleOpen(false);
         ret = false;
       }
