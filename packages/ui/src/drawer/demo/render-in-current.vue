@@ -18,6 +18,7 @@ const onClose = () => {
     <Drawer
       title="Render in current node"
       :get-container="false"
+      size="min(100%, 378px)"
       :open="open"
       :style="{ position: 'absolute' }"
       @close="onClose"

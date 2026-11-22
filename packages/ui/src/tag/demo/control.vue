@@ -14,7 +14,7 @@ const showInput = async () => {
   await nextTick();
   input.value?.focus();
 };
-const handleInputConfirm = async () => {
+const handleInputConfirm = (restoreFocus: boolean) => {
   if (!inputVisible.value) return;
   const text = inputValue.value.trim();
   if (text && !tags.value.includes(text)) {
@@ -22,8 +22,7 @@ const handleInputConfirm = async () => {
   }
   inputVisible.value = false;
   inputValue.value = '';
-  await nextTick();
-  addButton.value?.nativeElement?.focus();
+  if (restoreFocus) void nextTick(() => addButton.value?.nativeElement?.focus());
 };
 
 const handleClose = (removed: string) => {
@@ -41,8 +40,8 @@ const handleClose = (removed: string) => {
       type="text"
       aria-label="New tag name"
       :style="{ width: '78px', marginRight: '8px', verticalAlign: 'top' }"
-      @blur="handleInputConfirm"
-      @keydown.enter.prevent="handleInputConfirm"
+      @blur="handleInputConfirm(false)"
+      @keydown.enter.prevent="handleInputConfirm(true)"
     />
     <Button v-else ref="addButton" size="small" @click="showInput">
       <PlusOutlined aria-hidden="true" /> New Tag

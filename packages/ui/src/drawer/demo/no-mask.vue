@@ -14,7 +14,7 @@ const onClose = () => {
 
 <template>
   <Button type="primary" @click="showDrawer">Open</Button>
-  <Drawer title="不显示遮罩" :open="open" @close="onClose">
+  <Drawer title="不显示遮罩" :open="open" :mask="false" @close="onClose">
     <p>Some contents...</p>
   </Drawer>
 </template>

@@ -3,8 +3,8 @@ order: 6
 ---
 ## zh-CN
 
-抽屉内容加载中。
+打开抽屉时显示加载骨架，点击标题栏的 Loading 切换加载状态与正文。
 
 ## en-US
 
-loading demo.
+Open the drawer to see the loading skeleton. Click Loading in the header to switch between the skeleton and the content.

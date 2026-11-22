@@ -1,26 +1,28 @@
 <script setup lang="ts">
 // 对齐 antd demo/hide-selected.tsx
 
-import type { DefaultOptionType } from '@apollo-design/ui';
-import { Select } from '@apollo-design/ui';
-import { ref } from 'vue';
+import { type LabeledValue, Select } from '@apollo-design/ui';
+import { computed, ref } from 'vue';
 
-const value = ref<string[]>([]);
+const value = ref<LabeledValue[]>([]);
 const options = [
   { value: 'a1', label: 'Jack' },
   { value: 'b2', label: 'Lucy' },
   { value: 'c3', label: 'Tom' },
 ];
+const availableOptions = computed(() => {
+  const selected = new Set(value.value.map((item) => item.value));
+  return options.filter((option) => !selected.has(option.value));
+});
 </script>
 
 <template>
   <Select
     v-model:value="value"
     mode="multiple"
-    :options="options"
-    :show-search="{
-      filterOption: (i: string, o?: DefaultOptionType) => !value.includes(String(o?.value)),
-    }"
+    label-in-value
+    :options="availableOptions"
+    :show-search="{ optionFilterProp: 'label' }"
     style="width: 100%"
   />
 </template>
