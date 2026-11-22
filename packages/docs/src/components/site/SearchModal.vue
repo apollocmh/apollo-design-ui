@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button, Input } from '@apollo-design/ui';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { Button, Input, type InputRef } from '@apollo-design/ui';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 import { useSearch } from '../../composables/search';
 
@@ -9,7 +9,7 @@ const emit = defineEmits<{ close: []; navigate: [path: string] }>();
 const { query, grouped, ensureIndex, loading, error } = useSearch();
 const { t, pick, locale } = useSiteLocale();
 
-const input = ref<{ nativeElement: HTMLElement | null } | null>(null);
+const input = ref<InputRef | null>(null);
 const panel = ref<HTMLElement | null>(null);
 const activeIndex = ref(0);
 let previousFocus: HTMLElement | null = null;
@@ -22,6 +22,9 @@ function focusables(): HTMLElement[] {
 }
 
 const flatResults = computed(() => grouped.value.flatMap((g) => g.items));
+watch(query, () => {
+  activeIndex.value = 0;
+});
 
 // 分组标题占位后，扁平列表里每项的真实序号
 function flatIndexOf(groupType: string, i: number): number {
@@ -66,9 +69,10 @@ function onKeydown(e: KeyboardEvent): void {
     });
     return;
   }
-  if (e.key === 'Enter') {
+  if (e.key === 'Enter' && e.target === input.value?.input && !e.isComposing) {
     const hit = flatResults.value[activeIndex.value];
     if (hit) {
+      e.preventDefault();
       const lang = locale.value === 'zh-CN' ? 'zh' : 'en';
       let path = hit.route[lang === 'zh' ? 'zh' : 'en'];
       if (hit.anchor) path += hit.anchor;
@@ -87,7 +91,7 @@ async function retry(): Promise<void> {
 
 onMounted(() => {
   previousFocus = document.activeElement as HTMLElement | null;
-  (input.value?.nativeElement as HTMLInputElement | null)?.focus();
+  input.value?.focus();
   void retry();
 });
 

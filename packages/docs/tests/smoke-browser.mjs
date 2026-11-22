@@ -158,6 +158,11 @@ try {
 
   // ── 5. 搜索 ─────────────────────────────────────────────────────────
   await page.keyboard.press('/');
+  const searchPanel = page.locator('.site-search-panel');
+  await searchPanel.waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await searchPanel.waitFor({ state: 'hidden' });
+  await page.locator('.site-search-trigger').click();
   await page.waitForSelector('.site-search-input', { timeout: 5000 });
   await page.keyboard.type('table');
   // 索引是懒加载的：等结果真正出现（最多 10s），而不是固定 sleep
@@ -168,6 +173,7 @@ try {
   await page.keyboard.press('Enter');
   await page.waitForTimeout(800);
   check('搜索跳转', page.url().includes('/components/table'), page.url());
+  check('搜索回车跳转后面板保持关闭', (await searchPanel.count()) === 0);
   await page
     .waitForSelector('.demo-canvas .apollo-table, .demo-canvas .apollo-form', { timeout: 15000 })
     .catch(() => {});

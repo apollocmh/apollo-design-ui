@@ -84,8 +84,8 @@ function reset(): void {
       :class="{ 'demo-canvas-viewport': previewMode === 'viewport' }"
       :style="canvasStyle"
     >
-      <DemoViewport v-if="previewMode === 'viewport'" :demo="demo" />
-      <DemoFrame v-else-if="previewMode === 'isolated'" :demo="demo" />
+      <DemoViewport v-if="previewMode === 'viewport'" :key="resetToken" :demo="demo" />
+      <DemoFrame v-else-if="previewMode === 'isolated'" :key="resetToken" :demo="demo" />
       <DemoProvider v-else :instance-id="instanceId">
         <DemoErrorBoundary :key="boundaryKey" @retry="reset">
           <DemoRenderer

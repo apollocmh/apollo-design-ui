@@ -359,6 +359,33 @@ describe('DemoPreview —— 卡片编排', () => {
 });
 
 describe('DemoPreview —— 预览模式与 iframe 通信（DOC-01/03/04/11）', () => {
+  it.each(['isolated', 'viewport'] as const)(
+    'reset replaces only its own %s frame',
+    async (mode) => {
+      const demo: DemoMeta = { ...demoMeta, preview: { ...demoMeta.preview, mode } };
+      const first = mount(DemoPreview, { props: { demo }, attachTo: document.body });
+      const second = mount(DemoPreview, {
+        props: { demo: { ...demo, name: 'size' } },
+        attachTo: document.body,
+      });
+      await nextTick();
+      const frame = first.get('iframe').element;
+      const otherFrame = second.get('iframe').element;
+      useSiteLocale().setLocale('en-US');
+      await nextTick();
+      expect(first.get('iframe').element).toBe(frame);
+      const reset = first.findAll('button').find((button) => button.text() === 'Reset demo');
+      if (!reset) throw new Error('Missing Reset demo button');
+      await reset.trigger('click');
+      await nextTick();
+      expect(first.get('iframe').element).not.toBe(frame);
+      expect(first.get('iframe').attributes('src')).toContain('lang=en-US');
+      expect(second.get('iframe').element).toBe(otherFrame);
+      first.unmount();
+      second.unmount();
+    },
+  );
+
   it('viewport 模式 ⇒ 独立视口画布 + iframe，而不是内联渲染', async () => {
     const viewportDemo: DemoMeta = {
       ...demoMeta,
