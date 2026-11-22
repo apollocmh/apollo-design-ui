@@ -20,7 +20,7 @@ subtitle: 标签
 | color | 13 预设色、success/processing/error/warning/default 或合法 CSS 色值 | `TagColor` | — |
 | variant | 变体 | `'filled' \| 'solid' \| 'outlined'` | `filled` |
 | bordered | 已有废弃字段，false 相当于 filled；使用 variant | `boolean` | — |
-| closable | 关闭开关/配置，包含 closeIcon、disabled、aria-*、data-* | `boolean \| TagClosableConfig \| null` | `false` |
+| closable | 关闭开关/配置，包含 closeIcon、disabled、`aria-*`、`data-*` | `boolean \| TagClosableConfig \| null` | `false` |
 | href / target | 内部链接地址/打开方式 | `string` | — |
 | disabled | 禁用链接及关闭操作；省略时采用全局禁用配置 | `boolean` | `false` |
 | classNames / styles | root、icon、content、close 四语义区域 | `TagSemanticClassNames / TagSemanticStyles` | — |

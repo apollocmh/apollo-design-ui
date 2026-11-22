@@ -19,7 +19,7 @@ All twelve [demos](./demo) are retained: basic links/closing, selection, colours
 | color | Thirteen presets, success/processing/error/warning/default, or a valid CSS colour | `TagColor` | — |
 | variant | Appearance | `'filled' \| 'solid' \| 'outlined'` | `filled` |
 | bordered | Existing deprecated field; false selects filled. Use variant | `boolean` | — |
-| closable | Close switch/configuration: closeIcon, disabled, aria-* and data-* | `boolean \| TagClosableConfig \| null` | `false` |
+| closable | Close switch/configuration: closeIcon, disabled, `aria-*` and `data-*` | `boolean \| TagClosableConfig \| null` | `false` |
 | href / target | Inner link URL / target | `string` | — |
 | disabled | Disable link and close; omission uses the global disabled setting | `boolean` | `false` |
 | classNames / styles | Four regions: root, icon, content and close | `TagSemanticClassNames / TagSemanticStyles` | — |

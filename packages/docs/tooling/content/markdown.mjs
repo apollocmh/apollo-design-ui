@@ -11,6 +11,7 @@
 import MarkdownIt from 'markdown-it';
 import { createJavaScriptRegexEngine } from 'shiki';
 import { createHighlighterCore } from 'shiki/core';
+import { docsBase } from '../site-base.mjs';
 
 /**
  * 去掉内联 HTML 标签（标题里出现 `<a>` / `<code>` 这类标签时，锚点与 TOC 文案
@@ -121,6 +122,9 @@ export async function createMarkdownRenderer({ currentPathPrefix = '', pageTitle
     if (/^https?:\/\//.test(href)) {
       tokens[idx].attrSet('target', '_blank');
       tokens[idx].attrSet('rel', 'noopener noreferrer');
+    } else if (href === '/' || /^\/(?:components|guide|changelog)(?=\/|[?#]|$)/.test(href)) {
+      tokens[idx].attrSet('href', `${docsBase.replace(/\/$/, '')}${href}`);
+      tokens[idx].attrSet('data-doc-route', href);
     } else if (/\.md($|#)/.test(href)) {
       // 文档互引：./demo 或 ../other/index.md → 去掉 .md，交给前端路由
       tokens[idx].attrSet('href', href.replace(/\.md(?=#|$)/, ''));

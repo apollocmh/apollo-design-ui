@@ -14,8 +14,11 @@ const router = useRouter();
 const route = useRoute();
 
 function onClick(e: MouseEvent): void {
-  const anchor = (e.target as HTMLElement).closest('a');
-  if (!anchor) return;
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+    return;
+  const anchor = e.target instanceof Element ? e.target.closest('a') : null;
+  if (!anchor || anchor.hasAttribute('download') || (anchor.target && anchor.target !== '_self'))
+    return;
   const href = anchor.getAttribute('href') ?? '';
   if (!href) return;
 
@@ -25,17 +28,17 @@ function onClick(e: MouseEvent): void {
     document.getElementById(href.slice(1))?.scrollIntoView({ behavior: 'smooth' });
     return;
   }
-  // 站内路由（绝对路径，可能带 hash）
-  if (href.startsWith('/')) {
-    const path = href.split('#')[0] ?? '';
-    const hash = href.split('#')[1];
-    if (path === route.path) {
-      e.preventDefault();
-      if (hash) document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+  // The HTML href is usable independently. Only a normal click stays in the router.
+  const destination = anchor.dataset.docRoute;
+  if (destination) {
+    e.preventDefault();
+    const to = router.resolve(destination);
+    if (to.fullPath.split('#')[0] === route.fullPath.split('#')[0]) {
+      if (to.hash)
+        document.getElementById(to.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
-    e.preventDefault();
-    void router.push(hash ? `${path}#${hash}` : path);
+    void router.push(destination);
   }
   // 其余（外链、相对文件）交浏览器默认行为；外链已在渲染期补 target/rel
 }

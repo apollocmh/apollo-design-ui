@@ -5,9 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 import type { ViteSSGOptions } from 'vite-ssg';
 import { buildManifest } from './tooling/content/build-manifest.mjs';
-
-// GitHub Pages 项目子路径；本地可用 DOCS_BASE=/ 覆盖。
-const BASE = process.env.DOCS_BASE ?? '/apollo-design-ui/';
+import { docsBase as BASE } from './tooling/site-base.mjs';
 
 /** 开发期内容热更：组件文档 / demo / 指南变化 ⇒ 重建 manifest + 整页刷新。 */
 function contentWatchPlugin(): Plugin {

@@ -12,6 +12,7 @@ import { describe, expect, it } from 'vitest';
 
 import manifest from '../.generated/manifest.json';
 import search from '../.generated/search.json';
+import { docsBase } from '../tooling/site-base.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const GENERATED = path.resolve(HERE, '../.generated');
@@ -190,6 +191,28 @@ describe('组件页数据', () => {
       );
     }
   });
+
+  it.each([
+    ['result', ['Result', 'ExceptionMap', 'IconMap']],
+    ['space', ['Space', 'SpaceCompact', 'SpaceAddon']],
+    ['drawer', ['Drawer', 'DrawerPurePanel']],
+    ['message', ['message']],
+    ['notification', ['notification']],
+  ])('按包根入口生成 %s 的值导入', (component, names) => {
+    expect(readPage(component).imports).toEqual(expect.arrayContaining(names));
+  });
+
+  it('中英文 Tag API 保留属性通配符', () => {
+    for (const lang of ['zh', 'en'] as const) {
+      const { introHtml, restHtml } = readPage('tag').doc[lang];
+      const parsed = new DOMParser().parseFromString(introHtml + restHtml, 'text/html');
+      const row = [...parsed.querySelectorAll('tr')].find(
+        (tr) => tr.cells[0]?.textContent === 'closable',
+      );
+      expect(row?.cells[1]?.textContent).toContain('aria-*');
+      expect(row?.cells[1]?.textContent).toContain('data-*');
+    }
+  });
 });
 
 describe('demo 元数据', () => {
@@ -300,14 +323,24 @@ const guideRoutes = new Set(manifest.guides.map((g) => `/guide/${g.slug}`));
 const allRoutes = new Set([...staticRoutes, ...componentRoutes, ...guideRoutes]);
 
 describe('站内链接可达性（不许静默死链）', () => {
+  const base = docsBase.replace(/\/$/, '');
+
+  it('中英文图标指南的链接可直接在部署子路径打开', () => {
+    for (const lang of ['zh', 'en'] as const) {
+      const { html } = readGuide('icons').doc[lang];
+      expect(html).toContain(`href="${base}/components/icon" data-doc-route="/components/icon"`);
+    }
+  });
+
   it('正文与示例说明里的站内链接都指向真实路由', () => {
     const offenders: string[] = [];
     for (const p of pages) {
       const html = p.data.doc.zh.introHtml + p.data.doc.zh.restHtml + p.data.doc.en.introHtml;
       for (const m of html.matchAll(/href="(\/[^"#?]*)"/g)) {
         const href = m[1]!;
-        if (href.startsWith('/assets') || href === '/apollo-design-ui/') continue;
-        if (staticRoutes.has(href) || componentRoutes.has(href) || guideRoutes.has(href)) continue;
+        if (href.startsWith('/assets') || href === `${base}/`) continue;
+        const route = href.startsWith(`${base}/`) ? href.slice(base.length) : href;
+        if (allRoutes.has(route) && href === `${base}${route}`) continue;
         offenders.push(`${p.meta.name}: ${href}`);
       }
     }

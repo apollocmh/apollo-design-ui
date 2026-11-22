@@ -20,6 +20,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import nodePath from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import ts from 'typescript';
 import { createAiContent, writeAiFiles } from './ai-content.mjs';
 import { compareCategories } from './categories.mjs';
 import { collectDemoSources } from './demo-source.mjs';
@@ -79,26 +80,31 @@ function toPascal(kebab) {
     .join('');
 }
 
-/** 从 packages/ui/src/<c>/index.ts 提取公开值导出（用于「使用方式」导入语句）。 */
-function extractExports(name) {
-  const entry = nodePath.join(UI_SRC, name, 'index.ts');
-  const names = new Set();
-  if (fs.existsSync(entry)) {
-    const src = fs.readFileSync(entry, 'utf8');
-    const re = /export\s*\{([^}]*)\}/g;
-    for (const m of src.matchAll(re)) {
-      for (const piece of m[1].split(',')) {
-        let id = piece.trim();
-        if (!id || id.startsWith('type')) continue;
-        if (/^import\s/.test(id)) continue;
-        const asMatch = /\bas\s+([A-Za-z_$][\w$]*)$/.exec(id);
-        if (asMatch) id = asMatch[1];
-        if (/^[A-Z]/.test(id)) names.add(id);
+/** The examples import from the package root, so use that entry's value exports. */
+function readComponentImports() {
+  const entry = nodePath.join(UI_SRC, 'index.ts');
+  const source = ts.createSourceFile(entry, fs.readFileSync(entry, 'utf8'), ts.ScriptTarget.Latest);
+  const imports = new Map();
+  for (const statement of source.statements) {
+    if (!ts.isExportDeclaration(statement) || statement.isTypeOnly) continue;
+    const { moduleSpecifier, exportClause } = statement;
+    if (!moduleSpecifier || !ts.isStringLiteral(moduleSpecifier)) continue;
+    const component = /^\.\/([a-z0-9-]+)$/.exec(moduleSpecifier.text)?.[1];
+    if (!component || !exportClause || !ts.isNamedExports(exportClause)) continue;
+    const names = imports.get(component) ?? new Set();
+    for (const specifier of exportClause.elements) {
+      const name = specifier.name.text;
+      if (specifier.isTypeOnly) continue;
+      if (
+        name === component ||
+        (/^[A-Z]/.test(name) && specifier.propertyName?.text !== 'default')
+      ) {
+        names.add(name);
       }
     }
+    if (names.size) imports.set(component, names);
   }
-  if (names.size === 0) names.add(toPascal(name));
-  return [...names];
+  return imports;
 }
 
 /** 解析单个 demo 元数据（demo/<n>.md + demo/<n>.vue）。 */
@@ -193,7 +199,7 @@ function parseDemo(componentName, demoMdPath) {
   };
 }
 
-function scanComponentDir(entry) {
+function scanComponentDir(entry, componentImports) {
   const name = entry.name;
   const dir = nodePath.join(UI_SRC, name);
   const zhPath = nodePath.join(dir, 'index.zh-CN.md');
@@ -245,6 +251,11 @@ function scanComponentDir(entry) {
     ids.add(d.name);
   }
 
+  const imports = [...(componentImports.get(name) ?? [])];
+  assert(imports.length > 0, `${name}：包入口缺少文档引入所需的值导出`);
+  const primaryIndex = imports.indexOf(toPascal(name));
+  if (primaryIndex > 0) imports.unshift(...imports.splice(primaryIndex, 1));
+
   return {
     name,
     id: name,
@@ -253,7 +264,7 @@ function scanComponentDir(entry) {
     order: Number.isFinite(Number(zhMeta.order)) ? Number(zhMeta.order) : Number.MAX_SAFE_INTEGER,
     title: bilingualOf(zhMeta, 'title', name, localeOf(enMeta, 'title', name)),
     subtitle: bilingualOf(zhMeta, 'subtitle', '', localeOf(enMeta, 'subtitle', '')),
-    imports: extractExports(name),
+    imports,
     body: { zh: zhBody, en: enBody },
     demos,
     relDir: `packages/ui/src/${name}`,
@@ -262,13 +273,14 @@ function scanComponentDir(entry) {
 
 export function scanComponents() {
   const components = [];
+  const componentImports = readComponentImports();
   for (const entry of fs.readdirSync(UI_SRC, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     if (entry.name.startsWith('_') || entry.name === '__tests__' || entry.name === 'style')
       continue;
     const hasDoc = fs.existsSync(nodePath.join(UI_SRC, entry.name, 'index.zh-CN.md'));
     if (!hasDoc) continue;
-    components.push(scanComponentDir(entry));
+    components.push(scanComponentDir(entry, componentImports));
   }
   components.sort((a, b) => a.name.localeCompare(b.name));
   return components;
